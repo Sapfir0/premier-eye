@@ -13,6 +13,7 @@
     cd videoscan
     python3 mainImage.py
 
+[История коммитов и старый репозиторий](https://github.com/Sapfir0/videoscan)
 
 ## Алгоритмы
 
