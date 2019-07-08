@@ -23,12 +23,19 @@ COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
 random.seed(42)
 random.shuffle(COLORS)
 
-
 def ImageMaskCNNPipeline(filename):
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
-    saveImage(masked_image.astype(np.uint8), cfg.OUTPUT_DIR_MASKCNN + filename)
+
+    cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, image ) #IMAGE, а не masked image
+
+    if (cfg.SAVE_COLORMAP):
+        im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET)
+        name, jpg = filename.split(".")
+        filename = name + "Colorname" + "." + jpg
+        cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, im_color )
+
     return r['rois']
 
 
@@ -115,7 +122,8 @@ def detectByMaskCNN(image):
     return r, rgb_image, elapsed_time
 
 
-def saveImage(imagePtr, filename):
+def saveImage(imagePtr, filename): #plot image saving
+
     fig = plt.figure(frameon=False)
     ax = plt.Axes(fig, [0., 0., 1., 1.])
     ax.set_axis_off()
@@ -123,7 +131,9 @@ def saveImage(imagePtr, filename):
 
     ax.imshow(imagePtr)
     fig.savefig(filename)
+
     #cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
+
 
 
 

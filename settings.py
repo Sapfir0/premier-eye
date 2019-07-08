@@ -21,8 +21,10 @@ MINIMUM_PERCENTAGE_PROBABILITY =30 # минимальный процент об�
 DATASET_DIR = "data/mask_rcnn_coco.h5" #относительный путь от этого файла
 LOGS_DIR = "logs"
 DATAFILE = "text.txt"
+SAVE_COLORMAP = True
 OUTPUT_DIR_MASKCNN  = 'output/maskCNNout/' # АЛГОРИТМ 2
 DETECTION_MIN_CONFIDENCE = 0.8  # минимальный процент обнаружения и обводки
+
 
 #video
 VIDEO_SOURCE = "data/3.mp4"
