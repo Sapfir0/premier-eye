@@ -10,6 +10,7 @@ from pathlib import Path
 import time
 import colorsys
 import random
+from colorama import Fore
 
 import settings as cfg
 
@@ -31,10 +32,10 @@ def ImageMaskCNNPipeline(filename):
     cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, image ) #IMAGE, а не masked image
 
     if (cfg.SAVE_COLORMAP):
-        im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET)
+        im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # заменить тут первый аргумент, пока это рабоет как фильтр
         name, jpg = filename.split(".")
-        filename = name + "Colorname" + "." + jpg
-        cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, im_color )
+        filename = f"{name}Colorname.{jpg}"
+        cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", im_color )
 
     return r['rois']
 
@@ -49,7 +50,7 @@ class MaskRCNNConfig(mrcnn.config.Config):
     NUM_CLASSES = 81
     IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
     IMAGE_MAX_DIM = 768
-    DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
+    DETECTION_NMS_THRESHOLD = cfg.DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
 
 
 model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=MaskRCNNConfig())
@@ -93,6 +94,14 @@ def visualize_detections(image, masks, boxes, class_ids, scores):
         image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6) # рисование маски
 
         classID = class_ids[i]
+        # if not classID in CLASS_NAMES:
+        #     print("Unknown object")
+        #     continue  
+
+        if(classID > len(CLASS_NAMES)):
+            print(Fore.RED + "Exception: Undefined classId - " + str(classID))
+            return -1
+            
         label = CLASS_NAMES[classID]
         color = [int(c) for c in np.array(COLORS[classID]) * 255] # ух круто
         text = "{}: {:.3f}".format(label, scores[i])

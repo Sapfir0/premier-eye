@@ -6,7 +6,7 @@ from colorama import Fore, Back, Style
 
 colorama.init(autoreset=True)
 
-IMAGE_DIR = "data/video0" 
+IMAGE_DIR = "data/video" 
 TABLE_NAME = "output/datas.csv" # табличка
 
 
@@ -23,8 +23,8 @@ LOGS_DIR = "logs"
 DATAFILE = "text.txt"
 SAVE_COLORMAP = True
 OUTPUT_DIR_MASKCNN  = 'output/maskCNNout/' # АЛГОРИТМ 2
-DETECTION_MIN_CONFIDENCE = 0.8  # минимальный процент обнаружения и обводки
-
+DETECTION_MIN_CONFIDENCE = 0.7  # минимальный процент обнаружения и обводки
+DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
 
 #video
 VIDEO_SOURCE = "data/3.mp4"
