@@ -44,6 +44,7 @@ RUN  pip3 install ${PYTHON_PACKAGES}
 #  && make install
 
 
+
  # для Mask R-CNN
 RUN git clone https://github.com/matterport/Mask_RCNN.git  \
     && cd Mask_RCNN \
