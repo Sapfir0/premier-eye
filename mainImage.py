@@ -6,7 +6,7 @@ import os
 import numpy as np
 
 import settings as cfg
-import neural_network.imageAi as imageAi
+#import neural_network.imageAi as imageAi
 import neural_network.maskCNN as mask
 import dateHelper as dh
 import db.fileHelper as fileHelper

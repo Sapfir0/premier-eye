@@ -123,6 +123,7 @@ def detectByMaskCNN(image):
 
 
 def saveImage(imagePtr, filename): #plot image saving
+
     fig = plt.figure(frameon=False)
     ax = plt.Axes(fig, [0., 0., 1., 1.])
     ax.set_axis_off()
@@ -130,6 +131,9 @@ def saveImage(imagePtr, filename): #plot image saving
 
     ax.imshow(imagePtr)
     fig.savefig(filename)
+
+    #cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
+
 
 
 

@@ -56,6 +56,7 @@ if not os.listdir(IMAGE_DIR):
     samples = ["https://pp.userapi.com/c852224/v852224214/1594c2/nuoWwPD9w24.jpg", 
             "https://pp.userapi.com/c852224/v852224214/1594cb/uDYNgvVKow8.jpg",
             "https://pp.userapi.com/c852224/v852224214/1594d4/XKUBv7r4xAY.jpg"]
+    realNames = ["3_20190702082219.jpg", "3_20190702082221.jpg", "3_20190702082223.jpg"]
     for i in range(0, len(samples)): # мы не будет исользовать in, мы же не любим ждать
         image = wget.download(samples[i])
-        os.rename(f"{os.getcwd()}/{image}", f"{os.getcwd()}/{IMAGE_DIR}/{image}")
+        os.rename(f"{os.getcwd()}/{image}", f"{os.getcwd()}/{IMAGE_DIR}/{realNames[i]}")
