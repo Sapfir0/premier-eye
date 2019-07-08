@@ -10,11 +10,11 @@ from pathlib import Path
 import time
 import colorsys
 import random
+from colorama import Fore
 
 import settings as cfg
 
 CLASS_NAMES = ['BG',"person", "bicycle", "car", "motorcycle", "bus", "truck"] # пока не придумал как делать поиск только по этим
-
 
 # generate random (but visually distinct) colors for each class label
 hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
@@ -23,12 +23,18 @@ COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
 random.seed(42)
 random.shuffle(COLORS)
 
-
 def ImageMaskCNNPipeline(filename):
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
-    saveImage(masked_image.astype(np.uint8), cfg.OUTPUT_DIR_MASKCNN + filename)
+    
+    cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, image ) #IMAGE, а не masked image
+    if (cfg.SAVE_COLORMAP):
+        im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # заменить тут первый аргумент, пока это рабоет как фильтр
+        name, jpg = filename.split(".")
+        filename = f"{name}Colorname.{jpg}"
+        cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", im_color )
+        
     return r['rois']
 
 
@@ -42,7 +48,7 @@ class MaskRCNNConfig(mrcnn.config.Config):
     NUM_CLASSES = 81
     IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
     IMAGE_MAX_DIM = 768
-    DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
+    DETECTION_NMS_THRESHOLD = cfg.DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
 
 
 model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=MaskRCNNConfig())
@@ -86,6 +92,14 @@ def visualize_detections(image, masks, boxes, class_ids, scores):
         image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6) # рисование маски
 
         classID = class_ids[i]
+        # if not classID in CLASS_NAMES:
+        #     print("Unknown object")
+        #     continue  
+
+        if(classID > len(CLASS_NAMES)):
+            print(Fore.RED + "Exception: Undefined classId - " + str(classID))
+            return -1
+            
         label = CLASS_NAMES[classID]
         color = [int(c) for c in np.array(COLORS[classID]) * 255] # ух круто
         text = "{}: {:.3f}".format(label, scores[i])
@@ -115,7 +129,7 @@ def detectByMaskCNN(image):
     return r, rgb_image, elapsed_time
 
 
-def saveImage(imagePtr, filename):
+def saveImage(imagePtr, filename): #plot image saving
     fig = plt.figure(frameon=False)
     ax = plt.Axes(fig, [0., 0., 1., 1.])
     ax.set_axis_off()
@@ -123,7 +137,9 @@ def saveImage(imagePtr, filename):
 
     ax.imshow(imagePtr)
     fig.savefig(filename)
+
     #cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
+
 
 
 
