@@ -10,12 +10,8 @@ ENV PYTHON_PACKAGES="\
     pandas \ 
     setuptools \ 
     keras \
-    "
-
-#сетаптуслс вроде уже есть
-
-
-ENV PACKAGES="\
+    " \
+  PACKAGES="\
     dumb-init \
     musl \
     libc6-compat \

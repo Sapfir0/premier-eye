@@ -16,7 +16,6 @@ import settings as cfg
 
 CLASS_NAMES = ['BG',"person", "bicycle", "car", "motorcycle", "bus", "truck"] # пока не придумал как делать поиск только по этим
 
-
 # generate random (but visually distinct) colors for each class label
 hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
 
@@ -28,9 +27,9 @@ def ImageMaskCNNPipeline(filename):
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
-
+  
     cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, image ) #IMAGE, а не masked image
-
+    
     if (cfg.SAVE_COLORMAP):
         im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # заменить тут первый аргумент, пока это рабоет как фильтр
         name, jpg = filename.split(".")

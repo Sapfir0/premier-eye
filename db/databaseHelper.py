@@ -37,3 +37,6 @@ def readFromDB():
     cursor.execute(f"SELECT * FROM {tableName};")
 
 
+
+# from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey
+# metadata = MetaData() 

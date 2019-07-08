@@ -1,17 +1,16 @@
 [Дневник практики и документация отчасти](https://docs.google.com/document/d/1Us4OW8wktNr98LsmdR_614xjYLwfMsDM4rQsbBY_xGU/edit)
 
-[Docker proj](https://cloud.docker.com/u/sapfir0/repository/docker/sapfir0/vision)
+[Docker proj](https://cloud.docker.com/u/sapfir0/repository/docker/sapfir0/premier-eye)
 
 Собрать свой
 
-    docker build -t sapfir0/vision:cv .
-    docker push sapfir0/vision:cv
+    docker build -t sapfir0/premier-eye:cv .
+    docker push sapfir0/premier-eye:cv
 
 Забрать себе удаленный
 
-    docker run -it sapfir0/vision:cv
-    cd videoscan
-    python3 mainImage.py
+    docker run -it sapfir0/premier-eye:cv
+
 
 [История коммитов и старый репозиторий](https://github.com/Sapfir0/videoscan)
 

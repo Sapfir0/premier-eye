@@ -26,21 +26,21 @@ ENV PACKAGES="\
 # не уверен нужно ли ставить опенсв тут
 
 RUN apt-get update \ 
- && apt-get install ${PACKAGES} -y
+ && apt-get install ${PACKAGES} -qy
 
 RUN  pip3 install ${PYTHON_PACKAGES}
 
-# соберем opencv лапками
-# RUN  git clone https://github.com/opencv/opencv.git \
+# соберем opencv лапками 
+# RUN git clone https://github.com/opencv/opencv.git \
 #  && git clone https://github.com/opencv/opencv_contrib.git \
-#  && ls && cd opencv \
+#  && cd opencv \
 #  && mkdir build \
 #  && cd build \
 #  && cmake -D CMAKE_BUILD_TYPE=RELEASE \ 
 #         -D CMAKE_INSTALL_PREFIX=/usr/local \ 
 #         -D OPENCV_ENABLE_NONFREE:BOOL=ON \
 #         -D OPENCV_EXTRA_MODULES_PATH=/opencv_contrib/modules \ 
-#  && make -j8 \
+#  &&  make -j8 \
 #  && make install
 
 
@@ -51,15 +51,10 @@ RUN git clone https://github.com/matterport/Mask_RCNN.git  \
     && pip3 install -r requirements.txt \
     && rm -rf Mask_RCNN
 
-RUN git clone https://github.com/Sapfir0/videoscan \
-    && mkdir videoscan/data  \
-    && mkdir videoscan/output \
-    && cd videoscan/data \
-    && wget -q https://github.com/matterport/Mask_RCNN/releases/download/v2.0/mask_rcnn_coco.h5 \
-    && wget -q https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5 \
-    && cd ..
+COPY . ./premier-app 
+#папку создаст сам докер
 
-CMD [ "python3", "mainImage.py" ]
+CMD [ "python3", "./premier-app/mainImage.py" ]
 
 
     
