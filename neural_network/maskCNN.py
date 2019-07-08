@@ -116,14 +116,14 @@ def detectByMaskCNN(image):
 
 
 def saveImage(imagePtr, filename):
-    # fig = plt.figure(frameon=False)
-    # ax = plt.Axes(fig, [0., 0., 1., 1.])
-    # ax.set_axis_off()
-    # fig.add_axes(ax)
+    fig = plt.figure(frameon=False)
+    ax = plt.Axes(fig, [0., 0., 1., 1.])
+    ax.set_axis_off()
+    fig.add_axes(ax)
 
-    # ax.imshow(imagePtr)
-    # fig.savefig(filename)
-    cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
+    ax.imshow(imagePtr)
+    fig.savefig(filename)
+    #cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
 
 
 
