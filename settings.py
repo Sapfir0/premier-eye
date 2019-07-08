@@ -2,9 +2,10 @@ import os
 import wget
 import mrcnn.utils
 import colorama
-from colorama import Fore, Back, Style
+from colorama import Fore, Back, Style # для цветного консльного вывода 
 
 colorama.init(autoreset=True)
+
 
 IMAGE_DIR = "data/video" 
 TABLE_NAME = "output/datas.csv" # табличка
