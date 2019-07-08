@@ -42,6 +42,10 @@ RUN  pip3 install ${PYTHON_PACKAGES}
 #         -D OPENCV_EXTRA_MODULES_PATH=/opencv_contrib/modules \ 
 #  &&  make -j8 \
 #  && make install
+<<<<<<< HEAD
+=======
+
+>>>>>>> 526d0f2c73e157b59c3066d8227001248f3a4b76
 
 
  # для Mask R-CNN

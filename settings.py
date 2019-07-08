@@ -10,6 +10,7 @@ DATA_DIR = "data"
 OUTPUT_DIR = "output"
 
 IMAGE_DIR = "data/video0" 
+
 TABLE_NAME = "output/datas.csv" # табличка
 
 
@@ -18,15 +19,18 @@ DATASET_DIR_IMAGE_AI = "data/resnet50_coco_best_v2.0.1.h5"
 OUTPUT_DIR_IMAGE_AI = 'output/imageAIout/'  # АЛГОРИТМ 1
 DETECTION_SPEED = "normal" # скорость обхода каждого кадра
 MINIMUM_PERCENTAGE_PROBABILITY =30 # минимальный процент обнаружения и обводки
-DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
 
 #Mask cnn
 DATASET_DIR = "data/mask_rcnn_coco.h5" #относительный путь от этого файла
 LOGS_DIR = "logs"
 DATAFILE = "text.txt"
+SAVE_COLORMAP = True
 OUTPUT_DIR_MASKCNN  = 'output/maskCNNout/' # АЛГОРИТМ 2
+DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
 DETECTION_MIN_CONFIDENCE = 0.8  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
+
+
 #video
 VIDEO_SOURCE = "data/3.mp4"
 OUTPUT_VIDEO = 'output/ITSWORK.avi'
