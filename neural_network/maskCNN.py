@@ -131,6 +131,9 @@ def saveImage(imagePtr, filename): #plot image saving
     ax.imshow(imagePtr)
     fig.savefig(filename)
 
+    #cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
+
+
 
 
 
