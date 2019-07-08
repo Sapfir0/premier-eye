@@ -31,10 +31,7 @@ def ImageMaskCNNPipeline(filename):
     cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, image ) #IMAGE, а не masked image
     
     if (cfg.SAVE_COLORMAP):
-        im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # заменить тут первый аргумент, пока это рабоет как фильтр
-        name, jpg = filename.split(".")
-        filename = f"{name}Colorname.{jpg}"
-        cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", im_color )
+        createHeatMap(image, filename)
     return r['rois']
 
 
@@ -92,9 +89,7 @@ def visualize_detections(image, masks, boxes, class_ids, scores):
         image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6) # рисование маски
 
         classID = class_ids[i]
-        # if not classID in CLASS_NAMES:
-        #     print("Unknown object")
-        #     continue  
+ 
 
         if(classID > len(CLASS_NAMES)):
             print(Fore.RED + "Exception: Undefined classId - " + str(classID))
@@ -141,7 +136,15 @@ def saveImage(imagePtr, filename): #plot image saving
     #cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
 
 
+def createHeatMap(image, filename):
+    im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # заменить тут первый аргумент, пока это рабоет как фильтр
+    name, jpg = filename.split(".")
+    filename = f"{name}Colorname.{jpg}"
+    cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", im_color )
 
+
+def getConcetration(highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
+    return foundedObjects # массив координат всех объектов в кадре
 
 
 

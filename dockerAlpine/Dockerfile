@@ -30,18 +30,12 @@ ENV PYTHON_PACKAGES="\
     cmake \
     alpine-sdk \
     linux-headers \
-    "
-
-#все для сборки из исходников
-#хотя cmake часть alpine-sdk, его нужно установить отдельно
-
-ENV BUILD_PACKAGES_NO_CACHE="\
+    " \
+  BUILD_PACKAGES_NO_CACHE="\
     build-dependencies \
     python3 \
-    " 
-
-#пакеты удалим потом
-ENV BUILD_PACKAGES_CACHE="\
+    " \ 
+  BUILD_PACKAGES_CACHE="\
      build-runtime \
      build-base \
      python3-dev \
@@ -50,6 +44,7 @@ ENV BUILD_PACKAGES_CACHE="\
      pkgconfig \
      gfortran \
      "
+#хотя cmake часть alpine-sdk, его нужно установить отдельно
 
 RUN apk add --no-cache --virtual $BUILD_PACKAGES_NO_CACHE \
     && apk add --virtual $BUILD_PACKAGES_CACHE \
@@ -83,9 +78,6 @@ RUN mkdir ~/opencv_build && cd ~/opencv_build && \
 RUN mkdir project && \
     mkdir project/data && \
     mkdir project/output
-
-#  ImageAI
-RUN pip3 install https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.3/imageai-2.0.3-py3-none-any.whl
 
 
 # для Mask R-CNN

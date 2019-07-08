@@ -6,34 +6,35 @@ from colorama import Fore, Back, Style  # для цветного консльн
 
 colorama.init(autoreset=True)
 
-DATA_DIR = "data"
+APP_PATH = os.path.abspath(os.path.dirname(__file__))
+DATA_PATH = os.path.join(APP_PATH, "data")
+DATABASE = "sqlite:///" + os.path.join(DATA_PATH, 'data.db')
+
 OUTPUT_DIR = "output"
-
 IMAGE_DIR = "data/video0" 
-
 TABLE_NAME = "output/datas.csv" # табличка
 
+#Mask cnn
+DATASET_DIR = "data/mask_rcnn_coco.h5" #относительный путь от этого файла
+LOGS_DIR = "logs"
+DATAFILE = "text.txt"
+OUTPUT_DIR_MASKCNN  = 'output/maskCNNout/' # АЛГОРИТМ 2
+DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
+DETECTION_MIN_CONFIDENCE = 0.6  # минимальный процент обнаружения и обводки
+SAVE_COLORMAP = False
+
+
+
+##### unused
+#video
+VIDEO_SOURCE = "data/3.mp4"
+OUTPUT_VIDEO = 'output/ITSWORK.avi'
 
 #imageAI
 DATASET_DIR_IMAGE_AI = "data/resnet50_coco_best_v2.0.1.h5"
 OUTPUT_DIR_IMAGE_AI = 'output/imageAIout/'  # АЛГОРИТМ 1
 DETECTION_SPEED = "normal" # скорость обхода каждого кадра
 MINIMUM_PERCENTAGE_PROBABILITY =30 # минимальный процент обнаружения и обводки
-
-#Mask cnn
-DATASET_DIR = "data/mask_rcnn_coco.h5" #относительный путь от этого файла
-LOGS_DIR = "logs"
-DATAFILE = "text.txt"
-SAVE_COLORMAP = True
-OUTPUT_DIR_MASKCNN  = 'output/maskCNNout/' # АЛГОРИТМ 2
-DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
-DETECTION_MIN_CONFIDENCE = 0.8  # минимальный процент обнаружения и обводки
-SAVE_COLORMAP = False
-
-
-#video
-VIDEO_SOURCE = "data/3.mp4"
-OUTPUT_VIDEO = 'output/ITSWORK.avi'
 
 # юзабилити функции
 
@@ -50,9 +51,7 @@ if not os.path.isfile(DATASET_DIR_IMAGE_AI):
 
 if not os.path.isfile(DATASET_DIR):
     print(Fore.YELLOW + f"{DATASET_DIR} isn't exist. Downloading..")
-    mrcnn.utils.download_trained_weights(DATASET_DIR)
-
-
+    mrcnn.utils.download_trained_weights(DATASET_DIR) #стоит это дополнительно скачивать в докере
 
 
 if not os.listdir(IMAGE_DIR):
