@@ -1,4 +1,4 @@
-FROM python:3-alpine
+FROM python:3-alpine:3.7
 
 RUN apk update
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
@@ -8,11 +8,13 @@ ENV PYTHON_PACKAGES="\
     scipy \
     matplotlib \
     pandas \ 
+    https://github.com/better/alpine-tensorflow/releases/download/alpine3.7-tensorflow1.7.0/tensorflow-1.7.0-cp36-cp36m-linux_x86_64.whl \
     setuptools \ 
     keras \
     " \
   PACKAGES="\
     dumb-init \
+    py3-numpy \
     musl \
     libc6-compat \
     build-base \
@@ -62,17 +64,18 @@ RUN apk add --no-cache --virtual $BUILD_PACKAGES_NO_CACHE \
 
 
 #установка opencv
-RUN mkdir ~/opencv_build && cd ~/opencv_build && \
-    git clone https://github.com/opencv/opencv.git && \
-    git clone https://github.com/opencv/opencv_contrib.git && \
-    cd ./opencv && mkdir build && cd build && \
-    cmake -D CMAKE_BUILD_TYPE=Release \
-          -D CMAKE_INSTALL_PREFIX=/usr/local ..  \
-          && \
-    make -j4  && \
-    sudo make install && \
-    ope
-    #pkg-config --modversion opencv #на этом пункте вылет, соответсвенно мы не сможем использовать opencv 
+RUN git clone https://github.com/opencv/opencv.git \
+ && git clone https://github.com/opencv/opencv_contrib.git \
+ && cd opencv \
+ && mkdir build \
+ && cd build \
+ && cmake -D CMAKE_BUILD_TYPE=RELEASE \ 
+        -D CMAKE_INSTALL_PREFIX=/usr/local \ 
+        -D OPENCV_ENABLE_NONFREE:BOOL=ON \
+        -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \ 
+        -D BUILD_EXAMPLES=ON .. \
+ &&  make -j8 \
+ && make install
 
 #все для проекта
 RUN mkdir project && \

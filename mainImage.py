@@ -14,7 +14,11 @@ import db.fileHelper as fileHelper
 
 
 def main():
-
+    # послдений обработанный файл = "" as ПОФ
+    # for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
+    # если filename==ПОФ # мы не будем экономить на младенцах
+    # после обработки добавить файл к массиву отработанных файлов
+    # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
         currentImage= f"{cfg.IMAGE_DIR}/{filename}"
         print(f"Analyzing {currentImage}")
