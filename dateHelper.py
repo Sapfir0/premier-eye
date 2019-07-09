@@ -12,4 +12,4 @@ def parseFilename(filename):
     seconds = int(date[12:14])
     
     parsedData = datetime.datetime(year, month, day, hours, minuts, seconds)
-    return numberOfCam, parsedData
+    return  parsedData, numberOfCam
