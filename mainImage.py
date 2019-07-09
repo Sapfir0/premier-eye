@@ -24,23 +24,19 @@ def main():
     processedFrames = []; notProcessedFrames = []
     while True:
         if (counter):
-            for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
+            for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
                 notProcessedFrames.append(filename) # Добавим все изображения к необработанным, если программа только запущена(потом можно брать из файла эти значения)
             counter = 0
 
-        for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
+        for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
             currentImage= f"{cfg.IMAGE_DIR}/{filename}"
             currentDir = f"{os.getcwd()}/{cfg.IMAGE_DIR}"
 
             print("Ожидаю")
             if filename in processedFrames:
+                if (processedFrames == os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR))):
+                    time.sleep(2.5)
                 continue
-
-            #print(last_date_rendered_frame, dh.parseFilename(filename)[0])
-            # if (last_date_rendered_frame >= dh.parseFilename(filename)[0]):
-            #     continue #мы уже в будущем относительно этого кадра и он нам не нужен
-            # если мы дошли до конца, у нас будут проблемы, поэтому нам нужен слип мод
-            # еще мы можем запомнить количество файлов в папке в прошлый раз 
 
             print(f"Analyzing {currentImage}")
 

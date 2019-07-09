@@ -1,9 +1,10 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Float, UnicodeText, literal_column, DateTime, Boolean, or_
 from sqlalchemy import create_engine
+from sqlalchemy.orm import scoped_session, sessionmaker, aliased
 import settings as cfg
 
 engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=True)
-db_session
+db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 
 __tablename__ =  "params"

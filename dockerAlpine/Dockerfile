@@ -1,4 +1,4 @@
-FROM python:3-alpine:3.7
+FROM alpine:3.7
 
 RUN apk update
 RUN echo "http://dl-cdn.alpinelinux.org/alpine/edge/testing" >> /etc/apk/repositories
