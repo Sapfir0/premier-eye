@@ -20,21 +20,25 @@ def main():
     # после обработки добавить файл к массиву отработанных файлов
     # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     last_date_rendered_frame = datetime.datetime(1970, 1, 1)
-    dir_state = None
+    counter = 1
+    processedFrames = []; notProcessedFrames = []
     while True:
+        if (counter):
+            for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
+                notProcessedFrames.append(filename) # Добавим все изображения к необработанным, если программа только запущена(потом можно брать из файла эти значения)
+            counter = 0
+
         for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
             currentImage= f"{cfg.IMAGE_DIR}/{filename}"
             currentDir = f"{os.getcwd()}/{cfg.IMAGE_DIR}"
 
-            print(last_date_rendered_frame, dh.parseFilename(filename)[0])
-            if (last_date_rendered_frame >= dh.parseFilename(filename)[0]):
-                # if not (os.listdir(currentDir) == dir_state):
-                #     dir_state = os.listdir(currentDir)
-                #     print("Sleep 3 seconds")
-                #     time.sleep(3)
-                # else:
-                continue #мы уже в будущем относительно этого кадра и он нам не нужен
-            
+            print("Ожидаю")
+            if filename in processedFrames:
+                continue
+
+            #print(last_date_rendered_frame, dh.parseFilename(filename)[0])
+            # if (last_date_rendered_frame >= dh.parseFilename(filename)[0]):
+            #     continue #мы уже в будущем относительно этого кадра и он нам не нужен
             # если мы дошли до конца, у нас будут проблемы, поэтому нам нужен слип мод
             # еще мы можем запомнить количество файлов в папке в прошлый раз 
 
@@ -48,7 +52,8 @@ def main():
             data, numberOfCam = dh.parseFilename(filename)
             centerDown = mask.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
             
-            last_date_rendered_frame = dh.parseFilename(filename)[0]
+            processedFrames.append(filename)
+            #last_date_rendered_frame = dh.parseFilename(filename)[0]
     print("It's all")
 
 if __name__ == "__main__":
