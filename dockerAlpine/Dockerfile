@@ -95,4 +95,4 @@ RUN git clone https://github.com/waleedka/coco && \
 # уже включено в проект
 #RUN cd project/data
 #RUN wget https://www.dropbox.com/s/njeje6rl2o9kdcm/mask_rcnn_coco.h5?dl=0 
-#RUN wget https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5?dl=0
+#RUN wget -q https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5
