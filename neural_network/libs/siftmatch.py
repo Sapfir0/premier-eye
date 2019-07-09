@@ -1,4 +1,4 @@
-from siftdetector import detect_keypoints
+from neural_network.libs.siftdetector import detect_keypoints
 import numpy as np
 import cv2
 import itertools

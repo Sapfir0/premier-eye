@@ -37,18 +37,16 @@ COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
 random.seed(42)
 random.shuffle(COLORS)
 
-#from libs.siftmatch import match_template
 #from neural_network.libs.siftmatch import match_template
-from neural_network.libs.sift import match_template
 def ImageMaskCNNPipeline(filename):
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
+
+    #extractObjectsFromR(image, r['rois'])
+
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
-  
-    for i in r['rois'].shape[0]:
-        print(r['rois'][i])
-        cropped = image[r['rois'][i]]
-        cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{i}", cropped )
+    #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
+
 
     cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", image ) #IMAGE, а не masked image
     
@@ -58,11 +56,12 @@ def ImageMaskCNNPipeline(filename):
     return r['rois']
 
 
-# def cropImage(image, cropCoordinates, savingFilename):
-#     cropped = image[cropCoordinates] # cropped = image[0:700, 300:1200]
-#     cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{savingFilename}", cropped ) #IMAGE, а не masked image
+def extractObjectsFromR(image, boxes):
+    for i in boxes:
+        y1, x1, y2, x2 = i 
+        cropped = image[y1:y2, x1:x2] 
+        cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{i}.jpg", cropped )
 
-#     return cropped
 
 # Configuration that will be used by the Mask-RCNN library
 class MaskRCNNConfig(mrcnn.config.Config):

@@ -5,20 +5,26 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine
 from sqlalchemy import func
 import settings as cfg
-
+import sqlalchemy as sql
 
 engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
+Base = declarative_base() 
+Base.query = db_session.query_property()
 
-dbName = 'object.sqlite'
-
-
-
-metadata.create_all(engine)
-
-class Objects(object):
+class Objects(Base):
     __tablename__ =  "objects"
+    id = Column(Integer, primary_key=True)
+    fixationDatetime = Column( DateTime ) # unque добавить
+    LUx = Column(Integer) # Left Up
+    LUy= Column(Integer)
+    RDx= Column(Integer) # Right Down
+    RDy= Column(Integer)
+    CDx= Column(Integer) # Center Down центр нижней стороны
+    CDy= Column(Integer)
+    #Column('GPS', Integer,),
+    #Column('objectId', Integer,)
 
     def __init__(self, name, fullname, password):
         self.name = name
@@ -26,20 +32,9 @@ class Objects(object):
         self.password = password
 
     def init_db():
-        metadata = MetaData() 
-        table = Table(__tablename__, metadata,
-            Column('id', Integer, primary_key=True),
-            Column('LUx', Integer),
-            Column('LUy', Integer),
-            Column('RDx', Integer),
-            Column('RDy', Integer),
-            Column('CDx', Integer),
-            Column('CDy', Integer),
-            Column('GPS', Integer,),
-            Column('objectId', Integer,)
-        )
-
-
+        Base.metadata.create_all(bind=engine)
+        #metadata.create_all(engine)
+        db_session.commit()
 
     def __repr__(self):
         return "<User('%s','%s', '%s')>" % (self.name, self.fullname, self.password)

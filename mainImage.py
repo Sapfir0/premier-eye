@@ -11,14 +11,14 @@ import neural_network.maskCNN as mask
 import dateHelper as dh
 import db.fileHelper as fileHelper
 import datetime, time
-
+import db.databaseHelper as db
 def main():
     # послдений обработанный файл = "" as ПОФ
     # for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
     # если filename==ПОФ # мы не будем экономить на младенцах
     # после обработки добавить файл к массиву отработанных файлов
     # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
-    last_date_rendered_frame = datetime.datetime(1970, 1, 1)
+
     processedFrames = []
     while True:
         for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
@@ -37,7 +37,6 @@ def main():
             rectCoordinates = mask.ImageMaskCNNPipeline(filename)
 
             #DB
-            #r['rois'] - массив координат левого нижнего и правого верхнего угла у надейнных объектов
             data, numberOfCam = dh.parseFilename(filename)
             centerDown = mask.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
             
