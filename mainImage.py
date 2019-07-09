@@ -37,7 +37,7 @@ def main():
 
             #Mask CNN
             rectCoordinates = mask.ImageMaskCNNPipeline(filename)
-
+            print(rectCoordinates)
             #DB
             data, numberOfCam = dh.parseFilename(filename)
             centerDown = mask.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
@@ -51,7 +51,6 @@ def main():
             db.session.commit()
             db.session.flush() # можно один раз добавить 
             
-
             processedFrames.append(filename)
 
     print("It's all")

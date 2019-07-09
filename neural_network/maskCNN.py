@@ -54,12 +54,14 @@ model.load_weights(cfg.DATASET_DIR, by_name=True)
 
 objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
 
-#from neural_network.libs.siftmatch import match_template
+from neural_network.libs.siftmatch import match_template
 def ImageMaskCNNPipeline(filename):
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
 
-    #extractObjectsFromR(image, r['rois'])
+    foundedObjectImage = extractObjectsFromR(image, r['rois']) # идентификация объекта
+    match_template(image, foundedObjectImage, 5, 100)
+
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
     #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
@@ -72,11 +74,15 @@ def ImageMaskCNNPipeline(filename):
     return r['rois']
 
 
-def extractObjectsFromR(image, boxes):
+def extractObjectsFromR(image, boxes, saveImage=False):
+    objects=[]
     for i in boxes:
         y1, x1, y2, x2 = i 
-        cropped = image[y1:y2, x1:x2] 
-        cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{i}.jpg", cropped )
+        cropped = image[y1:y2, x1:x2] # вырежет все объекты в отдельные изображения
+        objects.append(cropped)
+        if (saveImage):
+            cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{i}.jpg", cropped )
+    return objects
 
 
 def getCenterOfDownOfRectangle(boxes): # задан левый нижний и правый верхний угол
@@ -169,8 +175,22 @@ def createHeatMap(image, filename):
 
 
 def getConcetration(highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
+
+
+
     return foundedObjects # массив координат всех объектов в кадре
 
 
-
+    def isLittleInBig(bigRect, minRect):
+        bigLUy, bigLUx, bigRDy, bigRDx = bigRect
+        minLUy, minLUx, minRDy, minRDx = minRect
+        if (bigLUy < minLUy):
+            minLUy = bigLUy
+        if (bigRDy < minDRy):
+            minRDy = bigRDy
+        if (bigLUx < minLUx):
+            minLUx = bigLUx
+        if (bigRDx < minRDx):
+            minRDx = bigRDx
+        return False
 

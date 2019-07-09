@@ -5,8 +5,8 @@ import itertools
 
 def match_template(imagename, templatename, threshold, cutoff):
 	
-    img = cv2.imread(imagename)
-    template = cv2.imread(templatename)
+    #img = cv2.imread(imagename)
+    #template = cv2.imread(templatename)
 
     [kpi, di] = detect_keypoints(imagename, threshold)
     [kpt, dt] = detect_keypoints(templatename, threshold)
