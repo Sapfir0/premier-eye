@@ -20,21 +20,15 @@ def main():
     # после обработки добавить файл к массиву отработанных файлов
     # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     last_date_rendered_frame = datetime.datetime(1970, 1, 1)
-    counter = 1
-    processedFrames = []; notProcessedFrames = []
+    processedFrames = []
     while True:
-        if (counter):
-            for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
-                notProcessedFrames.append(filename) # Добавим все изображения к необработанным, если программа только запущена(потом можно брать из файла эти значения)
-            counter = 0
-
         for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
             currentImage= f"{cfg.IMAGE_DIR}/{filename}"
             currentDir = f"{os.getcwd()}/{cfg.IMAGE_DIR}"
 
-            print("Ожидаю")
             if filename in processedFrames:
                 if (processedFrames == os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR))):
+                    print("Ожидаю")
                     time.sleep(2.5)
                 continue
 
@@ -48,8 +42,8 @@ def main():
             data, numberOfCam = dh.parseFilename(filename)
             centerDown = mask.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
             
+
             processedFrames.append(filename)
-            #last_date_rendered_frame = dh.parseFilename(filename)[0]
     print("It's all")
 
 if __name__ == "__main__":
