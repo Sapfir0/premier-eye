@@ -1,4 +1,5 @@
 import os
+from os.path import join
 import wget
 import mrcnn.utils
 import colorama
@@ -7,39 +8,39 @@ from colorama import Fore, Back, Style  # для цветного консльн
 colorama.init(autoreset=True)
 
 APP_PATH = os.path.abspath(os.path.dirname(__file__))
-DATA_PATH = os.path.join(APP_PATH, "data")
-DATABASE = "sqlite:///" + os.path.join(DATA_PATH, 'data.db')
+DATA_PATH = join(APP_PATH, "data")
+DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
 
 OUTPUT_DIR = "output"
-IMAGE_DIR = "data/video0" 
-TABLE_NAME = "output/datas.csv" # табличка
+IMAGE_DIR = join(DATA_PATH, "video0") 
+TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
 
 #Mask cnn
-DATASET_DIR = "data/mask_rcnn_coco.h5" #относительный путь от этого файла
+DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный путь от этого файла
 LOGS_DIR = "logs"
 DATAFILE = "text.txt"
-OUTPUT_DIR_MASKCNN  = 'output/maskCNNout/' # АЛГОРИТМ 2
+OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
 DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
-DETECTION_MIN_CONFIDENCE = 0.6  # минимальный процент обнаружения и обводки
+DETECTION_MIN_CONFIDENCE = 0.2  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
 
 
 ##### unused
 #video
-VIDEO_SOURCE = "data/3.mp4"
-OUTPUT_VIDEO = 'output/ITSWORK.avi'
+VIDEO_SOURCE = join(DATA_PATH, "3.mp4")
+OUTPUT_VIDEO = join(OUTPUT_DIR, 'ITSWORK.avi')
 
 #imageAI
-DATASET_DIR_IMAGE_AI = "data/resnet50_coco_best_v2.0.1.h5"
-OUTPUT_DIR_IMAGE_AI = 'output/imageAIout/'  # АЛГОРИТМ 1
+DATASET_DIR_IMAGE_AI = join(DATA_PATH, "data/resnet50_coco_best_v2.0.1.h5")
+OUTPUT_DIR_IMAGE_AI = join(OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
 DETECTION_SPEED = "normal" # скорость обхода каждого кадра
-MINIMUM_PERCENTAGE_PROBABILITY =30 # минимальный процент обнаружения и обводки
+MINIMUM_PERCENTAGE_PROBABILITY = 30 # минимальный процент обнаружения и обводки
 
 # юзабилити функции
 
 
-must_exist_dirs = [IMAGE_DIR, OUTPUT_DIR_MASKCNN, OUTPUT_DIR_IMAGE_AI, OUTPUT_DIR, DATA_DIR]
+must_exist_dirs = [IMAGE_DIR, OUTPUT_DIR_MASKCNN, OUTPUT_DIR_IMAGE_AI, OUTPUT_DIR, DATA_PATH]
 
 for i in must_exist_dirs:
     if not os.path.exists(i):

@@ -14,7 +14,22 @@ from colorama import Fore
 
 import settings as cfg
 
-CLASS_NAMES = ['BG',"person", "bicycle", "car", "motorcycle", "bus", "truck"] # пока не придумал как делать поиск только по этим
+
+CLASS_NAMES = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
+               'bus', 'train', 'truck', 'boat', 'traffic light',
+               'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird',
+               'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear',
+               'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie',
+               'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
+               'kite', 'baseball bat', 'baseball glove', 'skateboard',
+               'surfboard', 'tennis racket', 'bottle', 'wine glass', 'cup',
+               'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
+               'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza',
+               'donut', 'cake', 'chair', 'couch', 'potted plant', 'bed',
+               'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote',
+               'keyboard', 'cell phone', 'microwave', 'oven', 'toaster',
+               'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors',
+               'teddy bear', 'hair drier', 'toothbrush']
 
 # generate random (but visually distinct) colors for each class label
 hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
@@ -23,15 +38,17 @@ COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
 random.seed(42)
 random.shuffle(COLORS)
 
+
 def ImageMaskCNNPipeline(filename):
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
   
-    cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, image ) #IMAGE, а не masked image
+    cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}" , image ) #IMAGE, а не masked image
     
     if (cfg.SAVE_COLORMAP):
         createHeatMap(image, filename)
+
     return r['rois']
 
 

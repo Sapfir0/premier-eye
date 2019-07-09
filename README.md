@@ -9,7 +9,7 @@
 
 Забрать себе удаленный
 
-    docker run -it sapfir0/premier-eye:cv
+    docker run --mount source=~/premier-eye/data/video,target=/premier-eye/data/video -it sapfir0/premier-eye:cv 
 
 
 [История коммитов и старый репозиторий](https://github.com/Sapfir0/videoscan)
