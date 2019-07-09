@@ -54,6 +54,8 @@ RUN git clone https://github.com/opencv/opencv.git \
 COPY . /premier-app 
 #папку создаст сам докер
 WORKDIR /premier-app 
+#RUN mkdir data && wget -q https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5 
+
 ENTRYPOINT ["python3"]
 
 CMD ["mainImage.py" ]

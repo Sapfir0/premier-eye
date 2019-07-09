@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy import func
 import settings as cfg
 
+
 engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=True)
 db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
