@@ -10,9 +10,8 @@ import settings as cfg
 import neural_network.maskCNN as mask
 import dateHelper as dh
 import db.fileHelper as fileHelper
-
-
 import datetime, time
+
 def main():
     # послдений обработанный файл = "" as ПОФ
     # for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
