@@ -30,12 +30,29 @@ CLASS_NAMES = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
                'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors',
                'teddy bear', 'hair drier', 'toothbrush']
 
+
+# Configuration that will be used by the Mask-RCNN library
+class MaskRCNNConfig(mrcnn.config.Config):
+    NAME = "coco_pretrained_model_config"
+    GPU_COUNT = 1
+    IMAGES_PER_GPU = 1
+    DETECTION_MIN_CONFIDENCE = cfg.DETECTION_MIN_CONFIDENCE # минимальный процент отображения прямоугольника
+    NUM_CLASSES = 81
+    IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
+    IMAGE_MAX_DIM = 768
+    DETECTION_NMS_THRESHOLD = cfg.DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
+
 # generate random (but visually distinct) colors for each class label
 hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
 
 COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
 random.seed(42)
 random.shuffle(COLORS)
+
+model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=MaskRCNNConfig())
+model.load_weights(cfg.DATASET_DIR, by_name=True)
+
+objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
 
 #from neural_network.libs.siftmatch import match_template
 def ImageMaskCNNPipeline(filename):
@@ -61,23 +78,6 @@ def extractObjectsFromR(image, boxes):
         cropped = image[y1:y2, x1:x2] 
         cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{i}.jpg", cropped )
 
-
-# Configuration that will be used by the Mask-RCNN library
-class MaskRCNNConfig(mrcnn.config.Config):
-    NAME = "coco_pretrained_model_config"
-    GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
-    DETECTION_MIN_CONFIDENCE = cfg.DETECTION_MIN_CONFIDENCE # минимальный процент отображения прямоугольника
-    NUM_CLASSES = 81
-    IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
-    IMAGE_MAX_DIM = 768
-    DETECTION_NMS_THRESHOLD = cfg.DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
-
-
-model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=MaskRCNNConfig())
-model.load_weights(cfg.DATASET_DIR, by_name=True)
-
-objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
 
 def getCenterOfDownOfRectangle(boxes): # задан левый нижний и правый верхний угол
     allCenters = []
@@ -162,7 +162,7 @@ def saveImage(imagePtr, filename): #plot image saving
 
 
 def createHeatMap(image, filename):
-    im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # заменить тут первый аргумент, пока это рабоет как фильтр
+    im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # пока это рабоет как фильтр
     name, jpg = filename.split(".")
     filename = f"{name}Colorname.{jpg}"
     cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", im_color )

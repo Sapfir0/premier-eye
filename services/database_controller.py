@@ -17,9 +17,9 @@ Base.query = session.query_property()
 class Objects(Base):
     __tablename__ =  "objects" 
 
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, unique=True)
     numberOfCam = Column(Integer)
-    fixationDatetime = Column( DateTime ) # unque добавить
+    fixationDatetime = Column( DateTime, unique=True ) # unque добавить
     LUx = Column(Integer) # Left Up
     LUy= Column(Integer)
     RDx= Column(Integer) # Right Down
@@ -45,7 +45,7 @@ class Objects(Base):
         session.commit()
 
     def __repr__(self):
-        return "<Object('%d','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (self.numberOfCam, self.fixationDatetime, self.LUx, self.LUy, self.RDx, self.RDy, self.CDx, self.CDy)
+        return "<Object('%s','%s', '[%s', '%s]','[%s', '%s]','[%s', '%s]')>" % (self.numberOfCam, self.fixationDatetime, self.LUx, self.LUy, self.RDx, self.RDy, self.CDx, self.CDy)
 
 Objects.init_db()
 
