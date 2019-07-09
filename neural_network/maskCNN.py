@@ -43,7 +43,6 @@ def ImageMaskCNNPipeline(filename):
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
 
     #extractObjectsFromR(image, r['rois'])
-
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
     #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
@@ -86,7 +85,6 @@ def getCenterOfDownOfRectangle(boxes): # задан левый нижний и �
         y1, x1, y2, x2 = boxes[i]
         midleDownPoint = [ (x1+x2)/2 , y1]
         allCenters.append(midleDownPoint)
-    print(allCenters)
     return allCenters
 
 

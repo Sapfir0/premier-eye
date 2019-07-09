@@ -32,7 +32,7 @@ VIDEO_SOURCE = join(DATA_PATH, "3.mp4")
 OUTPUT_VIDEO = join(OUTPUT_DIR, 'ITSWORK.avi')
 
 #imageAI
-DATASET_DIR_IMAGE_AI = join(DATA_PATH, "data/resnet50_coco_best_v2.0.1.h5")
+DATASET_DIR_IMAGE_AI = join(DATA_PATH, "resnet50_coco_best_v2.0.1.h5")
 OUTPUT_DIR_IMAGE_AI = join(OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
 DETECTION_SPEED = "normal" # скорость обхода каждого кадра
 MINIMUM_PERCENTAGE_PROBABILITY = 30 # минимальный процент обнаружения и обводки

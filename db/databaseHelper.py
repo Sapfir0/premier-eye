@@ -8,10 +8,10 @@ import settings as cfg
 import sqlalchemy as sql
 
 engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=True)
-db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
+session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine)) # хм сложная строчка
 
 Base = declarative_base() 
-Base.query = db_session.query_property()
+Base.query = session.query_property()
 
 
 class Objects(Base):
@@ -42,7 +42,10 @@ class Objects(Base):
 
     def init_db():
         Base.metadata.create_all(bind=engine)
-        db_session.commit()
+        session.commit()
 
     def __repr__(self):
         return "<Object('%d','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (self.numberOfCam, self.fixationDatetime, self.LUx, self.LUy, self.RDx, self.RDy, self.CDx, self.CDy)
+
+Objects.init_db()
+
