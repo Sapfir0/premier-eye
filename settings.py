@@ -20,7 +20,7 @@ LOGS_DIR = "logs"
 DATAFILE = "text.txt"
 OUTPUT_DIR_MASKCNN  = 'output/maskCNNout/' # АЛГОРИТМ 2
 DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
-DETECTION_MIN_CONFIDENCE = 0.6  # минимальный процент обнаружения и обводки
+DETECTION_MIN_CONFIDENCE = 0.2  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
 
@@ -39,7 +39,7 @@ MINIMUM_PERCENTAGE_PROBABILITY =30 # минимальный процент об�
 # юзабилити функции
 
 
-must_exist_dirs = [IMAGE_DIR, OUTPUT_DIR_MASKCNN, OUTPUT_DIR_IMAGE_AI, OUTPUT_DIR, DATA_DIR]
+must_exist_dirs = [IMAGE_DIR, OUTPUT_DIR_MASKCNN, OUTPUT_DIR_IMAGE_AI, OUTPUT_DIR, DATA_PATH]
 
 for i in must_exist_dirs:
     if not os.path.exists(i):

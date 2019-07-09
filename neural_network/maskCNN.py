@@ -14,9 +14,22 @@ from colorama import Fore
 
 import settings as cfg
 
-import copy
 
-CLASS_NAMES = ['BG',"person", "bicycle", "car", "motorcycle", "bus", "truck"] # пока не придумал как делать поиск только по этим
+CLASS_NAMES = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
+               'bus', 'train', 'truck', 'boat', 'traffic light',
+               'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird',
+               'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear',
+               'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie',
+               'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
+               'kite', 'baseball bat', 'baseball glove', 'skateboard',
+               'surfboard', 'tennis racket', 'bottle', 'wine glass', 'cup',
+               'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple',
+               'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza',
+               'donut', 'cake', 'chair', 'couch', 'potted plant', 'bed',
+               'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote',
+               'keyboard', 'cell phone', 'microwave', 'oven', 'toaster',
+               'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors',
+               'teddy bear', 'hair drier', 'toothbrush']
 
 # generate random (but visually distinct) colors for each class label
 hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
@@ -26,36 +39,16 @@ random.seed(42)
 random.shuffle(COLORS)
 
 
-first_iteration_indicator = 1
-fgbg = cv2.bgsegm.createBackgroundSubtractorMOG()
 def ImageMaskCNNPipeline(filename):
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
   
-
-    if (first_iteration_indicator):
-        image = copy.deepcopy(image)
-        first_iteration_indicator = 0
-        gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-        height, width = gray.shape[:2]
-        accum_image = np.zeros((height, width), np.uint8)
-    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)  # convert to grayscale
-    fgmask = fgbg.apply(gray)  # remove the background
-    ret, th1 = cv2.threshold(fgmask, 2, 2, cv2.THRESH_BINARY)
-    cv2.imwrite(filename+'diff-th1.jpg', th1)
-    accum_image = cv2.add(accum_image, th1)
-    cv2.imwrite(filename+'diff-accum.jpg', accum_image)
-
-    color_image = im_color = cv2.applyColorMap(accum_image, cv2.COLORMAP_HOT)
-    result_overlay = cv2.addWeighted(first_frame, 0.7, color_image, 0.7, 0)
-    cv2.imwrite(filename+'diff-overlay.jpg', result_overlay)
-
-
     cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}" , image ) #IMAGE, а не masked image
     
     if (cfg.SAVE_COLORMAP):
         createHeatMap(image, filename)
+
     return r['rois']
 
 
