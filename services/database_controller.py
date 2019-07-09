@@ -7,7 +7,7 @@ from sqlalchemy import func
 import settings as cfg
 import sqlalchemy as sql
 
-engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=True)
+engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=False)
 session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine)) # хм сложная строчка
 
 Base = declarative_base() 
@@ -19,7 +19,7 @@ class Objects(Base):
 
     id = Column(Integer, primary_key=True, unique=True)
     numberOfCam = Column(Integer)
-    fixationDatetime = Column( DateTime, unique=True ) # unque добавить
+    fixationDatetime = Column( DateTime ) # unque добавить
     LUx = Column(Integer) # Left Up
     LUy= Column(Integer)
     RDx= Column(Integer) # Right Down
@@ -31,7 +31,7 @@ class Objects(Base):
 
     def __init__(self, numberOfCam, fixationDatetime, LUx, LUy, RDx, RDy, CDx, CDy):
         self.numberOfCam = numberOfCam
-        self.fixationDatetime, 
+        self.fixationDatetime = fixationDatetime
         self.LUx = LUx
         self.LUy = LUy
         self.RDx = RDx
@@ -45,7 +45,14 @@ class Objects(Base):
         session.commit()
 
     def __repr__(self):
-        return "<Object('%s','%s', '[%s', '%s]','[%s', '%s]','[%s', '%s]')>" % (self.numberOfCam, self.fixationDatetime, self.LUx, self.LUy, self.RDx, self.RDy, self.CDx, self.CDy)
+        return "<Object('%s','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (self.numberOfCam, self.fixationDatetime, self.LUx, self.LUy, self.RDx, self.RDy, self.CDx, self.CDy)
+
+    def checkQuery():
+        for i in session.query(Objects):
+            print(i) 
+
+
+
 
 Objects.init_db()
 

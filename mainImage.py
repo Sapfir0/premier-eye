@@ -41,17 +41,16 @@ def main():
             #DB
             data, numberOfCam = dh.parseFilename(filename)
             centerDown = mask.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-            print(type(data))
+            
             for i in range(0, len(rectCoordinates)): # для каждого объекта, найденного на кадре
                 LUy, LUx, RDy, RDx = rectCoordinates[i]
                 CDx, CDy = centerDown[i]
-                objN = db.Objects(numberOfCam, data, LUx, LUy, RDx, RDy, CDx, CDy)
+                objN = db.Objects(numberOfCam, data, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy))
                 db.session.add(objN)
+
             db.session.commit()
             db.session.flush() # можно один раз добавить 
             
-            for i in db.session.query(db.Objects):
-                print("Печатаю i", i.fixationTime, i.numberOfCam, i.RDx) 
 
             processedFrames.append(filename)
 
