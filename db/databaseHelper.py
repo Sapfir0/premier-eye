@@ -13,9 +13,12 @@ db_session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind
 Base = declarative_base() 
 Base.query = db_session.query_property()
 
+
 class Objects(Base):
-    __tablename__ =  "objects"
+    __tablename__ =  "objects" 
+
     id = Column(Integer, primary_key=True)
+    numberOfCam = Column(Integer)
     fixationDatetime = Column( DateTime ) # unque добавить
     LUx = Column(Integer) # Left Up
     LUy= Column(Integer)
@@ -26,15 +29,20 @@ class Objects(Base):
     #Column('GPS', Integer,),
     #Column('objectId', Integer,)
 
-    def __init__(self, name, fullname, password):
-        self.name = name
-        self.fullname = fullname
-        self.password = password
+    def __init__(self, numberOfCam, fixationDatetime, LUx, LUy, RDx, RDy, CDx, CDy):
+        self.numberOfCam = numberOfCam
+        self.fixationDatetime, 
+        self.LUx = LUx
+        self.LUy = LUy
+        self.RDx = RDx
+        self.RDy = RDy
+        self.CDx = CDx
+        self.CDy = CDy
+
 
     def init_db():
         Base.metadata.create_all(bind=engine)
-        #metadata.create_all(engine)
         db_session.commit()
 
     def __repr__(self):
-        return "<User('%s','%s', '%s')>" % (self.name, self.fullname, self.password)
+        return "<Object('%d','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (self.numberOfCam, self.fixationDatetime, self.LUx, self.LUy, self.RDx, self.RDy, self.CDx, self.CDy)
