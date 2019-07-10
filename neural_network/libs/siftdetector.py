@@ -17,7 +17,7 @@ def detect_keypoints(imagename, threshold):
     # SIFT Detector 
     #--------------
      
-    #original = ndimage.imread(imagename, flatten=True)
+    original = ndimage.imread(imagename, flatten=True)
 
     # SIFT Parameters
     s = 3

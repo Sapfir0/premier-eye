@@ -2,10 +2,13 @@
 
 [Docker proj](https://cloud.docker.com/u/sapfir0/repository/docker/sapfir0/premier-eye)
 
-Забрать себе удаленный
+Запустить докер образ с примонтированной папкой
 
     docker run --mount source=~/premier-eye/data/video,target=/premier-eye/data/video -it sapfir0/premier-eye:cv 
 
+Запустить тесты алгоритмов
+
+    python3 -m unittest tests/utest.py 
 
 [История коммитов и старый репозиторий](https://github.com/Sapfir0/videoscan)
 
