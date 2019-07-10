@@ -18,16 +18,33 @@ TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
 #Mask cnn
 DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный путь от этого файла
 LOGS_DIR = "logs"
+CLASSES_FILE = join(DATA_PATH, "class_names.txt") # если его нет, то скачать1
+
 DATAFILE = "text.txt"
 OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
 DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
 DETECTION_MIN_CONFIDENCE = 0.5  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
+# Mask cnn advanced
+# Configuration that will be used by the Mask-RCNN library
+import mrcnn.config
+
+class MaskRCNNConfig(mrcnn.config.Config):
+    NAME = "coco_pretrained_model_config"
+    GPU_COUNT = 1
+    IMAGES_PER_GPU = 1
+    DETECTION_MIN_CONFIDENCE = DETECTION_MIN_CONFIDENCE # минимальный процент отображения прямоугольника
+    NUM_CLASSES = 81
+    IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
+    IMAGE_MAX_DIM = 768
+    DETECTION_NMS_THRESHOLD = DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
+
+
 # Алгоритм сравнения
 MIN_MATCH_COUNT = 50 # меньше этого числа совпадений, будем считать что объекты разные
 FLANN_INDEX_KDTREE = 0 # алгоритм
-cencitivity = 0.7 # не особо влияет на что-то 
+cencitivity = 0.7 # не особо влияет на что-то
 
 
 
@@ -45,6 +62,10 @@ MINIMUM_PERCENTAGE_PROBABILITY = 30 # минимальный процент об
 
 # юзабилити функции
 
+def downloadAndMove(downloadLink, destinationDir):
+    file = wget.download(downloadLink) 
+    os.rename(join(os.getcwd(), file), destinationDir)
+
 
 must_exist_dirs = [IMAGE_DIR, OUTPUT_DIR_MASKCNN, OUTPUT_DIR_IMAGE_AI, OUTPUT_DIR, DATA_PATH]
 
@@ -54,11 +75,16 @@ for i in must_exist_dirs:
         os.makedirs(i)
 
 if not os.path.isfile(DATASET_DIR_IMAGE_AI):
-    print(Fore.RED + f"{DATASET_DIR_IMAGE_AI} isn't exist. Image AI alhorithm isn't available")
+    print(Fore.RED + f"{DATASET_DIR_IMAGE_AI} isn't exist. Image AI algorithm isn't available")
 
 if not os.path.isfile(DATASET_DIR):
-    print(Fore.YELLOW + f"{DATASET_DIR} isn't exist. Downloading..")
+    print(Fore.YELLOW + f"{DATASET_DIR} isn't exist. Downloading...")
     mrcnn.utils.download_trained_weights(DATASET_DIR) #стоит это дополнительно скачивать в докере
+
+if not os.path.isfile(CLASSES_FILE):
+    print(Fore.YELLOW + f"{CLASSES_FILE} isn't exist. Downloading...")
+    link = "https://www.dropbox.com/s/oml72u381vtbaqe/class_names.txt"
+    downloadAndMove(link, CLASSES_FILE)
 
 
 if not os.listdir(IMAGE_DIR):
@@ -69,6 +95,6 @@ if not os.listdir(IMAGE_DIR):
             "https://pp.userapi.com/c852224/v852224214/1594d4/XKUBv7r4xAY.jpg"]
     realNames = ["3_20190702082219.jpg", "3_20190702082221.jpg", "3_20190702082223.jpg"]
     for i in range(0, len(samples)): # мы не будет исользовать in, мы же не любим ждать
-        image = wget.download(samples[i])
-        
-        os.rename(join(os.getcwd(), image), join(IMAGE_DIR, realNames[i]))
+        downloadAndMove(samples[i], join(IMAGE_DIR, realNames[i]))
+
+

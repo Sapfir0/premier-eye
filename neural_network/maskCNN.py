@@ -3,7 +3,6 @@ from os.path import join
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
-import mrcnn.config
 import mrcnn.visualize
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
@@ -14,43 +13,30 @@ import random
 from colorama import Fore
 
 import settings as cfg
-import neural_network.FeatureMatching as sift
+import neural_network.modules.feature_matching as sift
+from neural_network.modules.heatmap import Heatmap
+from neural_network.modules.decart import DecartCoordinates
 
 class Mask():
-    CLASS_NAMES = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
-                'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear',
-                'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
-                'kite', 'baseball bat', 'baseball glove', 'skateboard', 'surfboard', 'tennis racket', 'bottle', 'wine glass', 'cup',
-                'fork', 'knife', 'spoon', 'bowl', 'banana', 'apple', 'sandwich', 'orange', 'broccoli', 'carrot', 'hot dog', 'pizza',
-                'donut', 'cake', 'chair', 'couch', 'potted plant', 'bed', 'dining table', 'toilet', 'tv', 'laptop', 'mouse', 'remote',
-                'keyboard', 'cell phone', 'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors',
-                'teddy bear', 'hair drier', 'toothbrush']
-    imagesFromPreviousFrame = None
-    model = None
+    CLASS_NAMES = None
     COLORS = None
-    # Configuration that will be used by the Mask-RCNN library
-    class MaskRCNNConfig(mrcnn.config.Config):
-        NAME = "coco_pretrained_model_config"
-        GPU_COUNT = 1
-        IMAGES_PER_GPU = 1
-        DETECTION_MIN_CONFIDENCE = cfg.DETECTION_MIN_CONFIDENCE # минимальный процент отображения прямоугольника
-        NUM_CLASSES = 81
-        IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
-        IMAGE_MAX_DIM = 768
-        DETECTION_NMS_THRESHOLD = cfg.DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
-    
+    imagesFromPreviousFrame = None # объекты на предыщуем кадре
+    model = None
+    objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
+
     def __init__(self):
+        with open(cfg.CLASSES_FILE, 'rt') as file:
+            self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
+            
         # generate random (but visually distinct) colors for each class label
         hsv = [(i / len(self.CLASS_NAMES), 1, 1.0) for i in range(len(self.CLASS_NAMES))]
+
         self.COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
         random.seed(42)
         random.shuffle(self.COLORS)
 
-        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=self.MaskRCNNConfig())
+        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
-
-        objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
-
 
 
     def ImageMaskCNNPipeline(self, filename):
@@ -73,7 +59,8 @@ class Mask():
         cv2.imwrite(join(cfg.OUTPUT_DIR, filename), image ) #IMAGE, а не masked image
         
         if (cfg.SAVE_COLORMAP):
-            self.createHeatMap(image, filename)
+            heatmap = Heatmap()
+            heatmap.createHeatMap(image, filename)
 
         return r['rois']
 
@@ -93,7 +80,7 @@ class Mask():
         allCenters = []
         for i in range(boxes.shape[0]):
             y1, x1, y2, x2 = boxes[i]
-            midleDownPoint = [ (x1+x2)/2 , y1]
+            midleDownPoint = [ (x1+x2)/2, y1]
             allCenters.append(midleDownPoint)
         return allCenters
 
@@ -158,7 +145,7 @@ class Mask():
         return r, rgb_image, elapsed_time
 
 
-    def saveImageBy(self, imagePtr, filename): #plot image saving
+    def saveImageByPlot(self, imagePtr, filename): #plot image saving
         fig = plt.figure(frameon=False)
         ax = plt.Axes(fig, [0., 0., 1., 1.])
         ax.set_axis_off()
@@ -167,53 +154,14 @@ class Mask():
         ax.imshow(imagePtr)
         fig.savefig(filename)
 
-
-    def createHeatMap(self, image, filename):
-        im_color = cv2.applyColorMap(image, cv2.COLORMAP_JET) # пока это рабоет как фильтр
-        name, jpg = filename.split(".")
-        filename = f"{name}Colorname.{jpg}"
-        cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", im_color )
-
-
     def getConcetration(self, highlightedRect, objectsRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
+        decart = DecartCoordinates()
+        foundedObjects = []
         for obj in objectsRect:
-            if ( isPartiallyInside(highlightedRect, obj) ):
+            if ( decart.hasOnePointInside(highlightedRect, obj) ):
                 print("Объект попадает в кадр")
-
+                foundedObjects.append(obj)
 
         return foundedObjects # массив координат всех объектов в кадре
 
-
-    def isCompletelyInside(self, bigRect, minRect):
-        y1, x1, y2, x2 = bigRect
-        minX = x1; minY = y1 # вроде верно
-        maxX = x2; maxY = y2
-        
-        y1, x1, y2, x2 = minRect
-
-        a = (y1 >= minY and y1 <= maxY)
-        b = (x1 >= minX and x1 <= maxX)
-        c = (y2 >= minY and y2 <= maxY)
-        d = (x2 >= minX and x2 <= maxX)
-
-        if (a and b and c and d):
-            return True # объект полностью внутри большого прямоугольника
-        return False
-
-
-    def isPartiallyInside(self, bigRect, minRect):
-        bigLUy, bigLUx, bigRDy, bigRDx = bigRect
-        minLUy, minLUx, minRDy, minRDx = minRect
-        full_square = (minLUy - minRDy) * (minRDx - minLUx) ## не уверен что правильно
-        # Не уверен в ифах
-        if (bigLUy < minLUy):
-            minLUy = bigLUy
-        if (bigRDy < minRDy):
-            minRDy = bigRDy
-        if (bigLUx > minLUx):
-            minLUx = bigLUx
-        if (bigRDx > minRDx):
-            minRDx = bigRDx
-        in_obj_square = (minLUy - minRDy) * (minRDx - minLUx)
-        return in_obj_square / full_square >= 0.5
-
+   
