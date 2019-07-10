@@ -48,26 +48,16 @@ class Mask():
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False) # идентификация объекта
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
 
-        foundedDifferentObjects = []; objectId = 0
-        if (self.imagesFromPreviousFrame): #дейcтвие тут начинается после обработки первого кадра
-            for previousObjects in self.imagesFromPreviousFrame:
-                for currentObjects in imagesFromCurrentFrame: 
-                    if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
-                        #foundedDifferentObjects.append(currentObjects) # все, матрицы можем выкидывать
-                        #objectId = len(foundedDifferentObjects) 
-                        objectId += 1
-                        # img1 = str(random.randint(1,50)) + filename; img2 = str(random.randint(1,50)) + filename ;
-                        # cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1), previousObjects )
-                        # cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img2), currentObjects )
-        #тут уже мы можем формировать все поля объекта
-        for i in range(0, objectId):
-            object = {
-                "objectId": objectId,
-                "type":  r['class_ids'],
-                "coordinates": r['rois']
-            }
-            print(object)
+        #start_time= time.time()
+        foundedDifferentObjects = None
 
+        if (self.imagesFromPreviousFrame): #дейcтвие тут начинается после обработки первого кадра
+            foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
+            print(foundedDifferentObjects)
+            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
+        #elapsed_time = time.time() - start_time
+        #print(Fore.LIGHTCYAN_EX + f"--- {elapsed_time} seconds by unique analyse ---" )
+    
         countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
         #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
@@ -81,6 +71,19 @@ class Mask():
 
         return r['rois']
 
+    def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r):
+        foundedDifferentObjects = []; objectId = 0
+        for previousObjects in imagesFromPreviousFrame:
+            for currentObjects in imagesFromCurrentFrame: 
+                if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
+                    object = {
+                        "id": objectId,
+                        "type":  r['class_ids'][objectId],
+                        "coordinates": r['rois'][objectId]
+                    }
+                    objectId += 1
+                    foundedDifferentObjects.append(object) # все, матрицы можем выкидывать
+        return foundedDifferentObjects
 
     def extractObjectsFromR(self, image, boxes, saveImage=False):
         objects=[]
@@ -102,7 +105,7 @@ class Mask():
         return allCenters
 
 
-    def visualize_detections(self, image, masks, boxes, class_ids, scores):
+    def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
         
         # Create a new solid-black image the same size as the original image
         masked_image = np.zeros(image.shape)
@@ -129,14 +132,25 @@ class Mask():
 
             classID = class_ids[i]
     
-
             if(classID > len(self.CLASS_NAMES)):
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
-                
+
+            print("итератор: ", i)
+            print("обджектАйди: ", objectId)
+            id = None
+            if (i <= len(objectId)):
+                if (objectId == "-"):
+                    id = objectId
+                else:
+                    id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
+                    print("Приравниваю к: ", id)
+            else:
+                id = "crit"                 
+            
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255] # ух круто
-            text = "{}: {:.3f}".format(label, scores[i])
+            text = "{}: {:.3f} {}".format(label, scores[i], id)
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1-20), font, 0.8, color, 2)        
@@ -158,7 +172,7 @@ class Mask():
         # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
         
         elapsed_time = time.time() - start_time
-        print(Fore.GREEN + f"--- {elapsed_time} seconds ---" )
+        print(Fore.GREEN + f"--- {elapsed_time} seconds by detect object with network ---" )
         return r, rgb_image, elapsed_time
 
 
