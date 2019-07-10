@@ -7,11 +7,12 @@ import numpy as np
 
 import settings as cfg
 #import neural_network.imageAi as imageAi
-from neural_network.maskCNN import mask
+from neural_network.maskCNN import Mask
 import dateHelper as dh
 import services.database_controller as db
 import services.file_controller as fileHelper
 import datetime, time
+from colorama import Fore
 
 def main():
     # послдений обработанный файл = "" as ПОФ
@@ -23,11 +24,11 @@ def main():
     processedFrames = []
     while True:
         for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
-            currentImage= f"{cfg.IMAGE_DIR}/{filename}"
-            currentDir = f"{os.getcwd()}/{cfg.IMAGE_DIR}"
+            currentImage = os.path.join(cfg.IMAGE_DIR, filename)
+            currentDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
             if filename in processedFrames:
-                if (processedFrames == os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR))):
+                if (processedFrames == os.listdir(currentDir)):
                     print("Ожидаю")
                     time.sleep(2.5)
                 continue # если файлы еще есть, то переходим к следующему
@@ -35,11 +36,11 @@ def main():
             print(f"Analyzing {currentImage}")
 
             #Mask CNN
-            rectCoordinates = mask.ImageMaskCNNPipeline(filename)
-            print(rectCoordinates)
+            neural_network = Mask()
+            rectCoordinates = neural_network.ImageMaskCNNPipeline(filename)
             #DB
             data, numberOfCam = dh.parseFilename(filename)
-            centerDown = mask.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
+            centerDown = neural_network.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
             
             for i in range(0, len(rectCoordinates)): # для каждого объекта, найденного на кадре
                 LUy, LUx, RDy, RDx = rectCoordinates[i]
@@ -48,11 +49,11 @@ def main():
                 db.session.add(objN)
 
             db.session.commit()
-            db.session.flush() # можно один раз добавить 
+            db.session.flush() # можно один раз добавить
             
             processedFrames.append(filename)
 
-    print("It's all")
+    print(Fore.GREEN + "It's all")
 
 if __name__ == "__main__":
     main()

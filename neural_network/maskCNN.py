@@ -16,7 +16,7 @@ from colorama import Fore
 import settings as cfg
 import neural_network.FeatureMatching as sift
 
-class mask():
+class Mask():
     CLASS_NAMES = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane', 'bus', 'train', 'truck', 'boat', 'traffic light',
                 'fire hydrant', 'stop sign', 'parking meter', 'bench', 'bird', 'cat', 'dog', 'horse', 'sheep', 'cow', 'elephant', 'bear',
                 'zebra', 'giraffe', 'backpack', 'umbrella', 'handbag', 'tie', 'suitcase', 'frisbee', 'skis', 'snowboard', 'sports ball',
@@ -26,7 +26,8 @@ class mask():
                 'keyboard', 'cell phone', 'microwave', 'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase', 'scissors',
                 'teddy bear', 'hair drier', 'toothbrush']
     imagesFromPreviousFrame = None
-   
+    model = None
+    COLORS = None
     # Configuration that will be used by the Mask-RCNN library
     class MaskRCNNConfig(mrcnn.config.Config):
         NAME = "coco_pretrained_model_config"
@@ -41,12 +42,12 @@ class mask():
     def __init__(self):
         # generate random (but visually distinct) colors for each class label
         hsv = [(i / len(self.CLASS_NAMES), 1, 1.0) for i in range(len(self.CLASS_NAMES))]
-        COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
+        self.COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
         random.seed(42)
-        random.shuffle(COLORS)
+        random.shuffle(self.COLORS)
 
-        model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=self.MaskRCNNConfig())
-        model.load_weights(cfg.DATASET_DIR, by_name=True)
+        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=self.MaskRCNNConfig())
+        self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
         objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
 
@@ -125,12 +126,12 @@ class mask():
             classID = class_ids[i]
     
 
-            if(classID > len(CLASS_NAMES)):
+            if(classID > len(self.CLASS_NAMES)):
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
                 
-            label = CLASS_NAMES[classID]
-            color = [int(c) for c in np.array(COLORS[classID]) * 255] # ух круто
+            label = self.CLASS_NAMES[classID]
+            color = [int(c) for c in np.array(self.COLORS[classID]) * 255] # ух круто
             text = "{}: {:.3f}".format(label, scores[i])
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
@@ -149,15 +150,15 @@ class mask():
     def detectByMaskCNN(self, image):
         rgb_image = image[:, :, ::-1]
         start_time= time.time()
-        r = model.detect([rgb_image], verbose=1)[0] #тут вся магия
+        r = self.model.detect([rgb_image], verbose=1)[0] #тут вся магия
         # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
         
         elapsed_time = time.time() - start_time
-        print(Fore.RED + f"--- {elapsed_time} seconds ---" )
+        print(Fore.GREEN + f"--- {elapsed_time} seconds ---" )
         return r, rgb_image, elapsed_time
 
 
-    def saveImageByPlot(self, imagePtr, filename): #plot image saving
+    def saveImageBy(self, imagePtr, filename): #plot image saving
         fig = plt.figure(frameon=False)
         ax = plt.Axes(fig, [0., 0., 1., 1.])
         ax.set_axis_off()
@@ -165,8 +166,6 @@ class mask():
 
         ax.imshow(imagePtr)
         fig.savefig(filename)
-
-        #cv2.imwrite(cfg.OUTPUT_DIR_MASKCNN + "/" + filename, imagePtr)
 
 
     def createHeatMap(self, image, filename):
