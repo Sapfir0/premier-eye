@@ -54,17 +54,24 @@ model.load_weights(cfg.DATASET_DIR, by_name=True)
 
 objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
 
-from neural_network.libs.siftmatch import match_template
+import neural_network.FeatureMatchingHomography as sift
+imagesFromPreviousFrame = None
+imagesFromCurrentFrame = None
 def ImageMaskCNNPipeline(filename):
+
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
     r, rgb_image, elapsed_time2 = detectByMaskCNN(image)
 
-    foundedObjectImage = extractObjectsFromR(image, r['rois'], saveImage=True) # идентификация объекта
+    imagesFromCurrentFrame = extractObjectsFromR(image, r['rois'], saveImage=False) # идентификация объекта
+    # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
+    for previousObjects in imagesFromPreviousFrame:
+        for currentObjects in imagesFromCurrentFrame:
+            sift.compareImages(previousObjects, currentObjects)    #дейcтвие тут начинается после обработки первого кадра
 
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
     #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
-
+    imagesFromPreviousFrame = imagesFromCurrentFrame
     cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", image ) #IMAGE, а не masked image
     
     if (cfg.SAVE_COLORMAP):

@@ -20,22 +20,22 @@ class Objects(Base):
     id = Column(Integer, primary_key=True, unique=True)
     numberOfCam = Column(Integer)
     fixationDatetime = Column( DateTime ) # unque добавить
-    LUx = Column(Integer) # Left Up
-    LUy= Column(Integer)
-    RDx= Column(Integer) # Right Down
-    RDy= Column(Integer)
+    LDx = Column(Integer) # Left Down
+    LDy= Column(Integer)
+    RUx= Column(Integer) # Right Up
+    RUy= Column(Integer)
     CDx= Column(Integer) # Center Down центр нижней стороны
     CDy= Column(Integer)
     #Column('GPS', Integer,),
     #Column('objectId', Integer,)
 
-    def __init__(self, numberOfCam, fixationDatetime, LUx, LUy, RDx, RDy, CDx, CDy):
+    def __init__(self, numberOfCam, fixationDatetime, LDx, LDy, RUx, RUy, CDx, CDy):
         self.numberOfCam = numberOfCam
         self.fixationDatetime = fixationDatetime
-        self.LUx = LUx
-        self.LUy = LUy
-        self.RDx = RDx
-        self.RDy = RDy
+        self.LDx = LDx
+        self.LDy = LDy
+        self.RUx = RUx
+        self.RUy = RUy
         self.CDx = CDx
         self.CDy = CDy
 
@@ -45,7 +45,7 @@ class Objects(Base):
         session.commit()
 
     def __repr__(self):
-        return "<Object('%s','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (self.numberOfCam, self.fixationDatetime, self.LUx, self.LUy, self.RDx, self.RDy, self.CDx, self.CDy)
+        return "<Object('%s','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (self.numberOfCam, self.fixationDatetime, self.LDx, self.LDy, self.RUx, self.RUy, self.CDx, self.CDy)
 
     def checkQuery():
         for i in session.query(Objects):
