@@ -21,10 +21,11 @@ LOGS_DIR = "logs"
 DATAFILE = "text.txt"
 OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
 DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
-DETECTION_MIN_CONFIDENCE = 0.2  # минимальный процент обнаружения и обводки
+DETECTION_MIN_CONFIDENCE = 0.5  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
 
+imagesFromPreviousFrame = None
 
 ##### unused
 #video
@@ -65,4 +66,4 @@ if not os.listdir(IMAGE_DIR):
     for i in range(0, len(samples)): # мы не будет исользовать in, мы же не любим ждать
         image = wget.download(samples[i])
         
-        os.rename(join(os.getcwd(), image), join(os.getcwd(), IMAGE_DIR, realNames[i]))
+        os.rename(join(os.getcwd(), image), join(IMAGE_DIR, realNames[i]))

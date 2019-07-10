@@ -13,6 +13,7 @@ import random
 from colorama import Fore
 
 import settings as cfg
+import neural_network.FeatureMatchingHomography as sift
 
 CLASS_NAMES = ['BG', 'person', 'bicycle', 'car', 'motorcycle', 'airplane',
                'bus', 'train', 'truck', 'boat', 'traffic light',
@@ -42,6 +43,8 @@ class MaskRCNNConfig(mrcnn.config.Config):
     IMAGE_MAX_DIM = 768
     DETECTION_NMS_THRESHOLD = cfg.DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
 
+#class mask():
+
 # generate random (but visually distinct) colors for each class label
 hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
 
@@ -54,9 +57,6 @@ model.load_weights(cfg.DATASET_DIR, by_name=True)
 
 objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
 
-import neural_network.FeatureMatchingHomography as sift
-imagesFromPreviousFrame = None
-imagesFromCurrentFrame = None
 def ImageMaskCNNPipeline(filename):
 
     image = cv2.imread(cfg.IMAGE_DIR + "/" + filename)
@@ -64,14 +64,15 @@ def ImageMaskCNNPipeline(filename):
 
     imagesFromCurrentFrame = extractObjectsFromR(image, r['rois'], saveImage=False) # идентификация объекта
     # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-    for previousObjects in imagesFromPreviousFrame:
-        for currentObjects in imagesFromCurrentFrame:
-            sift.compareImages(previousObjects, currentObjects)    #дейcтвие тут начинается после обработки первого кадра
+    if (cfg.imagesFromPreviousFrame):
+        for previousObjects in cfg.imagesFromPreviousFrame:
+            for currentObjects in imagesFromCurrentFrame:
+                sift.compareImages(previousObjects, currentObjects)    #дейcтвие тут начинается после обработки первого кадра
 
     countedObj, masked_image = visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
     #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
-    imagesFromPreviousFrame = imagesFromCurrentFrame
+    cfg.imagesFromPreviousFrame = imagesFromCurrentFrame
     cv2.imwrite(f"{cfg.OUTPUT_DIR_MASKCNN}/{filename}", image ) #IMAGE, а не masked image
     
     if (cfg.SAVE_COLORMAP):
@@ -149,7 +150,7 @@ def visualize_detections(image, masks, boxes, class_ids, scores):
     print(countedObj)
     return countedObj, rgb_image.astype(np.uint8)
 
-
+from colorama import Fore
 def detectByMaskCNN(image):
     rgb_image = image[:, :, ::-1]
     start_time= time.time()
@@ -157,7 +158,7 @@ def detectByMaskCNN(image):
     # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
     
     elapsed_time = time.time() - start_time
-    print(f"--- {elapsed_time} seconds ---" )
+    print(Fore.RED + f"--- {elapsed_time} seconds ---" )
     return r, rgb_image, elapsed_time
 
 
