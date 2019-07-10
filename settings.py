@@ -24,8 +24,13 @@ DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог пода
 DETECTION_MIN_CONFIDENCE = 0.5  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
+# Алгоритм сравнения
+MIN_MATCH_COUNT = 50 # меньше этого числа совпадений, будем считать что объекты разные
+FLANN_INDEX_KDTREE = 0 # алгоритм
+cencitivity = 0.7 # не особо влияет на что-то 
 
-imagesFromPreviousFrame = None
+
+
 
 ##### unused
 #video

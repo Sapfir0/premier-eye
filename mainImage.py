@@ -7,12 +7,11 @@ import numpy as np
 
 import settings as cfg
 #import neural_network.imageAi as imageAi
-import neural_network.maskCNN as mask
+from neural_network.maskCNN import mask
 import dateHelper as dh
 import services.database_controller as db
 import services.file_controller as fileHelper
 import datetime, time
-
 
 def main():
     # послдений обработанный файл = "" as ПОФ
