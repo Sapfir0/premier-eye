@@ -4,27 +4,37 @@ import unittest
 # import maskCNN
 
 class FunctionTest(unittest.TestCase):
-    objectsInFrame = [
+    objectsInFrame = [ # прогоняем все эти объекты для каждой ареи
         [ 299, 658, 539,  1173],
         [ 422,   0, 714,   331],
         [  68, 1032, 131, 1111]
     ]
-    highlightedArea = [
-        [0, 800, 0, 1200],
+    highlightedArea = [ 
+        [20, 20, 800, 1200],
         [0, 0, 0, 0],
-        [200, 400, 600, 1000]
+        [0, 0, 600, 1000],
+        [0, 0, 800, 1200]
     ]
-    expected_output = [True, False , True]
+    expected_output = [
+        [False, True , True],
+        [False, False, False],
+        [False, False, False], # полностью не входит ни один
+        [True, True, True]
+    ]
 
     def testCompletelyInside(self):
-        for i in range(0, len(self.objectsInFrame)):
-            res = isCompletelyInside(self.highlightedArea[i], self.objectsInFrame[i])
-            self.assertEqual(res, self.expected_output[i])
+        for area in range(0, len(self.highlightedArea)):
+            for obj in range(0, len(self.objectsInFrame)):
+                res = isCompletelyInside(self.highlightedArea[area], self.objectsInFrame[obj])
+                print("Ожидаемое: ", self.expected_output[area][obj], ", полученное: ", res)
+                self.assertEqual(res, self.expected_output[area][obj])
 
     def testPartiallyInside(self):
-        for i in range(0, len(self.objectsInFrame)):
-            res = isPartiallyInside(self.highlightedArea[i], self.objectsInFrame[i])
-            self.assertEqual(res, self.expected_output[i])
+        for area in range(0, len(self.highlightedArea)):
+            for obj in range(0, len(self.objectsInFrame)):
+                res = isPartiallyInside(self.highlightedArea[area], self.objectsInFrame[obj])
+                print("Ожидаемое: ", self.expected_output[area][obj], ", полученное: ", res)
+                self.assertEqual(res, self.expected_output[area][obj])
 
 if __name__ == '__main__':
     unittest.main()
