@@ -22,6 +22,7 @@ def main():
     # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
 
     processedFrames = []
+    neural_network = Mask()
     while True:
         for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
@@ -36,7 +37,6 @@ def main():
             print(f"Analyzing {currentImage}")
 
             #Mask CNN
-            neural_network = Mask()
             rectCoordinates = neural_network.ImageMaskCNNPipeline(filename)
             #DB
             data, numberOfCam = dh.parseFilename(filename)

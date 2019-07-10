@@ -16,6 +16,7 @@ import settings as cfg
 import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
 from neural_network.modules.decart import DecartCoordinates
+import services.database_controller as db
 
 class Mask():
     CLASS_NAMES = None
@@ -27,7 +28,7 @@ class Mask():
     def __init__(self):
         with open(cfg.CLASSES_FILE, 'rt') as file:
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
-            
+        print(self.CLASS_NAMES)
         # generate random (but visually distinct) colors for each class label
         hsv = [(i / len(self.CLASS_NAMES), 1, 1.0) for i in range(len(self.CLASS_NAMES))]
 
@@ -46,17 +47,33 @@ class Mask():
 
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False) # идентификация объекта
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        if (self.imagesFromPreviousFrame):
+
+        foundedDifferentObjects = []; objectId = 0
+        if (self.imagesFromPreviousFrame): #дейcтвие тут начинается после обработки первого кадра
             for previousObjects in self.imagesFromPreviousFrame:
-                for currentObjects in imagesFromCurrentFrame:
-                    sift.compareImages(previousObjects, currentObjects)    #дейcтвие тут начинается после обработки первого кадра
+                for currentObjects in imagesFromCurrentFrame: 
+                    if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
+                        #foundedDifferentObjects.append(currentObjects) # все, матрицы можем выкидывать
+                        #objectId = len(foundedDifferentObjects) 
+                        objectId += 1
+                        # img1 = str(random.randint(1,50)) + filename; img2 = str(random.randint(1,50)) + filename ;
+                        # cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1), previousObjects )
+                        # cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img2), currentObjects )
+        #тут уже мы можем формировать все поля объекта
+        for i in range(0, objectId):
+            object = {
+                "objectId": objectId,
+                "type":  r['class_ids'],
+                "coordinates": r['rois']
+            }
+            print(object)
 
         countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
         #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
         self.imagesFromPreviousFrame = imagesFromCurrentFrame
         
-        cv2.imwrite(join(cfg.OUTPUT_DIR, filename), image ) #IMAGE, а не masked image
+        cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, filename), image ) #IMAGE, а не masked image
         
         if (cfg.SAVE_COLORMAP):
             heatmap = Heatmap()

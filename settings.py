@@ -83,7 +83,7 @@ if not os.path.isfile(DATASET_DIR):
 
 if not os.path.isfile(CLASSES_FILE):
     print(Fore.YELLOW + f"{CLASSES_FILE} isn't exist. Downloading...")
-    link = "https://www.dropbox.com/s/oml72u381vtbaqe/class_names.txt"
+    link = "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
     downloadAndMove(link, CLASSES_FILE)
 
 
