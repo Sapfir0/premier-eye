@@ -47,6 +47,18 @@ class Objects(Base):
     def __repr__(self):
         return "<Object('%s','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (self.numberOfCam, self.fixationDatetime, self.LDx, self.LDy, self.RUx, self.RUy, self.CDx, self.CDy)
 
+        # object = {
+        #     "numberOfCam": self.numberOfCam,
+        #     "fixationDatetime": self.fixationDatetime,
+        #     "LDx": self.LDx, 
+        #     "LDy": self.LDy, 
+        #     "RUx": self.RUx, 
+        #     "RUy": self.RUy, 
+        #     "CDx": self.CDx, 
+        #     "CDy": self.CDy
+        # }
+        # return object 
+
     def checkQuery():
         for i in session.query(Objects):
             print(i) 

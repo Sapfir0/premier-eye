@@ -37,7 +37,13 @@ def main():
             print(f"Analyzing {currentImage}")
 
             #Mask CNN
+            start_time= time.time()
+
             rectCoordinates = neural_network.ImageMaskCNNPipeline(filename)
+
+            elapsed_time = time.time() - start_time
+            print(Fore.YELLOW + f"--- {elapsed_time} seconds by all image work ---" )
+
             #DB
             data, numberOfCam = dh.parseFilename(filename)
             centerDown = neural_network.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])

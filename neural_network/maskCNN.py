@@ -6,7 +6,8 @@ import cv2
 import mrcnn.visualize
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
-from pathlib import Path
+
+#from pathlib import Path
 import time
 import colorsys
 import random
@@ -17,6 +18,8 @@ import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
 from neural_network.modules.decart import DecartCoordinates
 import services.database_controller as db
+import sqlalchemy as sql
+import dateHelper as date
 
 class Mask():
     CLASS_NAMES = None
@@ -24,11 +27,13 @@ class Mask():
     imagesFromPreviousFrame = None # объекты на предыщуем кадре
     model = None
     objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
+    
+    counter=0
 
     def __init__(self):
         with open(cfg.CLASSES_FILE, 'rt') as file:
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
-        print(self.CLASS_NAMES)
+
         # generate random (but visually distinct) colors for each class label
         hsv = [(i / len(self.CLASS_NAMES), 1, 1.0) for i in range(len(self.CLASS_NAMES))]
 
@@ -39,26 +44,26 @@ class Mask():
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
-
     def ImageMaskCNNPipeline(self, filename):
-        
+### test start
+        datestart, n = date.parseFilename("3_20190702082436.jpg"); dateFinish, n = date.parseFilename("3_20190702085716.jpg")
+        print(datestart, dateFinish)
+        self.getConcetration([0,0,800,1200], datestart, dateFinish)
+##test end
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
         r, rgb_image, elapsed_time2 = self.detectByMaskCNN(image)
 
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False) # идентификация объекта
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
 
-        #start_time= time.time()
         foundedDifferentObjects = None
 
         if (self.imagesFromPreviousFrame): #дейcтвие тут начинается после обработки первого кадра
             foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
-            print(foundedDifferentObjects)
+            print(Fore.LIGHTMAGENTA_EX + "Пришедшие с предыдущего кадра объекты:", foundedDifferentObjects)
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
-        #elapsed_time = time.time() - start_time
-        #print(Fore.LIGHTCYAN_EX + f"--- {elapsed_time} seconds by unique analyse ---" )
-    
-        countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+        else:
+            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
         #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
         self.imagesFromPreviousFrame = imagesFromCurrentFrame
@@ -83,6 +88,10 @@ class Mask():
                     }
                     objectId += 1
                     foundedDifferentObjects.append(object) # все, матрицы можем выкидывать
+                    # if (self.imagesFromPreviousFrame):
+                    #     img1 = str(random.randint(1,50)) + ".jpg"; img2 = str(random.randint(1,50)) + ".jpg" ;
+                    #     cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1), previousObjects )
+                    #     self.counter=1
         return foundedDifferentObjects
 
     def extractObjectsFromR(self, image, boxes, saveImage=False):
@@ -116,11 +125,15 @@ class Mask():
         person_count = 0; cars_count = 0; truck_count = 0
         # Loop over each detected person
         for i in range(boxes.shape[0]):
-            if class_ids[i] == 1:
+            classID = class_ids[i]
+            if not classID in[1,3,4]:
+                continue 
+
+            if classID == 1:
                 person_count+=1
-            if class_ids[i] == 3:
+            if classID == 3:
                 cars_count+=1
-            if class_ids[i] == 4:
+            if classID == 4:
                 truck_count+=1
             
             # Get the bounding box of the current person
@@ -130,27 +143,26 @@ class Mask():
             color = (1.0, 1.0, 1.0) # White
             image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6) # рисование маски
 
-            classID = class_ids[i]
     
             if(classID > len(self.CLASS_NAMES)):
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 
-            print("итератор: ", i)
-            print("обджектАйди: ", objectId)
-            id = None
-            if (i <= len(objectId)):
-                if (objectId == "-"):
-                    id = objectId
-                else:
-                    id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-                    print("Приравниваю к: ", id)
-            else:
-                id = "crit"                 
+            # print("итератор: ", i)
+            # print("обджектАйди: ", objectId)
+            # id = None
+            # if (i <= len(objectId)):
+            #     if (objectId == "-"):
+            #         id = objectId
+            #     else:
+            #         id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
+            #         print("Приравниваю к: ", id)
+            # else:
+            #     id = "crit"                 
             
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255] # ух круто
-            text = "{}: {:.3f} {}".format(label, scores[i], id)
+            text = "{}: {:.3f}".format(label, scores[i])
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1-20), font, 0.8, color, 2)        
@@ -185,14 +197,17 @@ class Mask():
         ax.imshow(imagePtr)
         fig.savefig(filename)
 
-    def getConcetration(self, highlightedRect, objectsRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
+    def getConcetration(self, highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
         decart = DecartCoordinates()
         foundedObjects = []
-        for obj in objectsRect:
-            if ( decart.hasOnePointInside(highlightedRect, obj) ):
-                print("Объект попадает в кадр")
-                foundedObjects.append(obj)
+        # запрос к бд
+        for object in db.session.query(db.Objects).filter(sql.and_(db.Objects.fixationDatetime>=startTime, db.Objects.fixationDatetime<=endTime)).all():
+            minRect = [object.LDy, object.LDx, object.RUy, object.RUx]
+            if ( decart.hasOnePointInside(highlightedRect, minRect )):
+                foundedObjects.append(object)
+                #print(f"Объект попадает в кадр")
 
+        print(Fore.LIGHTBLACK_EX + " После меня будет то что нужно")
+        №print(foundedObjects)
         return foundedObjects # массив координат всех объектов в кадре
 
-   

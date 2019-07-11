@@ -22,11 +22,12 @@ def compareImages(img1, img2):
 
     # store all the good matches as per Lowe's ratio test.
     good = []
+    counter = 0
     for m,n in matches:
         if m.distance < cfg.cencitivity*n.distance:
-            good.append(m)
+            counter+=1
 
-    if len(good)>cfg.MIN_MATCH_COUNT:
+    if counter>cfg.MIN_MATCH_COUNT:
         #print("Enough matches are found - %d/%d" % (len(good),cfg.MIN_MATCH_COUNT) )
         return True
     else:

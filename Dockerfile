@@ -35,6 +35,8 @@ RUN  pip3 install ${PYTHON_PACKAGES}
 RUN git clone https://github.com/matterport/Mask_RCNN.git  \
     && cd Mask_RCNN \
     && pip3 install -r requirements.txt \
+    && python3 setup.py build  \
+    && python3 setup.py install \
     && rm -rf Mask_RCNN
 
 # соберем opencv лапками 

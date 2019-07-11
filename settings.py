@@ -20,10 +20,10 @@ DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный 
 LOGS_DIR = "logs"
 CLASSES_FILE = join(DATA_PATH, "class_names.txt") # если его нет, то скачать1
 
-DATAFILE = "text.txt"
+DATAFILE = "text.txt" # не актуально
 OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
 DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
-DETECTION_MIN_CONFIDENCE = 0.5  # минимальный процент обнаружения и обводки
+DETECTION_MIN_CONFIDENCE = 0.1  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
 # Mask cnn advanced
