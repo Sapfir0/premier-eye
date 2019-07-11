@@ -46,10 +46,10 @@ class Mask():
 
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
         r, rgb_image, elapsed_time2 = self.detectByMaskCNN(image)
-
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False) # идентификация объекта
+        #print(Fore.LIGHTBLACK_EX + "Длины ", len(r['rois']), " : ", len(imagesFromCurrentFrame) )
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-
+        #print(Fore.LIGHTBLACK_EX + "Столько объектов на текущем кадре ", len(imagesFromCurrentFrame))
         foundedDifferentObjects = None
 
         if (self.imagesFromPreviousFrame): #дейcтвие тут начинается после обработки первого кадра
@@ -70,8 +70,9 @@ class Mask():
 
         return r['rois']
 
-    def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r):
+    def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
         foundedDifferentObjects = []; objectId = 0
+        #print(Fore.RED + str(len(imagesFromCurrentFrame)) + ":" + str(len(imagesFromPreviousFrame)) )
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame: 
                 if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
@@ -83,10 +84,12 @@ class Mask():
                     objectId += 1
                     imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
                     foundedDifferentObjects.append(object) # все, матрицы можем выкидывать
-                    # if (self.imagesFromPreviousFrame):
-                    #     img1 = str(random.randint(1,50)) + ".jpg"; img2 = str(random.randint(1,50)) + ".jpg" ;
-                    #     cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1), previousObjects )
-                    #     self.counter=1
+                    if (saveUniqueObjects):
+                        img1 = str(objectId) + ".jpg"; img2 = str(objectId) +  "N" + ".jpg" 
+                        cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1), previousObjects )
+                        self.counter=1
+        #print(Fore.RED + str(len(imagesFromCurrentFrame)) + ":" + str(len(imagesFromPreviousFrame)) )
+
         return foundedDifferentObjects
 
     def extractObjectsFromR(self, image, boxes, saveImage=False):
@@ -144,21 +147,24 @@ class Mask():
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 
-            # print("итератор: ", i)
-            # print("обджектАйди: ", objectId)
-            # id = None
-            # if (i <= len(objectId)):
-            #     if (objectId == "-"):
-            #         id = objectId
-            #     else:
-            #         id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-            #         print("Приравниваю к: ", id)
-            # else:
-            #     id = "crit"                 
+
+            #print("итератор: ", i)
+            #print("обджектАйди: ", objectId)
+            id = None
+            if (i-1 <= len(objectId)):
+                if (objectId == "-"):
+                    id = objectId
+                else:
+                    if (not len(objectId) == 0):
+                        print(i, len(objectId))
+                        id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
+                        print("Приравниваю к: ", id)
+            else:
+                id = "crit"                 
             
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255] # ух круто
-            text = "{}: {:.3f}".format(label, scores[i])
+            text = "{}: {:.3f} {}".format(label, scores[i], id)
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1-20), font, 0.8, color, 2)        
@@ -170,7 +176,7 @@ class Mask():
             "truck": truck_count,
             "car": cars_count
         }
-        print(countedObj)
+        #print(countedObj)
         return countedObj, rgb_image.astype(np.uint8)
 
     def detectByMaskCNN(self, image):
