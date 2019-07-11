@@ -18,8 +18,6 @@ import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
 from neural_network.modules.decart import DecartCoordinates
 import services.database_controller as db
-import sqlalchemy as sql
-import dateHelper as date
 
 class Mask():
     CLASS_NAMES = None
@@ -45,11 +43,7 @@ class Mask():
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     def ImageMaskCNNPipeline(self, filename):
-### test start
-        datestart, n = date.parseFilename("3_20190702082436.jpg"); dateFinish, n = date.parseFilename("3_20190702085716.jpg")
-        print(datestart, dateFinish)
-        self.getConcetration([0,0,800,1200], datestart, dateFinish)
-##test end
+
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
         r, rgb_image, elapsed_time2 = self.detectByMaskCNN(image)
 
@@ -87,6 +81,7 @@ class Mask():
                         "coordinates": r['rois'][objectId]
                     }
                     objectId += 1
+                    imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
                     foundedDifferentObjects.append(object) # все, матрицы можем выкидывать
                     # if (self.imagesFromPreviousFrame):
                     #     img1 = str(random.randint(1,50)) + ".jpg"; img2 = str(random.randint(1,50)) + ".jpg" ;
@@ -126,6 +121,7 @@ class Mask():
         # Loop over each detected person
         for i in range(boxes.shape[0]):
             classID = class_ids[i]
+
             if not classID in[1,3,4]:
                 continue 
 
@@ -186,28 +182,4 @@ class Mask():
         elapsed_time = time.time() - start_time
         print(Fore.GREEN + f"--- {elapsed_time} seconds by detect object with network ---" )
         return r, rgb_image, elapsed_time
-
-
-    def saveImageByPlot(self, imagePtr, filename): #plot image saving
-        fig = plt.figure(frameon=False)
-        ax = plt.Axes(fig, [0., 0., 1., 1.])
-        ax.set_axis_off()
-        fig.add_axes(ax)
-
-        ax.imshow(imagePtr)
-        fig.savefig(filename)
-
-    def getConcetration(self, highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
-        decart = DecartCoordinates()
-        foundedObjects = []
-        # запрос к бд
-        for object in db.session.query(db.Objects).filter(sql.and_(db.Objects.fixationDatetime>=startTime, db.Objects.fixationDatetime<=endTime)).all():
-            minRect = [object.LDy, object.LDx, object.RUy, object.RUx]
-            if ( decart.hasOnePointInside(highlightedRect, minRect )):
-                foundedObjects.append(object)
-                #print(f"Объект попадает в кадр")
-
-        print(Fore.LIGHTBLACK_EX + " После меня будет то что нужно")
-        №print(foundedObjects)
-        return foundedObjects # массив координат всех объектов в кадре
 

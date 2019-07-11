@@ -8,7 +8,7 @@ import numpy as np
 import settings as cfg
 #import neural_network.imageAi as imageAi
 from neural_network.maskCNN import Mask
-import dateHelper as dh
+import helpers.dateHelper as dh
 import services.database_controller as db
 import services.file_controller as fileHelper
 import datetime, time
