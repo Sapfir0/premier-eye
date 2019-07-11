@@ -46,22 +46,24 @@ class Mask():
 
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
         r, rgb_image, elapsed_time2 = self.detectByMaskCNN(image)
-        imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False) # идентификация объекта
+        imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False)  #почему-то current иногда бывает пустым
         #print(Fore.LIGHTBLACK_EX + "Длины ", len(r['rois']), " : ", len(imagesFromCurrentFrame) )
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         #print(Fore.LIGHTBLACK_EX + "Столько объектов на текущем кадре ", len(imagesFromCurrentFrame))
-        foundedDifferentObjects = None
 
-        if (self.imagesFromPreviousFrame): #дейcтвие тут начинается после обработки первого кадра
+        foundedDifferentObjects = None
+        if (self.counter): 
             foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
             print(Fore.LIGHTMAGENTA_EX + "Пришедшие с предыдущего кадра объекты:", foundedDifferentObjects)
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+            self.counter = 1
         #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
         self.imagesFromPreviousFrame = imagesFromCurrentFrame
-        
+        #print(imagesFromCurrentFrame)
+
         cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, filename), image ) #IMAGE, а не masked image
         
         if (cfg.SAVE_COLORMAP):
@@ -82,12 +84,12 @@ class Mask():
                         "coordinates": r['rois'][objectId]
                     }
                     objectId += 1
-                    imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
+                    #imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
                     foundedDifferentObjects.append(object) # все, матрицы можем выкидывать
                     if (saveUniqueObjects):
                         img1 = str(objectId) + ".jpg"; img2 = str(objectId) +  "N" + ".jpg" 
                         cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1), previousObjects )
-                        self.counter=1
+                        #self.counter=1
         #print(Fore.RED + str(len(imagesFromCurrentFrame)) + ":" + str(len(imagesFromPreviousFrame)) )
 
         return foundedDifferentObjects
@@ -147,18 +149,19 @@ class Mask():
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 
-
             #print("итератор: ", i)
             #print("обджектАйди: ", objectId)
             id = None
-            if (i-1 <= len(objectId)):
+            if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
                 if (objectId == "-"):
                     id = objectId
                 else:
                     if (not len(objectId) == 0):
-                        print(i, len(objectId))
+                        print(i-1, len(objectId))
                         id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
                         print("Приравниваю к: ", id)
+                    else:
+                        id = "puk"
             else:
                 id = "crit"                 
             

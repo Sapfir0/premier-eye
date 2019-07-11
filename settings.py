@@ -23,7 +23,7 @@ CLASSES_FILE = join(DATA_PATH, "class_names.txt") # если его нет, то
 DATAFILE = "text.txt" # не актуально
 OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
 DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
-DETECTION_MIN_CONFIDENCE = 0.6  # минимальный процент обнаружения и обводки
+DETECTION_MIN_CONFIDENCE = 0.7  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
 # Mask cnn advanced
@@ -33,7 +33,7 @@ import mrcnn.config
 class MaskRCNNConfig(mrcnn.config.Config):
     NAME = "coco_pretrained_model_config"
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 1
+    IMAGES_PER_GPU = 2
     DETECTION_MIN_CONFIDENCE = DETECTION_MIN_CONFIDENCE # минимальный процент отображения прямоугольника
     NUM_CLASSES = 81
     IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
@@ -42,7 +42,7 @@ class MaskRCNNConfig(mrcnn.config.Config):
 
 
 # Алгоритм сравнения
-MIN_MATCH_COUNT = 50 # меньше этого числа совпадений, будем считать что объекты разные
+MIN_MATCH_COUNT = 20 # меньше этого числа совпадений, будем считать что объекты разные
 FLANN_INDEX_KDTREE = 0 # алгоритм
 cencitivity = 0.7 # не особо влияет на что-то
 
