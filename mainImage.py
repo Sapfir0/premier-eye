@@ -1,26 +1,18 @@
 # coding: utf8
-
+import time
+import os
 import cv2
 import pandas as pd
-import os
 import numpy as np
 
 import settings as cfg
-#import neural_network.imageAi as imageAi
 from neural_network.maskCNN import Mask
 import helpers.dateHelper as dh
 import services.database_controller as db
-import services.file_controller as fileHelper
-import datetime, time
 from colorama import Fore
 
 def main():
-    # послдений обработанный файл = "" as ПОФ
-    # for filename in os.listdir(os.getcwd() + "/" + cfg.IMAGE_DIR):
-    # если filename==ПОФ # мы не будем экономить на младенцах
-    # после обработки добавить файл к массиву отработанных файлов
     # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
-
     processedFrames = []
     neural_network = Mask()
     while True:

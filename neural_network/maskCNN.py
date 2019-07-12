@@ -43,18 +43,17 @@ class Mask():
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     def ImageMaskCNNPipeline(self, filename):
-
+        """
+            Считай, почти мейн
+        """
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
         r, rgb_image, elapsed_time2 = self.detectByMaskCNN(image)
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False)  #почему-то current иногда бывает пустым
-        #print(Fore.LIGHTBLACK_EX + "Длины ", len(r['rois']), " : ", len(imagesFromCurrentFrame) )
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        #print(Fore.LIGHTBLACK_EX + "Столько объектов на текущем кадре ", len(imagesFromCurrentFrame))
 
         foundedDifferentObjects = None
         if (self.counter): 
             foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
-            #print(Fore.LIGHTMAGENTA_EX + "Пришедшие с предыдущего кадра объекты:", foundedDifferentObjects)
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
@@ -62,7 +61,6 @@ class Mask():
         #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
         self.imagesFromPreviousFrame = imagesFromCurrentFrame
-        #print(imagesFromCurrentFrame)
 
         cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, filename), image ) #IMAGE, а не masked image
         
@@ -73,28 +71,35 @@ class Mask():
         return r['rois']
 
     def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
-        foundedDifferentObjects = []; objectId = 0
-        #print(Fore.RED + str(len(imagesFromCurrentFrame)) + ":" + str(len(imagesFromPreviousFrame)) )
+        """
+            input: массивы найденных объектов с двух кадров, и r - информация об объектах, полученная с mask rcnn
+            output: вернет массив объектов, которые есть на обоих кадрах
+        """
+
+        foundedUniqueObjects = []; objectId = 0
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame: 
                 if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
-                    object = {
+                    obj = {
                         "id": objectId,
                         "type":  r['class_ids'][objectId],
                         "coordinates": r['rois'][objectId]
                     }
                     objectId += 1
                     #imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
-                    foundedDifferentObjects.append(object) # все, матрицы можем выкидывать
+                    foundedUniqueObjects.append(obj) # все, матрицы можем выкидывать
                     if (saveUniqueObjects):
                         img1 = str(objectId) + ".jpg"; img2 = str(objectId) +  "N" + ".jpg" 
                         cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1), previousObjects )
-                        #self.counter=1
-        #print(Fore.RED + str(len(imagesFromCurrentFrame)) + ":" + str(len(imagesFromPreviousFrame)) )
 
-        return foundedDifferentObjects
+        return foundedUniqueObjects
 
     def extractObjectsFromR(self, image, boxes, saveImage=False):
+        """
+            input: исходное изображение, и массив найденных объектов на изображении, дополнительно: сохранять ли полученныее изображения
+            output: массив изображений объектов
+        """
+
         objects=[]
         for i in boxes:
             y1, x1, y2, x2 = i 
@@ -115,7 +120,11 @@ class Mask():
 
 
     def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
-        
+        """
+            input: исходное изображение, полный объект из нейросети mask cnn, и айдишник объекта, если получилось его получить
+            output: объект с указанием найденных объектов на изображении, и само изображение, с выделенными объектами и подписями
+        """
+
         # Create a new solid-black image the same size as the original image
         masked_image = np.zeros(image.shape)
 
@@ -127,7 +136,7 @@ class Mask():
         for i in range(boxes.shape[0]):
             classID = class_ids[i]
 
-            if not classID in[1,3,4]:
+            if not classID in[1, 3, 4]:
                 continue 
 
             if classID == 1:
@@ -149,8 +158,6 @@ class Mask():
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 
-            #print("итератор: ", i)
-            #print("обджектАйди: ", objectId)
             id = None
             if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
                 if (objectId == "-"):
@@ -159,11 +166,10 @@ class Mask():
                     if (not len(objectId) == 0):
                         print(i-1, len(objectId))
                         id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-                        #print("Приравниваю к: ", id)
                     else:
                         id = "puk"
             else:
-                id = "crit"                 
+                id = "crit"               
             
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255] # ух круто

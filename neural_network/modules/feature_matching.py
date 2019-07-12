@@ -6,6 +6,12 @@ from matplotlib import pyplot as plt
 import settings as cfg
 
 def compareImages(img1, img2):
+    """
+        Важно, для работы этой функции необходимы opencv contib модули
+        input: 2 сравниваемых изображения
+        output: результат сравнения [True|False]
+    """
+
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
 

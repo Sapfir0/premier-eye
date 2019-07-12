@@ -7,4 +7,5 @@ def checkTime():
 
 
 def printTime(criticalTime, permissibleTime, greatTime):
+    if()
     

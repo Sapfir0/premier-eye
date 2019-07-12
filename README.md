@@ -4,7 +4,7 @@
 
 Запустить докер образ с примонтированной папкой
 
-    docker run --mount source=~/premier-eye/data/video,target=/premier-eye/data/video sapfir0/premier-eye:cv 
+    docker run -v/Users/DATA: /premier-eye/data/video0 sapfir0/premier-eye
 
 Запустить тесты алгоритмов
 

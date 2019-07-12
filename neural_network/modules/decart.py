@@ -11,9 +11,7 @@ class DecartCoordinates():
             minRect = [obj.LDy, obj.LDx, obj.RUy, obj.RUx]
             if ( self.hasOnePointInside(highlightedRect, minRect )):
                 foundedObjects.append(obj)
-                #print(f"Объект попадает в кадр")
 
-        #print(foundedObjects)
         return foundedObjects # массив координат всех объектов в кадре
 
     def hasOnePointInside(self, bigRect, minRect): # хотя бы одна точка лежит внутри
@@ -47,7 +45,7 @@ class DecartCoordinates():
         return False
 
 
-    def isPartiallyInside(self, bigRect, minRect): # объект частично внутри прямоугольника
+    def isPartiallyInside(self, bigRect, minRect, innerPercent=0.5): # объект частично внутри прямоугольника
         bigLUy, bigLUx, bigRDy, bigRDx = bigRect
         minLUy, minLUx, minRDy, minRDx = minRect
         full_square = (minLUy - minRDy) * (minRDx - minLUx) ## не уверен что правильно
@@ -61,5 +59,5 @@ class DecartCoordinates():
         if (bigRDx > minRDx):
             minRDx = bigRDx
         in_obj_square = (minLUy - minRDy) * (minRDx - minLUx)
-        return in_obj_square / full_square >= 0.5
+        return in_obj_square / full_square >= innerPercent
 
