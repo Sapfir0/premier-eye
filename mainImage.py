@@ -30,7 +30,7 @@ def main():
 
             if filename in processedFrames:
                 if (processedFrames == os.listdir(currentDir)):
-                    print("Ожидаю")
+                    print("Sleeping")
                     time.sleep(2.5)
                 continue # если файлы еще есть, то переходим к следующему
 

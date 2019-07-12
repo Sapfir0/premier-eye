@@ -54,7 +54,7 @@ class Mask():
         foundedDifferentObjects = None
         if (self.counter): 
             foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
-            print(Fore.LIGHTMAGENTA_EX + "Пришедшие с предыдущего кадра объекты:", foundedDifferentObjects)
+            #print(Fore.LIGHTMAGENTA_EX + "Пришедшие с предыдущего кадра объекты:", foundedDifferentObjects)
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
@@ -159,7 +159,7 @@ class Mask():
                     if (not len(objectId) == 0):
                         print(i-1, len(objectId))
                         id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-                        print("Приравниваю к: ", id)
+                        #print("Приравниваю к: ", id)
                     else:
                         id = "puk"
             else:

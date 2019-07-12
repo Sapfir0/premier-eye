@@ -1,3 +1,4 @@
+from matplotlib import pyplot as plt
 
 
 def saveImageByPlot(self, imagePtr, filename): #plot image saving

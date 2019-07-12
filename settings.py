@@ -33,7 +33,7 @@ import mrcnn.config
 class MaskRCNNConfig(mrcnn.config.Config):
     NAME = "coco_pretrained_model_config"
     GPU_COUNT = 1
-    IMAGES_PER_GPU = 2
+    IMAGES_PER_GPU = 1
     DETECTION_MIN_CONFIDENCE = DETECTION_MIN_CONFIDENCE # минимальный процент отображения прямоугольника
     NUM_CLASSES = 81
     IMAGE_MIN_DIM = 768 #все что ниже пока непонятно

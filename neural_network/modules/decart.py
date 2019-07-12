@@ -1,18 +1,18 @@
 import sqlalchemy as sql
 import services.database_controller as db
+from colorama import Fore
 
 class DecartCoordinates():
 
     def getConcetration(self, highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
         foundedObjects = []
         # запрос к бд
-        for object in db.session.query(db.Objects).filter(sql.and_(db.Objects.fixationDatetime>=startTime, db.Objects.fixationDatetime<=endTime)).all():
-            minRect = [object.LDy, object.LDx, object.RUy, object.RUx]
+        for obj in db.session.query(db.Objects).filter(sql.and_(db.Objects.fixationDatetime >= startTime, db.Objects.fixationDatetime <= endTime)).all():
+            minRect = [obj.LDy, obj.LDx, obj.RUy, obj.RUx]
             if ( self.hasOnePointInside(highlightedRect, minRect )):
-                foundedObjects.append(object)
+                foundedObjects.append(obj)
                 #print(f"Объект попадает в кадр")
 
-        print(Fore.LIGHTBLACK_EX + " После меня будет то что нужно")
         #print(foundedObjects)
         return foundedObjects # массив координат всех объектов в кадре
 
