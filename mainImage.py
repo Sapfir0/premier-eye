@@ -9,12 +9,12 @@ import settings as cfg
 from neural_network.maskCNN import Mask
 import helpers.dateHelper as dh
 import services.database_controller as db
-from colorama import Fore
-
+from neural_network.modules.decart import DecartCoordinates
 def main():
     # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     processedFrames = []
     neural_network = Mask()
+    decart = DecartCoordinates()
     while True:
         for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
@@ -29,16 +29,12 @@ def main():
             print(f"Analyzing {currentImage}")
 
             #Mask CNN
-            start_time= time.time()
-
             rectCoordinates = neural_network.ImageMaskCNNPipeline(filename)
 
-            elapsed_time = time.time() - start_time
-            print(Fore.YELLOW + f"--- {elapsed_time} seconds by all image work ---" )
 
             #DB
             data, numberOfCam = dh.parseFilename(filename)
-            centerDown = neural_network.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
+            centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
             
             for i in range(0, len(rectCoordinates)): # для каждого объекта, найденного на кадре
                 LUy, LUx, RDy, RDx = rectCoordinates[i]

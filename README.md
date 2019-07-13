@@ -1,4 +1,4 @@
-[Дневник практики и документация отчасти](https://docs.google.com/document/d/1Us4OW8wktNr98LsmdR_614xjYLwfMsDM4rQsbBY_xGU/edit)
+!()[]
 
 [Docker proj](https://cloud.docker.com/u/sapfir0/repository/docker/sapfir0/premier-eye)
 

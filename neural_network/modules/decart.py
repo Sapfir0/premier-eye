@@ -4,6 +4,14 @@ from colorama import Fore
 
 class DecartCoordinates():
 
+    def getCenterOfDownOfRectangle(self, boxes): # задан левый нижний и правый верхний угол
+        allCenters = []
+        for i in range(boxes.shape[0]):
+            y1, x1, y2, x2 = boxes[i]
+            midleDownPoint = [ (x1+x2)/2, y1]
+            allCenters.append(midleDownPoint)
+        return allCenters
+
     def getConcetration(self, highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
         foundedObjects = []
         # запрос к бд

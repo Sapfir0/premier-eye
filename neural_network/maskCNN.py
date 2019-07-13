@@ -9,8 +9,6 @@ from mrcnn.model import MaskRCNN
 
 #from pathlib import Path
 import time
-import colorsys
-import random
 from colorama import Fore
 
 import settings as cfg
@@ -18,6 +16,7 @@ import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
 from neural_network.modules.decart import DecartCoordinates
 import services.database_controller as db
+import helpers.timeChecker as timeChecker
 
 class Mask():
     CLASS_NAMES = None
@@ -29,6 +28,9 @@ class Mask():
     counter=0
 
     def __init__(self):
+        import colorsys
+        import random
+
         with open(cfg.CLASSES_FILE, 'rt') as file:
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
@@ -41,13 +43,14 @@ class Mask():
 
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
-
+    
+    @timeChecker.checkElapsedTimeAndCompair(10,5,3)
     def ImageMaskCNNPipeline(self, filename):
         """
             Считай, почти мейн
         """
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
-        r, rgb_image, elapsed_time2 = self.detectByMaskCNN(image)
+        r, rgb_image= self.detectByMaskCNN(image)
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False)  #почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
 
@@ -109,22 +112,11 @@ class Mask():
                 cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, f"{i}.jpg"), cropped )
         return objects
 
-
-    def getCenterOfDownOfRectangle(self, boxes): # задан левый нижний и правый верхний угол
-        allCenters = []
-        for i in range(boxes.shape[0]):
-            y1, x1, y2, x2 = boxes[i]
-            midleDownPoint = [ (x1+x2)/2, y1]
-            allCenters.append(midleDownPoint)
-        return allCenters
-
-
     def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
         """
             input: исходное изображение, полный объект из нейросети mask cnn, и айдишник объекта, если получилось его получить
             output: объект с указанием найденных объектов на изображении, и само изображение, с выделенными объектами и подписями
         """
-
         # Create a new solid-black image the same size as the original image
         masked_image = np.zeros(image.shape)
 
@@ -139,12 +131,9 @@ class Mask():
             if not classID in[1, 3, 4]:
                 continue 
 
-            if classID == 1:
-                person_count+=1
-            if classID == 3:
-                cars_count+=1
-            if classID == 4:
-                truck_count+=1
+            if classID == 1: person_count+=1
+            if classID == 3: cars_count+=1
+            if classID == 4: truck_count+=1
             
             # Get the bounding box of the current person
             y1, x1, y2, x2 = boxes[i]
@@ -189,12 +178,12 @@ class Mask():
         return countedObj, rgb_image.astype(np.uint8)
 
     def detectByMaskCNN(self, image):
+        """
+            input: image - результат работы cv2.imread(<filename>)
+            output: r - словарь найденных объектов (r['masks'], r['rois'], r['class_ids'], r['scores']), подробная справка где-то еще
+        """
         rgb_image = image[:, :, ::-1]
-        start_time= time.time()
         r = self.model.detect([rgb_image], verbose=1)[0] #тут вся магия
         # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
-        
-        elapsed_time = time.time() - start_time
-        print(Fore.GREEN + f"--- {elapsed_time} seconds by detect object with network ---" )
-        return r, rgb_image, elapsed_time
+        return r, rgb_image
 
