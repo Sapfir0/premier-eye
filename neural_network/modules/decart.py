@@ -15,9 +15,11 @@ class DecartCoordinates():
     def getConcetration(self, highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
         foundedObjects = []
         # запрос к бд
-        for obj in db.session.query(db.Objects).filter(sql.and_(db.Objects.fixationDatetime >= startTime, db.Objects.fixationDatetime <= endTime)).all():
+        a = db.Objects.fixationDatetime >= startTime
+        b = db.Objects.fixationDatetime <= endTime
+        for obj in db.session.query(db.Objects).filter(sql.and_(a, b)).all():
             minRect = [obj.LDy, obj.LDx, obj.RUy, obj.RUx]
-            if ( self.hasOnePointInside(highlightedRect, minRect )):
+            if (self.hasOnePointInside(highlightedRect, minRect)):
                 foundedObjects.append(obj)
 
         return foundedObjects # массив координат всех объектов в кадре

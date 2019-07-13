@@ -17,7 +17,7 @@ from neural_network.modules.heatmap import Heatmap
 from neural_network.modules.decart import DecartCoordinates
 import services.database_controller as db
 import helpers.timeChecker as timeChecker
-
+import neural_network.modules.extra as extra
 class Mask():
     CLASS_NAMES = None
     COLORS = None
@@ -28,24 +28,15 @@ class Mask():
     counter=0
 
     def __init__(self):
-        import colorsys
-        import random
-
         with open(cfg.CLASSES_FILE, 'rt') as file:
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
-        # generate random (but visually distinct) colors for each class label
-        hsv = [(i / len(self.CLASS_NAMES), 1, 1.0) for i in range(len(self.CLASS_NAMES))]
-
-        self.COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
-        random.seed(42)
-        random.shuffle(self.COLORS)
-
+        self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
     
-    @timeChecker.checkElapsedTimeAndCompair(10,5,3)
-    def ImageMaskCNNPipeline(self, filename):
+    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
+    def pipeline(self, filename):
         """
             Считай, почти мейн
         """
@@ -73,21 +64,28 @@ class Mask():
 
         return r['rois']
 
+    def setIdToObject():
+        return NotImplemented
+
     def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
         """
-            input: массивы найденных объектов с двух кадров, и r - информация об объектах, полученная с mask rcnn
+            input: 
+            imagesFromPreviousFrame - массив объектов на предыдущем кадре \n
+            imagesFromCurrentFrame  - массив объектов на текущем кадре \n
+            r - информация об объектах, полученная с mask rcnn \n
             output: вернет массив объектов, которые есть на обоих кадрах
         """
+        obj = {
+            "id": None,
+            "type":  None,
+            "coordinates": None
+        }
 
         foundedUniqueObjects = []; objectId = 0
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame: 
                 if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
-                    obj = {
-                        "id": objectId,
-                        "type":  r['class_ids'][objectId],
-                        "coordinates": r['rois'][objectId]
-                    }
+                    obj.id = objectId; obj.type = r['class_ids'][objectId]; obj.coordinates = r['rois'][objectId]
                     objectId += 1
                     #imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
                     foundedUniqueObjects.append(obj) # все, матрицы можем выкидывать
@@ -99,7 +97,9 @@ class Mask():
 
     def extractObjectsFromR(self, image, boxes, saveImage=False):
         """
-            input: исходное изображение, и массив найденных объектов на изображении, дополнительно: сохранять ли полученныее изображения
+            input: image - исходное изображение \n
+                boxes - массив найденных объектов на изображении \n 
+                дополнительно: сохранять ли полученные изображения
             output: массив изображений объектов
         """
 
@@ -142,7 +142,6 @@ class Mask():
             color = (1.0, 1.0, 1.0) # White
             image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6) # рисование маски
 
-    
             if(classID > len(self.CLASS_NAMES)):
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1

@@ -1,5 +1,7 @@
-!()[]
+# Premier Eye
+![](./resources/images/eye.svg)
 
+## Программа для детектирования объектов
 [Docker proj](https://cloud.docker.com/u/sapfir0/repository/docker/sapfir0/premier-eye)
 
 Запустить докер образ с примонтированной папкой

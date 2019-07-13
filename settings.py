@@ -4,6 +4,7 @@ import wget
 import mrcnn.utils
 import colorama
 from colorama import Fore, Back, Style  # для цветного консльного вывода 
+import mrcnn.config
 
 colorama.init(autoreset=True)
 
@@ -22,23 +23,20 @@ CLASSES_FILE = join(DATA_PATH, "class_names.txt") # если его нет, то
 
 DATAFILE = "text.txt" # не актуально
 OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
-DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
-DETECTION_MIN_CONFIDENCE = 0.7  # минимальный процент обнаружения и обводки
 SAVE_COLORMAP = False
 
 # Mask cnn advanced
 # Configuration that will be used by the Mask-RCNN library
-import mrcnn.config
 
 class MaskRCNNConfig(mrcnn.config.Config):
     NAME = "coco_pretrained_model_config"
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
-    DETECTION_MIN_CONFIDENCE = DETECTION_MIN_CONFIDENCE # минимальный процент отображения прямоугольника
+    DETECTION_MIN_CONFIDENCE = 0.7  # минимальный процент отображения прямоугольника
     NUM_CLASSES = 81
     IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
     IMAGE_MAX_DIM = 768
-    DETECTION_NMS_THRESHOLD = DETECTION_NMS_THRESHOLD #Не максимальный порог подавления для обнаружения
+    DETECTION_NMS_THRESHOLD = 0.0 #Не максимальный порог подавления для обнаружения
 
 
 # Алгоритм сравнения

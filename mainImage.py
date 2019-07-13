@@ -29,7 +29,7 @@ def main():
             print(f"Analyzing {currentImage}")
 
             #Mask CNN
-            rectCoordinates = neural_network.ImageMaskCNNPipeline(filename)
+            rectCoordinates = neural_network.pipeline(filename)
 
 
             #DB

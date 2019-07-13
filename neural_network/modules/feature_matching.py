@@ -31,7 +31,7 @@ def compareImages(img1, img2):
     counter = 0
     for m,n in matches:
         if m.distance < cfg.cencitivity*n.distance:
-            counter+=1
+            counter += 1
 
     if counter>cfg.MIN_MATCH_COUNT:
         #print("Enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
