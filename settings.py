@@ -25,6 +25,8 @@ DATAFILE = "text.txt" # не актуально
 OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
 SAVE_COLORMAP = False
 
+
+DETECTION_MIN_CONFIDENCE = 70
 # Mask cnn advanced
 # Configuration that will be used by the Mask-RCNN library
 
@@ -32,7 +34,7 @@ class MaskRCNNConfig(mrcnn.config.Config):
     NAME = "coco_pretrained_model_config"
     GPU_COUNT = 1
     IMAGES_PER_GPU = 1
-    DETECTION_MIN_CONFIDENCE = 0.7  # минимальный процент отображения прямоугольника
+    DETECTION_MIN_CONFIDENCE = DETECTION_MIN_CONFIDENCE/100  # минимальный процент отображения прямоугольника
     NUM_CLASSES = 81
     IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
     IMAGE_MAX_DIM = 768
@@ -48,16 +50,15 @@ cencitivity = 0.7 # не особо влияет на что-то
 
 
 ##### unused
-#video
-VIDEO_SOURCE = join(DATA_PATH, "3.mp4")
-OUTPUT_VIDEO = join(OUTPUT_DIR, 'ITSWORK.avi')
 
 #imageAI
 DATASET_DIR_IMAGE_AI = join(DATA_PATH, "resnet50_coco_best_v2.0.1.h5")
 OUTPUT_DIR_IMAGE_AI = join(OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
 DETECTION_SPEED = "normal" # скорость обхода каждого кадра
-MINIMUM_PERCENTAGE_PROBABILITY = 30 # минимальный процент обнаружения и обводки
 
+#video
+VIDEO_SOURCE = join(DATA_PATH, "3.mp4")
+OUTPUT_VIDEO = join(OUTPUT_DIR, 'ITSWORK.avi')
 # юзабилити функции
 
 def downloadAndMove(downloadLink, destinationDir):

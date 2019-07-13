@@ -2,6 +2,8 @@ import os
 import sys
 from imageai.Detection import ObjectDetection
 import settings as cfg
+from os.path import join
+  
 
 class ImageAI():
     detector = None
@@ -16,7 +18,8 @@ class ImageAI():
         self.customObjects = self.detector.CustomObjects(person=True, car=True, truck=True) #указывает на те объекты, которые мы ищем на кадре
 
     def pipeline(self, filename):
-        detections = self.detectMyObjects(filename, cfg.OUTPUT_DIR_IMAGE_AI + filename) 
+        print(cfg.IMAGE_DIR + filename, cfg.OUTPUT_DIR_IMAGE_AI + filename)
+        detections = self.detectMyObjects(join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename)) 
         countedObj = self.countObjects(detections)
         print(countedObj)
         self.getBoxesForObjectWithId(detections)
@@ -58,10 +61,26 @@ class ImageAI():
             custom_objects=self.customObjects,
             input_image=os.path.join(cfg.APP_PATH, inputName),
             output_image_path=os.path.join(cfg.APP_PATH, outputName),
-            minimum_percentage_probability=cfg.MINIMUM_PERCENTAGE_PROBABILITY
+            minimum_percentage_probability=cfg.DETECTION_MIN_CONFIDENCE
             )
 
         return detections
+
+    def extactObjects(self, inputName, outputName):
+
+        detections, objects_path = self.detector.detectObjectsFromImage(
+            input_image=os.path.join(cfg.APP_PATH, inputName),
+            output_image_path=os.path.join(cfg.APP_PATH, outputName),
+            minimum_percentage_probability=cfg.DETECTION_MIN_CONFIDENCE,  
+            extract_detected_objects=True
+            )
+
+        # for eachObject, eachObjectPath in zip(detections, objects_path):
+        # print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
+        # print("Object's image saved in " + eachObjectPath)
+        # print("--------------------------------")
+
+
 
 
 

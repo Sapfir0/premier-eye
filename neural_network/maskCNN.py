@@ -24,7 +24,7 @@ class Mask():
     imagesFromPreviousFrame = None # объекты на предыщуем кадре
     model = None
     objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
-    
+    SAVE_COLORMAP = False
     counter=0
 
     def __init__(self):
@@ -58,13 +58,26 @@ class Mask():
 
         cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, filename), image ) #IMAGE, а не masked image
         
-        if (cfg.SAVE_COLORMAP):
+        if (self.SAVE_COLORMAP):
             heatmap = Heatmap()
             heatmap.createHeatMap(image, filename)
 
         return r['rois']
 
     def setIdToObject():
+        id = None
+        if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
+            if (objectId == "-"):
+                id = objectId
+            else:
+                if (not len(objectId) == 0):
+                    print(i-1, len(objectId))
+                    id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
+                else:
+                    id = "puk"
+        else:
+            id = "crit"               
+        
         return NotImplemented
 
     def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
@@ -85,7 +98,7 @@ class Mask():
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame: 
                 if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
-                    obj.id = objectId; obj.type = r['class_ids'][objectId]; obj.coordinates = r['rois'][objectId]
+                    obj['id'] = objectId; obj['type'] = r['class_ids'][objectId]; obj['coordinates'] = r['rois'][objectId]
                     objectId += 1
                     #imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
                     foundedUniqueObjects.append(obj) # все, матрицы можем выкидывать
@@ -146,22 +159,10 @@ class Mask():
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 
-            id = None
-            if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
-                if (objectId == "-"):
-                    id = objectId
-                else:
-                    if (not len(objectId) == 0):
-                        print(i-1, len(objectId))
-                        id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-                    else:
-                        id = "puk"
-            else:
-                id = "crit"               
-            
+
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255] # ух круто
-            text = "{}: {:.3f} {}".format(label, scores[i], id)
+            text = "{}: {:.1f} {}".format(label, scores[i]*100, id)
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1-20), font, 0.8, color, 2)        
