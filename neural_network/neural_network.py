@@ -1,13 +1,13 @@
 from abc import ABC, abstractmethod
+import helpers.timeChecker as timeChecker
 
-class neural_networks(ABC):
+class Neural_network(ABC):
 
     @abstractmethod
     @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
-        
-        return NotImplemented
-
+        print("Im you father, network")
+        pass
 
     def extractImages():
         return NotImplemented
@@ -23,20 +23,20 @@ class neural_networks(ABC):
         return NotImplemented
 
 
-    def __init__(self):
-    def pipeline(self, filename):
-    def setIdToObject():
-    def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
-    def extractObjectsFromR(self, image, boxes, saveImage=False):
-    def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
-    def detectByMaskCNN(self, image):
+    # def __init__(self):
+    # def pipeline(self, filename):
+    # def setIdToObject():
+    # def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
+    # def extractObjectsFromR(self, image, boxes, saveImage=False):
+    # def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
+    # def detectByMaskCNN(self, image):
 
 
-    def __init__(self):
-    def pipeline(self, filename):
-    def getBoxesForObjectWithId(self, detections):
-    def countObjects(self, detections):
-    def detectMyObjects(self, inputName, outputName):
+    # def __init__(self):
+    # def pipeline(self, filename):
+    # def getBoxesForObjectWithId(self, detections):
+    # def countObjects(self, detections):
+    # def detectMyObjects(self, inputName, outputName):
 
 
 

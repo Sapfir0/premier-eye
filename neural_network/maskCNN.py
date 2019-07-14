@@ -18,13 +18,16 @@ from neural_network.modules.decart import DecartCoordinates
 import services.database_controller as db
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
-class Mask():
+from neural_network.neural_network import Neural_network
+
+class Mask(Neural_network):
+    objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
+    SAVE_COLORMAP = False
+
     CLASS_NAMES = None
     COLORS = None
     imagesFromPreviousFrame = None # объекты на предыщуем кадре
     model = None
-    objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
-    SAVE_COLORMAP = False
     counter=0
 
     def __init__(self):
@@ -35,7 +38,7 @@ class Mask():
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
     
-    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
+    #@timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
         """
             Считай, почти мейн

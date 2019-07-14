@@ -22,8 +22,8 @@ class ImageAI():
         detections = self.detectMyObjects(join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename)) 
         countedObj = self.countObjects(detections)
         print(countedObj)
-        self.getBoxesForObjectWithId(detections)
-        return countedObj
+        boxes = self.getBoxesForObjectWithId(detections)
+        return boxes
 
 
     def getBoxesForObjectWithId(self, detections):
