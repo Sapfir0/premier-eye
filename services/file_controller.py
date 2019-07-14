@@ -1,6 +1,14 @@
 import settings as cfg
 
-def writeInFile(numberOfCam, fixationTime, rectCoordinates, GPScoordinates, objectId=0 ): #gps - это середина нижней стороны
+def writeInFile(filename, *args):
+    f = open(filename, 'w')
+    for params in args:
+        f.write(params + " ")
+    f.close()
+
+
+
+def writeDatabaseInFile(numberOfCam, fixationTime, rectCoordinates, GPScoordinates, objectId=0 ): #gps - это середина нижней стороны
     f = open(cfg.DATAFILE, 'w')
     print("START ", numberOfCam, fixationTime, rectCoordinates, GPScoordinates, "END")
     f.write(numberOfCam + " ")
@@ -9,4 +17,6 @@ def writeInFile(numberOfCam, fixationTime, rectCoordinates, GPScoordinates, obje
     f.write(str(objectId) + " ")
     f.write(str(GPScoordinates) + " \n")
     f.close()
+
+
 

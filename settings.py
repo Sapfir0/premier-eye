@@ -16,7 +16,7 @@ OUTPUT_DIR = "output"
 IMAGE_DIR = join(DATA_PATH, "video0") 
 TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
 loggingInDB = False
-algorithm = 0
+algorithm = 1
 #Mask cnn
 DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный путь от этого файла
 LOGS_DIR = "logs"
@@ -30,6 +30,8 @@ SAVE_COLORMAP = False
 DETECTION_MIN_CONFIDENCE = 70
 # Mask cnn advanced
 # Configuration that will be used by the Mask-RCNN library
+import cv2
+print(Fore.MAGENTA + str(cv2.__version__))
 
 class MaskRCNNConfig(mrcnn.config.Config):
     NAME = "coco_pretrained_model_config"
@@ -47,16 +49,12 @@ MIN_MATCH_COUNT = 20 # меньше этого числа совпадений, 
 FLANN_INDEX_KDTREE = 0 # алгоритм
 cencitivity = 0.7 # не особо влияет на что-то
 
-
-
-
-##### unused
-
 #imageAI
 DATASET_DIR_IMAGE_AI = join(DATA_PATH, "resnet50_coco_best_v2.0.1.h5")
-OUTPUT_DIR_IMAGE_AI = join(OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
+OUTPUT_DIR_IMAGE_AI = join(APP_PATH, OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
 DETECTION_SPEED = "normal" # скорость обхода каждого кадра
 
+##### unused
 #video
 VIDEO_SOURCE = join(DATA_PATH, "3.mp4")
 OUTPUT_VIDEO = join(OUTPUT_DIR, 'ITSWORK.avi')

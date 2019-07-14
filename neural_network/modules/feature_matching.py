@@ -34,10 +34,10 @@ def compareImages(img1, img2):
             counter += 1
 
     if counter>cfg.MIN_MATCH_COUNT:
-        #print("Enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
+        print("Enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
         return True
     else:
-        #print("Not enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
+        print("Not enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
         return False
 
 

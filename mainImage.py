@@ -11,11 +11,18 @@ from neural_network.imageAi import ImageAI
 import helpers.dateHelper as dh
 import services.database_controller as db
 from neural_network.modules.decart import DecartCoordinates
+import services.file_controller as file_controller
 
 
 def main():
-    # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
+    # есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     processedFrames = []
+    dateFile = "last_data_processed.txt"
+    if os.path.isfile(dateFile):
+        with open(dateFile, 'r') as f:
+            last_processed_data = f.read() # сверимся с древниви свитками
+            data, n = dh.parseFilename(last_processed_data) 
+            print(type(data), data)
 
     if (cfg.algorithm): neural_network = Mask()
     else: imageAI = ImageAI()
@@ -42,10 +49,11 @@ def main():
             else:
                 rectCoordinates = imageAI.pipeline(filename)
             
+            data, numberOfCam = dh.parseFilename(filename)
+            file_controller.writeInFile(dateFile, str(data)) # будет стирать содержимое файла каждый кадр
 
             #DB
             if (cfg.loggingInDB):
-                data, numberOfCam = dh.parseFilename(filename)
                 centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
                 
                 for i in range(0, len(rectCoordinates)): # для каждого объекта, найденного на кадре
