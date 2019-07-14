@@ -13,16 +13,21 @@ import services.database_controller as db
 from neural_network.modules.decart import DecartCoordinates
 import services.file_controller as file_controller
 
+def checkDateFile():
+    processedFrames = []
+    if os.path.isfile(cfg.dateFile): 
+        with open(cfg.dateFile, 'r') as f:
+            last_processed_data = f.read() # сверимся с древними свитками
+            dateFromFile = dh.parseDateFromFile(last_processed_data) 
+            for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
+                frameDate = dh.parseFilename(filename)
+                if (frameDate < dateFromFile): # мы не обработаем никогда старый кадр
+                    processedFrames.append(filename)
+    return processedFrames
 
 def main():
-    # есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
-    processedFrames = []
-    dateFile = "last_data_processed.txt"
-    if os.path.isfile(dateFile):
-        with open(dateFile, 'r') as f:
-            last_processed_data = f.read() # сверимся с древниви свитками
-            data, n = dh.parseFilename(last_processed_data) 
-            print(type(data), data)
+    # парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
+    processedFrames = checkDateFile()
 
     if (cfg.algorithm): neural_network = Mask()
     else: imageAI = ImageAI()
@@ -49,8 +54,8 @@ def main():
             else:
                 rectCoordinates = imageAI.pipeline(filename)
             
-            data, numberOfCam = dh.parseFilename(filename)
-            file_controller.writeInFile(dateFile, str(data)) # будет стирать содержимое файла каждый кадр
+            data, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+            file_controller.writeInFile(cfg.dateFile, str(data)) # будет стирать содержимое файла каждый кадр
 
             #DB
             if (cfg.loggingInDB):
