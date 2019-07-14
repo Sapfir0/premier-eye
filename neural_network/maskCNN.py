@@ -18,13 +18,16 @@ from neural_network.modules.decart import DecartCoordinates
 import services.database_controller as db
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
-class Mask():
+from neural_network.neural_network import Neural_network
+
+class Mask(Neural_network):
+    objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
+    SAVE_COLORMAP = False
+
     CLASS_NAMES = None
     COLORS = None
     imagesFromPreviousFrame = None # объекты на предыщуем кадре
     model = None
-    objectOnFrames = 0 # сколько кадров мы видели объект(защитит от ложных срабатываний)
-    
     counter=0
 
     def __init__(self):
@@ -35,16 +38,26 @@ class Mask():
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
     
-    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
         """
             Считай, почти мейн
         """
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
-        r, rgb_image= self.detectByMaskCNN(image)
+        r, rgb_image= self.detectByMaskCNN(image)     #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False)  #почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
 
+        self.checkNewFrame(r, rgb_image, imagesFromCurrentFrame)
+
+        cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, filename), image ) #IMAGE, а не masked image
+        
+        if (self.SAVE_COLORMAP):
+            heatmap = Heatmap()
+            heatmap.createHeatMap(image, filename)
+
+        return r['rois']
+
+    def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
         foundedDifferentObjects = None
         if (self.counter): 
             foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
@@ -52,19 +65,24 @@ class Mask():
         else:
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
             self.counter = 1
-        #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
 
         self.imagesFromPreviousFrame = imagesFromCurrentFrame
 
-        cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, filename), image ) #IMAGE, а не masked image
+
+    def setIdToObject(objectId):
+        id = None
+        if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
+            if (objectId == "-"):
+                id = objectId
+            else:
+                if (not len(objectId) == 0):
+                    print(i-1, len(objectId))
+                    id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
+                else:
+                    id = "puk"
+        else:
+            id = "crit"               
         
-        if (cfg.SAVE_COLORMAP):
-            heatmap = Heatmap()
-            heatmap.createHeatMap(image, filename)
-
-        return r['rois']
-
-    def setIdToObject():
         return NotImplemented
 
     def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
@@ -85,7 +103,7 @@ class Mask():
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame: 
                 if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
-                    obj.id = objectId; obj.type = r['class_ids'][objectId]; obj.coordinates = r['rois'][objectId]
+                    obj['id'] = objectId; obj['type'] = r['class_ids'][objectId]; obj['coordinates'] = r['rois'][objectId]
                     objectId += 1
                     #imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
                     foundedUniqueObjects.append(obj) # все, матрицы можем выкидывать
@@ -146,22 +164,10 @@ class Mask():
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 
-            id = None
-            if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
-                if (objectId == "-"):
-                    id = objectId
-                else:
-                    if (not len(objectId) == 0):
-                        print(i-1, len(objectId))
-                        id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-                    else:
-                        id = "puk"
-            else:
-                id = "crit"               
-            
+
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255] # ух круто
-            text = "{}: {:.3f} {}".format(label, scores[i], id)
+            text = "{}: {:.1f} {}".format(label, scores[i]*100, id)
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1-20), font, 0.8, color, 2)        

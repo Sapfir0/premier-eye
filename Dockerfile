@@ -62,5 +62,3 @@ WORKDIR /premier-app
 ENTRYPOINT ["python3"]
 CMD ["mainImage.py" ]
 
-
-    
