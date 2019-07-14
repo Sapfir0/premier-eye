@@ -16,7 +16,7 @@ OUTPUT_DIR = "output"
 IMAGE_DIR = join(DATA_PATH, "video0") 
 TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
 loggingInDB = False
-algorithm = 1
+algorithm = 0
 #Mask cnn
 DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный путь от этого файла
 LOGS_DIR = "logs"
@@ -74,17 +74,20 @@ for i in must_exist_dirs:
         print(f"{i} folder is'nt exist. Creating..")
         os.makedirs(i)
 
-if not os.path.isfile(DATASET_DIR_IMAGE_AI):
-    print(Fore.RED + f"{DATASET_DIR_IMAGE_AI} isn't exist. Image AI algorithm isn't available")
-
-if not os.path.isfile(DATASET_DIR):
-    print(Fore.YELLOW + f"{DATASET_DIR} isn't exist. Downloading...")
-    mrcnn.utils.download_trained_weights(DATASET_DIR) #стоит это дополнительно скачивать в докере
-
-if not os.path.isfile(CLASSES_FILE):
-    print(Fore.YELLOW + f"{CLASSES_FILE} isn't exist. Downloading...")
-    link = "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
-    downloadAndMove(link, CLASSES_FILE)
+if algorithm:
+    if not os.path.isfile(DATASET_DIR):
+        print(Fore.YELLOW + f"{DATASET_DIR} isn't exist. Downloading...")
+        mrcnn.utils.download_trained_weights(DATASET_DIR) #стоит это дополнительно скачивать в докере
+    
+    if not os.path.isfile(CLASSES_FILE):
+        print(Fore.YELLOW + f"{CLASSES_FILE} isn't exist. Downloading...")
+        link = "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
+        downloadAndMove(link, CLASSES_FILE)
+else:
+    if not os.path.isfile(DATASET_DIR_IMAGE_AI):
+        print(Fore.RED + f"{DATASET_DIR_IMAGE_AI} isn't exist. Downloading...")
+        link = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
+        downloadAndMove(link, DATASET_DIR_IMAGE_AI)
 
 
 if not os.listdir(IMAGE_DIR):

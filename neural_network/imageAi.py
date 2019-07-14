@@ -3,9 +3,13 @@ import sys
 from imageai.Detection import ObjectDetection
 import settings as cfg
 from os.path import join
-  
+from neural_network.neural_network import Neural_network
+import cv2
+import numpy as np
+import neural_network.modules.feature_matching as sift
+import helpers.timeChecker as timeChecker
 
-class ImageAI():
+class ImageAI(Neural_network):
     detector = None
     customObjects = None
 
@@ -17,12 +21,13 @@ class ImageAI():
 
         self.customObjects = self.detector.CustomObjects(person=True, car=True, truck=True) #указывает на те объекты, которые мы ищем на кадре
 
+    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
-        print(cfg.IMAGE_DIR + filename, cfg.OUTPUT_DIR_IMAGE_AI + filename)
-        detections = self.detectMyObjects(join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename)) 
-        countedObj = self.countObjects(detections)
-        print(countedObj)
-        boxes = self.getBoxesForObjectWithId(detections)
+        super().pipeline(filename)
+        #detections = self.detectMyObjects(join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename)) 
+        boxes = self.extractObjects(join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename))
+        #countedObj = self.countObjects(detections)
+        #boxes = self.getBoxesForObjectWithId(detections)
         return boxes
 
 
@@ -40,12 +45,9 @@ class ImageAI():
     def countObjects(self, detections):
         personCount=0; carCount=0; truckCount =0
         for eachObject in detections:
-            if(eachObject['name'] == "person"):
-                personCount+=1
-            if(eachObject['name'] == "car"):
-                carCount+=1
-            if(eachObject['name'] == "truck"):
-                truckCount+=1
+            if(eachObject['name'] == "person"): personCount+=1
+            if(eachObject['name'] == "car"): carCount+=1
+            if(eachObject['name'] == "truck"): truckCount+=1
 
         countedObj = {
             "person": personCount,
@@ -65,22 +67,42 @@ class ImageAI():
             )
 
         return detections
-
-    def extactObjects(self, inputName, outputName):
-
-        detections, objects_path = self.detector.detectObjectsFromImage(
+    previous_objects_path = None
+    def extractObjects(self, inputName, outputName, saveImage=False):
+        detections, current_objects_path = self.detector.detectObjectsFromImage(
             input_image=os.path.join(cfg.APP_PATH, inputName),
             output_image_path=os.path.join(cfg.APP_PATH, outputName),
-            minimum_percentage_probability=cfg.DETECTION_MIN_CONFIDENCE,  
+            minimum_percentage_probability=cfg.DETECTION_MIN_CONFIDENCE,
             extract_detected_objects=True
             )
+        #currentObjectFromFrame = []
+        if self.previous_objects_path:
+            for current in current_objects_path:
+                for previous in self.previous_objects_path:
+                    self.uniqueObjects(current, previous, detections)
 
-        # for eachObject, eachObjectPath in zip(detections, objects_path):
-        # print(eachObject["name"] , " : " , eachObject["percentage_probability"], " : ", eachObject["box_points"] )
-        # print("Object's image saved in " + eachObjectPath)
-        # print("--------------------------------")
+        print(detections)
+        print(current_objects_path)
+        boxes=[]
+        for i in detections:
+            boxes.append(i['box_points'])
 
+        self.previous_objects_path = current_objects_path
+        return boxes
+        
+    def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r):
+        previousObject = cv2.imread(imagesFromPreviousFrame)
+        currentObject = cv2.imread(imagesFromCurrentFrame) 
+        foundedUniqueObjects = []; objectId = 0
+        obj = {
+            "id": None,
+            "type":  None,
+            "coordinates": None
+        }
+        if( sift.compareImages(previousObject, currentObject)  ): # то это один объект
+            obj['id'] = objectId; obj['type'] = r['name']; obj['coordinates'] = r['box_points']
+            objectId += 1
+            foundedUniqueObjects.append(obj) # все, матрицы можем выкидывать
 
-
-
-
+        print(foundedUniqueObjects)
+        return foundedUniqueObjects

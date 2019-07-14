@@ -38,26 +38,16 @@ class Mask(Neural_network):
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
     
-    #@timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
         """
             Считай, почти мейн
         """
         image = cv2.imread(join(cfg.IMAGE_DIR, filename))
-        r, rgb_image= self.detectByMaskCNN(image)
+        r, rgb_image= self.detectByMaskCNN(image)     #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
         imagesFromCurrentFrame = self.extractObjectsFromR(image, r['rois'], saveImage=False)  #почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
 
-        foundedDifferentObjects = None
-        if (self.counter): 
-            foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
-            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
-        else:
-            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
-            self.counter = 1
-        #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
-
-        self.imagesFromPreviousFrame = imagesFromCurrentFrame
+        self.checkNewFrame(r, rgb_image, imagesFromCurrentFrame)
 
         cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, filename), image ) #IMAGE, а не masked image
         
@@ -67,7 +57,19 @@ class Mask(Neural_network):
 
         return r['rois']
 
-    def setIdToObject():
+    def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
+        foundedDifferentObjects = None
+        if (self.counter): 
+            foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
+            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
+        else:
+            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+            self.counter = 1
+
+        self.imagesFromPreviousFrame = imagesFromCurrentFrame
+
+
+    def setIdToObject(objectId):
         id = None
         if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
             if (objectId == "-"):

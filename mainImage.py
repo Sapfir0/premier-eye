@@ -16,9 +16,13 @@ from neural_network.modules.decart import DecartCoordinates
 def main():
     # или есть варик парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     processedFrames = []
-    neural_network = Mask(); imageAI = ImageAI()
+
+    if (cfg.algorithm): neural_network = Mask()
+    else: imageAI = ImageAI()
+
     decart = DecartCoordinates()
     rectCoordinates = None
+
     while True:
         for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
@@ -40,7 +44,7 @@ def main():
             
 
             #DB
-            if (loggingInDB):
+            if (cfg.loggingInDB):
                 data, numberOfCam = dh.parseFilename(filename)
                 centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
                 

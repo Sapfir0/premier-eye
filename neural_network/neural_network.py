@@ -4,7 +4,6 @@ import helpers.timeChecker as timeChecker
 class Neural_network(ABC):
 
     @abstractmethod
-    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
         print("Im you father, network")
         pass
