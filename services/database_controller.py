@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine
 from sqlalchemy import func
-import settings as cfg
+from settings import Settings as cfg
 import sqlalchemy as sql
 
 engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=False)

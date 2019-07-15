@@ -5,7 +5,7 @@ import cv2
 import pandas as pd
 import numpy as np
 
-import settings as cfg
+from settings import Settings
 from neural_network.maskCNN import Mask
 from neural_network.imageAi import ImageAI
 import helpers.dateHelper as dh
@@ -13,19 +13,21 @@ import services.database_controller as db
 from neural_network.modules.decart import DecartCoordinates
 import services.file_controller as file_controller
 
-def checkDateFile():
-    processedFrames = []
-    if os.path.isfile(cfg.dateFile): 
-        with open(cfg.dateFile, 'r') as f:
-            last_processed_data = f.read() # сверимся с древними свитками
-            dateFromFile = dh.parseDateFromFile(last_processed_data) 
-            for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
-                frameDate = dh.parseFilename(filename)
-                if (frameDate < dateFromFile): # мы не обработаем никогда старый кадр
-                    processedFrames.append(filename)
-    return processedFrames
 
 def main():
+    def checkDateFile():
+        processedFrames = []
+        if os.path.isfile(cfg.dateFile):
+            with open(cfg.dateFile, 'r') as f:
+                last_processed_data = f.read() # сверимся с древними свитками
+                dateFromFile = dh.parseDateFromFile(last_processed_data) 
+                for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
+                    frameDate = dh.parseFilename(filename)
+                    if (frameDate < dateFromFile): # мы не обработаем никогда старый кадр
+                        processedFrames.append(filename)
+        return processedFrames
+        
+    cfg = Settings()
     # парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     processedFrames = checkDateFile()
 
@@ -48,13 +50,20 @@ def main():
 
             print(f"Analyzing {currentImage}")
 
+            data, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+
+            if os.path.isdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam)):
+                os.mkdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam))
+
             #Mask CNN
             if (cfg.algorithm):
-                rectCoordinates = neural_network.pipeline(filename)
+                rectCoordinates = neural_network.pipeline(
+                    os.path.join(cfg.IMAGE_DIR, filename),
+                    os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)
+                    )
             else:
                 rectCoordinates = imageAI.pipeline(filename)
             
-            data, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
             file_controller.writeInFile(cfg.dateFile, str(data)) # будет стирать содержимое файла каждый кадр
 
             #DB
