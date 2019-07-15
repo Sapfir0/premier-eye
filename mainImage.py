@@ -15,35 +15,46 @@ import services.file_controller as file_controller
 
 
 def main():
-    def checkDateFile():
+    def countCamers(currentImageDir):
+        existedCams = []; counterOfCamers = 0
+        for filename in os.listdir(currentImageDir): # пробежимся первый раз и определим сколько у нас камер
+            date, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+            if not numberOfCam in existedCams:
+                existedCams.append(numberOfCam)
+                counterOfCamers+=1
+        return counterOfCamers
+
+    def checkDateFile(currentImageDir):
         processedFrames = []
         if os.path.isfile(cfg.dateFile):
             with open(cfg.dateFile, 'r') as f:
                 last_processed_data = f.read() # сверимся с древними свитками
                 dateFromFile = dh.parseDateFromFile(last_processed_data) 
-                for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
+                for filename in os.listdir(currentImageDir):
                     frameDate = dh.parseFilename(filename)
                     if (frameDate < dateFromFile): # мы не обработаем никогда старый кадр
                         processedFrames.append(filename)
         return processedFrames
         
     cfg = Settings()
-    # парсить filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
-    processedFrames = checkDateFile()
-
     if (cfg.algorithm): neural_network = Mask()
     else: imageAI = ImageAI()
-
     decart = DecartCoordinates()
+
+
+    currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
+    processedFrames = checkDateFile(currentImageDir)  # парсим filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
+    
+    threadCount = countCamers(currentImageDir)
+
     rectCoordinates = None
 
     while True:
-        for filename in os.listdir(os.path.join(os.getcwd(), cfg.IMAGE_DIR)):
+        for filename in os.listdir(currentImageDir):
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
-            currentDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
             if filename in processedFrames:
-                if (processedFrames == os.listdir(currentDir)):
+                if (processedFrames == os.listdir(currentImageDir)):
                     print("Sleeping")
                     time.sleep(2.5)
                 continue # если файлы еще есть, то переходим к следующему
@@ -52,7 +63,7 @@ def main():
 
             data, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
 
-            if os.path.isdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam)):
+            if not os.path.isdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam)): # хех круто что это здесь
                 os.mkdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam))
 
             #Mask CNN
