@@ -21,6 +21,7 @@ class ImageAI(Neural_network):
 
         self.customObjects = self.detector.CustomObjects(person=True, car=True, truck=True) #указывает на те объекты, которые мы ищем на кадре
 
+    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
         super().pipeline(filename)
         #print()
@@ -28,7 +29,7 @@ class ImageAI(Neural_network):
         boxes = self.extractObjects(join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename))
         #countedObj = self.countObjects(detections)
         #boxes = self.getBoxesForObjectWithId(detections)
-        #return boxes
+        return boxes
 
 
     def getBoxesForObjectWithId(self, detections):

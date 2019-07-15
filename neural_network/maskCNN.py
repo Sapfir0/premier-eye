@@ -37,7 +37,8 @@ class Mask(Neural_network):
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
-    
+
+    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, filename):
         """
             Считай, почти мейн
@@ -68,22 +69,6 @@ class Mask(Neural_network):
 
         self.imagesFromPreviousFrame = imagesFromCurrentFrame
 
-
-    def setIdToObject(objectId):
-        id = None
-        if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
-            if (objectId == "-"):
-                id = objectId
-            else:
-                if (not len(objectId) == 0):
-                    print(i-1, len(objectId))
-                    id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-                else:
-                    id = "puk"
-        else:
-            id = "crit"               
-        
-        return NotImplemented
 
     def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
         """

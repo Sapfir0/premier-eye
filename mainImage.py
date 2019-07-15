@@ -72,7 +72,6 @@ def main():
                 
             processedFrames.append(filename)
 
-    print(Fore.GREEN + "It's all")
 
 if __name__ == "__main__":
     main()

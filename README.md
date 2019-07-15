@@ -1,6 +1,5 @@
 # Premier Eye
-![](./resources/images/eye.svg)
-
+<a href="https://github.com/avdosev"><img src="./resources/images/eye.svg" alt="avdosev" width="100" height="100"> </a>
 ## Программа для детектирования объектов
 [Docker proj](https://cloud.docker.com/u/sapfir0/repository/docker/sapfir0/premier-eye)
 

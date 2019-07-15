@@ -5,6 +5,24 @@ import cv2
 from matplotlib import pyplot as plt
 import settings as cfg
 
+
+def setIdToObject(objectId):
+    id = None
+    if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
+        if (objectId == "-"):
+            id = objectId
+        else:
+            if (not len(objectId) == 0):
+                print(i-1, len(objectId))
+                id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
+            else:
+                id = "puk"
+    else:
+        id = "crit"               
+    
+    return NotImplemented
+
+
 def compareImages(img1, img2):
     """
         Важно, для работы этой функции необходимы opencv contib модули
@@ -26,8 +44,6 @@ def compareImages(img1, img2):
 
     matches = flann.knnMatch(des1,des2,k=2)
 
-    # store all the good matches as per Lowe's ratio test.
-    good = []
     counter = 0
     for m,n in matches:
         if m.distance < cfg.cencitivity*n.distance:
