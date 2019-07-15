@@ -5,22 +5,13 @@ import cv2
 import time
 import csv
 
-import settings as cfg
+from settings import Settings as cfg
 
 counter=0
 start_time = time.time()
 
 framesPerSecond=20
 
-def getTime(forFrame):
-    def wrapper(frame_number, output_array, output_count):
-        start_time = time.time()
-        forFrame(frame_number, output_array, output_count)
-        print("--- %s seconds ---" % (time.time() - start_time))
-    return wrapper
-
-
-#@getTime
 def forFrame(frame_number, output_array, output_count):
     print("FOR FRAME " , frame_number)
     #print("Output for each object : ", output_array)

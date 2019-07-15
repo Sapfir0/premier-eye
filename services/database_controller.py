@@ -7,6 +7,7 @@ from sqlalchemy import func
 from settings import Settings as cfg
 import sqlalchemy as sql
 
+print(cfg.DATABASE)
 engine = create_engine(cfg.DATABASE,  convert_unicode=True, echo=False)
 session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine)) # хм сложная строчка
 
@@ -15,7 +16,7 @@ Base.query = session.query_property()
 
 
 class Objects(Base):
-    __tablename__ =  "objects" 
+    __tablename__ = "objects"
 
     id = Column(Integer, primary_key=True, unique=True)
     numberOfCam = Column(Integer)

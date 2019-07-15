@@ -1,13 +1,14 @@
 import os
 import sys
-from imageai.Detection import ObjectDetection
-import settings as cfg
-from os.path import join
-from neural_network.neural_network import Neural_network
 import cv2
+from imageai.Detection import ObjectDetection
+from os.path import join
 import numpy as np
+
+from neural_network.neural_network import Neural_network
 import neural_network.modules.feature_matching as sift
 import helpers.timeChecker as timeChecker
+from settings import Settings as cfg
 
 class ImageAI(Neural_network):
     detector = None

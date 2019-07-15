@@ -11,7 +11,7 @@ def saveImageByPlot(self, imagePtr, filename): #plot image saving
     ax.imshow(imagePtr)
     fig.savefig(filename)
 
-def getRandomColors(CLASS_NAMES, seed=42): 
+def getRandomColors(CLASS_NAMES, seed=42):
     # generate random (but visually distinct) colors for each class label
     hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
 
