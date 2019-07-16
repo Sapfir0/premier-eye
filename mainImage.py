@@ -16,17 +16,15 @@ import helpers.timeChecker as timeChecker
 
 def main():
     def checkDateFile(currentImageDir):
-        processedFrames = []
+        import json
         if os.path.isfile(cfg.dateFile):
             with open(cfg.dateFile, 'r') as f:
-                last_processed_data = f.read() # сверимся с древними свитками
-                dateFromFile = dh.parseDateFromFile(last_processed_data) 
-                for filename in os.listdir(currentImageDir):
-                    frameDate = dh.parseFilename(filename)
-                    if (frameDate < dateFromFile): # мы не обработаем никогда старый кадр
-                        processedFrames.append(filename)
-        return processedFrames
-        
+                last_processed_date = f.read() # сверимся с древними свитками
+                json_acceptable_string = last_processed_date.replace("'", "\"")
+                dateFromFile = json.loads(json_acceptable_string)
+                print( dateFromFile)
+                return dateFromFile
+                
     cfg = Settings()
     if (cfg.algorithm): neural_network = Mask()
     else: imageAI = ImageAI()
@@ -34,13 +32,12 @@ def main():
 
 
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
-    #processedFrames = checkDateFile(currentImageDir)  # ПЕРЕДЕЛАТЬ ПОД СЛОВАРЬ
-    processedFrames = {}
+    processedFrames = checkDateFile(currentImageDir) 
+    #processedFrames = {}
 
 
     rectCoordinates = None
 
-    @timeChecker.checkElapsedTime
     def checkNewFile(currentImageDir):
         """
             input: Директория в которой будем искать файлы
@@ -63,7 +60,7 @@ def main():
         for filename in filenames:
             if not numberOfCam in processedFrames.keys():
                 processedFrames.update({numberOfCam:[]}) # если этого ключа нет, без этой строчки мы бы вылетели на следующей
-            print(type(processedFrames), processedFrames)
+
             if filename in processedFrames[str(numberOfCam)]: 
                 print("Non implemented sleeping", processedFrames[str(numberOfCam)], filenames)
 
@@ -91,13 +88,14 @@ def main():
             
  
             processedFrames[numberOfCam].append(filename)
-            #file_controller.writeInFile(cfg.dateFile, str(data)) # будет стирать содержимое файла каждый кадр
+            
+            file_controller.writeInFile(cfg.dateFile, str(processedFrames)) # будет стирать содержимое файла каждый кадр
 
 
 
 
     while True:        
-        imagesForEachCamer = checkNewFile(currentImageDir)
+        imagesForEachCamer = checkNewFile(currentImageDir) # ГЛАВНЫЙ ПОТОК БУДЕТ ЗАНИМАТЬСЯ ЭТИМ
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]; filenames = items[1]
             foo(numberOfCam, filenames) # вызывать эту функцию в отдельном потоке для каждого filenames
