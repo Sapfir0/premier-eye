@@ -29,10 +29,9 @@ def checkNewFile(currentImageDir):
         else: 
             numbersOfCamers.update({numberOfCam:[filename]})
     return numbersOfCamers
-
-
-            
+     
 def main():
+
     cfg = Settings()
     if (cfg.algorithm): neural_network = Mask()
     else: imageAI = ImageAI()
@@ -48,7 +47,6 @@ def main():
     rectCoordinates = None
 
     def mainPipeline(numberOfCam, filenames, processedFrames):
-
         for filename in filenames:
             if not numberOfCam in processedFrames.keys():
                 processedFrames.update({numberOfCam:[]}) # если этого ключа нет, без этой строчки мы бы вылетели на следующей
@@ -90,7 +88,6 @@ def main():
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]; filenames = items[1]
             mainPipeline(numberOfCam, filenames, processedFrames) # вызывать эту функцию в отдельном потоке для каждого filenames
-
 
 
 
