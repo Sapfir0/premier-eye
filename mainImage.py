@@ -12,7 +12,7 @@ import helpers.dateHelper as dh
 import services.database_controller as db
 from neural_network.modules.decart import DecartCoordinates
 import services.file_controller as file_controller
-
+import helpers.timeChecker as timeChecker
 
 def main():
     def checkDateFile(currentImageDir):
@@ -34,12 +34,13 @@ def main():
 
 
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
-    processedFrames = checkDateFile(currentImageDir)  # парсим filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
-    
-    #startedFrame = countCamers(currentImageDir)
+    #processedFrames = checkDateFile(currentImageDir)  # ПЕРЕДЕЛАТЬ ПОД СЛОВАРЬ
+    processedFrames = {}
+
 
     rectCoordinates = None
 
+    @timeChecker.checkElapsedTime
     def checkNewFile(currentImageDir):
         """
             input: Директория в которой будем искать файлы
@@ -48,7 +49,7 @@ def main():
         numbersOfCamers={} # numberOfCam:files
 
         for filename in os.listdir(currentImageDir):
-            _d, numberOfCam = parseFilename(filename, getNumberOfCamera=True)
+            _d, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
 
             if numberOfCam in numbersOfCamers.keys():
                 numbersOfCamers[numberOfCam].append(filename)
@@ -57,31 +58,25 @@ def main():
         print(numbersOfCamers)
         return numbersOfCamers
 
+    def foo(numberOfCam, filenames):
+
+        for filename in filenames:
+            if not numberOfCam in processedFrames.keys():
+                processedFrames.update({numberOfCam:[]}) # если этого ключа нет, без этой строчки мы бы вылетели на следующей
+
+            for processedFrames in processedFrames[str(numberOfCam)].values():
+                if filename in processedFrames: 
+                    print("Non implemented sleeping")
 
 
-    imagesForEachCamer = checkNewFile(currentImageDir)
+                    if (processedFrames[numberOfCam] == os.listdir(currentImageDir)):
+                        print(f"Thread {numberOfCam} sleeping")
+                        time.sleep(2.5) # ЗАСЫПАЕТ ПОТОК ИСПОЛНЕНИЯ, А НЕ ВСЯ ПРОГА!!!!!!!!!!!!!!!!!!!!!!!!
+                    continue # если файлы еще есть, то переходим к следующему
+            # елси все нормально, и мы не обрабатывали этот кадр, то работаем как обычно
 
-
-    while True:
-        # можно обходить не одним циклом, а n циклами
-        # т.е. в начале считать сколько нам будет нужно циклов
-        # добавить назвагние кадра с каждой камеры в свой массив, создать столько потоков, сколько у нас камер
-        # и проходить так
-        # если добавляется новая камера, то нужно перезапустить прогу
-        #import threading
-
-        for filename in os.listdir(currentImageDir):
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
-            
-            if filename in processedFrames:
-                if (processedFrames == os.listdir(currentImageDir)):
-                    print("Sleeping")
-                    time.sleep(2.5)
-                continue # если файлы еще есть, то переходим к следующему
-
-
             print(f"Analyzing {currentImage}")
-
             data, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
 
             if not os.path.isdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam)): # хех круто что это здесь
@@ -96,22 +91,22 @@ def main():
             else:
                 rectCoordinates = imageAI.pipeline(filename)
             
-            file_controller.writeInFile(cfg.dateFile, str(data)) # будет стирать содержимое файла каждый кадр
+ 
+            processedFrames.update({numberOfCam:[filename]})
+            
+            #file_controller.writeInFile(cfg.dateFile, str(data)) # будет стирать содержимое файла каждый кадр
 
-            #DB
-            if (cfg.loggingInDB):
-                centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-                
-                for i in range(0, len(rectCoordinates)): # для каждого объекта, найденного на кадре
-                    LUy, LUx, RDy, RDx = rectCoordinates[i]
-                    CDx, CDy = centerDown[i]
-                    objN = db.Objects(numberOfCam, data, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy))
-                    db.session.add(objN)
 
-                db.session.commit()
-                db.session.flush() # можно один раз добавить
-                
-            processedFrames.append(filename)
+
+
+    while True:        
+        imagesForEachCamer = checkNewFile(currentImageDir)
+        for items in imagesForEachCamer.items():
+            numberOfCam = items[0]; filenames = items[1]
+            foo(numberOfCam, filenames) # вызывать эту функцию в отдельном потоке для каждого filenames
+
+
+
 
 
 if __name__ == "__main__":
