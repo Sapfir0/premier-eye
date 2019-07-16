@@ -64,10 +64,10 @@ def main():
             if not numberOfCam in processedFrames.keys():
                 processedFrames.update({numberOfCam:[]}) # если этого ключа нет, без этой строчки мы бы вылетели на следующей
             print(type(processedFrames), processedFrames)
-            if filename in processedFramesList[str(numberOfCam)]: 
-                print("Non implemented sleeping", processedFramesList, os.listdir(currentImageDir))
+            if filename in processedFrames[str(numberOfCam)]: 
+                print("Non implemented sleeping", processedFrames[str(numberOfCam)], filenames)
 
-                if (processedFramesList[str(numberOfCam)] == filenames):
+                if (processedFrames[str(numberOfCam)] == filenames):
                     print(f"Thread {numberOfCam} sleeping")
                     time.sleep(2.5) # ЗАСЫПАЕТ ПОТОК ИСПОЛНЕНИЯ, А НЕ ВСЯ ПРОГА!!!!!!!!!!!!!!!!!!!!!!!!
                 continue # если файлы еще есть, то переходим к следующему
