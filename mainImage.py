@@ -16,8 +16,8 @@ import helpers.timeChecker as timeChecker
 
 def checkNewFile(currentImageDir):
     """
-        input: Директория в которой будем искать файлы
-        output: Словарь, где номеру камеры будет сопоставлен массив изображений из этой камеры
+        input: Directory in which we search for files
+        output: A dictionary where the camera number will be associated with an array of images from this camera    
     """
     numbersOfCamers={} # numberOfCam:files
 
@@ -29,12 +29,9 @@ def checkNewFile(currentImageDir):
         else: 
             numbersOfCamers.update({numberOfCam:[filename]})
     return numbersOfCamers
-
-
-
-            
+     
 def main():
-    # instancing
+
     cfg = Settings()
     if (cfg.algorithm): neural_network = Mask()
     else: imageAI = ImageAI()
@@ -50,7 +47,6 @@ def main():
     rectCoordinates = None
 
     def mainPipeline(numberOfCam, filenames, processedFrames):
-
         for filename in filenames:
             if not numberOfCam in processedFrames.keys():
                 processedFrames.update({numberOfCam:[]}) # если этого ключа нет, без этой строчки мы бы вылетели на следующей
@@ -87,15 +83,11 @@ def main():
             return rectCoordinates
 
 
-
-
     while True:        
         imagesForEachCamer = checkNewFile(currentImageDir) # ГЛАВНЫЙ ПОТОК БУДЕТ ЗАНИМАТЬСЯ ЭТИМ
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]; filenames = items[1]
             mainPipeline(numberOfCam, filenames, processedFrames) # вызывать эту функцию в отдельном потоке для каждого filenames
-
-
 
 
 

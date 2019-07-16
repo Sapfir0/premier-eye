@@ -1,7 +1,7 @@
 def checkElapsedTime(measuredFunction):
     """
-        Декоратор, засечет время работы функции
-        Пример работы
+        Decorator, timed function
+        Work example:
         @timeChecker.checkElapsedTime
         def foo():
             print("foo")
@@ -19,12 +19,12 @@ def checkElapsedTime(measuredFunction):
 
 def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime):
     """
-        Декоратор, засечет время работы функции и сравнит с необходимыми
-        ВРФ = время работы функции
-        Время рассчитывается в секнудах
-        criticalTime - максимальное время работы, если ВРФ больше, то оно будет выведено красным [c]
-        permissibleTime - допустимое время работы - желтое [c]
-        greatTime - прекрасно, мы вошли в рамки - зеленое [c]
+        The decorator will detect the function time and compare it with the necessary ones.
+        FT = function time
+        Time is calculated in seconds
+        criticalTime - the maximum running time, if the FT is longer, it will be displayed in red [seconds]
+        permissibleTime - permissible working time - yellow [seconds]
+        greatTime - great, we went into the frame - green [seconds]
     """
     def checkElapsedTime(measuredFunction):
         import time
