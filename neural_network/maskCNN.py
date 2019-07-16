@@ -7,7 +7,6 @@ import mrcnn.visualize
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
 
-#from pathlib import Path
 import time
 from colorama import Fore
 
@@ -30,7 +29,7 @@ class Mask(Neural_network):
 
     CLASS_NAMES = None
     COLORS = None
-    imagesFromPreviousFrame = None  # объекты на предыщуем кадре
+    imagesFromPreviousFrame = None  # objects in the previous frame
     model = None
     counter = 0
 
@@ -51,10 +50,9 @@ class Mask(Neural_network):
             almost main
         """
         image = cv2.imread(inputPath)
-        # r['rois'] - массив координат левого нижнего и правого верхнего угла у
-        # найденных объектов
+        # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
-        imagesFromCurrentFrame = self.extractObjectsFromR(
+        imagesFromCurrentFrame = extra.extractObjectsFromR(
             image, r['rois'], saveImage=False)  # почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными
         # на следующем кадре
@@ -125,25 +123,6 @@ class Mask(Neural_network):
                             previousObjects)
 
         return foundedUniqueObjects
-
-    def extractObjectsFromR(self, image, boxes, saveImage=False):
-        """
-            input:
-                image - source image \n
-                boxes - an array of objects found in the image \n
-                in addition: whether to save the received images
-            output: an array of images of objects
-        """
-
-        objects = []
-        for i in boxes:
-            y1, x1, y2, x2 = i
-            # вырежет все объекты в отдельные изображения
-            cropped = image[y1:y2, x1:x2]
-            objects.append(cropped)
-            if (saveImage):
-                cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, f"{i}.jpg"), cropped)
-        return objects
 
     def visualize_detections(
             self,
