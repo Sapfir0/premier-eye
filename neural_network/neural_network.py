@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 import helpers.timeChecker as timeChecker
 
+
 class Neural_network(ABC):
 
     @abstractmethod
@@ -11,7 +12,6 @@ class Neural_network(ABC):
     def extractImages():
         return NotImplemented
 
-
     def detectMyObjects():
         return NotImplemented
 
@@ -21,7 +21,6 @@ class Neural_network(ABC):
     def countObjects():
         return NotImplemented
 
-
     # def __init__(self):
     # def pipeline(self, filename):
     # def setIdToObject():
@@ -30,12 +29,8 @@ class Neural_network(ABC):
     # def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
     # def detectByMaskCNN(self, image):
 
-
     # def __init__(self):
     # def pipeline(self, filename):
     # def getBoxesForObjectWithId(self, detections):
     # def countObjects(self, detections):
     # def detectMyObjects(self, inputName, outputName):
-
-
-

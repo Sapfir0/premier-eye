@@ -1,13 +1,14 @@
 import datetime
 import re
 
+
 def parseFilename(filename, getNumberOfCamera=False, getDate=True):
     numberOfCam, date = 0, datetime
-    
-    result = re.findall(r'\d_\d{14}\..+', filename) 
+
+    result = re.findall(r'\d_\d{14}\..+', filename)
     if not result:
         raise ValueError("Wrong date in filename")
-    numberOfCam, date =  filename.split("_")
+    numberOfCam, date = filename.split("_")
     date = date.split(".")[0]
     year = int(date[0:4])
     month = int(date[4:6])
@@ -17,7 +18,7 @@ def parseFilename(filename, getNumberOfCamera=False, getDate=True):
     seconds = int(date[12:14])
     parsedData = datetime.datetime(year, month, day, hours, minuts, seconds)
     if getNumberOfCamera and getDate:
-        return  parsedData, numberOfCam
+        return parsedData, numberOfCam
     elif getDate:
         return parsedData
     elif getNumberOfCamera:
@@ -25,11 +26,12 @@ def parseFilename(filename, getNumberOfCamera=False, getDate=True):
     else:
         raise Exception("No parsed data, check arguments")
 
+
 def checkDateFile(currentImageDir):
     import json
     if os.path.isfile(cfg.dateFile):
         with open(cfg.dateFile, 'r') as f:
-            last_processed_date = f.read() # сверимся с древними свитками
+            last_processed_date = f.read()  # сверимся с древними свитками
             json_acceptable_string = last_processed_date.replace("'", "\"")
             dateFromFile = json.loads(json_acceptable_string)
             return dateFromFile
@@ -38,14 +40,14 @@ def checkDateFile(currentImageDir):
 def parseDateFromFile(dateFromFile):
     dateFromFile = dateFromFile.strip()
     regexp = r"^\d{4}-\d{2}-\d{2}\s\d{2}:\d{2}:\d{2}"
-    result = re.findall(regexp, dateFromFile) 
+    result = re.findall(regexp, dateFromFile)
     if not result:
         raise ValueError("Wrong dateFromFile from file")
     date, time = dateFromFile.split(" ")
-    
+
     year, month, day = date.split("-")
     hours, minuts, seconds = time.split(":")
 
-    parsedData = datetime.datetime(int(year), int(month), int(day), 
-                                   int(hours), int(minuts), int(seconds))                            
+    parsedData = datetime.datetime(int(year), int(month), int(day),
+                                   int(hours), int(minuts), int(seconds))
     return parsedData

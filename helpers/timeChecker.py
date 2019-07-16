@@ -7,14 +7,14 @@ def checkElapsedTime(measuredFunction):
             print("foo")
     """
     import time
+
     def the_wrapper(*args, **kwargs):
         start = time.time()
         res = measuredFunction(*args, **kwargs)
         end = time.time()
-        print('[*] elapsed time: {} second'.format(end-start))
+        print('[*] elapsed time: {} second'.format(end - start))
         return res
     return the_wrapper
-
 
 
 def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime):
@@ -28,16 +28,20 @@ def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime):
     """
     def checkElapsedTime(measuredFunction):
         import time
+
         def the_wrapper(*args, **kwargs):
             start = time.time()
             res = measuredFunction(*args, **kwargs)
             end = time.time()
-            color, state = getColorForTime(end-start, criticalTime, permissibleTime, greatTime)
-            print(color + '[*{}] elapsed time: {} second'.format(state, end-start))
+            color, state = getColorForTime(
+                end - start, criticalTime, permissibleTime, greatTime)
+            print(
+                color + '[*{}] elapsed time: {} second'.format(state, end - start))
             return res
         return the_wrapper
 
     return checkElapsedTime
+
 
 def getColorForTime(currentTime, criticalTime, permissibleTime, greatTime):
     from colorama import Fore
@@ -51,7 +55,3 @@ def getColorForTime(currentTime, criticalTime, permissibleTime, greatTime):
         return Fore.GREEN, "ok"
     else:
         pass
-
-
-
-    
