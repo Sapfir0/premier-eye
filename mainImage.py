@@ -14,48 +14,42 @@ from neural_network.modules.decart import DecartCoordinates
 import services.file_controller as file_controller
 import helpers.timeChecker as timeChecker
 
+def checkNewFile(currentImageDir):
+    """
+        input: Директория в которой будем искать файлы
+        output: Словарь, где номеру камеры будет сопоставлен массив изображений из этой камеры
+    """
+    numbersOfCamers={} # numberOfCam:files
+
+    for filename in os.listdir(currentImageDir):
+        numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
+
+        if numberOfCam in numbersOfCamers.keys():
+            numbersOfCamers[numberOfCam].append(filename)
+        else: 
+            numbersOfCamers.update({numberOfCam:[filename]})
+    return numbersOfCamers
+
+
+
+            
 def main():
-    def checkDateFile(currentImageDir):
-        import json
-        if os.path.isfile(cfg.dateFile):
-            with open(cfg.dateFile, 'r') as f:
-                last_processed_date = f.read() # сверимся с древними свитками
-                json_acceptable_string = last_processed_date.replace("'", "\"")
-                dateFromFile = json.loads(json_acceptable_string)
-                print( dateFromFile)
-                return dateFromFile
-                
+    # instancing
     cfg = Settings()
     if (cfg.algorithm): neural_network = Mask()
     else: imageAI = ImageAI()
     decart = DecartCoordinates()
 
-
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
-    processedFrames = checkDateFile(currentImageDir) 
-    #processedFrames = {}
 
+    if (cfg.checkOldProcessedFrames):
+        processedFrames = dh.checkDateFile(currentImageDir) 
+    else:
+        processedFrames = {}
 
     rectCoordinates = None
 
-    def checkNewFile(currentImageDir):
-        """
-            input: Директория в которой будем искать файлы
-            output: Хеш, где номеру камеры будет сопоставлен массив изображений из этой камеры
-        """
-        numbersOfCamers={} # numberOfCam:files
-
-        for filename in os.listdir(currentImageDir):
-            _d, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
-
-            if numberOfCam in numbersOfCamers.keys():
-                numbersOfCamers[numberOfCam].append(filename)
-            else: 
-                numbersOfCamers.update({numberOfCam:[filename]})
-        return numbersOfCamers
-
-
-    def foo(numberOfCam, filenames):
+    def mainPipeline(numberOfCam, filenames, processedFrames):
 
         for filename in filenames:
             if not numberOfCam in processedFrames.keys():
@@ -90,6 +84,7 @@ def main():
             processedFrames[numberOfCam].append(filename)
             
             file_controller.writeInFile(cfg.dateFile, str(processedFrames)) # будет стирать содержимое файла каждый кадр
+            return rectCoordinates
 
 
 
@@ -98,7 +93,7 @@ def main():
         imagesForEachCamer = checkNewFile(currentImageDir) # ГЛАВНЫЙ ПОТОК БУДЕТ ЗАНИМАТЬСЯ ЭТИМ
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]; filenames = items[1]
-            foo(numberOfCam, filenames) # вызывать эту функцию в отдельном потоке для каждого filenames
+            mainPipeline(numberOfCam, filenames, processedFrames) # вызывать эту функцию в отдельном потоке для каждого filenames
 
 
 
