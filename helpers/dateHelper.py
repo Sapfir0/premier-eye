@@ -1,7 +1,7 @@
 import datetime
 import re
 
-def parseFilename(filename, getNumberOfCamera=False):
+def parseFilename(filename, getNumberOfCamera=False, getDate=True):
     numberOfCam, date = 0, datetime
     
     result = re.findall(r'\d_\d{14}\..+', filename) 
@@ -16,11 +16,23 @@ def parseFilename(filename, getNumberOfCamera=False):
     minuts = int(date[10:12])
     seconds = int(date[12:14])
     parsedData = datetime.datetime(year, month, day, hours, minuts, seconds)
-    if getNumberOfCamera:
+    if getNumberOfCamera and getDate:
         return  parsedData, numberOfCam
+    elif getDate:
+        return parsedData
+    elif getNumberOfCamera:
+        return numberOfCam
     else:
-        return  parsedData
+        raise Exception("No parsed data, check arguments")
 
+def checkDateFile(currentImageDir):
+    import json
+    if os.path.isfile(cfg.dateFile):
+        with open(cfg.dateFile, 'r') as f:
+            last_processed_date = f.read() # сверимся с древними свитками
+            json_acceptable_string = last_processed_date.replace("'", "\"")
+            dateFromFile = json.loads(json_acceptable_string)
+            return dateFromFile
 
 
 def parseDateFromFile(dateFromFile):

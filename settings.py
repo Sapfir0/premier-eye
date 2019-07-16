@@ -14,12 +14,13 @@ class Settings():
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
 
     OUTPUT_DIR = "output"
-    IMAGE_DIR = join(DATA_PATH, "video0") 
+    IMAGE_DIR = join(DATA_PATH, "videoCut") 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
     loggingInDB = False
     dateFile = "last_data_processed.txt"
 
     algorithm = 1
+    checkOldProcessedFrames = False # в продакшене должен быть обязательно тру
     #Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный путь от этого файла
     LOGS_DIR = "logs"
