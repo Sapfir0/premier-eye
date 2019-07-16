@@ -15,15 +15,6 @@ import services.file_controller as file_controller
 
 
 def main():
-    def countCamers(currentImageDir):
-        existedCams = []; counterOfCamers = 0
-        for filename in os.listdir(currentImageDir): # пробежимся первый раз и определим сколько у нас камер
-            date, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
-            if not numberOfCam in existedCams:
-                existedCams.append(numberOfCam)
-                counterOfCamers+=1
-        return counterOfCamers
-
     def checkDateFile(currentImageDir):
         processedFrames = []
         if os.path.isfile(cfg.dateFile):
@@ -45,19 +36,49 @@ def main():
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
     processedFrames = checkDateFile(currentImageDir)  # парсим filename и ПОФ и если ПОФ произошел раньше чем filename, то обабатываем
     
-    threadCount = countCamers(currentImageDir)
+    #startedFrame = countCamers(currentImageDir)
 
     rectCoordinates = None
 
+    def checkNewFile(currentImageDir):
+        """
+            input: Директория в которой будем искать файлы
+            output: Хеш, где номеру камеры будет сопоставлен массив изображений из этой камеры
+        """
+        numbersOfCamers={} # numberOfCam:files
+
+        for filename in os.listdir(currentImageDir):
+            _d, numberOfCam = parseFilename(filename, getNumberOfCamera=True)
+
+            if numberOfCam in numbersOfCamers.keys():
+                numbersOfCamers[numberOfCam].append(filename)
+            else: 
+                numbersOfCamers.update({numberOfCam:[filename]})
+        print(numbersOfCamers)
+        return numbersOfCamers
+
+
+
+    imagesForEachCamer = checkNewFile(currentImageDir)
+
+
     while True:
+        # можно обходить не одним циклом, а n циклами
+        # т.е. в начале считать сколько нам будет нужно циклов
+        # добавить назвагние кадра с каждой камеры в свой массив, создать столько потоков, сколько у нас камер
+        # и проходить так
+        # если добавляется новая камера, то нужно перезапустить прогу
+        #import threading
+
         for filename in os.listdir(currentImageDir):
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
-
+            
             if filename in processedFrames:
                 if (processedFrames == os.listdir(currentImageDir)):
                     print("Sleeping")
                     time.sleep(2.5)
                 continue # если файлы еще есть, то переходим к следующему
+
 
             print(f"Analyzing {currentImage}")
 
