@@ -44,7 +44,7 @@ class Mask(Neural_network):
     @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, inputPath, outputPath):
         """
-            Считай, почти мейн
+            almost main
         """
         image = cv2.imread(inputPath)
         r, rgb_image = self.detectByMaskCNN(image)     #r['rois'] - массив координат левого нижнего и правого верхнего угла у найденных объектов
@@ -76,10 +76,10 @@ class Mask(Neural_network):
     def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
         """
             input: 
-            imagesFromPreviousFrame - массив объектов на предыдущем кадре \n
-            imagesFromCurrentFrame  - массив объектов на текущем кадре \n
-            r - информация об объектах, полученная с mask rcnn \n
-            output: вернет массив объектов, которые есть на обоих кадрах
+                imagesFromPreviousFrame - an array of objects in the previous frame \n
+                imagesFromCurrentFrame - an array of objects on the current frame \n
+                r - information about objects obtained with mask rcnn \n
+            output: returns an array of objects in both frames.
         """
         obj = {
             "id": None,
@@ -91,7 +91,9 @@ class Mask(Neural_network):
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame: 
                 if( sift.compareImages(previousObjects, currentObjects)  ): # то это один объект
-                    obj['id'] = objectId; obj['type'] = r['class_ids'][objectId]; obj['coordinates'] = r['rois'][objectId]
+                    obj['id'] = objectId
+                    obj['type'] = r['class_ids'][objectId] 
+                    obj['coordinates'] = r['rois'][objectId]
                     objectId += 1
                     #imagesFromCurrentFrame.remove(currentObjects) # оптимизация от некита
                     foundedUniqueObjects.append(obj) # все, матрицы можем выкидывать
@@ -103,10 +105,11 @@ class Mask(Neural_network):
 
     def extractObjectsFromR(self, image, boxes, saveImage=False):
         """
-            input: image - исходное изображение \n
-                boxes - массив найденных объектов на изображении \n 
-                дополнительно: сохранять ли полученные изображения
-            output: массив изображений объектов
+            input: 
+                image - source image \n
+                boxes - an array of objects found in the image \n
+                in addition: whether to save the received images
+            output: an array of images of objects
         """
 
         objects=[]
@@ -120,8 +123,8 @@ class Mask(Neural_network):
 
     def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
         """
-            input: исходное изображение, полный объект из нейросети mask cnn, и айдишник объекта, если получилось его получить
-            output: объект с указанием найденных объектов на изображении, и само изображение, с выделенными объектами и подписями
+            input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
+            output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
         """
         # Create a new solid-black image the same size as the original image
         masked_image = np.zeros(image.shape)
@@ -171,9 +174,9 @@ class Mask(Neural_network):
         return countedObj, rgb_image.astype(np.uint8)
 
     def detectByMaskCNN(self, image):
-        """
-            input: image - результат работы cv2.imread(<filename>)
-            output: r - словарь найденных объектов (r['masks'], r['rois'], r['class_ids'], r['scores']), подробная справка где-то еще
+        """     
+            input: image - the result of cv2.imread (<filename>)
+            output: r - dictionary of objects found (r ['masks'], r ['rois'], r ['class_ids'], r ['scores']), detailed help somewhere else
         """
         rgb_image = image[:, :, ::-1]
         r = self.model.detect([rgb_image], verbose=1)[0] #тут вся магия
