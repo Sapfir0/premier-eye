@@ -38,12 +38,9 @@ class Objects(Base):
             self,
             numberOfCam,
             fixationDatetime,
-            LDx,
-            LDy,
-            RUx,
-            RUy,
-            CDx,
-            CDy):
+            LDx, LDy,
+            RUx, RUy,
+            CDx, CDy):
         self.numberOfCam = numberOfCam
         self.fixationDatetime = fixationDatetime
         self.LDx = LDx
@@ -61,9 +58,17 @@ class Objects(Base):
         return "<Object('%s','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (
             self.numberOfCam, self.fixationDatetime, self.LDx, self.LDy, self.RUx, self.RUy, self.CDx, self.CDy)
 
-    def checkQuery():
+    def checkQuery(self):
         for i in session.query(Objects):
             print(i)
+
+def writeInfoForObjectInDB(numberOfCam, fixationDatetime, rectCoordinates, centerDown):
+    LUy, LUx, RDy, RDx = rectCoordinates
+    CDx, CDy = centerDown
+    objN = Objects(numberOfCam, fixationDatetime, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy))
+    session.add(objN)
+    session.commit()
+    session.flush() # можно один раз добавить  
 
 
 Objects.init_db()

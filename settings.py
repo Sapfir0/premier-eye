@@ -34,8 +34,10 @@ class Settings():
 
     # Mask cnn advanced
     # Configuration that will be used by the Mask-RCNN library
-    import cv2
-    print(Fore.MAGENTA + str(cv2.__version__))
+    import cv2, tensorflow, keras
+    print(Fore.MAGENTA + "Opencv v" + str(cv2.__version__))
+    print(Fore.MAGENTA + "Tensorflow v" + str(tensorflow.__version__))
+    print(Fore.MAGENTA + "Keras v" + str(keras.__version__))
 
     class MaskRCNNConfig(mrcnn.config.Config):
         NAME = "coco_pretrained_model_config"

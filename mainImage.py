@@ -13,7 +13,7 @@ import services.database_controller as db
 from neural_network.modules.decart import DecartCoordinates
 import services.file_controller as file_controller
 import helpers.timeChecker as timeChecker
-
+from threading import Thread
 
 def checkNewFile(currentImageDir):
     """
@@ -29,13 +29,20 @@ def checkNewFile(currentImageDir):
             numbersOfCamers[numberOfCam].append(filename)
         else:
             numbersOfCamers.update({numberOfCam: [filename]})
+
+    for i in numbersOfCamers.keys():
+        numbersOfCamers.update({i: sorted(numbersOfCamers[i])})
+
     return numbersOfCamers
     
+
 def parseImageAiData(rectCoordinates):
     boxes = []
     for diction in rectCoordinates:
         boxes.append(diction['box_points'])
     return boxes
+
+
 
 def main():
 
@@ -68,45 +75,31 @@ def main():
 
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
             print(f"Analyzing {currentImage}")
-            data, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+            date, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
 
             # Mask CNN
             if (cfg.algorithm):
-                if not os.path.isdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam)):  # хех круто что это здесь
-                    os.mkdir(os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam))
-
                 rectCoordinates = neural_network.pipeline(
                     os.path.join(cfg.IMAGE_DIR, filename),
                     os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)
-                    )
+                )
             else:
-                if not os.path.isdir(os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam)): 
-                    os.mkdir(os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam))
-
                 rectCoordinates = imageAI.pipeline(
                     os.path.join(cfg.IMAGE_DIR, filename),
                     os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam, filename)
-                    )
+                )
                 rectCoordinates = parseImageAiData(rectCoordinates)
            
             processedFrames[numberOfCam].append(filename)
            
-            file_controller.writeInFile(cfg.dateFile, str(processedFrames)) # будет стирать содержимое файла каждый кадр
+            file_controller.writeInFile(cfg.dateFile, str(processedFrames))  # будет стирать содержимое файла каждый кадр
            
             # DB
             if (cfg.loggingInDB):
-
-                centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-                
-                for i in range(0, len(rectCoordinates)): # для каждого объекта, найденного на кадре
-                    LUy, LUx, RDy, RDx = rectCoordinates[i]
-                    CDx, CDy = centerDown[i]
-                    objN = db.Objects(numberOfCam, data, int(LUx), int(LUy), 
-                                    int(RDx), int(RDy), int(CDx), int(CDy))
-                    db.session.add(objN)
-
-                db.session.commit()
-                db.session.flush() # можно один раз добавить   
+                centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
+                for i in range(0, len(rectCoordinates)):  # для каждого объекта, найденного на кадре
+                    db.writeInfoForObjectInDB(numberOfCam, date, rectCoordinates[i], centerDown[i])
+ 
             return rectCoordinates
 
 
@@ -115,8 +108,9 @@ def main():
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]
-            mainPipeline(numberOfCam, filenames, processedFrames)  # вызывать эту функцию в отдельном потоке для каждого filenames
-
-
+            threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
+            #mainPipeline(numberOfCam, filenames, processedFrames)
+            threadI.start()
+        
 if __name__ == "__main__":
     main()

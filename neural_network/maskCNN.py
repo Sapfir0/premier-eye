@@ -49,6 +49,9 @@ class Mask(Neural_network):
         """
             almost main
         """
+        if not os.path.isdir(os.path.split(outputPath)[0]):  
+            os.mkdir(os.path.split(outputPath)[0])
+
         image = cv2.imread(inputPath)
         # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
