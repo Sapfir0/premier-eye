@@ -1,8 +1,9 @@
 from matplotlib import pyplot as plt
 import colorsys
-import random  
+import random
 
-def saveImageByPlot(self, imagePtr, filename): #plot image saving
+
+def saveImageByPlot(imagePtr, filename): #plot image saving
     fig = plt.figure(frameon=False)
     ax = plt.Axes(fig, [0., 0., 1., 1.])
     ax.set_axis_off()
@@ -10,6 +11,7 @@ def saveImageByPlot(self, imagePtr, filename): #plot image saving
 
     ax.imshow(imagePtr)
     fig.savefig(filename)
+
 
 def getRandomColors(CLASS_NAMES, seed=42):
     # generate random (but visually distinct) colors for each class label
@@ -20,7 +22,8 @@ def getRandomColors(CLASS_NAMES, seed=42):
     random.shuffle(COLORS)
     return COLORS
 
-def extractObjectsFromR(self, image, boxes, saveImage=False):
+
+def extractObjectsFromR(image, boxes, saveImage=False):
     """
         input:
             image - source image \n

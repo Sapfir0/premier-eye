@@ -20,7 +20,7 @@ class Settings():
     dateFile = "last_data_processed.txt"
 
     algorithm = 1
-    checkOldProcessedFrames = True # в продакшене должен быть обязательно тру
+    checkOldProcessedFrames = False # в продакшене должен быть обязательно тру
     #Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный путь от этого файла
     LOGS_DIR = "logs"
