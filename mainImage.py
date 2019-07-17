@@ -109,8 +109,8 @@ def main():
             numberOfCam = items[0]
             filenames = items[1]
             mainPipeline(numberOfCam, filenames, processedFrames)
-            #threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
-            #threadI.start()
+            threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
+            threadI.start()
         
 if __name__ == "__main__":
     main()
