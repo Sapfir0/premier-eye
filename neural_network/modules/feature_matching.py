@@ -5,29 +5,36 @@ import cv2
 from matplotlib import pyplot as plt
 from settings import Settings as cfg
 
+def setIdToObject(objectId, i):
+    print("Мы пук", objectId)
+    if not isinstance(objectId, list):
+        return "-"
+    print(i >= len(objectId), i, len(objectId))
+    if i >= len(objectId):
+        return i
 
-def setIdToObject(objectId):
-    id = None
-    if (i-1 < len(objectId)): # правильно будет меньше либо равен, но попробую юзнуть меьшн
-        if (objectId == "-"):
-            id = objectId
-        else:
-            if (not len(objectId) == 0):
-                print(i-1, len(objectId))
-                id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-            else:
-                id = "puk"
-    else:
-        id = "crit"               
+    id = objectId[i]['id']
+
+    return id
+#    if (i-1 < len(objectId)):   # правильно будет меньше либо равен, но попробую юзнуть меьшн
+#        if (objectId == "-"):
+#            id = objectId
+#        else:
+#            if (not len(objectId) == 0):
+#                print(i-1, len(objectId))
+#                id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
+#           else:
+#                id = "puk"
+#    else:
+#       id = "crit"              
     
-    return NotImplemented
 
 
 def compareImages(img1, img2):
     """
-        Важно, для работы этой функции необходимы opencv contib модули
-        input: 2 сравниваемых изображения
-        output: результат сравнения [True|False]
+        OpenCV Contrib Modules
+        input: 2 compared images
+        conclusion: the result of the comparison [True | False]
     """
 
     # Initiate SIFT detector

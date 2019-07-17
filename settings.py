@@ -3,10 +3,12 @@ from os.path import join
 import wget
 import mrcnn.utils
 import colorama
-from colorama import Fore, Back, Style  # для цветного консльного вывода 
+from colorama import Fore, Back, Style  # для цветного консольного вывода 
 import mrcnn.config
 
 class Settings():
+    lastId = 0 # убрать
+
     colorama.init(autoreset=True)
 
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
@@ -19,15 +21,15 @@ class Settings():
     loggingInDB = False
     dateFile = "last_data_processed.txt"
 
-    algorithm = 1
-    checkOldProcessedFrames = True # в продакшене должен быть обязательно тру
+    algorithm = 0
+    checkOldProcessedFrames = False # в продакшене должен быть обязательно тру
     #Mask cnn
-    DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  #относительный путь от этого файла
+    DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
     LOGS_DIR = "logs"
-    CLASSES_FILE = join(DATA_PATH, "class_names.txt") # если его нет, то скачать1
+    CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
 
-    DATAFILE = "text.txt" # не актуально
-    OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout') # АЛГОРИТМ 2
+    DATAFILE = "text.txt"  # не актуально
+    OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
     SAVE_COLORMAP = False
 
     # Mask cnn advanced
@@ -39,7 +41,7 @@ class Settings():
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
-        DETECTION_MIN_CONFIDENCE = 70 /100  # минимальный процент отображения прямоугольника
+        DETECTION_MIN_CONFIDENCE = 60 /100  # минимальный процент отображения прямоугольника
         NUM_CLASSES = 81
         IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
@@ -54,7 +56,7 @@ class Settings():
     #imageAI
     DATASET_DIR_IMAGE_AI = join(DATA_PATH, "resnet50_coco_best_v2.0.1.h5")
     OUTPUT_DIR_IMAGE_AI = join(APP_PATH, OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
-    DETECTION_SPEED = "normal" # скорость обхода каждого кадра
+    DETECTION_SPEED = "normal"  # скорость обхода каждого кадра
 
     ##### unused
     #video
@@ -65,30 +67,30 @@ class Settings():
         file = wget.download(downloadLink) 
         os.rename(join(os.getcwd(), file), destinationDir)
 
+    def checkExist(self, mustExistedFile, link, downloadMaskCNNdataset=False):
+        if not os.path.exists(mustExistedFile):
+            if downloadMaskCNNdataset:
+                mrcnn.utils.download_trained_weights(mustExistedFile)  # стоит это дополнительно скачивать в докере
+            else:
+                print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
+                self.downloadAndMove(link, mustExistedFile)
+        
     def __init__(self):
 
         must_exist_dirs = [self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI, self.OUTPUT_DIR, self.DATA_PATH]
 
         for i in must_exist_dirs:
             if not os.path.exists(i):
-                print(f"{i} folder is'nt exist. Creating..")
+                print(f"{i} folder isn't exist. Creating..")
                 os.makedirs(i)
 
         if self.algorithm:
-            if not os.path.isfile(self.DATASET_DIR):
-                print(Fore.YELLOW + f"{self.DATASET_DIR} isn't exist. Downloading...")
-                mrcnn.utils.download_trained_weights(self.DATASET_DIR) #стоит это дополнительно скачивать в докере
-            
-            if not os.path.isfile(self.CLASSES_FILE):
-                print(Fore.YELLOW + f"{self.CLASSES_FILE} isn't exist. Downloading...")
-                link = "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
-                self.downloadAndMove(link, self.CLASSES_FILE)
+            self.checkExist(self.DATASET_DIR, None, downloadMaskCNNdataset=True)
+            link = "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
+            self.checkExist(self.CLASSES_FILE, link)
         else:
-            if not os.path.isfile(self.DATASET_DIR_IMAGE_AI):
-                print(Fore.RED + f"{self.DATASET_DIR_IMAGE_AI} isn't exist. Downloading...")
-                link = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
-                self.downloadAndMove(link, self.DATASET_DIR_IMAGE_AI)
-
+            link = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
+            self.checkExist(self.DATASET_DIR_IMAGE_AI, link)
 
         if not os.listdir(self.IMAGE_DIR):
             print(Fore.YELLOW + f"{self.IMAGE_DIR} is empty")

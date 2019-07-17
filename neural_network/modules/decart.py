@@ -1,12 +1,17 @@
 import sqlalchemy as sql
 import services.database_controller as db
 from colorama import Fore
+from settings import Settings
 
 class DecartCoordinates():
 
     def getCenterOfDownOfRectangle(self, boxes): # задан левый нижний и правый верхний угол
         allCenters = []
-        for i in range(boxes.shape[0]):
+        iterator = []
+        cfg = Settings()
+        if cfg.algorithm: iterator = boxes.shape[0]
+        else: iterator = boxes 
+        for i in range(iterator):
             y1, x1, y2, x2 = boxes[i]
             midleDownPoint = [(x1+x2)/2, y1]
             allCenters.append(midleDownPoint)

@@ -8,7 +8,9 @@ import numpy as np
 from neural_network.neural_network import Neural_network
 import neural_network.modules.feature_matching as sift
 import helpers.timeChecker as timeChecker
-from settings import Settings as cfg
+from settings import Settings
+
+cfg = Settings()
 
 
 class ImageAI(Neural_network):
@@ -16,6 +18,7 @@ class ImageAI(Neural_network):
     customObjects = None
 
     def __init__(self):
+
         self.detector = ObjectDetection()
         self.detector.setModelTypeAsRetinaNet()
         self.detector.setModelPath(
@@ -29,14 +32,11 @@ class ImageAI(Neural_network):
             person=True, car=True, truck=True)
 
     @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
-    def pipeline(self, filename):
-        super().pipeline(filename)
+    def pipeline(self, inputPath, outputPath):
         # print()
-        #detections = self.detectMyObjects(join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename))
-        boxes = self.extractObjects(
-            join(
-                cfg.IMAGE_DIR, filename), join(
-                cfg.OUTPUT_DIR_IMAGE_AI, filename))
+        boxes = self.detectMyObjects(inputPath, outputPath)
+        # boxes = self.extractObjects(
+        #     join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename))
         #countedObj = self.countObjects(detections)
         #boxes = self.getBoxesForObjectWithId(detections)
         return boxes
@@ -76,7 +76,7 @@ class ImageAI(Neural_network):
             custom_objects=self.customObjects,
             input_image=os.path.join(cfg.APP_PATH, inputName),
             output_image_path=os.path.join(cfg.APP_PATH, outputName),
-            minimum_percentage_probability=cfg.DETECTION_MIN_CONFIDENCE
+            minimum_percentage_probability=(cfg.MaskRCNNConfig.DETECTION_MIN_CONFIDENCE)*100
         )
 
         return detections
@@ -88,7 +88,7 @@ class ImageAI(Neural_network):
             input_image=inputName,
             output_type="array",
             extract_detected_objects=True,
-            minimum_percentage_probability=cfg.DETECTION_MIN_CONFIDENCE)
+            minimum_percentage_probability=cfg.MaskRCNNConfig.DETECTION_MIN_CONFIDENCE)
         #print(returned_image, detections, extracted_objects)
         currentObjectFromFrame = []
 

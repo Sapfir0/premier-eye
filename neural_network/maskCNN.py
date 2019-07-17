@@ -70,23 +70,16 @@ class Mask(Neural_network):
     def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
         foundedDifferentObjects = None
         if (self.counter):
-            foundedDifferentObjects = self.uniqueObjects(
-                self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
-            countedObj, masked_image = self.visualize_detections(
-                rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
+            foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
+            print("Столько у нас одниковых обхектов с пердыщуим кадром", len(foundedDifferentObjects))
+            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
-            countedObj, masked_image = self.visualize_detections(
-                rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
             self.counter = 1
 
         self.imagesFromPreviousFrame = imagesFromCurrentFrame
 
-    def uniqueObjects(
-            self,
-            imagesFromPreviousFrame,
-            imagesFromCurrentFrame,
-            r,
-            saveUniqueObjects=False):
+    def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
         """
             input:
                 imagesFromPreviousFrame - an array of objects in the previous frame \n
@@ -94,20 +87,18 @@ class Mask(Neural_network):
                 r - information about objects obtained with mask rcnn \n
             output: returns an array of objects in both frames.
         """
-        obj = {
-            "id": None,
-            "type": None,
-            "coordinates": None
-        }
+
 
         foundedUniqueObjects = []
         objectId = 0
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame:
                 if(sift.compareImages(previousObjects, currentObjects)):  # то это один объект
-                    obj['id'] = objectId
-                    obj['type'] = r['class_ids'][objectId]
-                    obj['coordinates'] = r['rois'][objectId]
+                    obj = {
+                        "id": objectId,
+                        "type": r['class_ids'][objectId],
+                        "coordinates": r['rois'][objectId]
+                    }
                     objectId += 1
                     # imagesFromCurrentFrame.remove(currentObjects) #
                     # оптимизация от некита
@@ -124,14 +115,7 @@ class Mask(Neural_network):
 
         return foundedUniqueObjects
 
-    def visualize_detections(
-            self,
-            image,
-            masks,
-            boxes,
-            class_ids,
-            scores,
-            objectId="-"):
+    def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
         """
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
@@ -164,22 +148,16 @@ class Mask(Neural_network):
 
             mask = masks[:, :, i]
             color = (1.0, 1.0, 1.0)  # White
-            image = mrcnn.visualize.apply_mask(
-                image, mask, color, alpha=0.6)  # рисование маски
+            image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6)  # рисование маски
 
             if(classID > len(self.CLASS_NAMES)):
-                print(
-                    Fore.RED +
-                    "Exception: Undefined classId - " +
-                    str(classID))
+                print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 
+            #id = sift.setIdToObject(objectId, i)
             label = self.CLASS_NAMES[classID]
-            color = [
-                int(c) for c in np.array(
-                    self.COLORS[classID]) *
-                255]  # ух круто
-            text = "{}: {:.1f} {}".format(label, scores[i] * 100, id)
+            color = [int(c) for c in np.array(self.COLORS[classID]) * 255]  # ух круто
+            text = "{}: {:.1f} {}".format(label, scores[i] * 100, i)
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1 - 20), font, 0.8, color, 2)
