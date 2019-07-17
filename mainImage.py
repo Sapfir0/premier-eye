@@ -108,9 +108,9 @@ def main():
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]
-            threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
-            #mainPipeline(numberOfCam, filenames, processedFrames)
-            threadI.start()
+            mainPipeline(numberOfCam, filenames, processedFrames)
+            #threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
+            #threadI.start()
         
 if __name__ == "__main__":
     main()

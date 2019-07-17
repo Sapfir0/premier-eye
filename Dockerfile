@@ -41,17 +41,19 @@ RUN git clone https://github.com/matterport/Mask_RCNN.git  \
     && cd .. \ 
     && rm -rf Mask_RCNN
 
-# соберем opencv лапками 
-RUN git clone https://github.com/opencv/opencv.git \
- && git clone https://github.com/opencv/opencv_contrib.git \
- && cd opencv && mkdir build && cd build \
- && cmake -D CMAKE_BUILD_TYPE=RELEASE \ 
-        -D CMAKE_INSTALL_PREFIX=/usr/local \ 
-        -D OPENCV_ENABLE_NONFREE:BOOL=ON \
-        -D OPENCV_EXTRA_MODULES_PATH=/opencv_contrib/modules .. \
- &&  make -j2 \
- && make install \
- && cd ../../ && rm -rf opencv && rm -rf opencv_contrib
+# соберем opencv лапками (или нет)
+RUN pip3 install opencv-python==3.4.2.16 \
+ && pip3 install opencv-contrib-python==3.4.2.16
+# RUN git clone https://github.com/opencv/opencv.git \
+#  && git clone https://github.com/opencv/opencv_contrib.git \
+#  && cd opencv && mkdir build && cd build \
+#  && cmake -D CMAKE_BUILD_TYPE=RELEASE \ 
+#         -D CMAKE_INSTALL_PREFIX=/usr/local \ 
+#         -D OPENCV_ENABLE_NONFREE:BOOL=ON \
+#         -D OPENCV_EXTRA_MODULES_PATH=/opencv_contrib/modules .. \
+#  &&  make -j2 \
+#  && make install \
+#  && cd ../../ && rm -rf opencv && rm -rf opencv_contrib
 
 
 COPY . /premier-app 

@@ -13,7 +13,7 @@ class Settings():
 
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")
-    DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
+    DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db') # на выходе 4 слеша, что докер не приемлет(странно, всегда было норм)
 
     OUTPUT_DIR = "output"
     IMAGE_DIR = join(DATA_PATH, "videoCut") 

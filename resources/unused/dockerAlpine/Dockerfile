@@ -11,16 +11,14 @@ RUN apk add python3 git python3-dev \
 
 # RUN git clone https://github.com/opencv/opencv.git \
 #  && git clone https://github.com/opencv/opencv_contrib.git \
-#  && cd opencv \
-#  && mkdir build \
-#  && cd build \
+#  && cd opencv && mkdir build && cd build \
 #  && cmake -D CMAKE_BUILD_TYPE=RELEASE \ 
 #         -D CMAKE_INSTALL_PREFIX=/usr/local \ 
 #         -D OPENCV_ENABLE_NONFREE:BOOL=ON \
-#         -D OPENCV_EXTRA_MODULES_PATH=../../opencv_contrib/modules \ 
-#         -D BUILD_EXAMPLES=ON .. \
+#         -D OPENCV_EXTRA_MODULES_PATH=/opencv_contrib/modules .. \
 #  &&  make -j2 \
-# && make install
+#  && make install \
+#  && cd ../../ && rm -rf opencv && rm -rf opencv_contrib
 
 COPY . /premier-app 
 
