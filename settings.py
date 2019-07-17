@@ -18,7 +18,7 @@ class Settings():
     OUTPUT_DIR = "output"
     IMAGE_DIR = join(DATA_PATH, "videoCut") 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
-    loggingInDB = False
+    loggingInDB = True
     dateFile = "last_data_processed.txt"
 
     algorithm = 0

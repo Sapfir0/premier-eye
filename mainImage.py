@@ -30,7 +30,12 @@ def checkNewFile(currentImageDir):
         else:
             numbersOfCamers.update({numberOfCam: [filename]})
     return numbersOfCamers
-     
+    
+def parseImageAiData(rectCoordinates):
+    boxes = []
+    for diction in rectCoordinates:
+        boxes.append(diction['box_points'])
+    return boxes
 
 def main():
 
@@ -53,14 +58,13 @@ def main():
     def mainPipeline(numberOfCam, filenames, processedFrames):
         for filename in filenames:
             if numberOfCam not in processedFrames.keys():
-                processedFrames.update({numberOfCam: []})  # если этого ключа нет, без этой строчки мы бы вылетели на следующей
+                processedFrames.update({numberOfCam: []})
 
             if filename in processedFrames[str(numberOfCam)]:
                 if (processedFrames[str(numberOfCam)] == filenames):
                     print(f"Thread {numberOfCam} sleeping")
-                    time.sleep(2.5)  # ЗАСЫПАЕТ ПОТОК ИСПОЛНЕНИЯ, А НЕ ВСЯ ПРОГА!!!!!!!!!!!!!!!!!!!!!!!!
+                    time.sleep(2.5)  # засыпает поток исполнения
                 continue  # если файлы еще есть, то переходим к следующему
-            # если все нормально, и мы не обрабатывали этот кадр, то работаем как обычно
 
             currentImage = os.path.join(cfg.IMAGE_DIR, filename)
             print(f"Analyzing {currentImage}")
@@ -76,13 +80,14 @@ def main():
                     os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)
                     )
             else:
-                if not os.path.isdir(os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam)):  # хех круто что это здесь
+                if not os.path.isdir(os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam)): 
                     os.mkdir(os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam))
 
                 rectCoordinates = imageAI.pipeline(
                     os.path.join(cfg.IMAGE_DIR, filename),
                     os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam, filename)
                     )
+                rectCoordinates = parseImageAiData(rectCoordinates)
            
             processedFrames[numberOfCam].append(filename)
            
@@ -90,12 +95,14 @@ def main():
            
             # DB
             if (cfg.loggingInDB):
+
                 centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates) #массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
                 
                 for i in range(0, len(rectCoordinates)): # для каждого объекта, найденного на кадре
                     LUy, LUx, RDy, RDx = rectCoordinates[i]
                     CDx, CDy = centerDown[i]
-                    objN = db.Objects(numberOfCam, data, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy))
+                    objN = db.Objects(numberOfCam, data, int(LUx), int(LUy), 
+                                    int(RDx), int(RDy), int(CDx), int(CDy))
                     db.session.add(objN)
 
                 db.session.commit()
@@ -104,7 +111,7 @@ def main():
 
 
     while True:
-        imagesForEachCamer = checkNewFile(currentImageDir)  # ГЛАВНЫЙ ПОТОК БУДЕТ ЗАНИМАТЬСЯ ЭТИМ
+        imagesForEachCamer = checkNewFile(currentImageDir)  # этим занимается главный поток
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]

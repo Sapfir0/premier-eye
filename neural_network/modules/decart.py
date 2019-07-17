@@ -7,12 +7,10 @@ class DecartCoordinates():
 
     def getCenterOfDownOfRectangle(self, boxes): # задан левый нижний и правый верхний угол
         allCenters = []
-        iterator = []
+        
         cfg = Settings()
-        if cfg.algorithm: iterator = boxes.shape[0]
-        else: iterator = boxes 
-        for i in range(iterator):
-            y1, x1, y2, x2 = boxes[i]
+        for i in boxes:
+            y1, x1, y2, x2 = i
             midleDownPoint = [(x1+x2)/2, y1]
             allCenters.append(midleDownPoint)
         return allCenters
