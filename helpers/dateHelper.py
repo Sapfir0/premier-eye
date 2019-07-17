@@ -1,6 +1,7 @@
 import datetime
 import re
-
+import os
+from settings import Settings as cfg
 
 def parseFilename(filename, getNumberOfCamera=False, getDate=True):
     numberOfCam, date = 0, datetime

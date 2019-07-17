@@ -8,7 +8,7 @@ class DecartCoordinates():
         allCenters = []
         for i in range(boxes.shape[0]):
             y1, x1, y2, x2 = boxes[i]
-            midleDownPoint = [ (x1+x2)/2, y1]
+            midleDownPoint = [(x1+x2)/2, y1]
             allCenters.append(midleDownPoint)
         return allCenters
 
