@@ -14,23 +14,28 @@ class Settings():
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db') # на выходе 4 слеша, что докер не приемлет(странно, всегда было норм)
-
     OUTPUT_DIR = "output"
     IMAGE_DIR = join(DATA_PATH, "videoCut") 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
-    loggingInDB = True
     dateFile = "last_data_processed.txt"
 
+    #car detector
+    NOMEROFF_NET_DIR = os.path.join(APP_PATH, 'nomeroff-net')
+    MASK_RCNN_DIR = os.path.join(NOMEROFF_NET_DIR, 'Mask_RCNN')
+    MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
+
+    loggingInDB = True
     algorithm = 0
     checkOldProcessedFrames = False # в продакшене должен быть обязательно тру
+    SAVE_COLORMAP = False
+    CAR_NUMBER_DETECTOR = True
+    
     #Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
     LOGS_DIR = "logs"
     CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
 
-    DATAFILE = "text.txt"  # не актуально
     OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
-    SAVE_COLORMAP = False
 
     # Mask cnn advanced
     # Configuration that will be used by the Mask-RCNN library
@@ -78,8 +83,17 @@ class Settings():
                 self.downloadAndMove(link, mustExistedFile)
         
     def __init__(self):
-
         must_exist_dirs = [self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI, self.OUTPUT_DIR, self.DATA_PATH]
+        
+        from git import Repo
+        #import git
+        if self.CAR_NUMBER_DETECTOR:
+            if not os.path.exists(self.NOMEROFF_NET_DIR):
+                Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.APP_PATH)
+                Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.APP_PATH, self.NOMEROFF_NET_DIR))
+                
+            
+
 
         for i in must_exist_dirs:
             if not os.path.exists(i):

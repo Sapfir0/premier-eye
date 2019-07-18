@@ -17,7 +17,7 @@ def checkElapsedTime(measuredFunction):
     return the_wrapper
 
 
-def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime):
+def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime, helperStr=""):
     """
         The decorator will detect the function time and compare it with the necessary ones.
         FT = function time
@@ -36,7 +36,7 @@ def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime):
             color, state = getColorForTime(
                 end - start, criticalTime, permissibleTime, greatTime)
             print(
-                color + '[*{}] elapsed time: {} second'.format(state, end - start))
+                color + '[*{}] {} elapsed time: {} second'.format(state, helperStr, end - start))
             return res
         return the_wrapper
 

@@ -44,7 +44,7 @@ class Mask(Neural_network):
             config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
-    @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
+    @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     def pipeline(self, inputPath, outputPath):
         """
             almost main

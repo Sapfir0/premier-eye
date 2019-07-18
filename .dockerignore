@@ -2,3 +2,5 @@ output
 logs
 __pycache__
 *txt
+.vscode
+nomeroff-net

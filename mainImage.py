@@ -62,13 +62,14 @@ def main():
 
     rectCoordinates = None
 
+    @timeChecker.checkElapsedTimeAndCompair(7, 6, 4, "Обработка одного кадра")
     def mainPipeline(numberOfCam, filenames, processedFrames):
         for filename in filenames:
             if numberOfCam not in processedFrames.keys():
                 processedFrames.update({numberOfCam: []})
 
-            if filename in processedFrames[str(numberOfCam)]:
-                if (processedFrames[str(numberOfCam)] == filenames):
+            if filename in processedFrames[numberOfCam]:
+                if (processedFrames[numberOfCam] == filenames):
                     print(f"Thread {numberOfCam} sleeping")
                     time.sleep(2.5)  # засыпает поток исполнения
                 continue  # если файлы еще есть, то переходим к следующему
@@ -83,14 +84,19 @@ def main():
                     os.path.join(cfg.IMAGE_DIR, filename),
                     os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)
                 )
-                # если камера №2 или №1, то запускем тест на номера
-            else:
+            else: #image ai
                 rectCoordinates = imageAI.pipeline(
                     os.path.join(cfg.IMAGE_DIR, filename),
                     os.path.join(cfg.OUTPUT_DIR_IMAGE_AI, numberOfCam, filename)
                 )
                 rectCoordinates = parseImageAiData(rectCoordinates)
-           
+
+            # car detector                 
+            if cfg.CAR_NUMBER_DETECTOR:
+                import car_number
+                if numberOfCam in [str(1), str(2)]:  # если камера №2 или №1, то запускем тест на номера
+                    carNumber, boxes = car_number.detectCarNumber(os.path.join(cfg.IMAGE_DIR, filename))
+
             processedFrames[numberOfCam].append(filename)
            
             file_controller.writeInFile(cfg.dateFile, str(processedFrames))  # будет стирать содержимое файла каждый кадр
@@ -106,12 +112,15 @@ def main():
 
     while True:
         imagesForEachCamer = checkNewFile(currentImageDir)  # этим занимается главный поток
+        arrayOfThreads = []
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]
-            mainPipeline(numberOfCam, filenames, processedFrames)
+            #mainPipeline(numberOfCam, filenames, processedFrames)
+            arrayOfThreads.append()
             threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
             threadI.start()
+            # странно, если написать и потоковую версию и обычную, то все будет выполняться в 2 потока
         
 if __name__ == "__main__":
     main()
