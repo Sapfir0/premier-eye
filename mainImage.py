@@ -80,6 +80,8 @@ def main():
 
             # Mask CNN
             if (cfg.algorithm):
+                print(f"Поток {numberOfCam} имеет на входе {os.path.join(cfg.IMAGE_DIR, filename)} и на выходе {os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)}")
+
                 rectCoordinates = neural_network.pipeline(
                     os.path.join(cfg.IMAGE_DIR, filename),
                     os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)
@@ -116,10 +118,15 @@ def main():
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]
-            #mainPipeline(numberOfCam, filenames, processedFrames)
-            arrayOfThreads.append()
-            threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
-            threadI.start()
+            mainPipeline(numberOfCam, filenames, processedFrames)
+            #threadI = Thread(target=mainPipeline, args=(numberOfCam, filenames, processedFrames), name=numberOfCam)
+            #arrayOfThreads.append(threadI)
+
+        # for i in arrayOfThreads:
+        #     print(i)
+        #     i.start()
+
+       # break
             # странно, если написать и потоковую версию и обычную, то все будет выполняться в 2 потока
         
 if __name__ == "__main__":

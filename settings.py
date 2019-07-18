@@ -14,7 +14,7 @@ class Settings():
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db') # на выходе 4 слеша, что докер не приемлет(странно, всегда было норм)
-    OUTPUT_DIR = "output"
+    OUTPUT_DIR = join(APP_PATH, "output")
     IMAGE_DIR = join(DATA_PATH, "videoCut") 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
     dateFile = "last_data_processed.txt"
@@ -25,7 +25,7 @@ class Settings():
     MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
 
     loggingInDB = True
-    algorithm = 0
+    algorithm = 1
     checkOldProcessedFrames = False # в продакшене должен быть обязательно тру
     SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR = True
