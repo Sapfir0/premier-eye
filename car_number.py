@@ -11,8 +11,6 @@ cfg = Settings()
 sys.path.append(cfg.NOMEROFF_NET_DIR)
 from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing, textPostprocessingAsync
 
-print("LOADING MODELS...")
-
 nnet = Detector(cfg.MASK_RCNN_DIR, cfg.MASK_RCNN_LOG_DIR)
 nnet.loadModel("latest")
 

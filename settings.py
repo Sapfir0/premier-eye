@@ -48,7 +48,7 @@ class Settings():
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
-        DETECTION_MIN_CONFIDENCE = 60 /100  # минимальный процент отображения прямоугольника
+        DETECTION_MIN_CONFIDENCE = 0.6  # минимальный процент отображения прямоугольника
         NUM_CLASSES = 81
         IMAGE_MIN_DIM = 768 #все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
@@ -89,8 +89,8 @@ class Settings():
         #import git
         if self.CAR_NUMBER_DETECTOR:
             if not os.path.exists(self.NOMEROFF_NET_DIR):
-                Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.APP_PATH)
-                Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.APP_PATH, self.NOMEROFF_NET_DIR))
+                Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
+                Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
                 
             
 

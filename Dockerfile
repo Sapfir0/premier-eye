@@ -2,7 +2,7 @@ FROM tensorflow/tensorflow:latest-py3
 
 RUN apt-get update
 
-RUN apt-get install -y libsm6 libfontconfig1 libxrender1 libxtst6
+RUN apt-get install -y libsm6 libfontconfig1 libxrender1 libxtst6 git
 
 ENV PYTHON_PACKAGES="\
        scikit_image wget numpy \
@@ -11,8 +11,9 @@ ENV PYTHON_PACKAGES="\
        mrcnn colorama keras IPython gitPython \
        https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.3/imageai-2.0.3-py3-none-any.whl \
        "
-RUN pip3 install Cython
-RUN pip3 install ${PYTHON_PACKAGES}
+RUN pip3 install Cython \
+ && pip3 install ${PYTHON_PACKAGES}
+
 
 COPY . /premier-app 
 WORKDIR /premier-app 
