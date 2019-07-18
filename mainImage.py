@@ -83,6 +83,7 @@ def main():
                     os.path.join(cfg.IMAGE_DIR, filename),
                     os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)
                 )
+                # если камера №2 или №1, то запускем тест на номера
             else:
                 rectCoordinates = imageAI.pipeline(
                     os.path.join(cfg.IMAGE_DIR, filename),
