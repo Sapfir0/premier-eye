@@ -20,7 +20,7 @@ import helpers.others as others
 
 cfg = Settings()
 if (cfg.algorithm):
-    neural_network = Mask()
+    mask = Mask()
 else:
     imageAI = ImageAI()
 decart = DecartCoordinates()
@@ -29,7 +29,7 @@ currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
 
 @timeChecker.checkElapsedTimeAndCompair(7, 6, 4, "Обработка одного кадра")
-async def detectObject(numberOfCam, filenames, processedFrames):
+def detectObject(numberOfCam, filenames, processedFrames):
     def analyze(filename):
         dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
         date, hours = dh.getDateOrHours(filename)
@@ -40,8 +40,7 @@ async def detectObject(numberOfCam, filenames, processedFrames):
 
         imagesFromCurrentFrame = 0
         if cfg.algorithm:  # Mask CNN
-            detections, imagesFromCurrentFrame = neural_network.pipeline(inputFile, outputFile)
-            print(Fore.LIGHTBLUE_EX + "После возвращения" + str(imagesFromCurrentFrame))
+            detections, imagesFromCurrentFrame = mask.pipeline(inputFile, outputFile)
         else:  # image ai # эти алгоритмы всегда остают в нововведениях
             detections = imageAI.pipeline(inputFile, outputFile)
             boxes = others.parseImageAiData(detections)
@@ -49,8 +48,12 @@ async def detectObject(numberOfCam, filenames, processedFrames):
         # car detector
         if cfg.CAR_NUMBER_DETECTOR:
             import car_number
-            if numberOfCam in [str(1), str(2)]:  # если камера №2 или №1, то запускем тест на номера
-                carNumber, boxes = car_number.detectCarNumber(imagesFromCurrentFrame) # прокидываем сюда не файл, а изображения машин, 
+            if numberOfCam in [str(1), str(2)] and imagesFromCurrentFrame:  # если камера №2 или №1, то запускем тест на номера
+                objectImageDir = os.path.join(os.path.split(outputFile)[0], "objectsOn" + os.path.split(outputFile)[1])
+                for obj in os.listdir(objectImageDir):
+                    name = str(obj).replace(" ", ",")
+                    print(os.path.join(objectImageDir, name))
+                    carNumber, boxes = car_number.detectCarNumber(name)  # прокидываем сюда не файл, а изображения машин, 
         return detections
     
     for filename in filenames:
@@ -67,7 +70,7 @@ async def detectObject(numberOfCam, filenames, processedFrames):
 
         processedFrames[numberOfCam].append(filename)
         
-        file_controller.writeInFile(cfg.dateFile, str(processedFrames))  # будет стирать содержимое файла каждый кадр
+        file_controller.writeInFile(cfg.DATE_FILE, str(processedFrames))  # будет стирать содержимое файла каждый кадр
         
         # DB
         if (cfg.loggingInDB):
@@ -75,18 +78,17 @@ async def detectObject(numberOfCam, filenames, processedFrames):
             for i in range(0, len(detections['rois'])):  # для каждого объекта, найденного на кадре
                 db.writeInfoForObjectInDB(numberOfCam, dateTime, detections['rois'][i], centerDown[i])
 # сделать запись в бд для каждого из алгоритмов
+
         return detections
     
 
-async def mainPipeline(processedFrames):
+def mainPipeline(processedFrames):
     while True:
         imagesForEachCamer = others.checkNewFile(currentImageDir)  # этим занимается главный поток
-        tasks = []
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]
-            tasks.append(asyncio.ensure_future(detectObject(numberOfCam, filenames, processedFrames)))   
-        await asyncio.wait(tasks)    
+            detectObject(numberOfCam, filenames, processedFrames)
 
 
 def main():
@@ -97,9 +99,8 @@ def main():
 
     rectCoordinates = None
 
-    ioloop = asyncio.get_event_loop()
-    ioloop.run_until_complete(mainPipeline(processedFrames))
-    ioloop.close()
+    mainPipeline(processedFrames)
+
 
         
 if __name__ == "__main__":

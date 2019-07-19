@@ -33,7 +33,7 @@ def existingOutputDir(function_to_decorate):
         print("Смотри, что я получил:", inputPath, outputPath)
         if not os.path.isdir(os.path.split(outputPath)[0]):  
             os.makedirs(os.path.split(outputPath)[0])
-        function_to_decorate(fakearg, inputPath, outputPath)
+        return function_to_decorate(fakearg, inputPath, outputPath)
 
     return wrapper
 

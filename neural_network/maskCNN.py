@@ -57,18 +57,15 @@ class Mask(Neural_network):
         # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
         imagesFromCurrentFrame = extra.extractObjectsFromR(
-            image, r['rois'], saveImage=False)  # почему-то current иногда бывает пустым
+            image, r['rois'], outputImageDirectory=outputPath, filename=os.path.split(outputPath)[1])  # почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         self.checkNewFrame(r, rgb_image, imagesFromCurrentFrame)
-
         cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
 
         if (self.SAVE_COLORMAP):
             heatmap = Heatmap()
             heatmap.createHeatMap(image, outputPath)
         
-        imagesFromCurrentFrame=-99
-        print(Fore.LIGHTGREEN_EX + "До возвращения" + str(imagesFromCurrentFrame))
         return r, imagesFromCurrentFrame
 
     def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):

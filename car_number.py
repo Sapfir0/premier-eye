@@ -29,9 +29,9 @@ textDetector = TextDetector({
 })
 
 @tm.checkElapsedTimeAndCompair(1.5,1,0.5, "Машины")
-def detectCarNumber(img):
+def detectCarNumber(img_path):
     
-    #rgb_image = image[:, :, ::-1]
+    img = mpimg.imread(img_path)
     NP = nnet.detect([img])
 
     cv_img_masks = filters.cv_img_mask(NP)

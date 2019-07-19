@@ -25,7 +25,7 @@ class Settings():
     MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
 
     algorithm = 1
-    loggingInDB = True  
+    loggingInDB = False 
     checkOldProcessedFrames = False # если True, обработанные файлы второй не попадут в очередь на обработку
     SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2)
