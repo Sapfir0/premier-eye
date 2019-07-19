@@ -5,6 +5,7 @@ import sys
 import json
 import matplotlib.image as mpimg
 from settings import Settings
+import helpers.timeChecker as tm
 
 cfg = Settings()
 
@@ -26,47 +27,27 @@ textDetector = TextDetector({
         "model_path": "latest"
     }
 })
-import helpers.timeChecker as tm
-@tm.checkElapsedTimeAndCompair(1.5,1,0.5, "Машины")
-def detectCarNumber(img_path):
-    print("START RECOGNIZING")
-    max_img_w = 1600
-    img = mpimg.imread(img_path)
-    
-    # corect size for better speed
-    img_w = img.shape[1]
-    img_h = img.shape[0]
-    img_w_r = 1
-    img_h_r = 1
-    if img_w > max_img_w:
-        resized_img = cv2.resize(img, (max_img_w, int(max_img_w/img_w*img_h)))
-        img_w_r = img_w/max_img_w
-        img_h_r = img_h/(max_img_w/img_w*img_h)
-    else:
-        resized_img = img
 
-    NP = nnet.detect([resized_img]) 
+@tm.checkElapsedTimeAndCompair(1.5,1,0.5, "Машины")
+def detectCarNumber(img):
     
-    # Generate image mask.
+    #rgb_image = image[:, :, ::-1]
+    NP = nnet.detect([img])
+
     cv_img_masks = filters.cv_img_mask(NP)
-        
-    # Detect points.
-    arrPoints = rectDetector.detect(cv_img_masks, outboundHeightOffset=0, fixGeometry=True, fixRectangleAngle=10)
-    print(arrPoints)
-    arrPoints[..., 1:2] = arrPoints[..., 1:2]*img_h_r
-    arrPoints[..., 0:1] = arrPoints[..., 0:1]*img_w_r
-    
-    # cut zones
+
+    arrPoints = rectDetector.detect(cv_img_masks)
     zones = rectDetector.get_cv_zonesBGR(img, arrPoints)
 
-    # find standart
     regionIds, stateIds, countLines = optionsDetector.predict(zones)
     regionNames = optionsDetector.getRegionLabels(regionIds)
-    print(regionNames)
-    print(countLines)
-
+    
     # find text with postprocessing by standart  
-    textArr = textDetector.predict(zones, regionNames, countLines)
+    textArr = textDetector.predict(zones)
     textArr = textPostprocessing(textArr, regionNames)
     print(textArr)
-    return textArr, arrPoints
+    return textArr
+
+
+
+

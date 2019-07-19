@@ -5,6 +5,7 @@ import cv2
 import pandas as pd
 import numpy as np
 import asyncio
+from colorama import Fore
 
 from settings import Settings
 from neural_network.maskCNN import Mask
@@ -29,6 +30,29 @@ currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
 @timeChecker.checkElapsedTimeAndCompair(7, 6, 4, "Обработка одного кадра")
 async def detectObject(numberOfCam, filenames, processedFrames):
+    def analyze(filename):
+        dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+        date, hours = dh.getDateOrHours(filename)
+
+        inputFile = os.path.join(cfg.IMAGE_DIR, filename)
+        outputFile = os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
+        print(f"Analyzing {inputFile}")
+
+        imagesFromCurrentFrame = 0
+        if cfg.algorithm:  # Mask CNN
+            detections, imagesFromCurrentFrame = neural_network.pipeline(inputFile, outputFile)
+            print(Fore.LIGHTBLUE_EX + "После возвращения" + str(imagesFromCurrentFrame))
+        else:  # image ai # эти алгоритмы всегда остают в нововведениях
+            detections = imageAI.pipeline(inputFile, outputFile)
+            boxes = others.parseImageAiData(detections)
+
+        # car detector
+        if cfg.CAR_NUMBER_DETECTOR:
+            import car_number
+            if numberOfCam in [str(1), str(2)]:  # если камера №2 или №1, то запускем тест на номера
+                carNumber, boxes = car_number.detectCarNumber(imagesFromCurrentFrame) # прокидываем сюда не файл, а изображения машин, 
+        return detections
+    
     for filename in filenames:
         if numberOfCam not in processedFrames.keys():
             processedFrames.update({numberOfCam: []})
@@ -39,27 +63,7 @@ async def detectObject(numberOfCam, filenames, processedFrames):
                 time.sleep(2.5)  # засыпает поток исполнения
             continue  # если файлы еще есть, то переходим к следующему
 
-        dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
-        date, hours = dh.getDateOrHours(filename)
-
-        inputFile = os.path.join(cfg.IMAGE_DIR, filename)
-        outputFile = os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
-        import colorama
-        print(colorama.Fore.RED + outputFile  )
-        print(f"Analyzing {inputFile}")
-
-        if (cfg.algorithm):  # Mask CNN
-            rectCoordinates = neural_network.pipeline(inputFile, outputFile)
-        else:  # image ai
-            rectCoordinates = imageAI.pipeline(inputFile, outputFile)
-            rectCoordinates = others.parseImageAiData(rectCoordinates)
-
-        # car detector
-        if cfg.CAR_NUMBER_DETECTOR:
-            import car_number
-            if numberOfCam in [str(1), str(2)]:  # если камера №2 или №1, то запускем тест на номера
-                carNumber, boxes = car_number.detectCarNumber(inputFile)
-
+        detections = analyze(filename)
 
         processedFrames[numberOfCam].append(filename)
         
@@ -67,11 +71,11 @@ async def detectObject(numberOfCam, filenames, processedFrames):
         
         # DB
         if (cfg.loggingInDB):
-            centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-            for i in range(0, len(rectCoordinates)):  # для каждого объекта, найденного на кадре
-                db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i])
-
-        return rectCoordinates
+            centerDown = decart.getCenterOfDownOfRectangle(detections['rois'])  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
+            for i in range(0, len(detections['rois'])):  # для каждого объекта, найденного на кадре
+                db.writeInfoForObjectInDB(numberOfCam, dateTime, detections['rois'][i], centerDown[i])
+# сделать запись в бд для каждого из алгоритмов
+        return detections
     
 
 async def mainPipeline(processedFrames):

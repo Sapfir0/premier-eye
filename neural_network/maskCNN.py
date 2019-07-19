@@ -1,16 +1,18 @@
 import os
+import sys
+import time
 from os.path import join
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+from settings import Settings as cfg
+from colorama import Fore
+
+sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 import mrcnn.visualize
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
 
-import time
-from colorama import Fore
-
-from settings import Settings as cfg
 import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
 from neural_network.modules.decart import DecartCoordinates
@@ -56,9 +58,7 @@ class Mask(Neural_network):
         r, rgb_image = self.detectByMaskCNN(image)
         imagesFromCurrentFrame = extra.extractObjectsFromR(
             image, r['rois'], saveImage=False)  # почему-то current иногда бывает пустым
-        # запоминаем найденные изображения, а потом сравниваем их с найденными
-        # на следующем кадре
-
+        # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         self.checkNewFrame(r, rgb_image, imagesFromCurrentFrame)
 
         cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
@@ -66,8 +66,10 @@ class Mask(Neural_network):
         if (self.SAVE_COLORMAP):
             heatmap = Heatmap()
             heatmap.createHeatMap(image, outputPath)
-
-        return r['rois']
+        
+        imagesFromCurrentFrame=-99
+        print(Fore.LIGHTGREEN_EX + "До возвращения" + str(imagesFromCurrentFrame))
+        return r, imagesFromCurrentFrame
 
     def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
         foundedDifferentObjects = None
@@ -89,7 +91,6 @@ class Mask(Neural_network):
                 r - information about objects obtained with mask rcnn \n
             output: returns an array of objects in both frames.
         """
-
 
         foundedUniqueObjects = []
         objectId = 0
