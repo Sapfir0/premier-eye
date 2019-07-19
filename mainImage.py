@@ -39,10 +39,13 @@ async def detectObject(numberOfCam, filenames, processedFrames):
                 time.sleep(2.5)  # засыпает поток исполнения
             continue  # если файлы еще есть, то переходим к следующему
 
-        date, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+        dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+        date, hours = dh.getDateOrHours(filename)
 
         inputFile = os.path.join(cfg.IMAGE_DIR, filename)
-        outputFile = os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, filename)
+        outputFile = os.path.join(cfg.OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
+        import colorama
+        print(colorama.Fore.RED + outputFile  )
         print(f"Analyzing {inputFile}")
 
         if (cfg.algorithm):  # Mask CNN
@@ -55,7 +58,8 @@ async def detectObject(numberOfCam, filenames, processedFrames):
         if cfg.CAR_NUMBER_DETECTOR:
             import car_number
             if numberOfCam in [str(1), str(2)]:  # если камера №2 или №1, то запускем тест на номера
-                carNumber, boxes = car_number.detectCarNumber(os.path.join(cfg.IMAGE_DIR, filename))
+                carNumber, boxes = car_number.detectCarNumber(inputFile)
+
 
         processedFrames[numberOfCam].append(filename)
         
@@ -65,7 +69,7 @@ async def detectObject(numberOfCam, filenames, processedFrames):
         if (cfg.loggingInDB):
             centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
             for i in range(0, len(rectCoordinates)):  # для каждого объекта, найденного на кадре
-                db.writeInfoForObjectInDB(numberOfCam, date, rectCoordinates[i], centerDown[i])
+                db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i])
 
         return rectCoordinates
     
@@ -83,7 +87,7 @@ async def mainPipeline(processedFrames):
 
 def main():
     if (cfg.checkOldProcessedFrames):
-        processedFrames = dh.checkDateFile(currentImageDir) 
+        processedFrames = dh.checkDateFile(cfg.DATE_FILE) 
     else:
         processedFrames = {}
 

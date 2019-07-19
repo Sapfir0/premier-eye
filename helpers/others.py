@@ -26,3 +26,25 @@ def parseImageAiData(rectCoordinates):
     for diction in rectCoordinates:
         boxes.append(diction['box_points'])
     return boxes
+
+
+def existingOutputDir(function_to_decorate):
+    def wrapper(fakearg, inputPath, outputPath):
+        print("Смотри, что я получил:", inputPath, outputPath)
+        if not os.path.isdir(os.path.split(outputPath)[0]):  
+            os.makedirs(os.path.split(outputPath)[0])
+        function_to_decorate(fakearg, inputPath, outputPath)
+
+    return wrapper
+
+
+# юзабилити функции
+def downloadAndMove(downloadLink, destinationDir):
+    file = wget.download(downloadLink) 
+    os.rename(join(os.getcwd(), file), destinationDir)
+
+def checkExist(mustExistedFile, link, downloadMaskCNNdataset=False):
+    if not os.path.exists(mustExistedFile):
+        print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
+        self.downloadAndMove(link, mustExistedFile)
+    

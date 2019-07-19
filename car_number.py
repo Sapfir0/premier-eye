@@ -26,8 +26,8 @@ textDetector = TextDetector({
         "model_path": "latest"
     }
 })
-
-
+import helpers.timeChecker as tm
+@tm.checkElapsedTimeAndCompair(1.5,1,0.5, "Машины")
 def detectCarNumber(img_path):
     print("START RECOGNIZING")
     max_img_w = 1600

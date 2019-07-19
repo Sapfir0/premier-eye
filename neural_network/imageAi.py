@@ -34,7 +34,7 @@ class ImageAI(Neural_network):
     @timeChecker.checkElapsedTimeAndCompair(10, 5, 3)
     def pipeline(self, inputPath, outputPath):
         if not os.path.isdir(os.path.split(outputPath)[0]):  
-            os.mkdir(os.path.split(outputPath)[0])
+            os.makedirs(os.path.split(outputPath)[0])
 
         boxes = self.detectMyObjects(inputPath, outputPath)
         # boxes = self.extractObjects(

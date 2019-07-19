@@ -18,7 +18,7 @@ import services.database_controller as db
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 from neural_network.neural_network import Neural_network
-
+import helpers.others as others
 
 class Mask(Neural_network):
     """
@@ -45,12 +45,11 @@ class Mask(Neural_network):
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
+    @others.existingOutputDir
     def pipeline(self, inputPath, outputPath):
         """
             almost main
         """
-        if not os.path.isdir(os.path.split(outputPath)[0]):  
-            os.mkdir(os.path.split(outputPath)[0])
 
         image = cv2.imread(inputPath)
         # r['rois'] - array of lower left and upper right corner of founded objects
