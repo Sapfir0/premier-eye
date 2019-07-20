@@ -30,7 +30,6 @@ def parseImageAiData(rectCoordinates):
 
 def existingOutputDir(function_to_decorate):
     def wrapper(fakearg, inputPath, outputPath):
-        print("Смотри, что я получил:", inputPath, outputPath)
         if not os.path.isdir(os.path.split(outputPath)[0]):  
             os.makedirs(os.path.split(outputPath)[0])
         return function_to_decorate(fakearg, inputPath, outputPath)

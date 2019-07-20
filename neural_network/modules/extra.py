@@ -45,8 +45,7 @@ def extractObjectsFromR(image, boxes, outputImageDirectory=None, filename=None):
             if not os.path.exists(outputDirPath):
                 os.mkdir(outputDirPath)
             name = str(i).replace(" ", ",")
-            cv2.imwrite(os.path.join(outputDirPath, f"{name}"), cropped)
-            print("ВСЕ ДОЛЖНО БЫЛО СОХРАНИТСЯ В ", outputDirPath,  f"{name}")
+            cv2.imwrite(os.path.join(outputDirPath, f"{name}.jpg"), cropped)
     return objects
 
 

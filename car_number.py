@@ -20,15 +20,10 @@ rectDetector = RectDetector()
 optionsDetector = OptionsDetector()
 optionsDetector.load("latest")
 
-# Initialize text detector.
-textDetector = TextDetector({
-    "ru": {
-        "for_regions": ["ru"],
-        "model_path": "latest"
-    }
-})
+textDetector = TextDetector.get_static_module("ru")()
+textDetector.load("latest")
 
-@tm.checkElapsedTimeAndCompair(1.5,1,0.5, "Машины")
+@tm.checkElapsedTimeAndCompair(1.5, 1, 0.5, "Машины")
 def detectCarNumber(img_path):
     
     img = mpimg.imread(img_path)
@@ -45,7 +40,6 @@ def detectCarNumber(img_path):
     # find text with postprocessing by standart  
     textArr = textDetector.predict(zones)
     textArr = textPostprocessing(textArr, regionNames)
-    print(textArr)
     return textArr
 
 
