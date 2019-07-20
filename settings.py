@@ -26,7 +26,7 @@ class Settings():
 
     algorithm = 1
     loggingInDB = True
-    checkOldProcessedFrames = False # если True, обработанные файлы второй не попадут в очередь на обработку
+    checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2)
     

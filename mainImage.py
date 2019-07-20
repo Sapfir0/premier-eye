@@ -29,7 +29,25 @@ currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
 
 async def detectObject(numberOfCam, filenames, processedFrames):
-    
+    """
+        Сакральный алгоритм:
+
+        Глава I. Dictionary from images directory.
+            Проходимся по папке с изображениями и цепляемся за головы. Головой в нашем случае назовем самое раннее
+            изображение с каждой камеры. Как мы это сделаем? Добавим все в словарь типа 
+            dict{numberOfCamera:arrayOfImages[numberOfCamera_image1, numberOfCamera_image2, .., numberOfCamera_imageN]}, 
+            и отсортируем эти массивы по устареванию. Соответственно, нулевой элемент каждого массива - это голова.
+        Глава II. Processed Frames.
+            После успешного завершения алогритма мы добавляем название изображения в словарь processedFrames с такой же структурой, как и предыдущий.
+            Если в processedFrames уже находится имя файла, которое мы взяли из словаря из прошлой главы, 
+            то изображение уже обработано, и мы пропускаем его. После успешной обработки, мы записываем словарь в файл.
+            Если стоит опция в настройках checkOldProcessedFrames, то при запуске программы, мы читаем из файла наш словарь, 
+            соответственно, мы не обработаем файл, который был уже обработан при предыдущих запусках.
+            Если у двух словарей идентичны массивы, ассоцирующуюся с одной камерой, то мы спим(спит поток:( )
+        Глава III. То, чего нет.
+            Потоки. В первоначальном задумке потоков(вероятнее всего, демонов) должно быть столько же, сколько и голов.
+            И мы бы проходились по их чахлым телесам в n потоков. Но почему-то тензорфлоу(или керас) не может запуститься в мультитреде.
+    """
     for filename in filenames:
         if numberOfCam not in processedFrames.keys():
             processedFrames.update({numberOfCam: []})
@@ -79,20 +97,22 @@ async def detectObject(numberOfCam, filenames, processedFrames):
                 elif carNumber: carNumber = carNumber[0]
                 
                 db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i], carNumber)
-# сделать запись в бд для каждого из алгоритмов
+                # сделать запись в бд для каждого из алгоритмов
 
         return detections
     
 
 async def mainPipeline(processedFrames):
     while True:
-        tasks = []
         imagesForEachCamer = others.checkNewFile(currentImageDir)  # этим занимается главный поток
+        tasks = []
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]
             tasks.append(asyncio.ensure_future(detectObject(numberOfCam, filenames, processedFrames)))   
         await asyncio.wait(tasks)    
+
+
 
 def main():
     if (cfg.checkOldProcessedFrames):
@@ -105,6 +125,8 @@ def main():
     ioloop = asyncio.get_event_loop()
     ioloop.run_until_complete(mainPipeline(processedFrames))
     ioloop.close()
+
+
 
         
 if __name__ == "__main__":
