@@ -23,7 +23,7 @@ def getRandomColors(CLASS_NAMES, seed=42):
     return COLORS
 
 
-def extractObjectsFromR(image, boxes, saveImage=False):
+def extractObjectsFromR(image, boxes, outputImageDirectory=None, filename=None):
     """
         input:
             image - source image \n
@@ -38,6 +38,15 @@ def extractObjectsFromR(image, boxes, saveImage=False):
         # вырежет все объекты в отдельные изображения
         cropped = image[y1:y2, x1:x2]
         objects.append(cropped)
-        if (saveImage):
-            cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, f"{i}.jpg"), cropped)
+        if outputImageDirectory:
+            import cv2
+            import os 
+            outputDirPath = os.path.join(os.path.split(outputImageDirectory)[0], "objectsOn" + filename)
+            if not os.path.exists(outputDirPath):
+                os.mkdir(outputDirPath)
+            name = str(i).replace(" ", ",")
+            cv2.imwrite(os.path.join(outputDirPath, f"{name}.jpg"), cropped)
     return objects
+
+
+    

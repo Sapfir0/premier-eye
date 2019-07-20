@@ -36,12 +36,12 @@ class ImageAI(Neural_network):
         if not os.path.isdir(os.path.split(outputPath)[0]):  
             os.makedirs(os.path.split(outputPath)[0])
 
-        boxes = self.detectMyObjects(inputPath, outputPath)
+        detections = self.detectMyObjects(inputPath, outputPath)
         # boxes = self.extractObjects(
         #     join(cfg.IMAGE_DIR, filename), join(cfg.OUTPUT_DIR_IMAGE_AI, filename))
         #countedObj = self.countObjects(detections)
         #boxes = self.getBoxesForObjectWithId(detections)
-        return boxes
+        return detections
 
     def getBoxesForObjectWithId(self, detections):
         boxes = {}

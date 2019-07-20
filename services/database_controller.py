@@ -30,7 +30,8 @@ class Objects(Base):
     RUx = Column(Integer)  # Right Up
     RUy = Column(Integer)
     CDx = Column(Integer)  # Center Down 
-    CDy = Column(Integer)
+    CDy = Column(Integer),
+    carNumber = Column(String)
     #Column('objectId', Integer,)
     #Column('GPS', Integer,),
 
@@ -40,7 +41,8 @@ class Objects(Base):
             fixationDatetime,
             LDx, LDy,
             RUx, RUy,
-            CDx, CDy):
+            CDx, CDy,
+            carNumber):
         self.numberOfCam = numberOfCam
         self.fixationDatetime = fixationDatetime
         self.LDx = LDx
@@ -49,6 +51,7 @@ class Objects(Base):
         self.RUy = RUy
         self.CDx = CDx
         self.CDy = CDy
+        self.carNumber = carNumber
 
     def init_db():
         Base.metadata.create_all(bind=engine)
@@ -56,16 +59,16 @@ class Objects(Base):
 
     def __repr__(self):
         return "<Object('%s','%s', '[%d', '%d]','[%d', '%d]','[%d', '%d]')>" % (
-            self.numberOfCam, self.fixationDatetime, self.LDx, self.LDy, self.RUx, self.RUy, self.CDx, self.CDy)
+            self.numberOfCam, self.fixationDatetime, self.LDx, self.LDy, self.RUx, self.RUy, self.CDx, self.CDy, self.curNumber)
 
     def checkQuery(self):
         for i in session.query(Objects):
             print(i)
 
-def writeInfoForObjectInDB(numberOfCam, fixationDatetime, rectCoordinates, centerDown):
+def writeInfoForObjectInDB(numberOfCam, fixationDatetime, rectCoordinates, centerDown, carNumber):
     LUy, LUx, RDy, RDx = rectCoordinates
     CDx, CDy = centerDown
-    objN = Objects(numberOfCam, fixationDatetime, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy))
+    objN = Objects(numberOfCam, fixationDatetime, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy), carNumber)
     session.add(objN)
     session.commit()
     session.flush() # можно один раз добавить  

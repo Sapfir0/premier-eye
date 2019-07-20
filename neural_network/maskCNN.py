@@ -1,16 +1,18 @@
 import os
+import sys
+import time
 from os.path import join
 import numpy as np
 import matplotlib.pyplot as plt
 import cv2
+from settings import Settings as cfg
+from colorama import Fore
+
+sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 import mrcnn.visualize
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
 
-import time
-from colorama import Fore
-
-from settings import Settings as cfg
 import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
 from neural_network.modules.decart import DecartCoordinates
@@ -38,10 +40,7 @@ class Mask(Neural_network):
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        self.model = MaskRCNN(
-            mode="inference",
-            model_dir=cfg.LOGS_DIR,
-            config=cfg.MaskRCNNConfig())
+        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
@@ -55,19 +54,16 @@ class Mask(Neural_network):
         # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
         imagesFromCurrentFrame = extra.extractObjectsFromR(
-            image, r['rois'], saveImage=False)  # почему-то current иногда бывает пустым
-        # запоминаем найденные изображения, а потом сравниваем их с найденными
-        # на следующем кадре
-
+            image, r['rois'], outputImageDirectory=outputPath, filename=os.path.split(outputPath)[1])  # почему-то current иногда бывает пустым
+        # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         self.checkNewFrame(r, rgb_image, imagesFromCurrentFrame)
-
         cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
 
         if (self.SAVE_COLORMAP):
             heatmap = Heatmap()
             heatmap.createHeatMap(image, outputPath)
-
-        return r['rois']
+        
+        return r, imagesFromCurrentFrame
 
     def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
         foundedDifferentObjects = None
@@ -89,7 +85,6 @@ class Mask(Neural_network):
                 r - information about objects obtained with mask rcnn \n
             output: returns an array of objects in both frames.
         """
-
 
         foundedUniqueObjects = []
         objectId = 0

@@ -8,7 +8,6 @@ import mrcnn.config
 import helpers.others as others
 
 class Settings():
-    lastId = 0 # убрать
 
     colorama.init(autoreset=True)
 
@@ -25,11 +24,11 @@ class Settings():
     MASK_RCNN_DIR = os.path.join(NOMEROFF_NET_DIR, 'Mask_RCNN')
     MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
 
-    loggingInDB = True
     algorithm = 1
-    checkOldProcessedFrames = False # в продакшене должен быть обязательно тру
+    loggingInDB = True
+    checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
-    CAR_NUMBER_DETECTOR = True
+    CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2)
     
     #Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
