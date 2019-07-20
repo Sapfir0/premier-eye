@@ -40,10 +40,7 @@ class Mask(Neural_network):
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        self.model = MaskRCNN(
-            mode="inference",
-            model_dir=cfg.LOGS_DIR,
-            config=cfg.MaskRCNNConfig())
+        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")

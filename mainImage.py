@@ -2,27 +2,26 @@
 import time
 import os
 import cv2
-import pandas as pd
 import numpy as np
 import asyncio
 from colorama import Fore
 
 from settings import Settings
-from neural_network.maskCNN import Mask
-from neural_network.imageAi import ImageAI
 import helpers.dateHelper as dh
 import services.database_controller as db
-from neural_network.modules.decart import DecartCoordinates
 import services.file_controller as file_controller
 import helpers.timeChecker as timeChecker
-from threading import Thread
 import helpers.others as others
+from neural_network.modules.decart import DecartCoordinates
 
 cfg = Settings()
 if (cfg.algorithm):
+    from neural_network.maskCNN import Mask
     mask = Mask()
 else:
+    from neural_network.imageAi import ImageAI
     imageAI = ImageAI()
+
 decart = DecartCoordinates()
 
 currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
@@ -47,6 +46,12 @@ async def detectObject(numberOfCam, filenames, processedFrames):
         Глава III. То, чего нет.
             Потоки. В первоначальном задумке потоков(вероятнее всего, демонов) должно быть столько же, сколько и голов.
             И мы бы проходились по их чахлым телесам в n потоков. Но почему-то тензорфлоу(или керас) не может запуститься в мультитреде.
+            Псевдокод многопоточки:
+                * Добавить к масиву потоков функцию со всем доступными аргументами в словаре №1
+                * После цикла пройтись по этому массиву и начать выполнение всех потоков 
+                - коммит #9106cbe
+        Глава IV. лнениеАссин выпохронное.
+            Дает меньший прирост, чем потоки. 
     """
     for filename in filenames:
         if numberOfCam not in processedFrames.keys():
@@ -76,12 +81,13 @@ async def detectObject(numberOfCam, filenames, processedFrames):
         # car detector
         carNumber = None
         if cfg.CAR_NUMBER_DETECTOR:
-            import car_number
+            import neural_network.car_number as car_number
             if numberOfCam in [str(1), str(2)] and imagesFromCurrentFrame:  # если камера №2 или №1, то запускем тест на номера
                 objectImageDir = os.path.join(os.path.split(outputFile)[0], "objectsOn" + os.path.split(outputFile)[1])
                 for obj in os.listdir(objectImageDir):
                     name = str(obj).replace(" ", ",")
-                    carNumber = car_number.detectCarNumber(os.path.join(objectImageDir, name))  # прокидываем сюда не файл, а изображения машин, 
+                    carNumber = car_number.detectCarNumber(os.path.join(objectImageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
+                    # решение такое себе, т.к. мы обращаемся к долгой памяти 
                     print(Fore.LIGHTBLUE_EX + str(carNumber))
 
         processedFrames[numberOfCam].append(filename)
@@ -97,7 +103,6 @@ async def detectObject(numberOfCam, filenames, processedFrames):
                 elif carNumber: carNumber = carNumber[0]
                 
                 db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i], carNumber)
-                # сделать запись в бд для каждого из алгоритмов
 
         return detections
     
@@ -110,8 +115,7 @@ async def mainPipeline(processedFrames):
             numberOfCam = items[0]
             filenames = items[1]
             tasks.append(asyncio.ensure_future(detectObject(numberOfCam, filenames, processedFrames)))   
-        await asyncio.wait(tasks)    
-
+        await asyncio.wait(tasks)
 
 
 def main():
@@ -127,7 +131,5 @@ def main():
     ioloop.close()
 
 
-
-        
 if __name__ == "__main__":
     main()
