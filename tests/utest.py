@@ -41,11 +41,8 @@ class FunctionTest(unittest.TestCase):
 
                 res = decart.isCompletelyInside(
                     self.highlightedArea[area], self.objectsInFrame[obj])
-                print(
-                    "Ожидаемое: ",
-                    self.expected_output[area][obj],
-                    ", полученное: ",
-                    res)
+                print("Ожидаемое: ", self.expected_output[area][obj],
+                     ", полученное: ", res)
                 self.assertEqual(res, self.expected_output[area][obj])
 
     def testPartiallyInside(self):

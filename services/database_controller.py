@@ -7,7 +7,6 @@ from sqlalchemy import func
 from settings import Settings as cfg
 import sqlalchemy as sql
 
-print(cfg.DATABASE)
 engine = create_engine(cfg.DATABASE, convert_unicode=True, echo=False)
 session = scoped_session(
     sessionmaker(
@@ -30,7 +29,7 @@ class Objects(Base):
     RUx = Column(Integer)  # Right Up
     RUy = Column(Integer)
     CDx = Column(Integer)  # Center Down 
-    CDy = Column(Integer),
+    CDy = Column(Integer)
     carNumber = Column(String)
     #Column('objectId', Integer,)
     #Column('GPS', Integer,),

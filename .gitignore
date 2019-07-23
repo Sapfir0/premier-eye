@@ -2,6 +2,6 @@ data
 output
 logs
 __pycache__
-*.txt
+last_data_processed.txt
 .vscode
 nomeroff-net
