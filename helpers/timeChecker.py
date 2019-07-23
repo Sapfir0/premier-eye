@@ -8,13 +8,13 @@ def checkElapsedTime(measuredFunction):
     """
     import time
 
-    def the_wrapper(*args, **kwargs):
+    def wrapper(*args, **kwargs):
         start = time.time()
         res = measuredFunction(*args, **kwargs)
         end = time.time()
         print('[*] elapsed time: {} second'.format(end - start))
         return res
-    return the_wrapper
+    return wrapper
 
 
 def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime, helperStr=""):
@@ -29,7 +29,7 @@ def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime, helperS
     def checkElapsedTime(measuredFunction):
         import time
 
-        def the_wrapper(*args, **kwargs):
+        def wrapper(*args, **kwargs):
             start = time.time()
             res = measuredFunction(*args, **kwargs)
             end = time.time()
@@ -38,7 +38,7 @@ def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime, helperS
             print(
                 color + '[*{}] {} elapsed time: {} second'.format(state, helperStr, end - start))
             return res
-        return the_wrapper
+        return wrapper
 
     return checkElapsedTime
 

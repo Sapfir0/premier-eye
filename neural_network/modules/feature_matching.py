@@ -5,10 +5,15 @@ import cv2
 from matplotlib import pyplot as plt
 from settings import Settings as cfg
 
+lastObjectId = 0
 def setIdToObject(objectId, i):
-    print("Мы пук", objectId)
+    print(objectId)
     if not isinstance(objectId, list):
         return "-"
+    if objectId[i] <= lastObjectId:
+        lastObjectId = objectId
+        objectId = lastObjectId+1
+    
     print(i >= len(objectId), i, len(objectId))
     if i >= len(objectId):
         return i
@@ -16,18 +21,6 @@ def setIdToObject(objectId, i):
     id = objectId[i]['id']
 
     return id
-#    if (i-1 < len(objectId)):   # правильно будет меньше либо равен, но попробую юзнуть меьшн
-#        if (objectId == "-"):
-#            id = objectId
-#        else:
-#            if (not len(objectId) == 0):
-#                print(i-1, len(objectId))
-#                id = objectId[i-1]['id']  # т.к. на первом кадре мы ничего не делаем
-#           else:
-#                id = "puk"
-#    else:
-#       id = "crit"              
-    
 
 
 def compareImages(img1, img2):
@@ -44,10 +37,10 @@ def compareImages(img1, img2):
     kp1, des1 = sift.detectAndCompute(img1, None)
     kp2, des2 = sift.detectAndCompute(img2, None)
 
-    index_params = dict(algorithm=cfg.FLANN_INDEX_KDTREE, trees=5)
-    search_params = dict(checks=50)
+    indexParams = dict(algorithm=cfg.FLANN_INDEX_KDTREE, trees=5)
+    searchParams = dict(checks=50)
 
-    flann = cv2.FlannBasedMatcher(index_params, search_params)
+    flann = cv2.FlannBasedMatcher(indexParams, searchParams)
 
     matches = flann.knnMatch(des1, des2, k=2)
 

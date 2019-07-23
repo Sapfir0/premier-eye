@@ -28,11 +28,11 @@ def parseImageAiData(rectCoordinates):
     return boxes
 
 
-def existingOutputDir(function_to_decorate):
+def existingOutputDir(functionToDecorate):
     def wrapper(fakearg, inputPath, outputPath):
         if not os.path.isdir(os.path.split(outputPath)[0]):  
             os.makedirs(os.path.split(outputPath)[0])
-        return function_to_decorate(fakearg, inputPath, outputPath)
+        return functionToDecorate(fakearg, inputPath, outputPath)
 
     return wrapper
 

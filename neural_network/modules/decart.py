@@ -4,20 +4,25 @@ from colorama import Fore
 from settings import Settings
 
 class DecartCoordinates():
-
-    def getCenterOfDownOfRectangle(self, boxes): # задан левый нижний и правый верхний угол
+    """
+        Класс для 2 задания
+        getConcetration - основной метод
+    """
+    def getCenterOfDownOfRectangle(self, boxes):
         allCenters = []
-        
+
         cfg = Settings()
         for i in boxes:
-            y1, x1, y2, x2 = i
+            y1, x1, y2, x2 = i  # задан левый нижний и правый верхний угол
             midleDownPoint = [(x1+x2)/2, y1]
             allCenters.append(midleDownPoint)
         return allCenters
 
-    def getConcetration(self, highlightedRect, startTime, endTime): # координаты прямоугольника, в котором начинаем искать объекты
+    def getConcetration(self, highlightedRect, startTime, endTime):
+        """
+            highlightedRectкоординаты прямоугольника, в котором начинаем искать объекты
+        """
         foundedObjects = []
-        # запрос к бд
         a = db.Objects.fixationDatetime >= startTime
         b = db.Objects.fixationDatetime <= endTime
         for obj in db.session.query(db.Objects).filter(sql.and_(a, b)).all():
@@ -25,10 +30,10 @@ class DecartCoordinates():
             if (self.hasOnePointInside(highlightedRect, minRect)):
                 foundedObjects.append(obj)
 
-        return foundedObjects # массив координат всех объектов в кадре
+        return foundedObjects  # массив координат всех объектов в кадре
 
-    def hasOnePointInside(self, bigRect, minRect): # хотя бы одна точка лежит внутри
-        minY, minX, maxY, maxX  = bigRect
+    def hasOnePointInside(self, bigRect, minRect):  # хотя бы одна точка лежит внутри
+        minY, minX, maxY, maxX = bigRect
         y1, x1, y2, x2 = minRect
 
         a = (y1 >= minY and y1 <= maxY)
@@ -58,10 +63,10 @@ class DecartCoordinates():
         return False
 
 
-    def isPartiallyInside(self, bigRect, minRect, innerPercent=0.5): # объект частично внутри прямоугольника
+    def isPartiallyInside(self, bigRect, minRect, innerPercent=0.5):  # объект частично внутри прямоугольника
         bigLUy, bigLUx, bigRDy, bigRDx = bigRect
         minLUy, minLUx, minRDy, minRDx = minRect
-        full_square = (minLUy - minRDy) * (minRDx - minLUx) ## не уверен что правильно
+        fullSquare = (minLUy - minRDy) * (minRDx - minLUx)  # не уверен что правильно
         # Не уверен в ифах
         if (bigLUy < minLUy):
             minLUy = bigLUy
@@ -71,6 +76,6 @@ class DecartCoordinates():
             minLUx = bigLUx
         if (bigRDx > minRDx):
             minRDx = bigRDx
-        in_obj_square = (minLUy - minRDy) * (minRDx - minLUx)
-        return in_obj_square / full_square >= innerPercent
+        inObjSquare = (minLUy - minRDy) * (minRDx - minLUx)
+        return inObjSquare / fullSquare >= innerPercent
 

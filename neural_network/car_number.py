@@ -24,14 +24,14 @@ textDetector = TextDetector.get_static_module("ru")()
 textDetector.load("latest")
 
 @tm.checkElapsedTimeAndCompair(1.5, 1, 0.5, "Машины")
-def detectCarNumber(img_path):
+def detectCarNumber(imgPath):
     
-    img = mpimg.imread(img_path)
+    img = mpimg.imread(imgPath)
     NP = nnet.detect([img])
 
-    cv_img_masks = filters.cv_img_mask(NP)
+    cvImgMasks = filters.cv_img_mask(NP)
 
-    arrPoints = rectDetector.detect(cv_img_masks)
+    arrPoints = rectDetector.detect(cvImgMasks)
     zones = rectDetector.get_cv_zonesBGR(img, arrPoints)
 
     regionIds, stateIds, countLines = optionsDetector.predict(zones)
