@@ -1,5 +1,7 @@
 import os
 import helpers.dateHelper as dh 
+from colorama import Fore
+import wget
 
 def checkNewFile(currentImageDir):
     """
@@ -40,10 +42,10 @@ def existingOutputDir(functionToDecorate):
 # юзабилити функции
 def downloadAndMove(downloadLink, destinationDir):
     file = wget.download(downloadLink) 
-    os.rename(join(os.getcwd(), file), destinationDir)
+    os.rename(os.path.join(os.getcwd(), file), destinationDir)
 
-def checkExist(mustExistedFile, link, downloadMaskCNNdataset=False):
+def checkExist(mustExistedFile, link):
     if not os.path.exists(mustExistedFile):
         print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
-        self.downloadAndMove(link, mustExistedFile)
+        downloadAndMove(link, mustExistedFile)
     

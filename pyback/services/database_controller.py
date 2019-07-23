@@ -73,4 +73,7 @@ def writeInfoForObjectInDB(numberOfCam, fixationDatetime, rectCoordinates, cente
     session.flush() # можно один раз добавить  
 
 
+import settings
+cfg = settings.Settings()
+
 Objects.init_db()

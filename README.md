@@ -1,6 +1,9 @@
 # Premier Eye
-<a href="https://github.com/avdosev"><img src="./resources/images/eye.svg" alt="avdosev" width="100" height="100"> </a>
+
+<img src="./resources/images/eye.svg" width="100" height="100">
+
 ## Программа для детектирования объектов
+
 [Docker proj](https://cloud.docker.com/u/sapfir0/repository/docker/sapfir0/premier-eye)
 
 Запустить докер образ с примонтированной папкой

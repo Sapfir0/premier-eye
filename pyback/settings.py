@@ -1,6 +1,5 @@
 import os
 from os.path import join
-import wget
 import mrcnn.utils
 import colorama
 from colorama import Fore, Back, Style  # для цветного консольного вывода 
@@ -13,7 +12,7 @@ class Settings():
 
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")
-    DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db') # на выходе 4 слеша, что докер не приемлет(странно, всегда было норм)
+    DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
     OUTPUT_DIR = join(APP_PATH, "output")
     IMAGE_DIR = join(DATA_PATH, "1_2") 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
