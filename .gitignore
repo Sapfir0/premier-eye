@@ -5,3 +5,4 @@ __pycache__
 last_data_processed.txt
 .vscode
 nomeroff-net
+.idea
