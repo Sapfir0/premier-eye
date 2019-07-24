@@ -48,4 +48,26 @@ def checkExist(mustExistedFile, link):
     if not os.path.exists(mustExistedFile):
         print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
         downloadAndMove(link, mustExistedFile)
-    
+  
+def checkVersion(package):
+    """
+        return version of the package and print it in color
+        input: string as name of package OR
+               list of string as names of packages
+        return dictionary [package: version]
+    """
+    def checkVersionFromString(stringPackage):
+        i = importlib.import_module(stringPackage)
+        version = i.__version__
+        print(Fore.MAGENTA + f"{stringPackage} {version}")
+        return version
+
+    import importlib
+    if isinstance(package, str):
+        version = checkVersionFromString(package)
+    elif isinstance(package, list):
+        version = {}
+        for i in package:
+            version.update({ i:checkVersionFromString(i) })
+
+    return version

@@ -10,6 +10,15 @@ class Settings():
 
     colorama.init(autoreset=True)
 
+    # Настройки высокого уровня, которые можно вынести как тригеры в вебе
+    algorithm = 1
+    loggingInDB = True
+    checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
+    SAVE_COLORMAP = False
+    CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2)
+
+
+    # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
@@ -17,32 +26,19 @@ class Settings():
     IMAGE_DIR = join(DATA_PATH, "1_2") 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
     DATE_FILE = "last_data_processed.txt"
-
+    #Mask cnn
+    DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
+    LOGS_DIR = "logs"
+    CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
+    OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
     #car detector
     NOMEROFF_NET_DIR = os.path.join(APP_PATH, 'nomeroff-net')
     MASK_RCNN_DIR = os.path.join(NOMEROFF_NET_DIR, 'Mask_RCNN')
     MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
 
-    algorithm = 1
-    loggingInDB = True
-    checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
-    SAVE_COLORMAP = False
-    CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2)
     
-    #Mask cnn
-    DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
-    LOGS_DIR = "logs"
-    CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
-
-    OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
-
     # Mask cnn advanced
     # Configuration that will be used by the Mask-RCNN library
-    import cv2, tensorflow, keras
-    print(Fore.MAGENTA + "Opencv v" + str(cv2.__version__))
-    print(Fore.MAGENTA + "Tensorflow v" + str(tensorflow.__version__))
-    print(Fore.MAGENTA + "Keras v" + str(keras.__version__))
-
     class MaskRCNNConfig(mrcnn.config.Config):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
@@ -70,20 +66,24 @@ class Settings():
     OUTPUT_VIDEO = join(OUTPUT_DIR, 'ITSWORK.avi')
 
     def __init__(self):
+
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
+
+        for i in must_exist_dirs:
+            if not os.path.exists(i):
+                print(f"{i} folder isn't exist. Creating..")
+                os.makedirs(i)
         
+        packages = ["cv2", "tensorflow", "keras"]
+        others.checkVersion(packages)
+
         from git import Repo
         if self.CAR_NUMBER_DETECTOR:
             if not os.path.exists(self.NOMEROFF_NET_DIR):
                 Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
                 Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
                             
-
-        for i in must_exist_dirs:
-            if not os.path.exists(i):
-                print(f"{i} folder isn't exist. Creating..")
-                os.makedirs(i)
-
+                            
         if self.algorithm:
             if not os.path.exists(self.DATASET_DIR):
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
