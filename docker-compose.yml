@@ -1,0 +1,14 @@
+version: '3.1'
+
+services:
+  premier-eye:
+    build:
+      dockerfile: Dockerfile
+      context: ./pyback/docker/cpu
+
+  web:
+    build: 
+      dockerfile: Dockerfile
+      context: ./pyfront
+    depends_on:
+      - premier-eye    
