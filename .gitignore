@@ -6,3 +6,6 @@ last_data_processed.txt
 .vscode
 nomeroff-net
 .idea
+*.mp4
+*.avi
+*.ogg

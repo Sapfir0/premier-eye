@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ title }} - Microblog</title>
+
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<h1>Hello, {{ user.username }}! </h1>
+<video id="mainvideo"  style=" width: 1000px; height: 563px;" src="{{ url_for('static', filename='img/1.mp4') }}" autoplay controls>
+    Sorry, your browser doesn't support embedded videos, 
+    but don't worry, you can <a href="{{ url_for('static', filename='img/1.mp4') }}">download it</a>
+    and watch it with your favorite video player!
+  </video>
+</body>
+</html>
