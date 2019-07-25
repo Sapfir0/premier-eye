@@ -12,9 +12,14 @@ sys.path.append(pathToPyback)
 def index():
     return render_template('index.html')
 
+@app.route('/settings')
+def settings():
+    return render_template('settings.html')
+
 @app.route('/index')
 def playVideo():
     return "ss"
+
 
 
 @app.route('/favicon.ico')
