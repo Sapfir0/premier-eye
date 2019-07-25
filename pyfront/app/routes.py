@@ -3,9 +3,6 @@ from app import app
 from pathlib import Path
 import sys
 import os
-pathToPyback = os.path.join(Path(__file__).parents[2], "pyback" )
-sys.path.append(pathToPyback)
-#import mainImage
 
 
 @app.route('/')
@@ -15,10 +12,6 @@ def index():
 @app.route('/settings')
 def settings():
     return render_template('settings.html')
-
-@app.route('/index')
-def playVideo():
-    return "ss"
 
 
 
