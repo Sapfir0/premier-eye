@@ -1,4 +1,4 @@
 *.bash     text eol=lf
 *.sh       text eol=lf
 *.py     text diff=python
-*.html text
+*.html text eol=lf
