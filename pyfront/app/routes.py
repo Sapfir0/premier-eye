@@ -10,16 +10,12 @@ sys.path.append(pathToPyback)
 
 @app.route('/')
 def index():
-    user = {'username': 'Miguel'}
-    return render_template('index.html', title='Home', user=user)
+    return render_template('index.html')
 
 @app.route('/index')
 def playVideo():
     return "ss"
 
-
-# app.add_url_rule('img/favicon.ico',
-#                  redirect_to=url_for('static', filename='favicon.ico'))
 
 @app.route('/favicon.ico')
 def favicon():
