@@ -11,7 +11,7 @@ queue = Celery('tasks', backend='amqp', broker='ampq://')
 pathToPyback = os.path.join(Path(__file__).parents[2], "pyback" )
 sys.path.append(pathToPyback)
 #import mainImage
-from mainImage import MainClass
+#from mainImage import MainClass
 
 @queue.task
 def runDetecting():

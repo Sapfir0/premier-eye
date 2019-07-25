@@ -1,19 +1,16 @@
 /* CSS rules are kept repetitive so that you can get CSS rules for each button easily :) */
 
-*
-{
+*  {
     background-color: wheat;
     user-select: none;
     /* -webkit-tap-highlight-color:transparent; */
 }
 
-*:focus
-{
+*:focus  {
     outline: none;
 }
 
-.toggle-button-cover
-{
+.toggle-button-cover  {
     display: table-cell;
     position: relative;
     width: 200px;
@@ -21,8 +18,7 @@
     box-sizing: border-box;
 }
 
-.button-cover
-{
+.button-cover {
     height: 100px;
     margin: 20px;
     background-color: #fff;
@@ -30,8 +26,7 @@
     border-radius: 4px;
 }
 
-.button-cover:before
-{
+.button-cover:before {
     counter-increment: button-counter;
     content: counter(button-counter);
     position: absolute;
@@ -43,8 +38,7 @@
     padding: 5px;
 }
 
-.button-cover, .knobs, .layer
-{
+.button-cover, .knobs, .layer {
     position: absolute;
     top: 0;
     right: 0;
@@ -52,8 +46,7 @@
     left: 0;
 }
 
-.button
-{
+.button {
     position: relative;
     top: 50%;
     width: 100px;
@@ -62,13 +55,11 @@
     overflow: hidden;
 }
 
-.button.r, .button.r .layer
-{
+.button.r, .button.r .layer {
     border-radius: 100px;
 }
 
-.checkbox
-{
+.checkbox {
     position: relative;
     width: 100%;
     height: 100%;
@@ -79,9 +70,7 @@
     z-index: 3;
 }
 
-/* Button 18 */
-#button-18 .knobs:before, #button-18 .knobs span
-{
+#button-18 .knobs:before, #button-18 .knobs span {
     content: 'Image-AI';
     position: absolute;
     top: 4px;
@@ -95,8 +84,7 @@
     border-radius: 2px;
 }
 
-#button-18 .knobs:before
-{
+#button-18 .knobs:before {
     top: 25%;
     left: 8px;
     width: 40px;
@@ -106,8 +94,7 @@
     z-index: 2;
 }
 
-#button-18 .knobs span
-{
+#button-18 .knobs span {
     width: 40px;
     height: 20px;
     padding: 9px 4px;
@@ -115,8 +102,7 @@
     z-index: 1;
 }
 
-#button-18 .checkbox:active + .knobs:before
-{
+#button-18 .checkbox:active + .knobs:before {
     left: 10px;
     width: 46px;
     height: 4px;
@@ -127,31 +113,26 @@
     overflow: hidden;
 }
 
-#button-18 .checkbox:active + .knobs span
-{
+#button-18 .checkbox:active + .knobs span {
     width: 74px;
 }
 
-#button-18 .checkbox:checked:active + .knobs:before
-{
+#button-18 .checkbox:checked:active + .knobs:before {
     left: auto;
     right: 10px;
     background-color: #d80000;
 }
 
-#button-18 .checkbox:checked:active + .knobs span
-{
+#button-18 .checkbox:checked:active + .knobs span {
     margin-left: -38px;
 }
 
-#button-18 .checkbox:checked + .knobs:before
-{
+#button-18 .checkbox:checked + .knobs:before {
     content: 'MASK-CNN';
     left: 47px;
 }
 
-#button-18 .checkbox:checked + .knobs span
-{
+#button-18 .checkbox:checked + .knobs span {
     left: 42px;
     background-color: #F44336;
 }

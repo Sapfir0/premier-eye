@@ -7,11 +7,11 @@ import os
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return render_template('index.html', link="style.css")
 
 @app.route('/settings')
 def settings():
-    return render_template('settings.html')
+    return render_template('settings.html', title="Settings")
 
 
 

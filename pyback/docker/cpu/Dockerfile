@@ -14,8 +14,10 @@ ENV PYTHON_PACKAGES="\
 RUN pip3 install Cython \
  && pip3 install ${PYTHON_PACKAGES}
 
-
-COPY . /premier-app 
-WORKDIR /premier-app 
+RUN cd ../../ && ls
+COPY . /pyback
+WORKDIR pyback
+RUN ls
 ENTRYPOINT ["python3"]
 CMD ["mainImage.py" ]
+# если собирать командой из скрипта поблизости, то CMD ["pyback/mainImage.py" ]
