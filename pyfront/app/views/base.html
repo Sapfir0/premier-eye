@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {% if title %}
+        <title>{{ title }} - Premier-eye</title>
+    {% else %}
+        <title>Welcome to Premier-eye app</title>
+    {% endif %}
+</head>
+<body>
+
+    {% block content %}{% endblock %}
+</body>
+</html>
