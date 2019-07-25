@@ -1,32 +1,24 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Settings</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+{% extends "base.html" %}
 
-</head>
-<body>
-        <div class="toggle-button-cover">
-                <div class="button-cover">
-                  Алгоритм<div class="button b2" id="button-18">
-                    <input type="checkbox" class="checkbox">
-                    <div class="knobs">
-                      <span></span>
-                    </div>
-                    <div class="layer"></div>     
-                  </div>
-                </div>
-              </div>
-            </div>
-          
-            
-    <!-- # Настройки высокого уровня, которые можно вынести как тригеры в вебе
-    checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
-    SAVE_COLORMAP = False
-    CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2) -->
+{% block content %}
+<div class="toggle-button-cover">
+  <div class="button-cover">
+    Алгоритм<div class="button b2" id="button-18">
+      <input type="checkbox" class="checkbox">
+      <div class="knobs">
+        <span></span>
+      </div>
+      <div class="layer"></div>     
+    </div>
+  </div>
+</div>
+</div>
 
-</body>
-</html>
+
+<!-- # Настройки высокого уровня, которые можно вынести как тригеры в вебе
+checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
+SAVE_COLORMAP = False
+CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2) -->
+
+{% endblock %}
+
