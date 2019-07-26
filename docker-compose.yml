@@ -4,11 +4,14 @@ services:
   pyback:
     build:
       dockerfile: Dockerfile
-      context: ./pyback/docker/cpu
+      context: ./pyback
 
   pyfront:
     build: 
       dockerfile: Dockerfile
       context: ./pyfront
+    command: flask run
     depends_on:
       - pyback
+    ports:
+    - 5000:5000 # [порт компьютера]:[порт контейнера]
