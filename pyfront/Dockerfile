@@ -6,5 +6,5 @@ RUN cd pyfront && pip3 install -r requirements.txt
 ENV FLASK_APP app.py
 ENV FLASK_ENV=development
 WORKDIR /pyfront
-EXPOSE 5000
-# CMD [ "flask", "run" ]
+#EXPOSE 5000
+CMD [ "flask", "run" ]
