@@ -1,26 +1,19 @@
 {% extends "base.html" %}
 
 {% block content %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+  <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
 
-<div class="toggle-button-cover">
-  <div class="button-cover">
-    Алгоритм<div class="button b2" id="button-18">
-      <input type="checkbox" class="checkbox">
-      <div class="knobs">
-        <span></span>
-      </div>
-      <div class="layer"></div>     
+    <div class="row">
+        <div class="item">Алгоритм
+        <input type="checkbox" class="algorithm"></div>
+  
+        <div class="item">Обрабатывать ли старые кадры
+        <input type="checkbox" class="oldFrames"></div>
+  
+        <div class="item">Определять ли номера машин(только для камер №1 и №2)
+        <input type="checkbox" class="carDetector"></div>
+
     </div>
-  </div>
-</div>
-</div>
-
-
-<!-- # Настройки высокого уровня, которые можно вынести как тригеры в вебе
-checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
-SAVE_COLORMAP = False
-CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2) -->
 
 {% endblock %}
 
