@@ -1,17 +1,23 @@
 from flask import Flask
-from celery import Celery
-from pathlib import Path
-import sys
-import os
+from redis import Redis
+import rq
+from config import Config
 
-app = Flask(__name__, template_folder="views")
 
-queue = Celery('tasks', backend='amqp', broker='ampq://')
-
-@queue.task
 def runDetecting():
     import services.docker_handlers as dc
     dc.runDockerContainer("sapfir0/premier-eye")
 
 
-from app import routes
+def createApp(configClass=Config):
+    app = Flask(__name__, template_folder="views")  # это экспортируем
+    print(app.config)
+    app.config.from_object(configClass)
+
+    from app.errors import bp as errorsBP
+    app.register_blueprint(errorsBP)
+
+    from app.main import bp as mainBP
+    app.register_blueprint(mainBP)
+    return app
+
