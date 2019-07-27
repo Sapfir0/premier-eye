@@ -6,12 +6,11 @@ services:
       dockerfile: Dockerfile
       context: ./pyback
 
-  pyfront:
+  web:
     build: 
       dockerfile: Dockerfile
       context: ./pyfront
-    command: flask run
+    ports:
+    - "5000:5000"
     depends_on:
       - pyback
-    ports:
-    - 5000:5000 # [порт компьютера]:[порт контейнера]

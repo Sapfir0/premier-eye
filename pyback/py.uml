@@ -1,32 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Diagram>
   <ID>Python</ID>
-  <OriginalElement>#C:/Users/Sapfir/Dropbox/WORKING/FAN/premier-eye/pyback/neural_network/maskCNN.py</OriginalElement>
+  <OriginalElement />
   <nodes>
-    <node x="627.0" y="852.0">pyback.neural_network.imageAi.ImageAI</node>
+    <node x="0.0" y="744.0">pyback.neural_network.imageAi.ImageAI</node>
     <node x="0.0" y="0.0">pyback.settings.Settings</node>
-    <node x="0.0" y="1270.0">pyback.neural_network.modules.decart.DecartCoordinates</node>
-    <node x="561.0" y="1270.0">pyback.neural_network.modules.heatmap.Heatmap</node>
-    <node x="0.0" y="797.0">pyback.neural_network.maskCNN.Mask</node>
-    <node x="535.25" y="716.0">Neural_network</node>
+    <node x="648.0" y="744.0">pyback.neural_network.modules.decart.DecartCoordinates</node>
+    <node x="534.0" y="1119.0">pyback.neural_network.modules.heatmap.Heatmap</node>
+    <node x="316.0" y="77.0">pyback.neural_network.maskCNN.Mask</node>
+    <node x="0.0" y="1119.0">pyback.neural_network.neural_network.Neural_network</node>
   </nodes>
   <notes />
-  <edges>
-    <edge source="pyback.neural_network.maskCNN.Mask" target="Neural_network">
-      <point x="0.0" y="-214.0" />
-      <point x="303.5" y="772.0" />
-      <point x="574.25" y="772.0" />
-      <point x="-39.0" y="15.5" />
-    </edge>
-    <edge source="pyback.neural_network.imageAi.ImageAI" target="Neural_network">
-      <point x="0.0" y="-159.0" />
-      <point x="923.0" y="772.0" />
-      <point x="652.25" y="772.0" />
-      <point x="39.0" y="15.5" />
-    </edge>
-  </edges>
-  <settings layout="Hierarchic Group" zoom="1.0" x="416.0" y="168.5" />
-  <SelectedNodes />
+  <edges />
+  <settings layout="Hierarchic Group" zoom="1.0" x="618.0" y="283.5" />
+  <SelectedNodes>
+    <node>pyback.neural_network.maskCNN.Mask</node>
+  </SelectedNodes>
   <Categories>
     <Category>Methods</Category>
     <Category>Inner Classes</Category>

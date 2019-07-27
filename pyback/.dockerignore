@@ -1,6 +1,9 @@
+#data
 output
 logs
 __pycache__
-*txt
 .vscode
 nomeroff-net
+last_data_processed.txt
+.vscode
+.idea
