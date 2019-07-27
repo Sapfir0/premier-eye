@@ -8,13 +8,10 @@ app = Flask(__name__, template_folder="views")
 
 queue = Celery('tasks', backend='amqp', broker='ampq://')
 
-pathToPyback = os.path.join(Path(__file__).parents[2], "pyback" )
-sys.path.append(pathToPyback)
-
-# @queue.task
-# def runDetecting():
-#     main = MainClass()
-
+@queue.task
+def runDetecting():
+    import services.docker_handlers as dc
+    dc.runDockerContainer("sapfir0/premier-eye")
 
 
 from app import routes
