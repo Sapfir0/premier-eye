@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <script src="{{ url_for('static', filename='js/settings.js') }}"></script>
+
+    <div class="row">
+        <div class="item">Алгоритм
+        <input type="checkbox" class="algorithm"></div>
+  
+        <div class="item">Обрабатывать ли старые кадры
+        <input type="checkbox" class="oldFrames"></div>
+  
+        <div class="item">Определять ли номера машин(только для камер №1 и №2)
+        <input type="checkbox" class="carDetector"></div>
+
+    </div>
+
+{% endblock %}
+
