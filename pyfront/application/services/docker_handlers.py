@@ -1,5 +1,5 @@
 
-def runDockerContainer(name)
+def runDockerContainer(name):
     import docker
 
     client = docker.from_env()

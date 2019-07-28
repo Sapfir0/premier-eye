@@ -4,14 +4,8 @@ import rq
 from config import Config
 
 
-def runDetecting():
-    import services.docker_handlers as dc
-    dc.runDockerContainer("sapfir0/premier-eye")
-
-
 def createApp(configClass=Config):
     app = Flask(__name__, template_folder="views")  # это экспортируем
-    print(app.config)
     app.config.from_object(configClass)
 
     from application.errors import bp as errorsBP
