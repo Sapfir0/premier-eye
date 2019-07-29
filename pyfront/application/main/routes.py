@@ -7,7 +7,7 @@ def index():
     return render_template('index.html')
 
 import rq
-import Redis
+# import Redis
 
 @bp.route('/startDetection')
 def startDetection():

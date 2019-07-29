@@ -141,7 +141,7 @@ class Mask(Neural_network):
             color = (1.0, 1.0, 1.0)  # White
             image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6)  # рисование маски
 
-            if(classID > len(self.CLASS_NAMES)):
+            if classID > len(self.CLASS_NAMES):
                 print(Fore.RED + "Exception: Undefined classId - " + str(classID))
                 return -1
 

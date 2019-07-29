@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-import helpers.timeChecker as timeChecker
 
 
 class Neural_network(ABC):

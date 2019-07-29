@@ -1,5 +1,4 @@
 import os
-import time
 import asyncio
 from colorama import Fore
 import tracemalloc
@@ -11,10 +10,10 @@ import helpers.timeChecker as timeChecker
 import helpers.others as others
 
 
-
 class MainClass(object):
     from settings import Settings
-    cfg = Settings()
+    cfg = Settings()  # единственный раз, когда мы создаем инстанс
+
     if cfg.algorithm:
         from neural_network.maskCNN import Mask
         mask = Mask()

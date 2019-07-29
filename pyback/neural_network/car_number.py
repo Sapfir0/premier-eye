@@ -18,6 +18,7 @@ optionsDetector.load("latest")
 textDetector = TextDetector.get_static_module("ru")()
 textDetector.load("latest")
 
+
 @tm.checkElapsedTimeAndCompair(1.5, 1, 0.5, "Машины")
 def detectCarNumber(imgPath):
     
