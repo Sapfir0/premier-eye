@@ -1,13 +1,16 @@
-from flask import render_template, url_for
+from flask import render_template, url_for, send_from_directory
 from application.main import bp
-
+import os
+import config
 
 @bp.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-import rq
-# import Redis
+from rq import Queue
+from redis import Redis
+redisConn = Redis()
+queue = Queue(connection=redisConn)
 
 @bp.route('/startDetection')
 def startDetection():
@@ -15,3 +18,8 @@ def startDetection():
     dc.runDockerContainer("sapfir0/premier-eye")
 
 
+
+@bp.route('/favicon.ico')
+def favicon():
+    return send_from_directory(os.path.join(config.pyfrontDir, 'static'),
+                               'img/favicon.ico', mimetype='image/vnd.microsoft.icon')

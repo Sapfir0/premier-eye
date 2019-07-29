@@ -3,16 +3,16 @@
   <ID>Python</ID>
   <OriginalElement />
   <nodes>
-    <node x="0.0" y="744.0">pyback.neural_network.imageAi.ImageAI</node>
+    <node x="0.0" y="716.0">pyback.neural_network.imageAi.ImageAI</node>
     <node x="0.0" y="0.0">pyback.settings.Settings</node>
-    <node x="648.0" y="744.0">pyback.neural_network.modules.decart.DecartCoordinates</node>
-    <node x="534.0" y="1119.0">pyback.neural_network.modules.heatmap.Heatmap</node>
-    <node x="316.0" y="77.0">pyback.neural_network.maskCNN.Mask</node>
-    <node x="0.0" y="1119.0">pyback.neural_network.neural_network.Neural_network</node>
+    <node x="637.0" y="716.0">pyback.neural_network.modules.decart.DecartCoordinates</node>
+    <node x="534.0" y="1079.0">pyback.neural_network.modules.heatmap.Heatmap</node>
+    <node x="291.0" y="0.0">pyback.neural_network.maskCNN.Mask</node>
+    <node x="0.0" y="1079.0">pyback.neural_network.neural_network.Neural_network</node>
   </nodes>
   <notes />
   <edges />
-  <settings layout="Hierarchic Group" zoom="1.0" x="618.0" y="283.5" />
+  <settings layout="Hierarchic Group" zoom="1.0" x="532.5" y="1091.0" />
   <SelectedNodes>
     <node>pyback.neural_network.maskCNN.Mask</node>
   </SelectedNodes>
