@@ -9,28 +9,14 @@ class Neural_network(ABC):
         print("Im you father, network")
         pass
 
-    def extractImages():
+    def extractImages(self):
         return NotImplemented
 
-    def detectMyObjects():
+    def detectMyObjects(self):
         return NotImplemented
 
-    def detectObjects():
+    def detectObjects(self):
         return NotImplemented
 
-    def countObjects():
+    def countObjects(self):
         return NotImplemented
-
-    # def __init__(self):
-    # def pipeline(self, filename):
-    # def setIdToObject():
-    # def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
-    # def extractObjectsFromR(self, image, boxes, saveImage=False):
-    # def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
-    # def detectByMaskCNN(self, image):
-
-    # def __init__(self):
-    # def pipeline(self, filename):
-    # def getBoxesForObjectWithId(self, detections):
-    # def countObjects(self, detections):
-    # def detectMyObjects(self, inputName, outputName):

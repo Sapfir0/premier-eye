@@ -6,6 +6,9 @@ from application.main import bp
 def index():
     return render_template('index.html')
 
+import rq
+import Redis
+
 @bp.route('/startDetection')
 def startDetection():
     import application.services.docker_handlers as dc

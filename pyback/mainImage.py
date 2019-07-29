@@ -1,10 +1,8 @@
-# coding: utf8
-import time
 import os
-import cv2
-import numpy as np
+import time
 import asyncio
 from colorama import Fore
+import tracemalloc
 
 import helpers.dateHelper as dh
 import services.database_controller as db
@@ -12,11 +10,12 @@ import services.file_controller as file_controller
 import helpers.timeChecker as timeChecker
 import helpers.others as others
 
-class MainClass():
+
+
+class MainClass(object):
     from settings import Settings
     cfg = Settings()
-
-    if (cfg.algorithm):
+    if cfg.algorithm:
         from neural_network.maskCNN import Mask
         mask = Mask()
     else:
@@ -29,18 +28,16 @@ class MainClass():
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
     def __init__(self):
-        if (self.cfg.checkOldProcessedFrames):
+        if self.cfg.checkOldProcessedFrames:
             processedFrames = dh.checkDateFile(self.cfg.DATE_FILE) 
         else:
             processedFrames = {}
-
-        rectCoordinates = None
 
         ioloop = asyncio.get_event_loop()
         ioloop.run_until_complete(self.mainPipeline(processedFrames))
         ioloop.close()
 
-    async def detectObject(self, numberOfCam, filenames, processedFrames):
+    def detectObject(self, numberOfCam, filenames, processedFrames):
         """
             Сакральный алгоритм:
 
@@ -73,7 +70,7 @@ class MainClass():
             if filename in processedFrames[numberOfCam]:
                 if (processedFrames[numberOfCam] == filenames):
                     print(f"Thread {numberOfCam} sleeping")
-                    time.sleep(2.5)  # засыпает поток исполнения
+                    #time.sleep(2.5)  # засыпает поток исполнения
                 continue  # если файлы еще есть, то переходим к следующему
 
             dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
@@ -100,39 +97,40 @@ class MainClass():
                     for obj in os.listdir(objectImageDir):
                         name = str(obj).replace(" ", ",")
                         carNumber = car_number.detectCarNumber(os.path.join(objectImageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
-                        # решение такое себе, т.к. мы обращаемся к долгой памяти 
+                        # решение такое себе, т.к. мы обращаемся к долгой памяти
                         print(Fore.LIGHTBLUE_EX + str(carNumber))
 
             processedFrames[numberOfCam].append(filename)
 
             file_controller.writeInFile(self.cfg.DATE_FILE, str(processedFrames))  # будет стирать содержимое файла каждый кадр
-            
+     
             # DB
             if (self.cfg.loggingInDB):
-                centerDown = decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
+                centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
                 for i in range(0, len(rectCoordinates)):  # для каждого объекта, найденного на кадре
                     if carNumber == [] or carNumber == ['']:
                         carNumber = None
                     elif carNumber:
                         carNumber = carNumber[0]
-                    
+                
                     db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i], carNumber)
 
             return detections
-        
-
-    async def mainPipeline(self, processedFrames):
+   
+    def mainPipeline(self, processedFrames):
         while True:
             imagesForEachCamer = others.checkNewFile(self.currentImageDir)  # этим занимается главный поток
-            tasks = []
             for items in imagesForEachCamer.items():
                 numberOfCam = items[0]
                 filenames = items[1]
-                tasks.append(asyncio.ensure_future(self.detectObject(numberOfCam, filenames, processedFrames)))   
-            await asyncio.wait(tasks)
+                self.detectObject(numberOfCam, filenames, processedFrames)
+                from services.memory import display_top
+                snapshot = tracemalloc.take_snapshot()
+                display_top(snapshot)
 
 
 
 if __name__ == "__main__":
+    tracemalloc.start()
     p = MainClass()
-    
+

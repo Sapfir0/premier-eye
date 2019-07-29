@@ -1,8 +1,6 @@
 # https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_feature2d/py_feature_homography/py_feature_homography.html#py-feature-homography
 
-import numpy as np
 import cv2
-from matplotlib import pyplot as plt
 from settings import Settings as cfg
 
 lastObjectId = 0

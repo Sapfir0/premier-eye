@@ -73,7 +73,7 @@ class Settings():
             if not os.path.exists(i):
                 print(f"{i} folder isn't exist. Creating..")
                 os.makedirs(i)
-        
+
         packages = ["cv2", "tensorflow", "keras"]
         others.checkVersion(packages)
 
@@ -82,8 +82,8 @@ class Settings():
             if not os.path.exists(self.NOMEROFF_NET_DIR):
                 Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
                 Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
-                            
-                            
+
+
         if self.algorithm:
             if not os.path.exists(self.DATASET_DIR):
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
@@ -102,5 +102,4 @@ class Settings():
             realNames = ["3_20190702082219.jpg", "3_20190702082221.jpg", "3_20190702082223.jpg"]
             for i in range(0, len(samples)): # мы не будет исользовать in, мы же не любим ждать
                 others.downloadAndMove(samples[i], join(self.IMAGE_DIR, realNames[i]))
-
 

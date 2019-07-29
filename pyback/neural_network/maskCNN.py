@@ -1,13 +1,11 @@
 import os
 import sys
-import time
 from os.path import join
 import numpy as np
-import matplotlib.pyplot as plt
 import cv2
-from settings import Settings as cfg
 from colorama import Fore
 
+from settings import Settings as cfg
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 import mrcnn.visualize
 import mrcnn.utils
@@ -15,8 +13,6 @@ from mrcnn.model import MaskRCNN
 
 import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
-from neural_network.modules.decart import DecartCoordinates
-import services.database_controller as db
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 from neural_network.neural_network import Neural_network
@@ -36,6 +32,7 @@ class Mask(Neural_network):
     counter = 0
 
     def __init__(self):
+
         with open(cfg.CLASSES_FILE, 'rt') as file:
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
@@ -66,10 +63,9 @@ class Mask(Neural_network):
         return r, imagesFromCurrentFrame
 
     def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
-        foundedDifferentObjects = None
         if (self.counter):
             foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
-            print("Столько у нас одниковых обхектов с пердыщуим кадром", len(foundedDifferentObjects))
+            #print("Столько у нас одниковых обхектов с пердыщуим кадром", len(foundedDifferentObjects))
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
@@ -90,15 +86,13 @@ class Mask(Neural_network):
         objectId = 0
         for previousObjects in imagesFromPreviousFrame:
             for currentObjects in imagesFromCurrentFrame:
-                if(sift.compareImages(previousObjects, currentObjects)):  # то это один объект
+                if sift.compareImages(previousObjects, currentObjects):  # то это один объект
                     obj = {
                         "id": objectId,
                         "type": r['class_ids'][objectId],
                         "coordinates": r['rois'][objectId]
                     }
                     objectId += 1
-                    # imagesFromCurrentFrame.remove(currentObjects) #
-                    # оптимизация от некита
                     # все, матрицы можем выкидывать
                     foundedUniqueObjects.append(obj)
                     if (saveUniqueObjects):
@@ -166,7 +160,6 @@ class Mask(Neural_network):
             "truck": truck_count,
             "car": cars_count
         }
-        # print(countedObj)
         return countedObj, rgb_image.astype(np.uint8)
 
     def detectByMaskCNN(self, image):

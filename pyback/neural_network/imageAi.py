@@ -1,9 +1,5 @@
 import os
-import sys
-import cv2
 from imageai.Detection import ObjectDetection
-from os.path import join
-import numpy as np
 
 from neural_network.neural_network import Neural_network
 import neural_network.modules.feature_matching as sift

@@ -3,6 +3,7 @@ import helpers.dateHelper as dh
 from colorama import Fore
 import wget
 
+
 def checkNewFile(currentImageDir):
     """
         input: Directory in which we search for files
@@ -22,7 +23,8 @@ def checkNewFile(currentImageDir):
         numbersOfCamers.update({i: sorted(numbersOfCamers[i])})
 
     return numbersOfCamers
-    
+
+
 def parseImageAiData(rectCoordinates):
     boxes = []
     for diction in rectCoordinates:
@@ -44,11 +46,13 @@ def downloadAndMove(downloadLink, destinationDir):
     file = wget.download(downloadLink) 
     os.rename(os.path.join(os.getcwd(), file), destinationDir)
 
+
 def checkExist(mustExistedFile, link):
     if not os.path.exists(mustExistedFile):
         print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
         downloadAndMove(link, mustExistedFile)
-  
+
+
 def checkVersion(package):
     """
         return version of the package and print it in color
@@ -56,9 +60,9 @@ def checkVersion(package):
                list of string as names of packages
         return dictionary [package: version]
     """
-    def checkVersionFromString(stringPackage):
-        i = importlib.import_module(stringPackage)
-        version = i.__version__
+    def checkVersionFromString(stringPackage: str) -> int:
+        currentPackage = importlib.import_module(stringPackage)
+        version = currentPackage.__version__
         print(Fore.MAGENTA + f"{stringPackage} {version}")
         return version
 
@@ -67,7 +71,9 @@ def checkVersion(package):
         version = checkVersionFromString(package)
     elif isinstance(package, list):
         version = {}
-        for i in package:
-            version.update({ i:checkVersionFromString(i) })
+        for pkg in package:
+            version.update({pkg: checkVersionFromString(pkg)})
+    else:
+        version = Exception
 
     return version

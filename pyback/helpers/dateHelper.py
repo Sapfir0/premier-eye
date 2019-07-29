@@ -2,6 +2,7 @@ import datetime
 import re
 import os
 
+
 def parseFilename(filename, getNumberOfCamera=False, getDate=True):
     numberOfCam, date = 0, datetime
 
@@ -35,6 +36,7 @@ def checkDateFile(dateFile):
             json_acceptable_string = last_processed_date.replace("'", "\"")
             dateFromFile = json.loads(json_acceptable_string)
             return dateFromFile
+
 
 def getDateOrHours(filename, getHours=True, getDate=True):
     result = re.findall(r'\d_\d{14}\..+', filename)

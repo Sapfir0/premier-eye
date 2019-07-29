@@ -1,7 +1,5 @@
 import sqlalchemy as sql
 import services.database_controller as db
-from colorama import Fore
-from settings import Settings
 
 class DecartCoordinates():
     """
@@ -11,7 +9,6 @@ class DecartCoordinates():
     def getCenterOfDownOfRectangle(self, boxes):
         allCenters = []
 
-        cfg = Settings()
         for i in boxes:
             y1, x1, y2, x2 = i  # задан левый нижний и правый верхний угол
             midleDownPoint = [(x1+x2)/2, y1]
@@ -36,10 +33,10 @@ class DecartCoordinates():
         minY, minX, maxY, maxX = bigRect
         y1, x1, y2, x2 = minRect
 
-        a = (y1 >= minY and y1 <= maxY)
-        b = (x1 >= minX and x1 <= maxX)
-        c = (y2 >= minY and y2 <= maxY)
-        d = (x2 >= minX and x2 <= maxX)
+        a = (minY <= y1 <= maxY)
+        b = (minX <= x1 <= maxX)
+        c = (minY <= y2 <= maxY)
+        d = (minX <= x2 <= maxX)
 
         if (a or b or c or d):
             return True
@@ -53,10 +50,10 @@ class DecartCoordinates():
         
         y1, x1, y2, x2 = minRect
 
-        a = (y1 >= minY and y1 <= maxY)
-        b = (x1 >= minX and x1 <= maxX)
-        c = (y2 >= minY and y2 <= maxY)
-        d = (x2 >= minX and x2 <= maxX)
+        a = (minY <= y1 <= maxY)
+        b = (minX <= x1 <= maxX)
+        c = (minY <= y2 <= maxY)
+        d = (minX <= x2 <= maxX)
 
         if (a and b and c and d):
             return True # объект полностью внутри большого прямоугольника
@@ -68,13 +65,13 @@ class DecartCoordinates():
         minLUy, minLUx, minRDy, minRDx = minRect
         fullSquare = (minLUy - minRDy) * (minRDx - minLUx)  # не уверен что правильно
         # Не уверен в ифах
-        if (bigLUy < minLUy):
+        if bigLUy < minLUy:
             minLUy = bigLUy
-        if (bigRDy < minRDy):
+        if bigRDy < minRDy:
             minRDy = bigRDy
-        if (bigLUx > minLUx):
+        if bigLUx > minLUx:
             minLUx = bigLUx
-        if (bigRDx > minRDx):
+        if bigRDx > minRDx:
             minRDx = bigRDx
         inObjSquare = (minLUy - minRDy) * (minRDx - minLUx)
         return inObjSquare / fullSquare >= innerPercent

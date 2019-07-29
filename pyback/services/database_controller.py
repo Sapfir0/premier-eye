@@ -1,9 +1,7 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Float, UnicodeText, literal_column, DateTime, Boolean, or_
 from sqlalchemy.orm import scoped_session, sessionmaker, aliased
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy import create_engine
-from sqlalchemy import func
 from settings import Settings as cfg
 import sqlalchemy as sql
 
@@ -34,8 +32,7 @@ class Objects(Base):
     #Column('objectId', Integer,)
     #Column('GPS', Integer,),
 
-    def __init__(
-            self,
+    def __init__(self,
             numberOfCam,
             fixationDatetime,
             LDx, LDy,
@@ -71,9 +68,5 @@ def writeInfoForObjectInDB(numberOfCam, fixationDatetime, rectCoordinates, cente
     session.add(objN)
     session.commit()
     session.flush() # можно один раз добавить  
-
-
-import settings
-cfg = settings.Settings()
 
 Objects.init_db()
