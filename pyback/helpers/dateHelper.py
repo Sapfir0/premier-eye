@@ -38,7 +38,8 @@ def checkDateFile(dateFile):
             return dateFromFile
 
 
-def getDateOrHours(filename, getHours=True, getDate=True):
+def getDateOrHours(filename: str, getHours=True, getDate=True):
+
     result = re.findall(r'\d_\d{14}\..+', filename)
     if not result:
         raise ValueError("Wrong date in filename")

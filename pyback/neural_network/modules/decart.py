@@ -1,12 +1,13 @@
 import sqlalchemy as sql
 import services.database_controller as db
 
+
 class DecartCoordinates():
     """
         Класс для 2 задания
-        getConcetration - основной метод
+        getConcentration - основной метод
     """
-    def getCenterOfDownOfRectangle(self, boxes):
+    def getCenterOfDownOfRectangle(self, boxes: list) -> list:
         allCenters = []
 
         for i in boxes:
@@ -15,7 +16,7 @@ class DecartCoordinates():
             allCenters.append(midleDownPoint)
         return allCenters
 
-    def getConcetration(self, highlightedRect, startTime, endTime):
+    def getConcentration(self, highlightedRect, startTime, endTime):
         """
             highlightedRectкоординаты прямоугольника, в котором начинаем искать объекты
         """
@@ -45,7 +46,7 @@ class DecartCoordinates():
 
     def isCompletelyInside(self, bigRect, minRect): # объект полностью внутри прямоугольника
         y1, x1, y2, x2 = bigRect
-        minX = x1; minY = y1 # вроде верно
+        minX = x1; minY = y1  # вроде верно
         maxX = x2; maxY = y2
         
         y1, x1, y2, x2 = minRect
@@ -56,9 +57,8 @@ class DecartCoordinates():
         d = (minX <= x2 <= maxX)
 
         if (a and b and c and d):
-            return True # объект полностью внутри большого прямоугольника
+            return True  # объект полностью внутри большого прямоугольника
         return False
-
 
     def isPartiallyInside(self, bigRect, minRect, innerPercent=0.5):  # объект частично внутри прямоугольника
         bigLUy, bigLUx, bigRDy, bigRDx = bigRect

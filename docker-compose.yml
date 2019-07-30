@@ -6,6 +6,10 @@ services:
       dockerfile: Dockerfile
       context: ./pyback
 
+  redis:
+    image: redis:alpine
+
+
   web:
     build: 
       dockerfile: Dockerfile
@@ -14,3 +18,4 @@ services:
     - "5000:5000"
     depends_on:
       - pyback
+      - redis

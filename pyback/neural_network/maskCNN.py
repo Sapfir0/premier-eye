@@ -56,14 +56,14 @@ class Mask(Neural_network):
         self.checkNewFrame(r, rgb_image, imagesFromCurrentFrame)
         cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
 
-        if (self.SAVE_COLORMAP):
+        if self.SAVE_COLORMAP:
             heatmap = Heatmap()
             heatmap.createHeatMap(image, outputPath)
         
         return r, imagesFromCurrentFrame
 
     def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
-        if (self.counter):
+        if self.counter:
             foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
             #print("Столько у нас одниковых обхектов с пердыщуим кадром", len(foundedDifferentObjects))
             countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
@@ -95,7 +95,7 @@ class Mask(Neural_network):
                     objectId += 1
                     # все, матрицы можем выкидывать
                     foundedUniqueObjects.append(obj)
-                    if (saveUniqueObjects):
+                    if saveUniqueObjects:
                         img1 = str(objectId) + ".jpg"
                         img2 = str(objectId) + "N" + ".jpg"
                         cv2.imwrite(
@@ -112,7 +112,7 @@ class Mask(Neural_network):
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
         """
         # Create a new solid-black image the same size as the original image
-        masked_image = np.zeros(image.shape)
+        #masked_image = np.zeros(image.shape)
 
         bgr_image = image[:, :, ::-1]
         font = cv2.FONT_HERSHEY_DUPLEX

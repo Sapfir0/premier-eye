@@ -11,11 +11,11 @@ class Settings():
     colorama.init(autoreset=True)
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
-    algorithm = 1
-    loggingInDB = True
-    checkOldProcessedFrames = False # если True, обработанные файлы второй раз не попадут в очередь на обработку
-    SAVE_COLORMAP = False
-    CAR_NUMBER_DETECTOR = True # детекировать номер машины(только для камер №1, №2)
+    ALGORITHM = 1
+    loggingInDB: bool = True
+    checkOldProcessedFrames: bool = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
+    SAVE_COLORMAP: bool = False
+    CAR_NUMBER_DETECTOR: bool = False  # детекировать номер машины(только для камер №1, №2)
 
 
     # путевые настройки
@@ -84,7 +84,7 @@ class Settings():
                 Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
 
 
-        if self.algorithm:
+        if self.ALGORITHM:
             if not os.path.exists(self.DATASET_DIR):
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
             link =  "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"

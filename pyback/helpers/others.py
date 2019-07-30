@@ -4,12 +4,12 @@ from colorama import Fore
 import wget
 
 
-def checkNewFile(currentImageDir):
+def checkNewFile(currentImageDir: str) -> dict:
     """
         input: Directory in which we search for files
         output: A dictionary where the camera number will be associated with an array of images from this camera    
     """
-    numbersOfCamers = {}  # numberOfCam:files
+    numbersOfCamers: dict[int, list] = {}  # numberOfCam:files #уточнение: номер камеры обычно идет строкой
 
     for filename in os.listdir(currentImageDir):
         numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
@@ -25,19 +25,17 @@ def checkNewFile(currentImageDir):
     return numbersOfCamers
 
 
-def parseImageAiData(rectCoordinates):
-    boxes = []
-    for diction in rectCoordinates:
-        boxes.append(diction['box_points'])
+def parseImageAiData(rectCoordinates: list) -> list:
+    boxes = [diction['box_points'] for diction in rectCoordinates]
     return boxes
 
 
 def existingOutputDir(functionToDecorate):
-    def wrapper(fakearg, inputPath, outputPath):
-        if not os.path.isdir(os.path.split(outputPath)[0]):  
-            os.makedirs(os.path.split(outputPath)[0])
-        return functionToDecorate(fakearg, inputPath, outputPath)
-
+    def wrapper(fakearg, inputPath, outputPathWithFile):
+        outputPath = os.path.split(outputPathWithFile)[0]
+        if not os.path.isdir(outputPath):
+            os.makedirs(outputPath)
+        return functionToDecorate(fakearg, inputPath, outputPathWithFile)
     return wrapper
 
 

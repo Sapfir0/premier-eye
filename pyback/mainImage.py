@@ -14,7 +14,7 @@ class MainClass(object):
     from settings import Settings
     cfg = Settings()  # единственный раз, когда мы создаем инстанс
 
-    if cfg.algorithm:
+    if cfg.ALGORITHM:
         from neural_network.maskCNN import Mask
         mask = Mask()
     else:
@@ -67,9 +67,9 @@ class MainClass(object):
                 processedFrames.update({numberOfCam: []})
 
             if filename in processedFrames[numberOfCam]:
-                if (processedFrames[numberOfCam] == filenames):
+                if processedFrames[numberOfCam] == filenames:
                     print(f"Thread {numberOfCam} sleeping")
-                    #time.sleep(2.5)  # засыпает поток исполнения
+                    # time.sleep(2.5)  # засыпает поток исполнения
                 continue  # если файлы еще есть, то переходим к следующему
 
             dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
@@ -80,7 +80,7 @@ class MainClass(object):
             print(f"Analyzing {inputFile}")
 
             imagesFromCurrentFrame = 0
-            if self.cfg.algorithm:  # Mask CNN
+            if self.cfg.ALGORITHM:  # Mask CNN
                 detections, imagesFromCurrentFrame = self.mask.pipeline(inputFile, outputFile)
                 rectCoordinates = detections['rois']
             else:  # image ai # эти алгоритмы всегда остают в нововведениях
