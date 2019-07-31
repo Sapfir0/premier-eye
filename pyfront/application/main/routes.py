@@ -1,25 +1,28 @@
 from flask import render_template, url_for, send_from_directory
 from application.main import bp
 import os
+from rq import Queue
+from redis import Redis
 import config
 
 @bp.route('/', methods=['GET'])
 def index():
     return render_template('index.html')
 
-from rq import Queue
-from redis import Redis
-redisConn = Redis(host='redis', port="6379")
-queue = Queue(connection=redisConn)
-job = queue.enqueue()
-#while not job.result:
-    # ждем
+
+# redisConn = Redis(host='redis', port="6379")
+# queue = Queue(connection=redisConn)
+
 
 @bp.route('/startDetection')
 def startDetection():
     import application.services.docker_handlers as dc
-    dc.runDockerContainer("sapfir0/premier-eye")
+    job = queue.enqueue(dc.runDockerContainer("sapfir0/premier-eye"))
 
+
+@bp.route("/api/getUpdateKey")
+def getUpdateKey():
+    return NotImplemented  # может вовзращать просто последнюю версию, чтобы сервисы обращзались сюда и обновлялись
 
 
 @bp.route('/favicon.ico')

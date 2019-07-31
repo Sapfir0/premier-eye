@@ -26,7 +26,7 @@ class MainClass(object):
 
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
-    def __init__(self):
+    def __init__(self, imageDirectory=cfg.IMAGE_DIR): # надо подумать насчет папки совсем в другом месте
         if self.cfg.checkOldProcessedFrames:
             processedFrames = dh.checkDateFile(self.cfg.DATE_FILE) 
         else:
@@ -118,7 +118,7 @@ class MainClass(object):
    
     def mainPipeline(self, processedFrames):
         while True:
-            imagesForEachCamer = others.checkNewFile(self.currentImageDir)  # этим занимается главный поток
+            imagesForEachCamer = others.checkNewFile(self.currentImageDir)
             for items in imagesForEachCamer.items():
                 numberOfCam = items[0]
                 filenames = items[1]
