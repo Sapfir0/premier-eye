@@ -8,3 +8,5 @@ load_dotenv(os.path.join(basedir, '.env'))
 
 class Config(object):
     REDIS_URL = os.environ.get('REDIS_URL') or 'redis://'
+    DATABASE_URL = os.environ.get("DATABASE_URL") or 'sqlite:///' + os.path.join(pyfrontDir, 'app.db')
+    SQLALCHEMY_TRACK_MODIFICATIONS = False

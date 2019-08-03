@@ -18,6 +18,10 @@ class Settings():
     CAR_NUMBER_DETECTOR: bool = False  # детекировать номер машины(только для камер №1, №2)
 
 
+    pyfrontProductionLink = "https://premier-eye.herokuapp.com"
+    port = "5000"
+    pyfrontDevelopmentLink = f"http://localhost:{port}"
+
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")

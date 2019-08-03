@@ -2,6 +2,7 @@ import os
 import asyncio
 from colorama import Fore
 import tracemalloc
+import requests
 
 import helpers.dateHelper as dh
 import services.database_controller as db
@@ -113,6 +114,15 @@ class MainClass(object):
                         carNumber = carNumber[0]
                 
                     db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i], carNumber)
+
+            # checkConnections with Pyfront
+
+            data = {
+                "filename": filename
+                #"proccessedIn":
+            }
+
+            r = requests.post(self.cfg.pyfrontDevelopmentLink, data)
 
             return detections
    

@@ -24,6 +24,9 @@ def startDetection():
 def getUpdateKey():
     return NotImplemented  # может вовзращать просто последнюю версию, чтобы сервисы обращзались сюда и обновлялись
 
+@bp.route("/service/checkConnections")
+def checkConnections():
+    return NotImplemented
 
 @bp.route('/favicon.ico')
 def favicon():
