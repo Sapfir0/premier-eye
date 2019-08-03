@@ -123,6 +123,8 @@ class MainClass(object):
             }
 
             r = requests.post(self.cfg.pyfrontDevelopmentLink, data)
+            if not r.status_code == 200:
+                raise ValueError("Server isn't available")
 
             return detections
    

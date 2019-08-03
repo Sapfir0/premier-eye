@@ -6,8 +6,8 @@ from colorama import Fore, Back, Style  # для цветного консоль
 import mrcnn.config
 import helpers.others as others
 
-class Settings():
 
+class Settings(object):
     colorama.init(autoreset=True)
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
@@ -16,7 +16,6 @@ class Settings():
     checkOldProcessedFrames: bool = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP: bool = False
     CAR_NUMBER_DETECTOR: bool = False  # детекировать номер машины(только для камер №1, №2)
-
 
     pyfrontProductionLink = "https://premier-eye.herokuapp.com"
     port = "5000"
@@ -30,17 +29,16 @@ class Settings():
     IMAGE_DIR = join(DATA_PATH, "1_2") 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
     DATE_FILE = "last_data_processed.txt"
-    #Mask cnn
+    # Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
     LOGS_DIR = "logs"
     CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
     OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
-    #car detector
+    # car detector
     NOMEROFF_NET_DIR = os.path.join(APP_PATH, 'nomeroff-net')
     MASK_RCNN_DIR = os.path.join(NOMEROFF_NET_DIR, 'Mask_RCNN')
     MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
 
-    
     # Mask cnn advanced
     # Configuration that will be used by the Mask-RCNN library
     class MaskRCNNConfig(mrcnn.config.Config):
@@ -53,7 +51,6 @@ class Settings():
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
 
-
     # Алгоритм сравнения
     MIN_MATCH_COUNT = 20 # меньше этого числа совпадений, будем считать что объекты разные
     FLANN_INDEX_KDTREE = 0 # алгоритм
@@ -64,15 +61,9 @@ class Settings():
     OUTPUT_DIR_IMAGE_AI = join(APP_PATH, OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
     DETECTION_SPEED = "normal"  # скорость обхода каждого кадра
 
-    ##### unused
-    #video
-    VIDEO_SOURCE = join(DATA_PATH, "3.mp4")
-    OUTPUT_VIDEO = join(OUTPUT_DIR, 'ITSWORK.avi')
-
     def __init__(self):
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
-
         for i in must_exist_dirs:
             if not os.path.exists(i):
                 print(f"{i} folder isn't exist. Creating..")
@@ -81,29 +72,34 @@ class Settings():
         packages = ["cv2", "tensorflow", "keras"]
         others.checkVersion(packages)
 
-        from git import Repo
         if self.CAR_NUMBER_DETECTOR:
-            if not os.path.exists(self.NOMEROFF_NET_DIR):
-                Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
-                Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
-
+            self.downloadNomeroffNet()
 
         if self.ALGORITHM:
             if not os.path.exists(self.DATASET_DIR):
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-            link =  "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
+            link = "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
             others.checkExist(self.CLASSES_FILE, link)
         else:
             link = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
             others.checkExist(self.DATASET_DIR_IMAGE_AI, link)
+        self.downloadSamples(self.IMAGE_DIR)
 
-        if not os.listdir(self.IMAGE_DIR):
-            print(Fore.YELLOW + f"{self.IMAGE_DIR} is empty")
+    def downloadSamples(self, imagesPath):
+        if not os.listdir(imagesPath):
+            print(Fore.YELLOW + f"{imagesPath} is empty")
             print(Fore.YELLOW + "Downloading sample")
             samples = ["https://pp.userapi.com/c852224/v852224214/1594c2/nuoWwPD9w24.jpg",
-                    "https://pp.userapi.com/c852224/v852224214/1594cb/uDYNgvVKow8.jpg",
-                    "https://pp.userapi.com/c852224/v852224214/1594d4/XKUBv7r4xAY.jpg"]
+                       "https://pp.userapi.com/c852224/v852224214/1594cb/uDYNgvVKow8.jpg",
+                       "https://pp.userapi.com/c852224/v852224214/1594d4/XKUBv7r4xAY.jpg"]
             realNames = ["3_20190702082219.jpg", "3_20190702082221.jpg", "3_20190702082223.jpg"]
-            for i in range(0, len(samples)): # мы не будет исользовать in, мы же не любим ждать
-                others.downloadAndMove(samples[i], join(self.IMAGE_DIR, realNames[i]))
+            for i in range(0, len(samples)):  # мы не будет исользовать in, мы же не любим ждать
+                others.downloadAndMove(samples[i], join(imagesPath, realNames[i]))
+
+    def downloadNomeroffNet(self):
+        from git import Repo
+
+        if not os.path.exists(self.NOMEROFF_NET_DIR):
+            Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
+            Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
 
