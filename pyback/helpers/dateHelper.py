@@ -3,7 +3,7 @@ import re
 import os
 
 
-def parseFilename(filename, getNumberOfCamera=False, getDate=True):
+def parseFilename(filename: str, getNumberOfCamera=False, getDate=True):
     numberOfCam, date = 0, datetime
 
     result = re.findall(r'\d_\d{14}\..+', filename)
@@ -28,7 +28,7 @@ def parseFilename(filename, getNumberOfCamera=False, getDate=True):
         raise Exception("No parsed data, check arguments")
 
 
-def checkDateFile(dateFile):
+def checkDateFile(dateFile: str):
     import json
     if os.path.isfile(dateFile):
         with open(dateFile, 'r') as f:
@@ -39,7 +39,6 @@ def checkDateFile(dateFile):
 
 
 def getDateOrHours(filename: str, getHours=True, getDate=True):
-
     result = re.findall(r'\d_\d{14}\..+', filename)
     if not result:
         raise ValueError("Wrong date in filename")

@@ -1,4 +1,5 @@
 wget
+Cython
 numpy
 sqlalchemy
 scikit_image
@@ -10,6 +11,7 @@ opencv-contrib-python==3.4.2.16
 mrcnn
 colorama
 keras
+tensorflow
 IPython 
 gitPython
 tqdm 

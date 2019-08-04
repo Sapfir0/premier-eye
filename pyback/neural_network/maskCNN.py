@@ -1,9 +1,9 @@
 import os
 import sys
 from os.path import join
-import numpy as np
 import cv2
 from colorama import Fore
+import numpy as np
 
 from settings import Settings as cfg
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
@@ -27,7 +27,7 @@ class Mask(Neural_network):
 
     CLASS_NAMES = None
     COLORS = None
-    imagesFromPreviousFrame = None  # objects in the previous frame
+    objectsFromPreviousFrame = None  # objects in the previous frame
     model = None
     counter = 0
 
@@ -42,7 +42,7 @@ class Mask(Neural_network):
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     @others.existingOutputDir
-    def pipeline(self, inputPath, outputPath):
+    def pipeline(self, inputPath: str, outputPath: str):
         """
             almost main
         """
@@ -50,42 +50,42 @@ class Mask(Neural_network):
         image = cv2.imread(inputPath)
         # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
-        imagesFromCurrentFrame = extra.extractObjectsFromR(
+        objectsFromCurrentFrame = extra.extractObjectsFromR(
             image, r['rois'], outputImageDirectory=outputPath, filename=os.path.split(outputPath)[1])  # почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        self.checkNewFrame(r, rgb_image, imagesFromCurrentFrame)
+        self.checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
         cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
 
         if self.SAVE_COLORMAP:
             heatmap = Heatmap()
             heatmap.createHeatMap(image, outputPath)
         
-        return r, imagesFromCurrentFrame
+        return r, objectsFromCurrentFrame
 
-    def checkNewFrame(self, r, rgb_image, imagesFromCurrentFrame):
+    def checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
         if self.counter:
-            foundedDifferentObjects = self.uniqueObjects(self.imagesFromPreviousFrame, imagesFromCurrentFrame, r)
+            foundedDifferentObjects = self.uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
             #print("Столько у нас одниковых обхектов с пердыщуим кадром", len(foundedDifferentObjects))
-            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
+            masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
-            countedObj, masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+            masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
             self.counter = 1
 
-        self.imagesFromPreviousFrame = imagesFromCurrentFrame
+        self.objectsFromPreviousFrame = objectsFromCurrentFrame
 
-    def uniqueObjects(self, imagesFromPreviousFrame, imagesFromCurrentFrame, r, saveUniqueObjects=False):
+    def uniqueObjects(self, objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame: np.ndarray, r: np.ndarray, saveUniqueObjects=False) -> np.ndarray:
         """
             input:
-                imagesFromPreviousFrame - an array of objects in the previous frame \n
-                imagesFromCurrentFrame - an array of objects on the current frame \n
+                objectsFromPreviousFrame - an array of objects in the previous frame \n
+                objectsFromCurrentFrame - an array of objects on the current frame \n
                 r - information about objects obtained with mask rcnn \n
             output: returns an array of objects in both frames.
         """
-
+        print("ПЕРЖУ", type(objectsFromPreviousFrame), type(objectsFromCurrentFrame), type(r))
         foundedUniqueObjects = []
         objectId = 0
-        for previousObjects in imagesFromPreviousFrame:
-            for currentObjects in imagesFromCurrentFrame:
+        for previousObjects in objectsFromPreviousFrame:
+            for currentObjects in objectsFromCurrentFrame:
                 if sift.compareImages(previousObjects, currentObjects):  # то это один объект
                     obj = {
                         "id": objectId,
@@ -106,33 +106,22 @@ class Mask(Neural_network):
 
         return foundedUniqueObjects
 
-    def visualize_detections(self, image, masks, boxes, class_ids, scores, objectId="-"):
+    def visualize_detections(self, image: np.ndarray, masks: np.ndarray, boxes: np.ndarray, class_ids: np.ndarray, scores: np.ndarray, objectId="-") -> np.ndarray:
         """
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
         """
         # Create a new solid-black image the same size as the original image
         #masked_image = np.zeros(image.shape)
-
         bgr_image = image[:, :, ::-1]
         font = cv2.FONT_HERSHEY_DUPLEX
 
-        person_count = 0
-        cars_count = 0
-        truck_count = 0
         # Loop over each detected person
         for i in range(boxes.shape[0]):
             classID = class_ids[i]
 
             if not classID in[1, 3, 4]:
                 continue
-
-            if classID == 1:
-                person_count += 1
-            if classID == 3:
-                cars_count += 1
-            if classID == 4:
-                truck_count += 1
 
             # Get the bounding box of the current person
             y1, x1, y2, x2 = boxes[i]
@@ -155,14 +144,9 @@ class Mask(Neural_network):
 
         rgb_image = bgr_image[:, :, ::-1]
 
-        countedObj = {
-            "person": person_count,
-            "truck": truck_count,
-            "car": cars_count
-        }
-        return countedObj, rgb_image.astype(np.uint8)
+        return rgb_image.astype(np.uint8)
 
-    def detectByMaskCNN(self, image):
+    def detectByMaskCNN(self, image: np.ndarray) -> dict: # и еще один, но чет не получается указать два возвращаемых аргумента
         """
             input: image - the result of cv2.imread (<filename>)
             output: r - dictionary of objects found (r ['masks'], r ['rois'], r ['class_ids'], r ['scores']), detailed help somewhere else

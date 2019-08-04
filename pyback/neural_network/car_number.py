@@ -3,7 +3,6 @@ import matplotlib.image as mpimg
 from settings import Settings as cfg
 import helpers.timeChecker as tm
 
-
 sys.path.append(cfg.NOMEROFF_NET_DIR)
 from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing, textPostprocessingAsync
 
@@ -11,17 +10,18 @@ nnet = Detector(cfg.MASK_RCNN_DIR, cfg.MASK_RCNN_LOG_DIR)
 nnet.loadModel("latest")
 
 rectDetector = RectDetector()
-
 optionsDetector = OptionsDetector()
 optionsDetector.load("latest")
-
 textDetector = TextDetector.get_static_module("ru")()
 textDetector.load("latest")
 
 
 @tm.checkElapsedTimeAndCompair(1.5, 1, 0.5, "Машины")
-def detectCarNumber(imgPath):
-    
+def detectCarNumber(imgPath: str) -> str:
+    """
+    :param imgPath:
+    :return: number of car
+    """
     img = mpimg.imread(imgPath)
     NP = nnet.detect([img])
 

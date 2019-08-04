@@ -105,7 +105,7 @@ class MainClass(object):
             file_controller.writeInFile(self.cfg.DATE_FILE, str(processedFrames))  # будет стирать содержимое файла каждый кадр
      
             # DB
-            if (self.cfg.loggingInDB):
+            if self.cfg.loggingInDB:
                 centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
                 for i in range(0, len(rectCoordinates)):  # для каждого объекта, найденного на кадре
                     if carNumber == [] or carNumber == ['']:
@@ -116,15 +116,9 @@ class MainClass(object):
                     db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i], carNumber)
 
             # checkConnections with Pyfront
-
-            data = {
-                "filename": filename
-                #"proccessedIn":
-            }
-
-            r = requests.post(self.cfg.pyfrontDevelopmentLink, data)
-            if not r.status_code == 200:
-                raise ValueError("Server isn't available")
+            # r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
+            # if not r.status_code == 200:
+            #     raise ValueError("Server isn't available")
 
             return detections
    
@@ -138,7 +132,6 @@ class MainClass(object):
                 from services.memory import display_top
                 snapshot = tracemalloc.take_snapshot()
                 display_top(snapshot)
-
 
 
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ import colorama
 from colorama import Fore, Back, Style  # для цветного консольного вывода 
 import mrcnn.config
 import helpers.others as others
+from dotenv import load_dotenv
 
 
 class Settings(object):
@@ -56,12 +57,15 @@ class Settings(object):
     FLANN_INDEX_KDTREE = 0 # алгоритм
     cencitivity = 0.7 # не особо влияет на что-то
 
-    #imageAI
+    # imageAI
     DATASET_DIR_IMAGE_AI = join(DATA_PATH, "resnet50_coco_best_v2.0.1.h5")
     OUTPUT_DIR_IMAGE_AI = join(APP_PATH, OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
     DETECTION_SPEED = "normal"  # скорость обхода каждого кадра
 
     def __init__(self):
+        load_dotenv(os.path.join(self.APP_PATH, '.env'))
+        enivroment = os.environ.get("enivroment")
+        #others.checkAvailabilityOfServer(enivroment)
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
         for i in must_exist_dirs:
@@ -73,7 +77,7 @@ class Settings(object):
         others.checkVersion(packages)
 
         if self.CAR_NUMBER_DETECTOR:
-            self.downloadNomeroffNet()
+            others.downloadNomeroffNet()
 
         if self.ALGORITHM:
             if not os.path.exists(self.DATASET_DIR):
@@ -83,23 +87,6 @@ class Settings(object):
         else:
             link = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
             others.checkExist(self.DATASET_DIR_IMAGE_AI, link)
-        self.downloadSamples(self.IMAGE_DIR)
 
-    def downloadSamples(self, imagesPath):
-        if not os.listdir(imagesPath):
-            print(Fore.YELLOW + f"{imagesPath} is empty")
-            print(Fore.YELLOW + "Downloading sample")
-            samples = ["https://pp.userapi.com/c852224/v852224214/1594c2/nuoWwPD9w24.jpg",
-                       "https://pp.userapi.com/c852224/v852224214/1594cb/uDYNgvVKow8.jpg",
-                       "https://pp.userapi.com/c852224/v852224214/1594d4/XKUBv7r4xAY.jpg"]
-            realNames = ["3_20190702082219.jpg", "3_20190702082221.jpg", "3_20190702082223.jpg"]
-            for i in range(0, len(samples)):  # мы не будет исользовать in, мы же не любим ждать
-                others.downloadAndMove(samples[i], join(imagesPath, realNames[i]))
-
-    def downloadNomeroffNet(self):
-        from git import Repo
-
-        if not os.path.exists(self.NOMEROFF_NET_DIR):
-            Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
-            Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
+        others.downloadSamples(self.IMAGE_DIR)
 
