@@ -4,7 +4,7 @@ from settings import Settings as cfg
 import helpers.timeChecker as tm
 
 sys.path.append(cfg.NOMEROFF_NET_DIR)
-from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing, textPostprocessingAsync
+from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing
 
 nnet = Detector(cfg.MASK_RCNN_DIR, cfg.MASK_RCNN_LOG_DIR)
 nnet.loadModel("latest")
@@ -30,7 +30,7 @@ def detectCarNumber(imgPath: str) -> str:
     arrPoints = rectDetector.detect(cvImgMasks)
     zones = rectDetector.get_cv_zonesBGR(img, arrPoints)
 
-    regionIds, stateIds, countLines = optionsDetector.predict(zones)
+    regionIds, stateIds, _c = optionsDetector.predict(zones)
     regionNames = optionsDetector.getRegionLabels(regionIds)
     
     # find text with postprocessing by standart  

@@ -116,9 +116,10 @@ class MainClass(object):
                     db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i], carNumber)
 
             # checkConnections with Pyfront
-            # r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
-            # if not r.status_code == 200:
-            #     raise ValueError("Server isn't available")
+            if self.cfg.sendRequestToServer:
+                r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
+                if not r.status_code == 200:
+                    raise ValueError("Server isn't available")
 
             return detections
    
@@ -129,9 +130,9 @@ class MainClass(object):
                 numberOfCam = items[0]
                 filenames = items[1]
                 self.detectObject(numberOfCam, filenames, processedFrames)
-                from services.memory import display_top
+                from services.memory import getUsedRAM
                 snapshot = tracemalloc.take_snapshot()
-                display_top(snapshot)
+                getUsedRAM(snapshot)
 
 
 if __name__ == "__main__":

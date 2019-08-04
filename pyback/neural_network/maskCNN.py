@@ -5,18 +5,19 @@ import cv2
 from colorama import Fore
 import numpy as np
 
-from settings import Settings as cfg
-sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
-import mrcnn.visualize
-import mrcnn.utils
-from mrcnn.model import MaskRCNN
-
 import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 from neural_network.neural_network import Neural_network
 import helpers.others as others
+
+from settings import Settings as cfg
+sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
+import mrcnn.visualize
+import mrcnn.utils
+from mrcnn.model import MaskRCNN
+
 
 class Mask(Neural_network):
     """
@@ -65,10 +66,9 @@ class Mask(Neural_network):
     def checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
         if self.counter:
             foundedDifferentObjects = self.uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
-            #print("Столько у нас одниковых обхектов с пердыщуим кадром", len(foundedDifferentObjects))
-            masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
+            self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
-            masked_image = self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+            self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
             self.counter = 1
 
         self.objectsFromPreviousFrame = objectsFromCurrentFrame

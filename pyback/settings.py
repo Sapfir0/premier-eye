@@ -18,6 +18,7 @@ class Settings(object):
     SAVE_COLORMAP: bool = False
     CAR_NUMBER_DETECTOR: bool = False  # детекировать номер машины(только для камер №1, №2)
 
+    sendRequestToServer = False
     pyfrontProductionLink = "https://premier-eye.herokuapp.com"
     port = "5000"
     pyfrontDevelopmentLink = f"http://localhost:{port}"
