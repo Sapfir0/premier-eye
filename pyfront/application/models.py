@@ -1,4 +1,5 @@
 from application import db
+from werkzeug.security import generate_password_hash, check_password_hash
 
 
 class User(db.Model):
@@ -9,3 +10,14 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User {}>'.format(self.username)
+
+    def setPassword(self, password):
+        self.password_hash = generate_password_hash(password)
+
+    def getPassword(self, password):
+        return check_password_hash(self.password_hash, password)
+
+
+    # пишу чтобы не забыть
+    # возможно нужно сделать другой сервак чтобы туда можно было обращаться за картинками
+    # протеститьт докер с монтированнымит папками(смонтироаь можно в докер композ)

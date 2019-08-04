@@ -7,10 +7,8 @@ RUN apt-get install -y libsm6 libfontconfig1 libxrender1 libxtst6 git
 COPY . /pyback
 WORKDIR /pyback
 
-RUN ls
 RUN pip3 install Cython \
  && pip3 install -r requirements.txt
 
-# ENTRYPOINT ["python3"]
-# CMD ["mainImage.py" ]
-# если собирать командой из скрипта поблизости, то CMD ["pyback/mainImage.py" ]
+#ENTRYPOINT ["python3"]
+#CMD ["mainImage.py" ]

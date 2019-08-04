@@ -4,3 +4,5 @@ docker
 rq
 redis
 celery
+flask_sqlalchemy
+flask_migrate

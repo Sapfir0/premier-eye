@@ -1,14 +1,19 @@
-version: '3.1'
+version: '3.3'
 
 services:
   pyback:
     build:
       dockerfile: Dockerfile
       context: ./pyback
+    command: python3 mainImage.py
+    volumes:
+      - ./pyback/data:/pyback/data
+      - ./pyback/output:/pyback/output
 
   redis:
     image: redis:alpine
-
+    ports:
+      - "6379"
 
   web:
     build: 

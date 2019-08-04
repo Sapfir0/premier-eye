@@ -1,6 +1,8 @@
 wget
+python-dotenv
 Cython
 numpy
+requests
 sqlalchemy
 scikit_image
 pandas
