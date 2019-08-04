@@ -1,5 +1,7 @@
 # Premier Eye
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/b885ecd500a248a29515627619e79eeb)](https://app.codacy.com/app/Sapfir0/premier-eye?utm_source=github.com&utm_medium=referral&utm_content=Sapfir0/premier-eye&utm_campaign=Badge_Grade_Dashboard)
+
 <img src="./pyback/resources/images/eye.svg" width="100" height="100">
 
 ## Программа для детектирования объектов
