@@ -81,7 +81,6 @@ class Mask(Neural_network):
                 r - information about objects obtained with mask rcnn \n
             output: returns an array of objects in both frames.
         """
-        print("ПЕРЖУ", type(objectsFromPreviousFrame), type(objectsFromCurrentFrame), type(r))
         foundedUniqueObjects = []
         objectId = 0
         for previousObjects in objectsFromPreviousFrame:

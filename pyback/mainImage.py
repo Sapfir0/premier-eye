@@ -27,17 +27,14 @@ class MainClass(object):
 
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
-    def __init__(self, imageDirectory=cfg.IMAGE_DIR): # надо подумать насчет папки совсем в другом месте
+    def __init__(self, imageDirectory=cfg.IMAGE_DIR):  # надо подумать насчет папки совсем в другом месте
         if self.cfg.checkOldProcessedFrames:
             processedFrames = dh.checkDateFile(self.cfg.DATE_FILE) 
         else:
             processedFrames = {}
+        self.mainPipeline(processedFrames)
 
-        ioloop = asyncio.get_event_loop()
-        ioloop.run_until_complete(self.mainPipeline(processedFrames))
-        ioloop.close()
-
-    def detectObject(self, numberOfCam, filenames, processedFrames):
+    def detectObject(self, numberOfCam: int, filenames: list, processedFrames: dict):
         """
             Сакральный алгоритм:
 
@@ -69,13 +66,13 @@ class MainClass(object):
 
             if filename in processedFrames[numberOfCam]:
                 if processedFrames[numberOfCam] == filenames:
+                    import time
                     print(f"Thread {numberOfCam} sleeping")
-                    # time.sleep(2.5)  # засыпает поток исполнения
+                    time.sleep(2.5)  # засыпает поток исполнения
                 continue  # если файлы еще есть, то переходим к следующему
 
             dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
             date, hours = dh.getDateOrHours(filename)
-
             inputFile = os.path.join(self.cfg.IMAGE_DIR, filename)
             outputFile = os.path.join(self.cfg.OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
             print(f"Analyzing {inputFile}")
@@ -84,6 +81,7 @@ class MainClass(object):
             if self.cfg.ALGORITHM:  # Mask CNN
                 detections, imagesFromCurrentFrame = self.mask.pipeline(inputFile, outputFile)
                 rectCoordinates = detections['rois']
+                print(filename, detections)
             else:  # image ai # эти алгоритмы всегда остают в нововведениях
                 detections = self.imageAI.pipeline(inputFile, outputFile)
                 rectCoordinates = others.parseImageAiData(detections)
@@ -125,7 +123,7 @@ class MainClass(object):
    
     def mainPipeline(self, processedFrames):
         while True:
-            imagesForEachCamer = others.checkNewFile(self.currentImageDir)
+            imagesForEachCamer = others.checkNewFile(self.currentImageDir, self.cfg.IMAGE_PATH_WHITELIST)
             for items in imagesForEachCamer.items():
                 numberOfCam = items[0]
                 filenames = items[1]

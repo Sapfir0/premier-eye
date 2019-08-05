@@ -28,7 +28,7 @@ class Settings(object):
     DATA_PATH = join(APP_PATH, "data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
     OUTPUT_DIR = join(APP_PATH, "output")
-    IMAGE_DIR = join(DATA_PATH, "1_2") 
+    IMAGE_DIR = join(DATA_PATH, "test_images", "detections")
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
     DATE_FILE = "last_data_processed.txt"
     # Mask cnn
@@ -53,6 +53,7 @@ class Settings(object):
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
 
+    IMAGE_PATH_WHITELIST = ["detections.json"]
     # Алгоритм сравнения
     MIN_MATCH_COUNT = 20 # меньше этого числа совпадений, будем считать что объекты разные
     FLANN_INDEX_KDTREE = 0 # алгоритм

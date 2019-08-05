@@ -4,15 +4,20 @@ from colorama import Fore
 import wget
 import requests
 
-def checkNewFile(currentImageDir: str) -> dict:
+
+def checkNewFile(currentImageDir: str, IMAGE_PATH_WHITELIST) -> dict:
     """
         input: Directory in which we search for files
-        output: A dictionary where the camera number will be associated with an array of images from this camera    
+        output: A dictionary where the camera number will be associated with an array of images from this camera
+        files in whitelist will be ignored
     """
     numbersOfCamers: dict[int, list] = {}  # numberOfCam:files #уточнение: номер камеры обычно идет строкой
 
     for filename in os.listdir(currentImageDir):
-        numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
+        if filename in IMAGE_PATH_WHITELIST:
+            continue
+        else:
+            numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
 
         if numberOfCam in numbersOfCamers.keys():
             numbersOfCamers[numberOfCam].append(filename)
@@ -59,13 +64,12 @@ def downloadSamples(imagesPath):
                    "https://pp.userapi.com/c852224/v852224214/1594cb/uDYNgvVKow8.jpg",
                    "https://pp.userapi.com/c852224/v852224214/1594d4/XKUBv7r4xAY.jpg"]
         realNames = ["3_20190702082219.jpg", "3_20190702082221.jpg", "3_20190702082223.jpg"]
-        for i in range(0, len(samples)):  # мы не будет исользовать in, мы же не любим ждать
+        for i, item in enumerate(samples):  # мы не будет исользовать in, мы же не любим ждать
             downloadAndMove(samples[i], os.path.join(imagesPath, realNames[i]))
 
 
 def downloadNomeroffNet(self):
     from git import Repo
-
     if not os.path.exists(self.NOMEROFF_NET_DIR):
         Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
         Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", os.path.join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))

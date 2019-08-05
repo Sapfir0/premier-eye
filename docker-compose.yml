@@ -9,7 +9,7 @@ services:
     volumes:
       - ./pyback/data:/pyback/data
       - ./pyback/output:/pyback/output
-
+# строчки выше не очень-то и адаптивны
   redis:
     image: redis:alpine
     ports:

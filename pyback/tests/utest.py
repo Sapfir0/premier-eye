@@ -4,7 +4,7 @@ import unittest
 # import maskCNN
 from neural_network.modules.decart import DecartCoordinates as decart
 import datetime
-import helpers.dateHelper as dateHelper
+import helpers.dateHelper as dh
 
 
 class FunctionTest(unittest.TestCase):
@@ -27,34 +27,23 @@ class FunctionTest(unittest.TestCase):
     ]
 
     def testConcetration(self):
-        start_date = date.parseFilename("3_20190702082436.jpg")
-        finish_date = date.parseFilename("3_20190702085716.jpg")
+        start_date = dh.parseFilename("3_20190702082436.jpg")
+        finish_date = dh.parseFilename("3_20190702085716.jpg")
         for area in range(0, len(self.highlightedArea)):
-            res = decart.getConcetration(
-                self.highlightedArea[area], start_date, finish_date)
+            res = decart.getConcetration(self.highlightedArea[area], start_date, finish_date)
             # self.assertEqual(res, self.expected_output[area][obj]) #не
             # продуманы выходные
 
     def testCompletelyInside(self):
         for area in range(0, len(self.highlightedArea)):
             for obj in range(0, len(self.objectsInFrame)):
-
-                res = decart.isCompletelyInside(
-                    self.highlightedArea[area], self.objectsInFrame[obj])
-                print("Ожидаемое: ", self.expected_output[area][obj],
-                     ", полученное: ", res)
+                res = decart.isCompletelyInside(self.highlightedArea[area], self.objectsInFrame[obj])
                 self.assertEqual(res, self.expected_output[area][obj])
 
     def testPartiallyInside(self):
         for area in range(0, len(self.highlightedArea)):
             for obj in range(0, len(self.objectsInFrame)):
-                res = decart.isPartiallyInside(
-                    self.highlightedArea[area], self.objectsInFrame[obj])
-                print(
-                    "Ожидаемое: ",
-                    self.expected_output[area][obj],
-                    ", полученное: ",
-                    res)
+                res = decart.isPartiallyInside(self.highlightedArea[area], self.objectsInFrame[obj])
                 self.assertEqual(res, self.expected_output[area][obj])
 
 
