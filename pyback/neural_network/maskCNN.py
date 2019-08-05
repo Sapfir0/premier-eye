@@ -4,6 +4,7 @@ from os.path import join
 import cv2
 from colorama import Fore
 import numpy as np
+import shutil
 
 import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
@@ -43,30 +44,30 @@ class Mask(Neural_network):
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     @others.existingOutputDir
-    def pipeline(self, inputPath: str, outputPath: str):
+    def pipeline(self, inputPath: str, outputPath: str = None):
         """
             almost main
         """
-
         image = cv2.imread(inputPath)
         # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
-        objectsFromCurrentFrame = extra.extractObjectsFromR(
-            image, r['rois'], outputImageDirectory=outputPath, filename=os.path.split(outputPath)[1])  # почему-то current иногда бывает пустым
-        # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        self.checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
-        cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
-
-        if self.SAVE_COLORMAP:
-            heatmap = Heatmap()
-            heatmap.createHeatMap(image, outputPath)
 
         typeOfObject = []
         for i, item in enumerate(r['class_ids']):
             convertType = self.CLASS_NAMES[r['class_ids'][i]]
             typeOfObject.append(convertType)
 
-        return r, objectsFromCurrentFrame, typeOfObject
+        objectsFromCurrentFrame = extra.extractObjectsFromR(
+            image, r['rois'], typeOfObject, outputImageDirectory=outputPath, filename=os.path.split(outputPath)[1])  # почему-то current иногда бывает пустым
+        # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
+        self.checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
+        if outputPath:
+            cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
+            # если камера кроме №1 или №2, то удаляем объекты уже сейчас
+            # objectImageDir = os.path.join(os.path.split(outputPath)[0], "objectsOn" + os.path.split(outputPath)[1])
+            # shutil.rmtree(objectImageDir)
+
+        return r, typeOfObject
 
     def checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
         if self.counter:
@@ -102,11 +103,8 @@ class Mask(Neural_network):
                     if saveUniqueObjects:
                         img1 = str(objectId) + ".jpg"
                         img2 = str(objectId) + "N" + ".jpg"
-                        cv2.imwrite(
-                            join(
-                                cfg.OUTPUT_DIR_MASKCNN,
-                                img1),
-                            previousObjects)
+                        cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1),
+                                    previousObjects)
 
         return foundedUniqueObjects
 

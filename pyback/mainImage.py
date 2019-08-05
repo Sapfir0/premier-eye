@@ -3,6 +3,7 @@ import asyncio
 from colorama import Fore
 import tracemalloc
 import requests
+import shutil
 
 import helpers.dateHelper as dh
 import services.database_controller as db
@@ -77,9 +78,8 @@ class MainClass(object):
             outputFile = os.path.join(self.cfg.OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
             print(f"Analyzing {inputFile}")
 
-            objectsFromCurrentFrame = 0
             if self.cfg.ALGORITHM:  # Mask CNN
-                detections, objectsFromCurrentFrame, humanizedOutput = self.mask.pipeline(inputFile, outputFile)
+                detections,  humanizedOutput = self.mask.pipeline(inputFile, outputFile)
                 print(humanizedOutput)
                 rectCoordinates = detections['rois']
             else:  # image ai # этот алгоритмы всегда остают в нововведениях
@@ -89,19 +89,22 @@ class MainClass(object):
             # car detector
             carNumber = None
             if self.cfg.CAR_NUMBER_DETECTOR:
-                import neural_network.car_number as car_number
-                if numberOfCam in [str(1), str(2)] and objectsFromCurrentFrame:  # если камера №2 или №1, то запускем тест на номера
+                if numberOfCam in [str(1), str(2)] and humanizedOutput:  # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
                     objectImageDir = os.path.join(os.path.split(outputFile)[0], "objectsOn" + os.path.split(outputFile)[1])
-                    for obj in os.listdir(objectImageDir):
-                        name = str(obj).replace(" ", ",")
-                        carNumber = car_number.detectCarNumber(os.path.join(objectImageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
-                        # решение такое себе, т.к. мы обращаемся к долгой памяти
-                        print(Fore.LIGHTBLUE_EX + str(carNumber))
+                    import neural_network.car_number as car_number
+                    for obj in os.listdir(objectImageDir): # смысл этого всего в том, что я не понял как передавать изобраджение матрицей от моего алгоритма к этому, поэтому сохраняю объект картинкой, работаю с ним и удаляю
+                        if "car" in obj:
+                            # только если в экзиф у файла написано что это машина(все таки решил что лучше в названии пусть будет)
+                            name = str(obj).replace(" ", ",")
+                            carNumber = car_number.detectCarNumber(os.path.join(objectImageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
+                            # решение такое себе, т.к. мы обращаемся к долгой памяти
+                            print(Fore.LIGHTBLUE_EX + str(carNumber))
+                    shutil.rmtree(objectImageDir)
 
             processedFrames[numberOfCam].append(filename)
 
             file_controller.writeInFile(self.cfg.DATE_FILE, str(processedFrames))  # будет стирать содержимое файла каждый кадр
-     
+
             # DB
             if self.cfg.loggingInDB:
                 centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
@@ -110,8 +113,8 @@ class MainClass(object):
                         carNumber = None
                     elif carNumber:
                         carNumber = carNumber[0]
-                
-                    db.writeInfoForObjectInDB(numberOfCam, humanizedOutput, dateTime, rectCoordinates[i], centerDown[i], carNumber)
+
+                    db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i], carNumber)
 
             # checkConnections with Pyfront
             if self.cfg.sendRequestToServer:
