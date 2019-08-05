@@ -13,10 +13,10 @@ class Settings(object):
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
     ALGORITHM = 1
-    loggingInDB: bool = True
-    checkOldProcessedFrames: bool = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
-    SAVE_COLORMAP: bool = False
-    CAR_NUMBER_DETECTOR: bool = False  # детекировать номер машины(только для камер №1, №2)
+    loggingInDB = True
+    checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
+    SAVE_COLORMAP = False
+    CAR_NUMBER_DETECTOR = True  # детекировать номер машины(только для камер №1, №2)
 
     sendRequestToServer = False
     pyfrontProductionLink = "https://premier-eye.herokuapp.com"
@@ -28,7 +28,9 @@ class Settings(object):
     DATA_PATH = join(APP_PATH, "data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
     OUTPUT_DIR = join(APP_PATH, "output")
-    IMAGE_DIR = join(DATA_PATH, "test_images", "detections")
+    IMAGE_DIR = join(DATA_PATH, "1_2")
+    TEST_IMAGE_DIR = join(DATA_PATH, "test_images")
+
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
     DATE_FILE = "last_data_processed.txt"
     # Mask cnn
@@ -79,16 +81,16 @@ class Settings(object):
         others.checkVersion(packages)
 
         if self.CAR_NUMBER_DETECTOR:
-            others.downloadNomeroffNet()
+            others.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
         if self.ALGORITHM:
             if not os.path.exists(self.DATASET_DIR):
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-            link = "https://vk.com/doc84996630_509032079?hash=5073c478dae5d81212&dl=2e4db6274b40a68dc8"
-            others.checkExist(self.CLASSES_FILE, link)
+            classNamesLink = "https://vk.com/doc84996630_511662034?hash=67486781e1f2e80f74&dl=ccef7e31f207091030"
+            others.checkExist(self.CLASSES_FILE, classNamesLink)
         else:
-            link = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
-            others.checkExist(self.DATASET_DIR_IMAGE_AI, link)
+            imageAInetworkLink = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
+            others.checkExist(self.DATASET_DIR_IMAGE_AI, imageAInetworkLink)
 
         others.downloadSamples(self.IMAGE_DIR)
 

@@ -68,7 +68,7 @@ class MainClass(object):
                 if processedFrames[numberOfCam] == filenames:
                     import time
                     print(f"Thread {numberOfCam} sleeping")
-                    time.sleep(2.5)  # засыпает поток исполнения
+                    #time.sleep(2.5)  # засыпает поток исполнения
                 continue  # если файлы еще есть, то переходим к следующему
 
             dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
@@ -77,12 +77,12 @@ class MainClass(object):
             outputFile = os.path.join(self.cfg.OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
             print(f"Analyzing {inputFile}")
 
-            imagesFromCurrentFrame = 0
+            objectsFromCurrentFrame = 0
             if self.cfg.ALGORITHM:  # Mask CNN
-                detections, imagesFromCurrentFrame = self.mask.pipeline(inputFile, outputFile)
+                detections, objectsFromCurrentFrame, humanizedOutput = self.mask.pipeline(inputFile, outputFile)
+                print(humanizedOutput)
                 rectCoordinates = detections['rois']
-                print(filename, detections)
-            else:  # image ai # эти алгоритмы всегда остают в нововведениях
+            else:  # image ai # этот алгоритмы всегда остают в нововведениях
                 detections = self.imageAI.pipeline(inputFile, outputFile)
                 rectCoordinates = others.parseImageAiData(detections)
 
@@ -90,7 +90,7 @@ class MainClass(object):
             carNumber = None
             if self.cfg.CAR_NUMBER_DETECTOR:
                 import neural_network.car_number as car_number
-                if numberOfCam in [str(1), str(2)] and imagesFromCurrentFrame:  # если камера №2 или №1, то запускем тест на номера
+                if numberOfCam in [str(1), str(2)] and objectsFromCurrentFrame:  # если камера №2 или №1, то запускем тест на номера
                     objectImageDir = os.path.join(os.path.split(outputFile)[0], "objectsOn" + os.path.split(outputFile)[1])
                     for obj in os.listdir(objectImageDir):
                         name = str(obj).replace(" ", ",")
@@ -111,7 +111,7 @@ class MainClass(object):
                     elif carNumber:
                         carNumber = carNumber[0]
                 
-                    db.writeInfoForObjectInDB(numberOfCam, dateTime, rectCoordinates[i], centerDown[i], carNumber)
+                    db.writeInfoForObjectInDB(numberOfCam, humanizedOutput, dateTime, rectCoordinates[i], centerDown[i], carNumber)
 
             # checkConnections with Pyfront
             if self.cfg.sendRequestToServer:

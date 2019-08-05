@@ -60,8 +60,13 @@ class Mask(Neural_network):
         if self.SAVE_COLORMAP:
             heatmap = Heatmap()
             heatmap.createHeatMap(image, outputPath)
-        
-        return r, objectsFromCurrentFrame
+
+        typeOfObject = []
+        for i, item in enumerate(r['class_ids']):
+            convertType = self.CLASS_NAMES[r['class_ids'][i]]
+            typeOfObject.append(convertType)
+
+        return r, objectsFromCurrentFrame, typeOfObject
 
     def checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
         if self.counter:

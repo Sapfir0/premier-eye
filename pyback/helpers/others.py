@@ -45,9 +45,10 @@ def existingOutputDir(functionToDecorate):
 
 
 # юзабилити функции
-def downloadAndMove(downloadLink, destinationDir):
+def downloadAndMove(downloadLink, destinationDir='.'):
     file = wget.download(downloadLink) 
     os.rename(os.path.join(os.getcwd(), file), destinationDir)
+    return file
 
 
 def checkExist(mustExistedFile, link):
@@ -68,14 +69,14 @@ def downloadSamples(imagesPath):
             downloadAndMove(samples[i], os.path.join(imagesPath, realNames[i]))
 
 
-def downloadNomeroffNet(self):
+def downloadNomeroffNet(NOMEROFF_NET_DIR):
     from git import Repo
-    if not os.path.exists(self.NOMEROFF_NET_DIR):
-        Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", self.NOMEROFF_NET_DIR)
-        Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", os.path.join(self.NOMEROFF_NET_DIR, "Mask_RCNN"))
+    if not os.path.exists(NOMEROFF_NET_DIR):
+        Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", NOMEROFF_NET_DIR)
+        Repo.clone_from("https://github.com/matterport/Mask_RCNN.git", os.path.join(NOMEROFF_NET_DIR, "Mask_RCNN"))
 
 
-def checkAvailabilityOfServer(self, env):
+def checkAvailabilityOfServer(env):
     if env == "development" or "dev":
         r = requests.get(self.pyfrontDevelopmentLink)
     elif env == "production" or "prod":
