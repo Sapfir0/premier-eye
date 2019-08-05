@@ -41,7 +41,8 @@ def extractObjectsFromR(image, boxes, typeOfObject, outputImageDirectory=None, f
         cropped = image[y1:y2, x1:x2]
         objects.append(cropped)
         if outputImageDirectory:
-            outputDirPath = os.path.join(os.path.split(outputImageDirectory)[0], "objectsOn" + filename)
+            beforePoint, afterPoint = filename.split(".")
+            outputDirPath = os.path.join(os.path.split(outputImageDirectory)[0], "objectsOn" + beforePoint)
             if not os.path.exists(outputDirPath):
                 os.mkdir(outputDirPath)
             coordinates = str(item).replace(" ", ",")

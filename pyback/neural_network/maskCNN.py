@@ -12,6 +12,7 @@ import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 from neural_network.neural_network import Neural_network
 import helpers.others as others
+import helpers.dateHelper as dh
 
 from settings import Settings as cfg
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
@@ -57,12 +58,20 @@ class Mask(Neural_network):
             convertType = self.CLASS_NAMES[r['class_ids'][i]]
             typeOfObject.append(convertType)
 
+        dir = os.path.split(outputPath)[0]
+        filename = os.path.split(outputPath)[1]
         objectsFromCurrentFrame = extra.extractObjectsFromR(
-            image, r['rois'], typeOfObject, outputImageDirectory=outputPath, filename=os.path.split(outputPath)[1])  # почему-то current иногда бывает пустым
+            image, r['rois'], typeOfObject, outputImageDirectory=outputPath, filename=filename)  # почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         self.checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
         if outputPath:
             cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
+        numberOfCamera = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
+        if numberOfCamera not in [1, 2] or ["1", "2"]:
+            for file in os.listdir(dir):
+                if os.path.isdir(f"{dir}/{file}"):
+                    print(file)
+                    shutil.rmtree(f"{dir}/{file}")
             # если камера кроме №1 или №2, то удаляем объекты уже сейчас
             # objectImageDir = os.path.join(os.path.split(outputPath)[0], "objectsOn" + os.path.split(outputPath)[1])
             # shutil.rmtree(objectImageDir)
