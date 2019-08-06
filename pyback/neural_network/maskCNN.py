@@ -58,7 +58,7 @@ class Mask(Neural_network):
             convertType = self.CLASS_NAMES[r['class_ids'][i]]
             typeOfObject.append(convertType)
 
-        dir = os.path.split(outputPath)[0]
+        pathToDir = os.path.split(outputPath)[0]
         filename = os.path.split(outputPath)[1]
         objectsFromCurrentFrame = extra.extractObjectsFromR(
             image, r['rois'], typeOfObject, outputImageDirectory=outputPath, filename=filename)  # почему-то current иногда бывает пустым
@@ -67,14 +67,9 @@ class Mask(Neural_network):
         if outputPath:
             cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
         numberOfCamera = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
-        if numberOfCamera not in [1, 2] or ["1", "2"]:
-            for file in os.listdir(dir):
-                if os.path.isdir(f"{dir}/{file}"):
-                    print(file)
-                    shutil.rmtree(f"{dir}/{file}")
+        #if numberOfCamera not in [1, 2] or ["1", "2"]:
+        #    others.removeDirectorysFromPath(pathToDir)
             # если камера кроме №1 или №2, то удаляем объекты уже сейчас
-            # objectImageDir = os.path.join(os.path.split(outputPath)[0], "objectsOn" + os.path.split(outputPath)[1])
-            # shutil.rmtree(objectImageDir)
 
         return r, typeOfObject
 

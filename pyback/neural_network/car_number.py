@@ -1,8 +1,10 @@
 import sys
+from colorama import Fore
 import matplotlib.image as mpimg
 from settings import Settings as cfg
 import helpers.timeChecker as tm
-
+import os
+import shutil
 sys.path.append(cfg.NOMEROFF_NET_DIR)
 from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing
 
@@ -15,6 +17,16 @@ optionsDetector.load("latest")
 textDetector = TextDetector.get_static_module("ru")()
 textDetector.load("latest")
 
+
+def car_detect(pathToimageDir):
+    for obj in os.listdir(pathToimageDir):  # смысл этого всего в том, что я не понял как передавать изобраджение матрицей от моего алгоритма к этому, поэтому сохраняю объект картинкой, работаю с ним и удаляю
+        if "car" in obj:
+            name = str(obj).replace(" ", ",")
+            carNumber = detectCarNumber(
+                os.path.join(pathToimageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
+            # решение такое себе, т.к. мы обращаемся к долгой памяти
+            print(Fore.LIGHTBLUE_EX + str(carNumber))
+    shutil.rmtree(pathToimageDir)
 
 @tm.checkElapsedTimeAndCompair(1.5, 1, 0.5, "Машины")
 def detectCarNumber(imgPath: str) -> str:

@@ -3,7 +3,7 @@ import helpers.dateHelper as dh
 from colorama import Fore
 import wget
 import requests
-
+import shutil
 
 def checkNewFile(currentImageDir: str, IMAGE_PATH_WHITELIST) -> dict:
     """
@@ -33,6 +33,13 @@ def checkNewFile(currentImageDir: str, IMAGE_PATH_WHITELIST) -> dict:
 def parseImageAiData(rectCoordinates: list) -> list:
     boxes = [diction['box_points'] for diction in rectCoordinates]
     return boxes
+
+
+def removeDirectorysFromPath(pathToDir):
+    for file in os.listdir(pathToDir):
+        subdir = os.path.join(pathToDir, file)
+        if os.path.isdir(subdir):
+            shutil.rmtree(subdir)
 
 
 def existingOutputDir(functionToDecorate):

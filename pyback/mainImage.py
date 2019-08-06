@@ -1,9 +1,7 @@
 import os
-import asyncio
 from colorama import Fore
 import tracemalloc
 import requests
-import shutil
 
 import helpers.dateHelper as dh
 import services.database_controller as db
@@ -80,7 +78,6 @@ class MainClass(object):
 
             if self.cfg.ALGORITHM:  # Mask CNN
                 detections,  humanizedOutput = self.mask.pipeline(inputFile, outputFile)
-                print(humanizedOutput)
                 rectCoordinates = detections['rois']
             else:  # image ai # этот алгоритмы всегда остают в нововведениях
                 detections = self.imageAI.pipeline(inputFile, outputFile)
@@ -89,17 +86,10 @@ class MainClass(object):
             # car detector
             carNumber = None
             if self.cfg.CAR_NUMBER_DETECTOR:
+                from neural_network.car_number import car_detect
                 if numberOfCam in [str(1), str(2)] and humanizedOutput:  # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
-                    objectImageDir = os.path.join(os.path.split(outputFile)[0], "objectsOn" + os.path.split(outputFile)[1])
-                    import neural_network.car_number as car_number
-                    for obj in os.listdir(objectImageDir): # смысл этого всего в том, что я не понял как передавать изобраджение матрицей от моего алгоритма к этому, поэтому сохраняю объект картинкой, работаю с ним и удаляю
-                        if "car" in obj:
-                            # только если в экзиф у файла написано что это машина(все таки решил что лучше в названии пусть будет)
-                            name = str(obj).replace(" ", ",")
-                            carNumber = car_number.detectCarNumber(os.path.join(objectImageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
-                            # решение такое себе, т.к. мы обращаемся к долгой памяти
-                            print(Fore.LIGHTBLUE_EX + str(carNumber))
-                    shutil.rmtree(objectImageDir)
+                    imD = os.path.join(os.path.split(outputFile)[0], "objectsOn" + filename.split(".")[0])
+                    car_detect(imD)
 
             processedFrames[numberOfCam].append(filename)
 
