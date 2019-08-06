@@ -4,7 +4,6 @@ from os.path import join
 import cv2
 from colorama import Fore
 import numpy as np
-import shutil
 
 import neural_network.modules.feature_matching as sift
 from neural_network.modules.heatmap import Heatmap
@@ -13,6 +12,7 @@ import neural_network.modules.extra as extra
 from neural_network.neural_network import Neural_network
 import helpers.others as others
 import helpers.dateHelper as dh
+import helpers.directory as dirs
 
 from settings import Settings as cfg
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
@@ -43,11 +43,11 @@ class Mask(Neural_network):
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
-    @others.existingOutputDir
     def pipeline(self, inputPath: str, outputPath: str = None):
         """
             almost main
         """
+        dirs.createDirs(os.path.split(outputPath)[0])
         image = cv2.imread(inputPath)
         # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)

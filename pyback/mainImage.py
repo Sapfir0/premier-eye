@@ -8,6 +8,7 @@ import services.database_controller as db
 import services.file_controller as file_controller
 import helpers.timeChecker as timeChecker
 import helpers.others as others
+import helpers.directory as dirs
 
 
 class MainClass(object):
@@ -112,7 +113,7 @@ class MainClass(object):
                 if not r.status_code == 200:
                     raise ValueError("Server isn't available")
 
-            others.removeDirectorysFromPath(os.path.split(outputFile)[0])
+            dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])
             return detections
 
     def mainPipeline(self, processedFrames):

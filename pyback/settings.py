@@ -6,6 +6,8 @@ from colorama import Fore, Back, Style  # для цветного консоль
 import mrcnn.config
 import helpers.others as others
 from dotenv import load_dotenv
+import helpers.directory as dirs
+import helpers.net as net
 
 
 class Settings(object):
@@ -57,37 +59,40 @@ class Settings(object):
 
     IMAGE_PATH_WHITELIST = ["detections.json"]
     # Алгоритм сравнения
-    MIN_MATCH_COUNT = 20 # меньше этого числа совпадений, будем считать что объекты разные
-    FLANN_INDEX_KDTREE = 0 # алгоритм
-    cencitivity = 0.7 # не особо влияет на что-то
+    MIN_MATCH_COUNT = 20  # меньше этого числа совпадений, будем считать что объекты разные
+    FLANN_INDEX_KDTREE = 0  # алгоритм
+    cencitivity = 0.7  # не особо влияет на что-то
 
     # imageAI
     DATASET_DIR_IMAGE_AI = join(DATA_PATH, "resnet50_coco_best_v2.0.1.h5")
     OUTPUT_DIR_IMAGE_AI = join(APP_PATH, OUTPUT_DIR, 'imageAIout')  # АЛГОРИТМ 1
     DETECTION_SPEED = "normal"  # скорость обхода каждого кадра
 
+    classNamesLink = "https://vk.com/doc84996630_511662034?hash=67486781e1f2e80f74&dl=ccef7e31f207091030"
+    imageAInetworkLink = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
+    packages = ["cv2", "tensorflow", "keras"]
+
     def __init__(self):
         load_dotenv(os.path.join(self.APP_PATH, '.env'))
         enivroment = os.environ.get("enivroment")
         #others.checkAvailabilityOfServer(enivroment)
 
-        must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
-        others.createMustExistedDirs(must_exist_dirs)
+        must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR]
+        dirs.createDirsFromList(must_exist_dirs)
 
-        packages = ["cv2", "tensorflow", "keras"]
-        others.checkVersion(packages)
+        others.checkVersion(self.packages)
 
         if self.CAR_NUMBER_DETECTOR:
-            others.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
+            net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
         if self.ALGORITHM:
+            dirs.createDir(self.OUTPUT_DIR_MASKCNN)
             if not os.path.exists(self.DATASET_DIR):
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-            classNamesLink = "https://vk.com/doc84996630_511662034?hash=67486781e1f2e80f74&dl=ccef7e31f207091030"
-            others.checkExist(self.CLASSES_FILE, classNamesLink)
+            net.checkExist(self.CLASSES_FILE, self.classNamesLink)
         else:
-            imageAInetworkLink = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
-            others.checkExist(self.DATASET_DIR_IMAGE_AI, imageAInetworkLink)
+            dirs.createDir(self.OUTPUT_DIR_IMAGE_AI)
+            net.checkExist(self.DATASET_DIR_IMAGE_AI, self.imageAInetworkLink)
 
-        others.downloadSamples(self.IMAGE_DIR)
+        net.downloadSamples(self.IMAGE_DIR)
 
