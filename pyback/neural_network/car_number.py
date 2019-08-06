@@ -26,7 +26,6 @@ def car_detect(pathToimageDir):
                 os.path.join(pathToimageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
             # решение такое себе, т.к. мы обращаемся к долгой памяти
             print(Fore.LIGHTBLUE_EX + str(carNumber))
-    shutil.rmtree(pathToimageDir)
 
 @tm.checkElapsedTimeAndCompair(1.5, 1, 0.5, "Машины")
 def detectCarNumber(imgPath: str) -> str:

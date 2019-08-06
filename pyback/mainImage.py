@@ -112,6 +112,7 @@ class MainClass(object):
                 if not r.status_code == 200:
                     raise ValueError("Server isn't available")
 
+            others.removeDirectorysFromPath(os.path.split(outputFile)[0])
             return detections
 
     def mainPipeline(self, processedFrames):

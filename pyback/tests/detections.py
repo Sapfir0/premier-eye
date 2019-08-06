@@ -11,6 +11,8 @@ from neural_network.maskCNN import Mask
 
 class DetectionsTest(unittest.TestCase):
     dirName = "detections"
+    cacheDirectory = False
+
     def setUp(self):
         # скачаем тестовую обстановку
         link = "https://vk.com/doc84996630_511676458?hash=e915563b619b68d654&dl=c0802c3ea67efa693e"
@@ -23,16 +25,17 @@ class DetectionsTest(unittest.TestCase):
 
     def test(self):
         mask = Mask()
-        with open('detections.json') as json_file:
+        with open(os.path.join(cfg.TEST_IMAGE_DIR, 'detections', 'detections.json')) as json_file:
             data = json.load(json_file)
-            print(data)
-        for filename in os.listdir(cfg.TEST_IMAGE_DIR, self.dirName):
-            _f, _f2, arg = mask.pipeline(filename)
-            self.assertEqual()
 
-    # def tearDown(self):
-    #     from shutil import rmtree
-    #     rmtree(join(cfg.TEST_IMAGE_DIR, "detections"))
+        for filename in os.listdir(os.path.join(cfg.TEST_IMAGE_DIR, self.dirName)):
+            _f,  arg = mask.pipeline(filename, None)
+            self.assertEqual( arg, data[filename])
+
+    def tearDown(self):
+        if not self.cacheDirectory:
+            from shutil import rmtree
+            rmtree(join(cfg.TEST_IMAGE_DIR, "detections"))
 
 
 if __name__ == '__main__':

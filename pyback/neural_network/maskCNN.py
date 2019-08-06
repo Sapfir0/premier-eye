@@ -35,7 +35,6 @@ class Mask(Neural_network):
     counter = 0
 
     def __init__(self):
-
         with open(cfg.CLASSES_FILE, 'rt') as file:
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
@@ -58,7 +57,6 @@ class Mask(Neural_network):
             convertType = self.CLASS_NAMES[r['class_ids'][i]]
             typeOfObject.append(convertType)
 
-        pathToDir = os.path.split(outputPath)[0]
         filename = os.path.split(outputPath)[1]
         objectsFromCurrentFrame = extra.extractObjectsFromR(
             image, r['rois'], typeOfObject, outputImageDirectory=outputPath, filename=filename)  # почему-то current иногда бывает пустым
@@ -66,10 +64,6 @@ class Mask(Neural_network):
         self.checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
         if outputPath:
             cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
-        numberOfCamera = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
-        #if numberOfCamera not in [1, 2] or ["1", "2"]:
-        #    others.removeDirectorysFromPath(pathToDir)
-            # если камера кроме №1 или №2, то удаляем объекты уже сейчас
 
         return r, typeOfObject
 

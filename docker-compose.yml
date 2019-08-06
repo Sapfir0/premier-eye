@@ -2,19 +2,28 @@ version: '3.3'
 
 services:
   pyback:
+    container_name: pyback
     image: sapfir0/premier-eye:cpu
-    command: python3 mainImage.py
+    build:
+      dockerfile: Dockerfile
+      context: ./pyback
+    #command: python3 mainImage.py
     volumes:
       - ./pyback/data:/pyback/data
       - ./pyback/output:/pyback/output
 # строчки выше не очень-то и адаптивны
   redis:
+    container_name: redis
     image: redis:alpine
     ports:
       - "6379"
 
   web:
+    container_name: pyfront
     image: sapfir0/premier-eye:web
+    build:
+      dockerfile: Dockerfile
+      context: ./pyfront
     command: flask run
     ports:
     - "5000:5000"

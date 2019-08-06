@@ -119,6 +119,7 @@ def checkVersion(package):
 
     return version
 
+
 def createMustExistedDirs(listOfDirs):
     for dir in listOfDirs:
         if not os.path.exists(dir):
