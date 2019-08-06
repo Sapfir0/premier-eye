@@ -72,10 +72,7 @@ class Settings(object):
         #others.checkAvailabilityOfServer(enivroment)
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
-        for i in must_exist_dirs:
-            if not os.path.exists(i):
-                print(f"{i} folder isn't exist. Creating..")
-                os.makedirs(i)
+        others.createMustExistedDirs(must_exist_dirs)
 
         packages = ["cv2", "tensorflow", "keras"]
         others.checkVersion(packages)

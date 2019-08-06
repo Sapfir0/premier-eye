@@ -10,4 +10,3 @@ ENV FLASK_RUN_HOST 0.0.0.0
 
 WORKDIR /pyfront
 #EXPOSE 5000
-CMD [ "flask", "run" ]

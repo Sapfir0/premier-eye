@@ -118,3 +118,9 @@ def checkVersion(package):
         version = Exception
 
     return version
+
+def createMustExistedDirs(listOfDirs):
+    for dir in listOfDirs:
+        if not os.path.exists(dir):
+            print(f"{dir} folder isn't exist. Creating..")
+            os.makedirs(dir)

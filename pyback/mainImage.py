@@ -28,7 +28,7 @@ class MainClass(object):
 
     def __init__(self, imageDirectory=cfg.IMAGE_DIR):  # надо подумать насчет папки совсем в другом месте
         if self.cfg.checkOldProcessedFrames:
-            processedFrames = dh.checkDateFile(self.cfg.DATE_FILE) 
+            processedFrames = dh.checkDateFile(self.cfg.DATE_FILE)
         else:
             processedFrames = {}
         self.mainPipeline(processedFrames)
@@ -113,15 +113,15 @@ class MainClass(object):
                     raise ValueError("Server isn't available")
 
             return detections
-   
+
     def mainPipeline(self, processedFrames):
+        from services.memory import getUsedRAM
         while True:
             imagesForEachCamer = others.checkNewFile(self.currentImageDir, self.cfg.IMAGE_PATH_WHITELIST)
             for items in imagesForEachCamer.items():
                 numberOfCam = items[0]
                 filenames = items[1]
                 self.detectObject(numberOfCam, filenames, processedFrames)
-                from services.memory import getUsedRAM
                 snapshot = tracemalloc.take_snapshot()
                 getUsedRAM(snapshot)
 

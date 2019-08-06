@@ -2,9 +2,7 @@ version: '3.3'
 
 services:
   pyback:
-    build:
-      dockerfile: Dockerfile
-      context: ./pyback
+    image: sapfir0/premier-eye:cpu
     command: python3 mainImage.py
     volumes:
       - ./pyback/data:/pyback/data
@@ -16,9 +14,8 @@ services:
       - "6379"
 
   web:
-    build: 
-      dockerfile: Dockerfile
-      context: ./pyfront
+    image: sapfir0/premier-eye:web
+    command: flask run
     ports:
     - "5000:5000"
     depends_on:
