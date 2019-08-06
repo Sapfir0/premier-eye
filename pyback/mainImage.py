@@ -85,12 +85,12 @@ class MainClass(object):
                 rectCoordinates = others.parseImageAiData(detections)
 
             # car detector
-            carNumber = None
+            carNumbers = []
             if self.cfg.CAR_NUMBER_DETECTOR:
                 from neural_network.car_number import car_detect
                 if numberOfCam in [str(1), str(2)] and humanizedOutput:  # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
                     imD = os.path.join(os.path.split(outputFile)[0], "objectsOn" + filename.split(".")[0])
-                    car_detect(imD)
+                    carNumbers = car_detect(imD)
 
             processedFrames[numberOfCam].append(filename)
 
@@ -98,14 +98,18 @@ class MainClass(object):
 
             # DB
             if self.cfg.loggingInDB:
+                castingCarNumber = None
+                iterator = 0
                 centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-                for i in range(0, len(rectCoordinates)):  # для каждого объекта, найденного на кадре
-                    if carNumber == [] or carNumber == ['']:
-                        carNumber = None
-                    elif carNumber:
-                        carNumber = carNumber[0]
+                for i, item in enumerate(humanizedOutput):  # для каждого объекта, найденного на кадре
+                    if item == "car" and carNumbers:
+                        if carNumbers[iterator] == [] or carNumbers[iterator] == ['']:
+                            castingCarNumber = None
+                        else:
+                            castingCarNumber = carNumbers[iterator][0]
+                        iterator += 1
 
-                    db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i], carNumber)
+                    db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i], castingCarNumber)
 
             # checkConnections with Pyfront
             if self.cfg.sendRequestToServer:

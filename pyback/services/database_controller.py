@@ -65,6 +65,7 @@ def writeInfoForObjectInDB(numberOfCam, typeOfObject, fixationDatetime, rectCoor
     LUy, LUx, RDy, RDx = rectCoordinates
     CDx, CDy = centerDown
     objN = Objects(numberOfCam, typeOfObject, fixationDatetime, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy), carNumber)
+    #print(objN)
     session.add(objN)
     session.commit()
     session.flush() # можно один раз добавить  
