@@ -57,3 +57,12 @@ def checkNewFile(currentImageDir: str, IMAGE_PATH_WHITELIST) -> dict:
 def parseImageAiData(rectCoordinates: list) -> list:
     boxes = [diction['box_points'] for diction in rectCoordinates]
     return boxes
+
+
+def getIOdirs(filename, IMAGE_DIR, OUTPUT_DIR_MASKCNN):
+    dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+    date, hours = dh.getDateOrHours(filename)
+    inputFile = os.path.join(IMAGE_DIR, filename)
+    outputFile = os.path.join(OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
+    print(f"Analyzing {inputFile}")
+    return inputFile, outputFile, dateTime
