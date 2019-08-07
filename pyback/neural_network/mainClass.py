@@ -71,7 +71,6 @@ class MainClass(object):
 
             return detections
 
-
     def maskCnnDetect(self, inputFile, outputFile):
         detections, humanizedOutput = self.mask.pipeline(inputFile, outputFile)
         rectCoordinates = detections['rois']
@@ -83,13 +82,12 @@ class MainClass(object):
         return detections, rectCoordinates
 
     def carNumberDetector(self, numberOfCam, humanizedOutput, outputFile, filename):
+        from neural_network.car_number import car_detect
         carNumbers = []
-        if self.cfg.CAR_NUMBER_DETECTOR:
-            from neural_network.car_number import car_detect
-            if numberOfCam in [str(1), str(2)] and humanizedOutput:
-                # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
-                imD = os.path.join(os.path.split(outputFile)[0], "objectsOn" + filename.split(".")[0])
-                carNumbers = car_detect(imD)
+        if humanizedOutput and numberOfCam in [str(1), str(2)]:
+            # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
+            imD = os.path.join(os.path.split(outputFile)[0], "objectsOn" + filename.split(".")[0])
+            carNumbers = car_detect(imD)
         return carNumbers
 
     def dblogging(self, numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumbers):
@@ -98,21 +96,16 @@ class MainClass(object):
         centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)
         # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
         for i, item in enumerate(humanizedOutput):  # для каждого объекта, найденного на кадре
-            if item == "car" and carNumbers:
-                if carNumbers[iterator] == [] or carNumbers[iterator] == ['']:
-                    castingCarNumber = None
-                else:
-                    castingCarNumber = carNumbers[iterator][0]
+            if item == "car" and carNumbers and (carNumbers[iterator] == [] or carNumbers[iterator] == ['']):
+                castingCarNumber = carNumbers[iterator][0]
                 iterator += 1
-
             db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i],
                                       castingCarNumber)
 
     def requestToServer(self, filename):
-        if self.cfg.sendRequestToServer:
-            r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
-            if not r.status_code == 200:
-                raise ValueError("Server isn't available")
+        r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
+        if not r.status_code == 200:
+            raise ValueError("Server isn't available")
 
     def detectObjects(self, filename):
         inputFile, outputFile, dateTime = others.getIOdirs(filename, self.cfg.IMAGE_DIR, self.cfg.OUTPUT_DIR_MASKCNN)

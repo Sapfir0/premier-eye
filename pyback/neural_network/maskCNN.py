@@ -42,12 +42,20 @@ class Mask(Neural_network):
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
+
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
         """
             almost main
         """
-        dirs.createDirs(os.path.split(outputPath)[0])
+        if outputPath:
+            dirs.createDirs(os.path.split(outputPath)[0])
+            filename = os.path.split(outputPath)[1]
+
+        if not others.isImage(inputPath):
+            print("This is incorrectly image format. Skipping " + inputPath)
+            return -1, -1
+
         image = cv2.imread(inputPath)
         # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
@@ -57,11 +65,13 @@ class Mask(Neural_network):
             convertType = self.CLASS_NAMES[r['class_ids'][i]]
             typeOfObject.append(convertType)
 
-        filename = os.path.split(outputPath)[1]
+        if not outputPath:
+            filename = os.path.split(inputPath)[1]
         objectsFromCurrentFrame = extra.extractObjectsFromR(
             image, r['rois'], typeOfObject, outputImageDirectory=outputPath, filename=filename)  # почему-то current иногда бывает пустым
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         self.checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
+
         if outputPath:
             cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
 

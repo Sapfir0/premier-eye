@@ -3,9 +3,15 @@ import helpers.others as others
 from neural_network.mainClass import MainClass
 import helpers.dateHelper as dh
 from settings import Settings as cfg
+from services.memory import getUsedRAM
 
-def mainPipeline(processedFrames):
-    from services.memory import getUsedRAM
+
+def mainPipeline():
+    if cfg.checkOldProcessedFrames:
+        processedFrames = dh.checkDateFile(cfg.DATE_FILE)
+    else:
+        processedFrames = {}
+
     while True:
         imagesForEachCamer = others.checkNewFile(cfg.IMAGE_DIR, cfg.IMAGE_PATH_WHITELIST)
         for items in imagesForEachCamer.items():
@@ -18,9 +24,5 @@ def mainPipeline(processedFrames):
 
 if __name__ == "__main__":
     tracemalloc.start()
-    if cfg.checkOldProcessedFrames:
-        processedFrames = dh.checkDateFile(cfg.DATE_FILE)
-    else:
-        processedFrames = {}
-    mainPipeline(processedFrames)
+    mainPipeline()
 

@@ -51,7 +51,7 @@ class Settings(object):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
-        DETECTION_MIN_CONFIDENCE = 0.8  # минимальный процент отображения прямоугольника
+        DETECTION_MIN_CONFIDENCE = 0.86  # минимальный процент отображения прямоугольника
         NUM_CLASSES = 81
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768

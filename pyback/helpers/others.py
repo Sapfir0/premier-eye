@@ -59,6 +59,14 @@ def parseImageAiData(rectCoordinates: list) -> list:
     return boxes
 
 
+def isImage(filepath):
+    file_extension = os.path.splitext(filepath)[1] # не уверен что срабоатет всегда
+    allowed_extension = [".jpg", ".png", ".jpeg"]
+    if file_extension in allowed_extension:
+        return True
+    return False
+
+
 def getIOdirs(filename, IMAGE_DIR, OUTPUT_DIR_MASKCNN):
     dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
     date, hours = dh.getDateOrHours(filename)
