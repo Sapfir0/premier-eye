@@ -23,10 +23,11 @@ class MainClass(object):
     decart = DecartCoordinates()
 
     currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
-    def __init__(self, numberOfCam: int, filenames: list, processedFrames: dict):
-        self.detectObjects(numberOfCam, filenames, processedFrames)
 
-    def detectObjects(self, numberOfCam: int, filenames: list, processedFrames: dict):
+    def __init__(self, numberOfCam: int, filenames: list, processedFrames: dict):
+        self.predicated(numberOfCam, filenames, processedFrames)
+
+    def predicated(self, numberOfCam: int, filenames: list, processedFrames: dict):
         """
             Сакральный алгоритм:
 
@@ -63,47 +64,53 @@ class MainClass(object):
                     #time.sleep(2.5)  # засыпает поток исполнения
                 continue  # если файлы еще есть, то переходим к следующему
 
-            inputFile, outputFile, dateTime = others.getIOdirs(filename, self.cfg.IMAGE_DIR, self.cfg.OUTPUT_DIR_MASKCNN)
-
-            if self.cfg.ALGORITHM:  # Mask CNN
-                detections,  humanizedOutput = self.mask.pipeline(inputFile, outputFile)
-                rectCoordinates = detections['rois']
-            else:  # image ai # этот алгоритмы всегда остают в нововведениях
-                detections = self.imageAI.pipeline(inputFile, outputFile)
-                rectCoordinates = others.parseImageAiData(detections)
-
-            # car detector
-            carNumbers = []
-            if self.cfg.CAR_NUMBER_DETECTOR:
-                from neural_network.car_number import car_detect
-                if numberOfCam in [str(1), str(2)] and humanizedOutput:  # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
-                    imD = os.path.join(os.path.split(outputFile)[0], "objectsOn" + filename.split(".")[0])
-                    carNumbers = car_detect(imD)
-
+            detections = self.detectObjects(filename)
             processedFrames[numberOfCam].append(filename)
-
             file_controller.writeInFile(self.cfg.DATE_FILE, str(processedFrames))  # будет стирать содержимое файла каждый кадр
 
-            # DB
-            if self.cfg.loggingInDB:
-                castingCarNumber = None
-                iterator = 0
-                centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-                for i, item in enumerate(humanizedOutput):  # для каждого объекта, найденного на кадре
-                    if item == "car" and carNumbers:
-                        if carNumbers[iterator] == [] or carNumbers[iterator] == ['']:
-                            castingCarNumber = None
-                        else:
-                            castingCarNumber = carNumbers[iterator][0]
-                        iterator += 1
-
-                    db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i], castingCarNumber)
-
-            # checkConnections with Pyfront
-            if self.cfg.sendRequestToServer:
-                r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
-                if not r.status_code == 200:
-                    raise ValueError("Server isn't available")
-
-            dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])
             return detections
+
+    def detectObjects(self, filename):
+        inputFile, outputFile, dateTime = others.getIOdirs(filename, self.cfg.IMAGE_DIR, self.cfg.OUTPUT_DIR_MASKCNN)
+        numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
+
+        if self.cfg.ALGORITHM:  # Mask CNN
+            detections, humanizedOutput = self.mask.pipeline(inputFile, outputFile)
+            rectCoordinates = detections['rois']
+        else:  # image ai # этот алгоритмы всегда остают в нововведениях
+            detections = self.imageAI.pipeline(inputFile, outputFile)
+            rectCoordinates = others.parseImageAiData(detections)
+
+        # car detector
+        carNumbers = []
+        if self.cfg.CAR_NUMBER_DETECTOR:
+            from neural_network.car_number import car_detect
+            if numberOfCam in [str(1), str(
+                    2)] and humanizedOutput:  # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
+                imD = os.path.join(os.path.split(outputFile)[0], "objectsOn" + filename.split(".")[0])
+                carNumbers = car_detect(imD)
+
+        # DB
+        if self.cfg.loggingInDB:
+            castingCarNumber = None
+            iterator = 0
+            centerDown = self.decart.getCenterOfDownOfRectangle(
+                rectCoordinates)  # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
+            for i, item in enumerate(humanizedOutput):  # для каждого объекта, найденного на кадре
+                if item == "car" and carNumbers:
+                    if carNumbers[iterator] == [] or carNumbers[iterator] == ['']:
+                        castingCarNumber = None
+                    else:
+                        castingCarNumber = carNumbers[iterator][0]
+                    iterator += 1
+
+                db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i],
+                                          castingCarNumber)
+        # checkConnections with Pyfront
+        if self.cfg.sendRequestToServer:
+            r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
+            if not r.status_code == 200:
+                raise ValueError("Server isn't available")
+
+        dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])
+        return detections
