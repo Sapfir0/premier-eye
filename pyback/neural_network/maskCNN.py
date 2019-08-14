@@ -6,12 +6,10 @@ from colorama import Fore
 import numpy as np
 
 import neural_network.modules.feature_matching as sift
-from neural_network.modules.heatmap import Heatmap
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 from neural_network.neural_network import Neural_network
 import helpers.others as others
-import helpers.dateHelper as dh
 import helpers.directory as dirs
 
 from settings import Settings as cfg
@@ -20,6 +18,7 @@ import mrcnn.visualize
 import mrcnn.utils
 from mrcnn.model import MaskRCNN
 
+from neural_network.classes.Image import Image
 
 class Mask(Neural_network):
     """
@@ -52,18 +51,25 @@ class Mask(Neural_network):
             dirs.createDirs(os.path.split(outputPath)[0])
             filename = os.path.split(outputPath)[1]
 
-        if not others.isImage(inputPath):
-            print("This is incorrectly image format. Skipping " + inputPath)
-            return -1, -1
-
         image = cv2.imread(inputPath)
-        # r['rois'] - array of lower left and upper right corner of founded objects
         r, rgb_image = self.detectByMaskCNN(image)
-
+        # r['rois'] - array of lower left and upper right corner of founded objects
         typeOfObject = []
         for i, item in enumerate(r['class_ids']):
             convertType = self.CLASS_NAMES[r['class_ids'][i]]
             typeOfObject.append(convertType)
+
+        detections = []
+        for i in range(0, len(r['rois'])):  # ужасно, поправить
+            obj = {
+                'coordinates': r['rois'][i],
+                'type': typeOfObject[i],
+                'scores': r['scores'][i]
+            }
+            detections.append(obj)
+        print(detections)
+        img = Image(inputPath, detections)
+
 
         if not outputPath:
             filename = os.path.split(inputPath)[1]
