@@ -71,17 +71,17 @@ class MainClass(object):
 
             return detections
 
-    def maskCnnDetect(self, inputFile, outputFile):
+    def _maskCnnDetect(self, inputFile, outputFile):
         detections, humanizedOutput = self.mask.pipeline(inputFile, outputFile)
         rectCoordinates = detections['rois']
         return detections, humanizedOutput, rectCoordinates
 
-    def imageAiDetect(self, inputFile, outputFile):
+    def _imageAiDetect(self, inputFile, outputFile):
         detections = self.imageAI.pipeline(inputFile, outputFile)
         rectCoordinates = others.parseImageAiData(detections)
         return detections, rectCoordinates
 
-    def carNumberDetector(self, numberOfCam, humanizedOutput, outputFile, filename):
+    def _carNumberDetector(self, numberOfCam, humanizedOutput, outputFile, filename):
         from neural_network.car_number import car_detect
         carNumbers = []
         if humanizedOutput and numberOfCam in [str(1), str(2)]:
@@ -90,7 +90,7 @@ class MainClass(object):
             carNumbers = car_detect(imD)
         return carNumbers
 
-    def dblogging(self, numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumbers):
+    def _dblogging(self, numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumbers):
         castingCarNumber = None
         iterator = 0
         centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)
@@ -102,7 +102,7 @@ class MainClass(object):
             db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i],
                                       castingCarNumber)
 
-    def requestToServer(self, filename):
+    def _requestToServer(self, filename):
         r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
         if not r.status_code == 200:
             raise ValueError("Server isn't available")
