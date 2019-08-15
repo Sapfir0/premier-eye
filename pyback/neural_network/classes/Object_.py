@@ -3,6 +3,7 @@ from neural_network.modules.decart import DecartCoordinates
 
 class Object_(object):
     id: int = None
+    type = "obj"
     scores = None
     LDx: int = None
     LDy: int = None
@@ -16,3 +17,6 @@ class Object_(object):
         self.scores = detections['scores']
         decart = DecartCoordinates()  # мне не нравится когда один конструктор инитит другой неявно
         self.CDx, self.CDy = decart.getCenterOfDown(detections['coordinates'])
+
+    def __repr__(self):
+        return "id = {}, type: {}".format(self.id, self.type)

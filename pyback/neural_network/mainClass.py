@@ -72,9 +72,8 @@ class MainClass(object):
             return detections
 
     def _maskCnnDetect(self, inputFile, outputFile):
-        detections, humanizedOutput = self.mask.pipeline(inputFile, outputFile)
-        rectCoordinates = detections['rois']
-        return detections, humanizedOutput, rectCoordinates
+        image = self.mask.pipeline(inputFile, outputFile)
+        return image
 
     def _imageAiDetect(self, inputFile, outputFile):
         detections = self.imageAI.pipeline(inputFile, outputFile)
@@ -112,18 +111,19 @@ class MainClass(object):
         numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
 
         if self.cfg.ALGORITHM:
-            detections, humanizedOutput, rectCoordinates = self.maskCnnDetect(inputFile, outputFile)
+            image = self._maskCnnDetect(inputFile, outputFile)
+            print(image)
         else:
-            detections, rectCoordinates = self.imageAiDetect(inputFile, outputFile)
+            detections, rectCoordinates = self._imageAiDetect(inputFile, outputFile)
 
         if self.cfg.CAR_NUMBER_DETECTOR:
-            carNumber = self.carNumberDetector(numberOfCam, humanizedOutput, outputFile, filename)
+            carNumber = self._carNumberDetector(numberOfCam, humanizedOutput, outputFile, filename)
 
         if self.cfg.loggingInDB:
-            self.dblogging(numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumber)
+            self._dblogging(numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumber)
 
         if self.cfg.sendRequestToServer:
-            self.requestToServer(filename)
+            self._requestToServer(filename)
 
         dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])
         return detections

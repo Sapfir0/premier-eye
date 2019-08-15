@@ -41,7 +41,6 @@ class Mask(Neural_network):
         self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
-
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
         """
@@ -51,41 +50,41 @@ class Mask(Neural_network):
             dirs.createDirs(os.path.split(outputPath)[0])
             filename = os.path.split(outputPath)[1]
 
-        image = cv2.imread(inputPath)
-        r, rgb_image = self.detectByMaskCNN(image)
-        # r['rois'] - array of lower left and upper right corner of founded objects
-        typeOfObject = []
-        for i, item in enumerate(r['class_ids']):
-            convertType = self.CLASS_NAMES[r['class_ids'][i]]
-            typeOfObject.append(convertType)
+        img = Image(inputPath, outputPath=outputPath)
+        binaryImage = img.read()
 
+        r, rgb_image = self.detectByMaskCNN(binaryImage)
+        # r['rois'] - array of lower left and upper right corner of founded objects
+        humanizedTypes = self._humanizeTypes(r['class_ids'])
+
+        detections = self.parseR(r, humanizedTypes)
+
+        img.saveDetections(detections)
+
+        if not outputPath:
+            filename = os.path.split(inputPath)[1]
+        objectsFromCurrentFrame = img.extractObjectsFromR(
+            binaryImage, outputImageDirectory=outputPath, filename=filename)
+        # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
+        self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
+
+        img.write()
+        return img
+
+    def parseR(self, r, humanizedTypes):
         detections = []
         for i in range(0, len(r['rois'])):  # ужасно, поправить
             obj = {
                 'coordinates': r['rois'][i],
-                'type': typeOfObject[i],
+                'type': humanizedTypes[i],
                 'scores': r['scores'][i]
             }
             detections.append(obj)
-        print(detections)
-        img = Image(inputPath, detections)
+        return detections
 
-
-        if not outputPath:
-            filename = os.path.split(inputPath)[1]
-        objectsFromCurrentFrame = extra.extractObjectsFromR(
-            image, r['rois'], typeOfObject, outputImageDirectory=outputPath, filename=filename)  # почему-то current иногда бывает пустым
-        # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        self.checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
-
-        if outputPath:
-            cv2.imwrite(outputPath, image)  # IMAGE, а не masked image
-
-        return r, typeOfObject
-
-    def checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
+    def _checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
         if self.counter:
-            foundedDifferentObjects = self.uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
+            foundedDifferentObjects = self._uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
             self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
             self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
@@ -93,7 +92,7 @@ class Mask(Neural_network):
 
         self.objectsFromPreviousFrame = objectsFromCurrentFrame
 
-    def uniqueObjects(self, objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame: np.ndarray, r: np.ndarray, saveUniqueObjects=False) -> np.ndarray:
+    def _uniqueObjects(self, objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame: np.ndarray, r: np.ndarray, saveUniqueObjects=False) -> np.ndarray:
         """
             input:
                 objectsFromPreviousFrame - an array of objects in the previous frame \n
@@ -122,7 +121,7 @@ class Mask(Neural_network):
 
         return foundedUniqueObjects
 
-    def visualize_detections(self, image: np.ndarray, masks: np.ndarray, boxes: np.ndarray, class_ids: np.ndarray, scores: np.ndarray, objectId="-") -> np.ndarray:
+    def _visualize_detections(self, image: np.ndarray, masks: np.ndarray, boxes: np.ndarray, class_ids: np.ndarray, scores: np.ndarray, objectId="-") -> np.ndarray:
         """
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
@@ -171,3 +170,10 @@ class Mask(Neural_network):
         r = self.model.detect([rgb_image], verbose=1)[0]  # тут вся магия
         # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
         return r, rgb_image
+
+    def _humanizeTypes(self, integerTypes):
+        typeOfObject = []
+        for i, item in enumerate(integerTypes):
+            convertType = self.CLASS_NAMES[integerTypes[i]]
+            typeOfObject.append(convertType)
+        return typeOfObject
