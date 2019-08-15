@@ -1,10 +1,10 @@
 import helpers.others as others
 import datetime
+import cv2
 
 from neural_network.classes.Car import Car
 from neural_network.classes.Person import Person
 
-import cv2
 
 class Image(object):
     inputPath: str = None
@@ -54,14 +54,17 @@ class Image(object):
             output: an array of images of objects
         """
         import os
-        for i in self.objects:
-            print(i)
+        for i in range(0, len(self.objects)):
+            print(self.objects[i].coordinates)
+
         objs = []
-        for i, item in enumerate(self.objects[i]):
+        for i, item in enumerate(self.objects[i].coordinates):
+            #print("Тип массива: ", type(item))
+
             y1, x1, y2, x2 = item
             # вырежет все объекты в отдельные изображения
             cropped = binaryImage[y1:y2, x1:x2]
-            objects.append(cropped)
+            objs.append(cropped)
             if outputImageDirectory:
                 beforePoint, afterPoint = filename.split(".")
                 outputDirPath = os.path.join(os.path.split(outputImageDirectory)[0], "objectsOn" + beforePoint)
@@ -70,4 +73,4 @@ class Image(object):
                 coordinates = str(item).replace(" ", ",")
 
                 cv2.imwrite(os.path.join(outputDirPath, f"{self.objects[i].type}{coordinates}.jpg"), cropped)
-        return objects
+        return objs

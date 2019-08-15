@@ -5,18 +5,16 @@ class Object_(object):
     id: int = None
     type = "obj"
     scores = None
-    LDx: int = None
-    LDy: int = None
-    RUx: int = None
-    RUy: int = None
+    coordinates = []  # LDx, LDy, RUx, RUy
     CDx: int = None
     CDy: int = None
 
     def __init__(self, detections):
-        self.LDx, self.LDy, self.RUx, self.RUy = detections['coordinates']
+        self.coordinates = detections['coordinates']
         self.scores = detections['scores']
+        print(type(self.coordinates), self.coordinates)
         decart = DecartCoordinates()  # мне не нравится когда один конструктор инитит другой неявно
-        self.CDx, self.CDy = decart.getCenterOfDown(detections['coordinates'])
+        self.CDx, self.CDy = decart.getCenterOfDown(self.coordinates)
 
     def __repr__(self):
         return "id = {}, type: {}".format(self.id, self.type)
