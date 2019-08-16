@@ -55,9 +55,9 @@ class Mask(Neural_network):
 
         r, rgb_image = self.detectByMaskCNN(binaryImage)
         # r['rois'] - array of lower left and upper right corner of founded objects
-        humanizedTypes = self._humanizeTypes(r['class_ids'])
+        r = self._humanizeTypes(r)
 
-        detections = self.parseR(r, humanizedTypes)
+        detections = self.parseR(r)
 
         img.saveDetections(detections)
 
@@ -71,12 +71,12 @@ class Mask(Neural_network):
         img.write()
         return img
 
-    def parseR(self, r, humanizedTypes):
+    def parseR(self, r):
         detections = []
         for i in range(0, len(r['rois'])):  # ужасно, поправить
             obj = {
                 'coordinates': r['rois'][i],
-                'type': humanizedTypes[i],
+                'type': r['class_ids'][i],
                 'scores': r['scores'][i]
             }
             detections.append(obj)
@@ -171,9 +171,7 @@ class Mask(Neural_network):
         # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
         return r, rgb_image
 
-    def _humanizeTypes(self, integerTypes):
-        typeOfObject = []
-        for i, item in enumerate(integerTypes):
-            convertType = self.CLASS_NAMES[integerTypes[i]]
-            typeOfObject.append(convertType)
-        return typeOfObject
+    def _humanizeTypes(self, r):
+        for i, item in enumerate(r['class_ids']):
+            r['class_ids'][i] =  self.CLASS_NAMES[r['class_ids']]
+        return r
