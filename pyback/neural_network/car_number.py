@@ -4,7 +4,6 @@ import matplotlib.image as mpimg
 from settings import Settings as cfg
 import helpers.timeChecker as tm
 import os
-import shutil
 sys.path.append(cfg.NOMEROFF_NET_DIR)
 from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing
 

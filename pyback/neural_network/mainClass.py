@@ -68,7 +68,6 @@ class MainClass(object):
             processedFrames[numberOfCam].append(filename)
             file_controller.writeInFile(self.cfg.DATE_FILE, str(processedFrames))
             # будет стирать содержимое файла каждый кадр
-
             return detections
 
     def _maskCnnDetect(self, inputFile, outputFile):

@@ -27,7 +27,6 @@ class Objects(Base):
     CDy = Column(Integer)
     carNumber = Column(String)
     #Column('objectId', Integer,)
-    #Column('GPS', Integer,),
 
     def __init__(self,
             numberOfCam,

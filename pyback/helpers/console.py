@@ -11,8 +11,8 @@ def confirm(question, default="yes"):
 
     The "answer" return value is True for "yes" or False for "no".
     """
-    valid = {"yes": True, "y": True, "ye": True,
-             "no": False, "n": False}
+    valid = {"yes": True, "y": True, "ye": True, "д": True, "да": True,
+             "no": False, "n": False, "нет": False, "не": False, "н": False}
     if not default:
         prompt = " [y/n] "
     elif default == "yes":

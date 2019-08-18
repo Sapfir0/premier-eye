@@ -2,7 +2,6 @@ import os
 from os.path import join
 import mrcnn.utils
 import colorama
-from colorama import Fore, Back, Style  # для цветного консольного вывода 
 import mrcnn.config
 import helpers.others as others
 from dotenv import load_dotenv
@@ -30,7 +29,7 @@ class Settings(object):
     DATA_PATH = join(APP_PATH, "data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
     OUTPUT_DIR = join(APP_PATH, "output")
-    IMAGE_DIR = join(DATA_PATH, "1_2")
+    IMAGE_DIR = join(DATA_PATH, "1_2")  # важная настройка
     TEST_IMAGE_DIR = join(DATA_PATH, "test_images")
 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
@@ -79,18 +78,18 @@ class Settings(object):
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
         dirs.createDirsFromList(must_exist_dirs)
-
         others.checkVersion(self.packages)
-
+        # а ниже мы сможем увидеть 3 разлчиных способа указзания большого трафика
         if self.CAR_NUMBER_DETECTOR:
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
         if self.ALGORITHM:
             if not os.path.exists(self.DATASET_DIR):
+                net.traffic(exiting=True)
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-            net.downloadFileIfNotExists(self.CLASSES_FILE, self.classNamesLink)
+            net.downloadAndMove(self.classNamesLink, self.CLASSES_FILE)
         else:
-            net.downloadFileIfNotExists(self.DATASET_DIR_IMAGE_AI, self.imageAInetworkLink)
+            net.downloadAndMove(self.imageAInetworkLink, self.DATASET_DIR_IMAGE_AI, aLotOfTraffic=True)
 
         net.downloadSamples(self.IMAGE_DIR)
 

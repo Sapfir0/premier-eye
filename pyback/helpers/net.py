@@ -5,14 +5,22 @@ import requests
 import helpers.console as console
 
 
-# def traffic():
-#     if not console.confirm("Do you want to start downloading? May be dangerous for traffic"):
-#         return 0
+def exit(status):
+    print("Exiting")
+    exit(status)
+
+
+def traffic(exiting=False):
+    if console.confirm("Do you want to start downloading? May be dangerous for traffic"):
+        return True
+    if exiting:  # мы сюда дойдем только если юзер сказал нет
+        exit(-1)
+    return False
+
 
 def dangerousTraffic(measuredFunction):
     def wrapper(*args, **kwargs):
-        if not console.confirm("Do you want to start downloading? May be dangerous for traffic"):
-            return 0
+        traffic(exiting=True)
         res = measuredFunction(*args, **kwargs)
         return res
     return wrapper
@@ -21,20 +29,19 @@ def dangerousTraffic(measuredFunction):
 # юзабилити функции
 def downloadAndMove(downloadLink: str, destinationDir='.', aLotOfTraffic=False):
     import urllib
+    if aLotOfTraffic:
+        traffic(exiting=True)  # если юзер не захочет скачивать, приложение завершится
+
+    if destinationDir != "." and os.path.exists(destinationDir):
+        print("File {} is exists".format(destinationDir))
+
     try:
         file = wget.download(downloadLink)
         os.rename(os.path.join(os.getcwd(), file), destinationDir)
         return file
     except urllib.error.URLError:
         print("Url {} isnt available or you not connected to network".format(downloadLink))
-        print("Exiting")
         exit(-1)  # спорное решение
-
-
-def downloadFileIfNotExists(mustExistedFile: str, link: str):
-    if not os.path.exists(mustExistedFile):
-        print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
-        downloadAndMove(link, mustExistedFile)
 
 
 def downloadSamples(imagesPath: str):
