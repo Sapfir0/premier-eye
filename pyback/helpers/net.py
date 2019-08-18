@@ -2,10 +2,24 @@ import wget
 import os
 from colorama import Fore
 import requests
+import helpers.console as console
+
+
+# def traffic():
+#     if not console.confirm("Do you want to start downloading? May be dangerous for traffic"):
+#         return 0
+
+def dangerousTraffic(measuredFunction):
+    def wrapper(*args, **kwargs):
+        if not console.confirm("Do you want to start downloading? May be dangerous for traffic"):
+            return 0
+        res = measuredFunction(*args, **kwargs)
+        return res
+    return wrapper
 
 
 # юзабилити функции
-def downloadAndMove(downloadLink, destinationDir='.'):
+def downloadAndMove(downloadLink: str, destinationDir='.', aLotOfTraffic=False):
     import urllib
     try:
         file = wget.download(downloadLink)
@@ -17,14 +31,13 @@ def downloadAndMove(downloadLink, destinationDir='.'):
         exit(-1)  # спорное решение
 
 
-
-def checkExist(mustExistedFile, link):
+def downloadFileIfNotExists(mustExistedFile: str, link: str):
     if not os.path.exists(mustExistedFile):
         print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
         downloadAndMove(link, mustExistedFile)
 
 
-def downloadSamples(imagesPath):
+def downloadSamples(imagesPath: str):
     if not os.listdir(imagesPath):
         print(Fore.YELLOW + f"{imagesPath} is empty")
         print(Fore.YELLOW + "Downloading sample")
@@ -36,7 +49,8 @@ def downloadSamples(imagesPath):
             downloadAndMove(samples[i], os.path.join(imagesPath, realNames[i]))
 
 
-def downloadNomeroffNet(NOMEROFF_NET_DIR):
+@dangerousTraffic
+def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
     from git import Repo
     if not os.path.exists(NOMEROFF_NET_DIR):
         Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", NOMEROFF_NET_DIR)
@@ -45,9 +59,9 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR):
 
 def checkAvailabilityOfServer(env):
     if env == "development" or "dev":
-        r = requests.get(self.pyfrontDevelopmentLink)
+        r = requests.get(cfg.pyfrontDevelopmentLink)
     elif env == "production" or "prod":
-        r = requests.get(self.pyfrontProductionLink)
+        r = requests.get(cfg.pyfrontProductionLink)
     else:
         raise BaseException("Environment not defined")
     if not r.status_code == 200:

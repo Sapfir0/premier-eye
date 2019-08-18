@@ -67,7 +67,6 @@ def isImage(filepath):
     return False
 
 
-
 def getIOdirs(filename, IMAGE_DIR, OUTPUT_DIR_MASKCNN):
     dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
     date, hours = dh.getDateOrHours(filename)

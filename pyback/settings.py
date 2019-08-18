@@ -41,9 +41,9 @@ class Settings(object):
     CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
     OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
     # car detector
-    NOMEROFF_NET_DIR = os.path.join(APP_PATH, 'nomeroff-net')
-    MASK_RCNN_DIR = os.path.join(NOMEROFF_NET_DIR, 'Mask_RCNN')
-    MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
+    NOMEROFF_NET_DIR = join(APP_PATH, 'nomeroff-net')
+    MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, 'Mask_RCNN')
+    MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, 'logs')
 
     # Mask cnn advanced
     # Configuration that will be used by the Mask-RCNN library
@@ -77,7 +77,7 @@ class Settings(object):
         enivroment = os.environ.get("enivroment")
         #others.checkAvailabilityOfServer(enivroment)
 
-        must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR]
+        must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
         dirs.createDirsFromList(must_exist_dirs)
 
         others.checkVersion(self.packages)
@@ -86,13 +86,11 @@ class Settings(object):
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
         if self.ALGORITHM:
-            dirs.createDir(self.OUTPUT_DIR_MASKCNN)
             if not os.path.exists(self.DATASET_DIR):
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-            net.checkExist(self.CLASSES_FILE, self.classNamesLink)
+            net.downloadFileIfNotExists(self.CLASSES_FILE, self.classNamesLink)
         else:
-            dirs.createDir(self.OUTPUT_DIR_IMAGE_AI)
-            net.checkExist(self.DATASET_DIR_IMAGE_AI, self.imageAInetworkLink)
+            net.downloadFileIfNotExists(self.DATASET_DIR_IMAGE_AI, self.imageAInetworkLink)
 
         net.downloadSamples(self.IMAGE_DIR)
 

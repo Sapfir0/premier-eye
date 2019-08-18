@@ -1,3 +1,5 @@
+import time
+
 
 def checkElapsedTime(measuredFunction):
     """
@@ -7,8 +9,6 @@ def checkElapsedTime(measuredFunction):
         def foo():
             print("foo")
     """
-    import time
-
     def wrapper(*args, **kwargs):
         start = time.time()
         res = measuredFunction(*args, **kwargs)
@@ -28,8 +28,6 @@ def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime, helperS
         greatTime - great, we went into the frame - green [seconds]
     """
     def checkElapsedTime(measuredFunction):
-        import time
-
         def wrapper(*args, **kwargs):
             start = time.time()
             res = measuredFunction(*args, **kwargs)

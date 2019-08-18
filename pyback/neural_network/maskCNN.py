@@ -13,7 +13,6 @@ from settings import Settings as cfg
 
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 import mrcnn.visualize
-import mrcnn.utils
 from mrcnn.model import MaskRCNN
 
 from neural_network.classes.Image import Image
@@ -152,16 +151,15 @@ class Mask(object):
 
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255]  # ух круто
-            text = "{}: {:.1f} {}".format(label, scores[i] * 100, i)
+            text = "{}: {:.1f} {}".format(label, currentObject.scores * 100, i)
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1 - 20), font, 0.8, color, 2)
 
         rgb_image = bgr_image[:, :, ::-1]
-
         return rgb_image.astype(np.uint8)
 
-    def detectByMaskCNN(self, image: np.ndarray) -> dict:  # и еще один, но чет не получается указать два возвращаемых аргумента
+    def detectByMaskCNN(self, image: np.ndarray) -> Tuple[dict, np.ndarray]:  # и еще один, но чет не получается указать два возвращаемых аргумента
         """
             input: image - the result of cv2.imread (<filename>)
             output: r - dictionary of objects found (r ['masks'], r ['rois'], r ['class_ids'], r ['scores']), detailed help somewhere else
@@ -171,7 +169,7 @@ class Mask(object):
         # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
         return r, rgb_image
 
-    def _humanizeTypes(self, r):
+    def _humanizeTypes(self, r: dict) -> dict:
         for i, item in enumerate(r['class_ids']):
             r['class_ids'][i] = self.CLASS_NAMES[r['class_ids']]
         return r
