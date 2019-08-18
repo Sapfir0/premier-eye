@@ -63,7 +63,7 @@ class Mask(Neural_network):
 
         if not outputPath:
             filename = os.path.split(inputPath)[1]
-        objectsFromCurrentFrame = img.extractObjectsFromR(
+        objectsFromCurrentFrame = img.extractObjects(
             binaryImage, outputImageDirectory=outputPath, filename=filename)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame)

@@ -45,7 +45,7 @@ class Image(object):
             elif obj['type'] == "person":
                 self.objects.append(Person(obj))
 
-    def extractObjectsFromR(self, binaryImage, outputImageDirectory=None, filename=None):
+    def extractObjects(self, binaryImage, outputImageDirectory=None, filename=None):
         """
             input:
                 image - source image \n

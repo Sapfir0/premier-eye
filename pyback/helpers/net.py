@@ -6,9 +6,16 @@ import requests
 
 # юзабилити функции
 def downloadAndMove(downloadLink, destinationDir='.'):
-    file = wget.download(downloadLink)
-    os.rename(os.path.join(os.getcwd(), file), destinationDir)
-    return file
+    import urllib
+    try:
+        file = wget.download(downloadLink)
+        os.rename(os.path.join(os.getcwd(), file), destinationDir)
+        return file
+    except urllib.error.URLError:
+        print("Url {} isnt available or you not connected to network".format(downloadLink))
+        print("Exiting")
+        exit(-1)  # спорное решение
+
 
 
 def checkExist(mustExistedFile, link):
