@@ -2,17 +2,15 @@ import os
 import sys
 from os.path import join
 import cv2
-from colorama import Fore
 import numpy as np
 
 import neural_network.modules.feature_matching as sift
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
-from neural_network.neural_network import Neural_network
-import helpers.others as others
 import helpers.directory as dirs
 
 from settings import Settings as cfg
+
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 import mrcnn.visualize
 import mrcnn.utils
@@ -20,7 +18,8 @@ from mrcnn.model import MaskRCNN
 
 from neural_network.classes.Image import Image
 
-class Mask(Neural_network):
+
+class Mask(object):
     """
         Mask R-CNN
     """
@@ -49,6 +48,8 @@ class Mask(Neural_network):
         if outputPath:
             dirs.createDirs(os.path.split(outputPath)[0])
             filename = os.path.split(outputPath)[1]
+        else:
+            filename = os.path.split(inputPath)[1]
 
         img = Image(inputPath, outputPath=outputPath)
         binaryImage = img.read()
@@ -56,13 +57,9 @@ class Mask(Neural_network):
         r, rgb_image = self.detectByMaskCNN(binaryImage)
         # r['rois'] - array of lower left and upper right corner of founded objects
         r = self._humanizeTypes(r)
-
         detections = self.parseR(r)
-
         img.saveDetections(detections)
 
-        if not outputPath:
-            filename = os.path.split(inputPath)[1]
         objectsFromCurrentFrame = img.extractObjects(
             binaryImage, outputImageDirectory=outputPath, filename=filename)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
@@ -77,7 +74,8 @@ class Mask(Neural_network):
             obj = {
                 'coordinates': r['rois'][i],
                 'type': r['class_ids'][i],
-                'scores': r['scores'][i]
+                'scores': r['scores'][i],
+                'masks': r['masks'][i]
             }
             detections.append(obj)
         return detections
@@ -85,14 +83,16 @@ class Mask(Neural_network):
     def _checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
         if self.counter:
             foundedDifferentObjects = self._uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
-            self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
+            self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'],
+                                      objectId=foundedDifferentObjects)
         else:
             self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
             self.counter = 1
 
         self.objectsFromPreviousFrame = objectsFromCurrentFrame
 
-    def _uniqueObjects(self, objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame: np.ndarray, r: np.ndarray, saveUniqueObjects=False) -> np.ndarray:
+    def _uniqueObjects(self, objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame: np.ndarray, r: np.ndarray,
+                       saveUniqueObjects=False) -> np.ndarray:
         """
             input:
                 objectsFromPreviousFrame - an array of objects in the previous frame \n
@@ -107,7 +107,7 @@ class Mask(Neural_network):
                 if sift.compareImages(previousObjects, currentObjects):  # то это один объект
                     obj = {
                         "id": objectId,
-                        "type": r['class_ids'][objectId],
+                        "type": r['class_ids'][objectId],  ################# исправить!!!
                         "coordinates": r['rois'][objectId]
                     }
                     objectId += 1
@@ -121,35 +121,35 @@ class Mask(Neural_network):
 
         return foundedUniqueObjects
 
-    def _visualize_detections(self, image: np.ndarray, masks: np.ndarray, boxes: np.ndarray, class_ids: np.ndarray, scores: np.ndarray, objectId="-") -> np.ndarray:
+    def _visualize_detections(self, img: Image) -> np.ndarray:
         """
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
         """
         # Create a new solid-black image the same size as the original image
-        #masked_image = np.zeros(image.shape)
+        # masked_image = np.zeros(image.shape)
+        image = img.read()
         bgr_image = image[:, :, ::-1]
         font = cv2.FONT_HERSHEY_DUPLEX
+        availableObjects = ['car', 'person', 'truck']
 
         # Loop over each detected person
-        for i in range(boxes.shape[0]):
-            classID = class_ids[i]
+        for i in enumerate(image.objects[i].coordinates):
+            # for i in range(boxes.shape[0]):
+            currentObject = image.objects[i]
+            classID = currentObject.type
+            if classID > len(self.CLASS_NAMES):
+                raise Exception("Undefined classId - {}".format(classID))
 
-            if not classID in[1, 3, 4]:
+            if classID not in availableObjects:
                 continue
 
             # Get the bounding box of the current person
-            y1, x1, y2, x2 = boxes[i]
+            y1, x1, y2, x2 = currentObject.coordinates
 
-            mask = masks[:, :, i]
-            color = (1.0, 1.0, 1.0)  # White
+            mask = currentObject.masks[:, :, i]
             image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6)  # рисование маски
 
-            if classID > len(self.CLASS_NAMES):
-                print(Fore.RED + "Exception: Undefined classId - " + str(classID))
-                return -1
-
-            #id = sift.setIdToObject(objectId, i)
             label = self.CLASS_NAMES[classID]
             color = [int(c) for c in np.array(self.COLORS[classID]) * 255]  # ух круто
             text = "{}: {:.1f} {}".format(label, scores[i] * 100, i)
@@ -161,7 +161,7 @@ class Mask(Neural_network):
 
         return rgb_image.astype(np.uint8)
 
-    def detectByMaskCNN(self, image: np.ndarray) -> dict: # и еще один, но чет не получается указать два возвращаемых аргумента
+    def detectByMaskCNN(self, image: np.ndarray) -> dict:  # и еще один, но чет не получается указать два возвращаемых аргумента
         """
             input: image - the result of cv2.imread (<filename>)
             output: r - dictionary of objects found (r ['masks'], r ['rois'], r ['class_ids'], r ['scores']), detailed help somewhere else
@@ -173,5 +173,5 @@ class Mask(Neural_network):
 
     def _humanizeTypes(self, r):
         for i, item in enumerate(r['class_ids']):
-            r['class_ids'][i] =  self.CLASS_NAMES[r['class_ids']]
+            r['class_ids'][i] = self.CLASS_NAMES[r['class_ids']]
         return r
