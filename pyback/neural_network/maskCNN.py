@@ -66,7 +66,7 @@ class Mask(Neural_network):
         objectsFromCurrentFrame = img.extractObjectsFromR(
             binaryImage, outputImageDirectory=outputPath, filename=filename)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
+        #self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame) ##################################################
 
         img.write(outputPath, binaryImage)
         return img

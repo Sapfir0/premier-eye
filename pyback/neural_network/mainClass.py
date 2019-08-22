@@ -6,6 +6,7 @@ import services.database_controller as db
 import services.file_controller as file_controller
 import helpers.others as others
 import helpers.directory as dirs
+from neural_network.classes import Image
 
 
 class MainClass(object):
@@ -89,17 +90,20 @@ class MainClass(object):
             carNumbers = car_detect(imD)
         return carNumbers
 
-    def _dblogging(self, numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumbers):
-        castingCarNumber = None
-        iterator = 0
-        centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)
-        # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-        for i, item in enumerate(humanizedOutput):  # для каждого объекта, найденного на кадре
-            if item == "car" and carNumbers and (carNumbers[iterator] == [] or carNumbers[iterator] == ['']):
-                castingCarNumber = carNumbers[iterator][0]
-                iterator += 1
-            db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i],
-                                      castingCarNumber)
+    def _dblogging(self, image: Image):
+        for i, item in enumerate(image.objects):  # для каждого объекта, найденного на кадре
+            frameObject = image.objects[i]
+            try:  # если сработает исключение, то это либо не машина либо номер не определен
+                frameObject.licenseNumber  # тупо проверка наличия
+            except:
+                frameObject.licenseNumber = None
+
+            db.writeInfoForObjectInDB(image.numberOfCam,
+                                      frameObject.type,
+                                      image.fixationDatetime,
+                                      frameObject.coordinates,
+                                      frameObject.centerDownCoordinates,
+                                      frameObject.licenseNumber)
 
     def _requestToServer(self, filename):
         r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
@@ -112,7 +116,6 @@ class MainClass(object):
 
         if self.cfg.ALGORITHM:
             image = self._maskCnnDetect(inputFile, outputFile)
-            print(image)
         else:
             detections, rectCoordinates = self._imageAiDetect(inputFile, outputFile)
 
@@ -120,7 +123,7 @@ class MainClass(object):
             carNumber = self._carNumberDetector(numberOfCam, humanizedOutput, outputFile, filename)
 
         if self.cfg.loggingInDB:
-            self._dblogging(numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumber)
+            self._dblogging(image)
 
         if self.cfg.sendRequestToServer:
             self._requestToServer(filename)

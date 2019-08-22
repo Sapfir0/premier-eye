@@ -7,15 +7,13 @@ class Object_(object):
     type = "obj"
     scores = None
     coordinates = []  # LDx, LDy, RUx, RUy
-    CDx: int = None
-    CDy: int = None
+    centerDownCoordinates = []  # CDx, CDy
 
     def __init__(self, detections):
         self.coordinates = detections['coordinates']
         self.scores = detections['scores']
-        print("Конструктор", type(self.coordinates), self.coordinates)
         decart = DecartCoordinates()  # мне не нравится когда один конструктор инитит другой неявно
-        self.CDx, self.CDy = decart.getCenterOfDown(self.coordinates)
+        self.centerDownCoordinates = decart.getCenterOfDown(self.coordinates)
 
     def __repr__(self):
         return "id = {}, type: {}".format(self.id, self.type)

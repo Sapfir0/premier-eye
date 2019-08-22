@@ -15,7 +15,7 @@ class Settings(object):
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
     ALGORITHM = 1
-    loggingInDB = False
+    loggingInDB = True
     checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR = False  # детекировать номер машины(только для камер №1, №2)
