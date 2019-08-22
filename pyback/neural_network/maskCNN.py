@@ -62,9 +62,9 @@ class Mask(object):
         objectsFromCurrentFrame = img.extractObjects(
             binaryImage, outputImageDirectory=outputPath, filename=filename)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
+        #self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame) ##################################################
 
-        img.write()
+        img.write(outputPath, binaryImage)
         return img
 
     def parseR(self, r):
@@ -85,7 +85,7 @@ class Mask(object):
             self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'],
                                       objectId=foundedDifferentObjects)
         else:
-            self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+            self._visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
             self.counter = 1
 
         self.objectsFromPreviousFrame = objectsFromCurrentFrame
