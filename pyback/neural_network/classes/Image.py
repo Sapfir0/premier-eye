@@ -37,6 +37,8 @@ class Image(object):
     def write(self, outputPath, image):
         if outputPath:
             cv2.imwrite(outputPath, image)
+        else:
+            cv2.imwrite(self.outputPath, image)
 
     def saveDetections(self, detections):
         for obj in detections:  # {'coordinates': array([526, 341, 719, 440], dtype=int32), 'type': 'person', 'scores': 0.99883527}
@@ -54,14 +56,9 @@ class Image(object):
             output: an array of images of objects
         """
         import os
-        for i in range(0, len(self.objects)):
-            print(self.objects[i].coordinates)
-
         objs = []
-        for i, item in enumerate(self.objects[i].coordinates):
-            #print("Тип массива: ", type(item))
-
-            y1, x1, y2, x2 = item
+        for item in self.objects:
+            y1, x1, y2, x2 = item.coordinates
             # вырежет все объекты в отдельные изображения
             cropped = binaryImage[y1:y2, x1:x2]
             objs.append(cropped)
@@ -71,6 +68,7 @@ class Image(object):
                 if not os.path.exists(outputDirPath):
                     os.mkdir(outputDirPath)
                 coordinates = str(item).replace(" ", ",")
+                pathToObjectImage = "{}{}.jpg".format(item.type, coordinates)
 
-                cv2.imwrite(os.path.join(outputDirPath, f"{self.objects[i].type}{coordinates}.jpg"), cropped)
+                cv2.imwrite(os.path.join(outputDirPath, str(pathToObjectImage)), cropped)
         return objs

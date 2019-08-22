@@ -126,4 +126,4 @@ class MainClass(object):
             self._requestToServer(filename)
 
         dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])
-        return detections
+        return image

@@ -68,7 +68,7 @@ class Mask(Neural_network):
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame)
 
-        img.write()
+        img.write(outputPath, binaryImage)
         return img
 
     def parseR(self, r, humanizedTypes):
@@ -87,7 +87,7 @@ class Mask(Neural_network):
             foundedDifferentObjects = self._uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
             self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'], objectId=foundedDifferentObjects)
         else:
-            self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
+            self._visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
             self.counter = 1
 
         self.objectsFromPreviousFrame = objectsFromCurrentFrame

@@ -1,4 +1,5 @@
 from neural_network.modules.decart import DecartCoordinates
+import abc
 
 
 class Object_(object):
@@ -12,7 +13,7 @@ class Object_(object):
     def __init__(self, detections):
         self.coordinates = detections['coordinates']
         self.scores = detections['scores']
-        print(type(self.coordinates), self.coordinates)
+        print("Конструктор", type(self.coordinates), self.coordinates)
         decart = DecartCoordinates()  # мне не нравится когда один конструктор инитит другой неявно
         self.CDx, self.CDy = decart.getCenterOfDown(self.coordinates)
 
