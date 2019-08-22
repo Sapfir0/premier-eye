@@ -3,7 +3,6 @@ from sqlalchemy.orm import scoped_session, sessionmaker, aliased
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
 from settings import Settings as cfg
-import sqlalchemy as sql
 
 engine = create_engine(cfg.DATABASE, convert_unicode=True, echo=False)
 session = scoped_session(
@@ -24,11 +23,10 @@ class Objects(Base):
     LDy = Column(Integer)
     RUx = Column(Integer)  # Right Up
     RUy = Column(Integer)
-    CDx = Column(Integer)  # Center Down 
+    CDx = Column(Integer)  # Center Down
     CDy = Column(Integer)
     carNumber = Column(String)
     #Column('objectId', Integer,)
-    #Column('GPS', Integer,),
 
     def __init__(self,
             numberOfCam,
@@ -68,6 +66,6 @@ def writeInfoForObjectInDB(numberOfCam, typeOfObject, fixationDatetime, rectCoor
     #print(objN)
     session.add(objN)
     session.commit()
-    session.flush() # можно один раз добавить  
+    session.flush() # можно один раз добавить
 
 Objects.init_db()

@@ -8,10 +8,14 @@ class Object_(object):
     scores = None
     coordinates = []  # LDx, LDy, RUx, RUy
     centerDownCoordinates = []  # CDx, CDy
+    masks = []
+
 
     def __init__(self, detections):
         self.coordinates = detections['coordinates']
         self.scores = detections['scores']
+        self.masks = detections['masks']
+        print(type(self.coordinates), self.coordinates)
         decart = DecartCoordinates()  # мне не нравится когда один конструктор инитит другой неявно
         self.centerDownCoordinates = decart.getCenterOfDown(self.coordinates)
 
