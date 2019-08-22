@@ -27,7 +27,7 @@ def compareImages(img1, img2):
         input: 2 compared images
         conclusion: the result of the comparison [True | False]
     """
-
+    print(img1, "jigjsdjgidsigjsijgsdjgijgsjgjsdijgisjgs", img2)
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
 

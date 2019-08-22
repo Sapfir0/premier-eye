@@ -6,6 +6,7 @@ import services.database_controller as db
 import services.file_controller as file_controller
 import helpers.others as others
 import helpers.directory as dirs
+from neural_network.classes import Image
 
 
 class MainClass(object):
@@ -68,20 +69,18 @@ class MainClass(object):
             processedFrames[numberOfCam].append(filename)
             file_controller.writeInFile(self.cfg.DATE_FILE, str(processedFrames))
             # будет стирать содержимое файла каждый кадр
-
             return detections
 
-    def maskCnnDetect(self, inputFile, outputFile):
-        detections, humanizedOutput = self.mask.pipeline(inputFile, outputFile)
-        rectCoordinates = detections['rois']
-        return detections, humanizedOutput, rectCoordinates
+    def _maskCnnDetect(self, inputFile, outputFile):
+        image = self.mask.pipeline(inputFile, outputFile)
+        return image
 
-    def imageAiDetect(self, inputFile, outputFile):
+    def _imageAiDetect(self, inputFile, outputFile):
         detections = self.imageAI.pipeline(inputFile, outputFile)
         rectCoordinates = others.parseImageAiData(detections)
         return detections, rectCoordinates
 
-    def carNumberDetector(self, numberOfCam, humanizedOutput, outputFile, filename):
+    def _carNumberDetector(self, numberOfCam, humanizedOutput, outputFile, filename):
         from neural_network.car_number import car_detect
         carNumbers = []
         if humanizedOutput and numberOfCam in [str(1), str(2)]:
@@ -90,19 +89,22 @@ class MainClass(object):
             carNumbers = car_detect(imD)
         return carNumbers
 
-    def dblogging(self, numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumbers):
-        castingCarNumber = None
-        iterator = 0
-        centerDown = self.decart.getCenterOfDownOfRectangle(rectCoordinates)
-        # массив массивов(массив координат центра нижней стороны прямоугольника у найденных объектов вида [[x1,y1],[x2,y2]..[xn,yn]])
-        for i, item in enumerate(humanizedOutput):  # для каждого объекта, найденного на кадре
-            if item == "car" and carNumbers and (carNumbers[iterator] == [] or carNumbers[iterator] == ['']):
-                castingCarNumber = carNumbers[iterator][0]
-                iterator += 1
-            db.writeInfoForObjectInDB(numberOfCam, humanizedOutput[i], dateTime, rectCoordinates[i], centerDown[i],
-                                      castingCarNumber)
+    def _dblogging(self, image: Image):
+        for i, item in enumerate(image.objects):  # для каждого объекта, найденного на кадре
+            frameObject = image.objects[i]
+            try:  # если сработает исключение, то это либо не машина либо номер не определен
+                frameObject.licenseNumber  # тупо проверка наличия
+            except:
+                frameObject.licenseNumber = None
 
-    def requestToServer(self, filename):
+            db.writeInfoForObjectInDB(image.numberOfCam,
+                                      frameObject.type,
+                                      image.fixationDatetime,
+                                      frameObject.coordinates,
+                                      frameObject.centerDownCoordinates,
+                                      frameObject.licenseNumber)
+
+    def _requestToServer(self, filename):
         r = requests.post(self.cfg.pyfrontDevelopmentLink, {"filename": filename})
         if not r.status_code == 200:
             raise ValueError("Server isn't available")
@@ -112,18 +114,18 @@ class MainClass(object):
         numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
 
         if self.cfg.ALGORITHM:
-            detections, humanizedOutput, rectCoordinates = self.maskCnnDetect(inputFile, outputFile)
+            image = self._maskCnnDetect(inputFile, outputFile)
         else:
-            detections, rectCoordinates = self.imageAiDetect(inputFile, outputFile)
+            detections, rectCoordinates = self._imageAiDetect(inputFile, outputFile)
 
         if self.cfg.CAR_NUMBER_DETECTOR:
-            carNumber = self.carNumberDetector(numberOfCam, humanizedOutput, outputFile, filename)
+            carNumber = self._carNumberDetector(numberOfCam, humanizedOutput, outputFile, filename)
 
         if self.cfg.loggingInDB:
-            self.dblogging(numberOfCam, humanizedOutput, dateTime, rectCoordinates, carNumber)
+            self._dblogging(image)
 
         if self.cfg.sendRequestToServer:
-            self.requestToServer(filename)
+            self._requestToServer(filename)
 
         dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])
-        return detections
+        return image

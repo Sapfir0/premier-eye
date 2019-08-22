@@ -2,22 +2,49 @@ import wget
 import os
 from colorama import Fore
 import requests
+import helpers.console as console
+
+
+def exit(status):
+    print("Exiting")
+    exit(status)
+
+
+def traffic(exiting=False):
+    if console.confirm("Do you want to start downloading? May be dangerous for traffic"):
+        return True
+    if exiting:  # мы сюда дойдем только если юзер сказал нет
+        exit(-1)
+    return False
+
+
+def dangerousTraffic(measuredFunction):
+    def wrapper(*args, **kwargs):
+        traffic(exiting=True)
+        res = measuredFunction(*args, **kwargs)
+        return res
+    return wrapper
 
 
 # юзабилити функции
-def downloadAndMove(downloadLink, destinationDir='.'):
-    file = wget.download(downloadLink)
-    os.rename(os.path.join(os.getcwd(), file), destinationDir)
-    return file
+def downloadAndMove(downloadLink: str, destinationDir='.', aLotOfTraffic=False):
+    import urllib
+    if aLotOfTraffic:
+        traffic(exiting=True)  # если юзер не захочет скачивать, приложение завершится
+
+    if destinationDir != "." and os.path.exists(destinationDir):
+        print("File {} is exists".format(destinationDir))
+
+    try:
+        file = wget.download(downloadLink)
+        os.rename(os.path.join(os.getcwd(), file), destinationDir)
+        return file
+    except urllib.error.URLError:
+        print("Url {} isnt available or you not connected to network".format(downloadLink))
+        exit(-1)  # спорное решение
 
 
-def checkExist(mustExistedFile, link):
-    if not os.path.exists(mustExistedFile):
-        print(Fore.RED + f"{mustExistedFile} isn't exist. Downloading...")
-        downloadAndMove(link, mustExistedFile)
-
-
-def downloadSamples(imagesPath):
+def downloadSamples(imagesPath: str):
     if not os.listdir(imagesPath):
         print(Fore.YELLOW + f"{imagesPath} is empty")
         print(Fore.YELLOW + "Downloading sample")
@@ -29,7 +56,8 @@ def downloadSamples(imagesPath):
             downloadAndMove(samples[i], os.path.join(imagesPath, realNames[i]))
 
 
-def downloadNomeroffNet(NOMEROFF_NET_DIR):
+@dangerousTraffic
+def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
     from git import Repo
     if not os.path.exists(NOMEROFF_NET_DIR):
         Repo.clone_from("https://github.com/ria-com/nomeroff-net.git", NOMEROFF_NET_DIR)
@@ -38,9 +66,9 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR):
 
 def checkAvailabilityOfServer(env):
     if env == "development" or "dev":
-        r = requests.get(self.pyfrontDevelopmentLink)
+        r = requests.get(cfg.pyfrontDevelopmentLink)
     elif env == "production" or "prod":
-        r = requests.get(self.pyfrontProductionLink)
+        r = requests.get(cfg.pyfrontProductionLink)
     else:
         raise BaseException("Environment not defined")
     if not r.status_code == 200:

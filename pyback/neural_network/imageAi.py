@@ -1,7 +1,6 @@
 import os
 from imageai.Detection import ObjectDetection
 
-from neural_network.neural_network import Neural_network
 import neural_network.modules.feature_matching as sift
 import helpers.timeChecker as timeChecker
 from settings import Settings
@@ -9,7 +8,7 @@ from settings import Settings
 cfg = Settings()
 
 
-class ImageAI(Neural_network):
+class ImageAI(object):
     detector = None
     customObjects = None
 

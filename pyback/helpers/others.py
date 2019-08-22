@@ -60,10 +60,10 @@ def parseImageAiData(rectCoordinates: list) -> list:
 
 
 def isImage(filepath):
-    file_extension = os.path.splitext(filepath)[1] # не уверен что срабоатет всегда
     allowed_extension = [".jpg", ".png", ".jpeg"]
-    if file_extension in allowed_extension:
-        return True
+    for ext in allowed_extension:
+        if filepath.endswith(ext):
+            return True
     return False
 
 

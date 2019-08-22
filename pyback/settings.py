@@ -2,7 +2,6 @@ import os
 from os.path import join
 import mrcnn.utils
 import colorama
-from colorama import Fore, Back, Style  # для цветного консольного вывода 
 import mrcnn.config
 import helpers.others as others
 from dotenv import load_dotenv
@@ -15,10 +14,10 @@ class Settings(object):
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
     ALGORITHM = 1
-    loggingInDB = True
+    loggingInDB = False
     checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
-    CAR_NUMBER_DETECTOR = True  # детекировать номер машины(только для камер №1, №2)
+    CAR_NUMBER_DETECTOR = False  # детекировать номер машины(только для камер №1, №2)
 
     sendRequestToServer = False
     pyfrontProductionLink = "https://premier-eye.herokuapp.com"
@@ -30,7 +29,7 @@ class Settings(object):
     DATA_PATH = join(APP_PATH, "data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
     OUTPUT_DIR = join(APP_PATH, "output")
-    IMAGE_DIR = join(DATA_PATH, "1_2")
+    IMAGE_DIR = join(DATA_PATH, "1_2")  # важная настройка
     TEST_IMAGE_DIR = join(DATA_PATH, "test_images")
 
     TABLE_NAME = join(OUTPUT_DIR, "datas.csv")  # табличка
@@ -41,9 +40,9 @@ class Settings(object):
     CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
     OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
     # car detector
-    NOMEROFF_NET_DIR = os.path.join(APP_PATH, 'nomeroff-net')
-    MASK_RCNN_DIR = os.path.join(NOMEROFF_NET_DIR, 'Mask_RCNN')
-    MASK_RCNN_LOG_DIR = os.path.join(NOMEROFF_NET_DIR, 'logs')
+    NOMEROFF_NET_DIR = join(APP_PATH, 'nomeroff-net')
+    MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, 'Mask_RCNN')
+    MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, 'logs')
 
     # Mask cnn advanced
     # Configuration that will be used by the Mask-RCNN library
@@ -77,22 +76,20 @@ class Settings(object):
         enivroment = os.environ.get("enivroment")
         #others.checkAvailabilityOfServer(enivroment)
 
-        must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR]
+        must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN, self.OUTPUT_DIR_IMAGE_AI]
         dirs.createDirsFromList(must_exist_dirs)
-
         others.checkVersion(self.packages)
-
+        # а ниже мы сможем увидеть 3 разлчиных способа указзания большого трафика
         if self.CAR_NUMBER_DETECTOR:
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
         if self.ALGORITHM:
-            dirs.createDir(self.OUTPUT_DIR_MASKCNN)
             if not os.path.exists(self.DATASET_DIR):
+                net.traffic(exiting=True)
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-            net.checkExist(self.CLASSES_FILE, self.classNamesLink)
+            net.downloadAndMove(self.classNamesLink, self.CLASSES_FILE)
         else:
-            dirs.createDir(self.OUTPUT_DIR_IMAGE_AI)
-            net.checkExist(self.DATASET_DIR_IMAGE_AI, self.imageAInetworkLink)
+            net.downloadAndMove(self.imageAInetworkLink, self.DATASET_DIR_IMAGE_AI, aLotOfTraffic=True)
 
         net.downloadSamples(self.IMAGE_DIR)
 
