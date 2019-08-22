@@ -18,7 +18,7 @@ class Objects(Base):
     id = Column(Integer, primary_key=True, unique=True)
     numberOfCam = Column(Integer),
     typeOfObject = Column(String),
-    fixationDatetime = Column(DateTime)  # unque добавить
+    fixationDatetime = Column(DateTime)  # unique добавить
     LDx = Column(Integer)  # Left Down
     LDy = Column(Integer)
     RUx = Column(Integer)  # Right Up
@@ -59,13 +59,15 @@ class Objects(Base):
         for i in session.query(Objects):
             print(i)
 
+
 def writeInfoForObjectInDB(numberOfCam, typeOfObject, fixationDatetime, rectCoordinates, centerDown, carNumber):
     LUy, LUx, RDy, RDx = rectCoordinates
     CDx, CDy = centerDown
     objN = Objects(numberOfCam, typeOfObject, fixationDatetime, int(LUx), int(LUy), int(RDx), int(RDy), int(CDx), int(CDy), carNumber)
-    #print(objN)
     session.add(objN)
     session.commit()
-    session.flush() # можно один раз добавить
+    session.flush()  # можно один раз добавить
 
+
+cfg()  # TODO мне не нравится что инстанс происходит здесь
 Objects.init_db()

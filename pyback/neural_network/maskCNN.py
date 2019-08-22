@@ -62,7 +62,7 @@ class Mask(object):
         objectsFromCurrentFrame = img.extractObjects(
             binaryImage, outputImageDirectory=outputPath, filename=filename)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        #self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame) ##################################################
+        # self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame) # TODO
 
         img.write(outputPath, binaryImage)
         return img
@@ -159,7 +159,7 @@ class Mask(object):
         rgb_image = bgr_image[:, :, ::-1]
         return rgb_image.astype(np.uint8)
 
-    def detectByMaskCNN(self, image: np.ndarray) -> Tuple[dict, np.ndarray]:  # и еще один, но чет не получается указать два возвращаемых аргумента
+    def detectByMaskCNN(self, image: np.ndarray):  # и еще один, но чет не получается указать два возвращаемых аргумента
         """
             input: image - the result of cv2.imread (<filename>)
             output: r - dictionary of objects found (r ['masks'], r ['rois'], r ['class_ids'], r ['scores']), detailed help somewhere else
@@ -170,6 +170,8 @@ class Mask(object):
         return r, rgb_image
 
     def _humanizeTypes(self, r: dict) -> dict:
-        for i, item in enumerate(r['class_ids']):
-            r['class_ids'][i] = self.CLASS_NAMES[r['class_ids']]
+        typesList = []
+        for i, obj in enumerate(r['class_ids']):
+            typesList.append(self.CLASS_NAMES[r['class_ids'][i]])
+        r.update({'class_ids': typesList})
         return r
