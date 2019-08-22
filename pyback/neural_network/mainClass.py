@@ -23,7 +23,7 @@ decart = DecartCoordinates()
 currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
 
-def predicated( numberOfCam: int, filenames: list, processedFrames: dict):
+def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
     """
         Сакральный алгоритм:
 
@@ -57,7 +57,7 @@ def predicated( numberOfCam: int, filenames: list, processedFrames: dict):
             if processedFrames[numberOfCam] == filenames:
                 import time
                 print(f"Thread {numberOfCam} sleeping")
-                #time.sleep(2.5)
+                time.sleep(2.5)
             continue  # если файлы еще есть, то переходим к следующему
 
         detections = detectObjects(filename)
@@ -66,25 +66,30 @@ def predicated( numberOfCam: int, filenames: list, processedFrames: dict):
         # будет стирать содержимое файла каждый кадр
         return detections
 
-def _maskCnnDetect( inputFile, outputFile):
+
+def _maskCnnDetect(inputFile, outputFile):
     image = mask.pipeline(inputFile, outputFile)
     return image
 
-def _imageAiDetect( inputFile, outputFile):
+
+def _imageAiDetect(inputFile, outputFile):
     detections = imageAI.pipeline(inputFile, outputFile)
     rectCoordinates = others.parseImageAiData(detections)
     return detections, rectCoordinates
 
-def _carNumberDetector( numberOfCam, humanizedOutput, outputFile, filename):
+def _carNumberDetector(filename, image: Image):
     from neural_network.car_number import car_detect
+    from neural_network.classes.Car import Car
     carNumbers = []
-    if humanizedOutput and numberOfCam in [str(1), str(2)]:
-        # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
-        imD = os.path.join(os.path.split(outputFile)[0], "objectsOn" + filename.split(".")[0])
-        carNumbers = car_detect(imD)
+    for i, item in enumerate(image.objects):
+        if image.numberOfCam in [str(1), str(2)] and isinstance(image.objects[i], Car):
+            # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
+            imD = os.path.join(os.path.split(image.outputFile)[0], "objectsOn" + filename.split(".")[0])
+            carNumbers = car_detect(imD)
     return carNumbers
 
-def _dblogging( image: Image):
+
+def _dblogging(image: Image):
     for i, item in enumerate(image.objects):  # для каждого объекта, найденного на кадре
         frameObject = image.objects[i]
         try:  # если сработает исключение, то это либо не машина либо номер не определен
@@ -99,22 +104,24 @@ def _dblogging( image: Image):
                                   frameObject.centerDownCoordinates,
                                   frameObject.licenseNumber)
 
+
 def _requestToServer( filename):
     r = requests.post(cfg.pyfrontDevelopmentLink, {"filename": filename})
     if not r.status_code == 200:
         raise ValueError("Server isn't available")
 
-def detectObjects( filename):
+
+def detectObjects(filename):
     inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
     numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
 
     if cfg.ALGORITHM:
         image = _maskCnnDetect(inputFile, outputFile)
     else:
-        detections, rectCoordinates = _imageAiDetect(inputFile, outputFile)
+        image = _imageAiDetect(inputFile, outputFile)
 
     if cfg.CAR_NUMBER_DETECTOR:
-        carNumber = _carNumberDetector(numberOfCam, humanizedOutput, outputFile, filename)
+        carNumber = _carNumberDetector(filename, image)
 
     if cfg.loggingInDB:
         _dblogging(image)
