@@ -27,6 +27,9 @@ class Image(object):
         if objectsOnFrame:
             self.saveDetections(objectsOnFrame)
 
+    def __del__(self):
+        pass
+
     def __repr__(self):
         return "{} with objects: {}".format(self.inputPath, self.objects)
 
@@ -46,6 +49,7 @@ class Image(object):
             cv2.imwrite(self.outputPath, image)
 
     def saveDetections(self, detections):
+        self.objects = []
         for obj in detections:  # {'coordinates': array([526, 341, 719, 440], dtype=int32), 'type': 'person', 'scores': 0.99883527}
             if obj['type'] == "car":
                 self.objects.append(Car(obj))

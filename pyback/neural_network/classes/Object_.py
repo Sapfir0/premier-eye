@@ -17,4 +17,4 @@ class Object_(ABC):
         self.centerDownCoordinates = decart.getCenterOfDown(self.coordinates)
 
     def __repr__(self):
-        return "id = {}, type: {}".format(self.id, self.type)
+        return "type: {}".format(self.type)

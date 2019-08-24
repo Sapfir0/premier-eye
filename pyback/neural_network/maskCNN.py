@@ -68,7 +68,7 @@ class Mask(object):
         img.saveDetections(detections)  # detections тоже
 
         objectsFromCurrentFrame = img.extractObjects(binaryImage, outputImageDirectory=outputPath, filename=filename)
-
+        print(img)
         signedImg = self._visualize_detections(img)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         # if self.hasOldFrame:
@@ -76,7 +76,8 @@ class Mask(object):
         # else:
         #     self.hasOldFrame = True
 
-        img.write(outputPath, signedImg )
+        img.write(outputPath, signedImg)
+
         return img
 
     def _visualize_detections(self, image: Image) -> np.ndarray:
@@ -84,18 +85,14 @@ class Mask(object):
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
         """
-        # Create a new solid-black image the same size as the original image
-        # masked_image = np.zeros(image.shape)
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
-        availableObjects = ['car', 'person', 'truck']
-
-        # Loop over each detected person
+        print("Начало визуализации")
         for i, currentObject in enumerate(image.objects):
-            if currentObject.type not in availableObjects:
+            #print(image.objects)
+            if currentObject.type not in cfg.AVAILABLE_OBJECTS:
                 continue
 
-            # Get the bounding box of the current person
             y1, x1, y2, x2 = currentObject.coordinates
 
             lineInClassName = self.CLASS_NAMES.index(currentObject.type)
