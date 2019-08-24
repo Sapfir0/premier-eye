@@ -65,11 +65,6 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
         # будет стирать содержимое файла каждый кадр
 
 
-def maskCnnDetect(inputFile, outputFile):
-    image = mask.pipeline(inputFile, outputFile)
-    return image
-
-
 def _imageAiDetect(inputFile, outputFile):
     detections = imageAI.pipeline(inputFile, outputFile)
     rectCoordinates = others.parseImageAiData(detections)
@@ -82,7 +77,7 @@ def carNumberDetector(filename, image: Image):
     for i, item in enumerate(image.objects):
         if image.numberOfCam in [str(1), str(2)] and isinstance(image.objects[i], Car):
             # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
-            imD = os.path.join(os.path.split(image.outputFile)[0], "objectsOn" + filename.split(".")[0])
+            imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
             carNumbers = car_detect(imD)
     return carNumbers
 
@@ -90,7 +85,7 @@ def carNumberDetector(filename, image: Image):
 def dblogging(image: Image):
     for i, item in enumerate(image.objects):  # для каждого объекта, найденного на кадре
         frameObject = image.objects[i]
-        try:  # если сработает исключение, то это либо не машина либо номер не определен
+        try:  # TODO исправить. если сработает исключение, то это либо не машина либо номер не определен
             frameObject.licenseNumber  # тупо проверка наличия
         except:
             frameObject.licenseNumber = None
@@ -113,7 +108,7 @@ def detectObjects(filename):
     inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
 
     if cfg.ALGORITHM:
-        image = maskCnnDetect(inputFile, outputFile)
+        image = mask.pipeline(inputFile, outputFile)
 
     if cfg.CAR_NUMBER_DETECTOR:
         image.licenseNumber = carNumberDetector(filename, image)

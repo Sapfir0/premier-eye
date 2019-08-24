@@ -18,7 +18,7 @@
 
 Запустить тесты алгоритмов
 
-    python3 -m unittest tests/utest.py 
+    python3 -m unittest tests/detections.py 
 
 
 ## Алгоритмы

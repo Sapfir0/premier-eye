@@ -72,8 +72,8 @@ def gitClone(link, directory):
 
 
 def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
-    trafficControl(exiting=True)
     if not os.path.exists(NOMEROFF_NET_DIR):
+        trafficControl(exiting=True)
         gitClone("https://github.com/ria-com/nomeroff-net.git", NOMEROFF_NET_DIR)
         gitClone("https://github.com/matterport/Mask_RCNN.git", os.path.join(NOMEROFF_NET_DIR, "Mask_RCNN"))
 

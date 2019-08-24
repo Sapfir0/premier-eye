@@ -7,11 +7,9 @@ import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 import helpers.directory as dirs
 from settings import Settings as cfg
-sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
-import mrcnn.visualize
-from mrcnn.model import MaskRCNN
-
 from neural_network.classes.Image import Image
+sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
+from mrcnn.model import MaskRCNN
 
 
 def _parseR(r):
@@ -33,7 +31,6 @@ class Mask(object):
     """
     objectOnFrames = 0  # сколько кадров мы видели объект(защитит от ложных срабатываний)
     SAVE_COLORMAP = False
-
     CLASS_NAMES = None
     COLORS = None
     objectsFromPreviousFrame = None  # objects in the previous frame
@@ -62,9 +59,7 @@ class Mask(object):
         img = Image(inputPath, outputPath=outputPath)
         binaryImage = img.read()
 
-        r = self._detectByMaskCNN(img)
-        r = self._humanizeTypes(r)
-        detections = _parseR(r)  # с этого момента r уже не нужен
+        detections = _parseR(self._humanizeTypes(self._detectByMaskCNN(img)))
         img.addDetections(detections)  # detections тоже
 
         objectsFromCurrentFrame = img.extractObjects(binaryImage, outputImageDirectory=outputPath, filename=filename)
@@ -76,7 +71,6 @@ class Mask(object):
         #     self.hasOldFrame = True
 
         img.write(outputPath, signedImg)
-
         return img
 
     def _visualize_detections(self, image: Image) -> np.ndarray:
