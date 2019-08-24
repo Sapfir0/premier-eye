@@ -69,5 +69,8 @@ def writeInfoForObjectInDB(numberOfCam, typeOfObject, fixationDatetime, rectCoor
     session.flush()  # можно один раз добавить
 
 
-cfg()  # TODO мне не нравится что инстанс происходит здесь
+import os  # TODO очень не нравится этот фрагмент
+if not os.path.exists(cfg.DATA_PATH):
+    os.mkdir(cfg.DATA_PATH)
+
 Objects.init_db()

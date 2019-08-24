@@ -18,6 +18,7 @@ class Settings(object):
     checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR = True  # детекировать номер машины(только для камер №1, №2)
+    AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
 
     sendRequestToServer = False
     pyfrontProductionLink = "https://premier-eye.herokuapp.com"
