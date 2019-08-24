@@ -34,6 +34,11 @@ class Image(object):
         binaryImage = cv2.imread(self.inputPath)
         return binaryImage
 
+    def getRGBImage(self):
+        binaryImage = self.read()
+        rgbImage = binaryImage[:, :, ::-1]
+        return rgbImage
+
     def write(self, outputPath, image):
         if outputPath:
             cv2.imwrite(outputPath, image)

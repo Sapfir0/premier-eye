@@ -62,74 +62,67 @@ class Mask(object):
         img = Image(inputPath, outputPath=outputPath)
         binaryImage = img.read()
 
-        r, rgb_image = self._detectByMaskCNN(binaryImage)
+        r = self._detectByMaskCNN(img)
         r = self._humanizeTypes(r)
         detections = _parseR(r)  # с этого момента r уже не нужен
         img.saveDetections(detections)  # detections тоже
 
         objectsFromCurrentFrame = img.extractObjects(binaryImage, outputImageDirectory=outputPath, filename=filename)
+
+        signedImg = self._visualize_detections(img)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        if self.hasOldFrame:
-            sift.checkNewFrame(img, rgb_image, objectsFromCurrentFrame, self.hasOldFrame)  # TODO
-        else:
-            self.hasOldFrame = True
+        # if self.hasOldFrame:
+        #     sift.checkNewFrame(img, rgb_image, objectsFromCurrentFrame, self.hasOldFrame)  # TODO
+        # else:
+        #     self.hasOldFrame = True
 
-
-        img.write(outputPath, binaryImage)
+        img.write(outputPath, signedImg )
         return img
 
-    def _visualize_detections(self, img: Image) -> np.ndarray:
+    def _visualize_detections(self, image: Image) -> np.ndarray:
         """
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
         """
         # Create a new solid-black image the same size as the original image
         # masked_image = np.zeros(image.shape)
-        image = img.read()
-        bgr_image = image[:, :, ::-1]
+        bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
         availableObjects = ['car', 'person', 'truck']
 
         # Loop over each detected person
-        for i in enumerate(image.objects[i].coordinates):
-            # for i in range(boxes.shape[0]):
-            currentObject = image.objects[i]
-            classID = currentObject.type
-            if classID > len(self.CLASS_NAMES):
-                raise Exception("Undefined classId - {}".format(classID))
-
-            if classID not in availableObjects:
+        for i, currentObject in enumerate(image.objects):
+            if currentObject.type not in availableObjects:
                 continue
 
             # Get the bounding box of the current person
             y1, x1, y2, x2 = currentObject.coordinates
 
-            mask = currentObject.masks[:, :, i]
-            image = mrcnn.visualize.apply_mask(image, mask, color, alpha=0.6)  # рисование маски
-
-            label = self.CLASS_NAMES[classID]
-            color = [int(c) for c in np.array(self.COLORS[classID]) * 255]  # ух круто
-            text = "{}: {:.1f} {}".format(label, currentObject.scores * 100, i)
+            lineInClassName = self.CLASS_NAMES.index(currentObject.type)
+            color = [int(c) for c in np.array(self.COLORS[lineInClassName]) * 255]  # ух круто
+            text = "{}: {:.1f} {}".format(currentObject.type, currentObject.scores * 100, i)
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
             cv2.putText(bgr_image, text, (x1, y1 - 20), font, 0.8, color, 2)
 
-        rgb_image = bgr_image[:, :, ::-1]
-        return rgb_image.astype(np.uint8)
+        return bgr_image.astype(np.uint8)
 
-    def _detectByMaskCNN(self, image: np.ndarray):
+    def _detectByMaskCNN(self, image: Image):
         """
             input: image - the result of cv2.imread (<filename>)
             output: r - dictionary of objects found (r ['masks'], r ['rois'], r ['class_ids'], r ['scores']), detailed help somewhere else
         """
-        rgb_image = image[:, :, ::-1]
-        r = self.model.detect([rgb_image], verbose=1)[0]  # тут вся магия
+        rgbImage = image.getRGBImage()
+        r = self.model.detect([rgbImage], verbose=1)[0]  # тут вся магия
         # проверить что будет если сюда подать НЕ ОДНО ИЗОБРАЖЕНИЕ, А ПОТОК
-        return r, rgb_image
+        return r
 
     def _humanizeTypes(self, r: dict) -> dict:
         typesList = []
         for i, obj in enumerate(r['class_ids']):
+            if r['class_ids'][i] > len(self.CLASS_NAMES):
+                raise Exception("Undefined classId - {}".format(r['class_ids'][i]))
+
             typesList.append(self.CLASS_NAMES[r['class_ids'][i]])
         r.update({'class_ids': typesList})
         return r

@@ -7,6 +7,7 @@ from sys import exit
 
 allowDownload = False
 
+
 def myExit(status):
     print("Exiting")
     exit(status)
@@ -27,11 +28,13 @@ def trafficControl(downloadingFile="", exiting=False):
 
 def downloadAndMove(downloadLink: str, destinationDir='.', aLotOfTraffic=False):
     import urllib
+
+    if destinationDir != '.' and os.path.exists(destinationDir):
+        print("File {} is exists".format(destinationDir))
+        return 0
+
     if aLotOfTraffic:
         trafficControl(exiting=True)  # если юзер не захочет скачивать, приложение завершится
-
-    if destinationDir != "." and os.path.exists(destinationDir):
-        print("File {} is exists".format(destinationDir))
 
     try:
         file = wget.download(downloadLink)

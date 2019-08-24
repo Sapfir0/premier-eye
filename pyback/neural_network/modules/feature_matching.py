@@ -2,6 +2,7 @@
 
 import cv2
 from settings import Settings as cfg
+import numpy as np
 
 lastObjectId = 0
 def setIdToObject(objectId, i):
@@ -21,15 +22,16 @@ def setIdToObject(objectId, i):
     return id
 
 
-def checkNewFrame(r, rgb_image, objectsFromCurrentFrame, hasOldFrames=False):
+def checkNewFrame(rgb_image, objectsFromCurrentFrame, objectsFromPreviousFrame, hasOldFrames=False):
     """
+    :param hasOldFrames:
     :param r:
     :param rgb_image:
     :param objectsFromCurrentFrame: матрицы объектов с текущего кадра
     :return:
     """
     if not hasOldFrames:
-        foundedDifferentObjects = uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
+        foundedUniqueObjects = uniqueObjects(objectsFromPreviousFrame, objectsFromCurrentFrame, r)
         self._visualize_detections(rgb_image, image)
     else:
         self._visualize_detections(rgb_image, image)
