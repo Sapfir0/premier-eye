@@ -1,7 +1,6 @@
 import os
 import requests
 
-import helpers.dateHelper as dh
 import services.database_controller as db
 import services.file_controller as file_controller
 import helpers.others as others
@@ -60,14 +59,13 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
                 time.sleep(2.5)
             continue  # если файлы еще есть, то переходим к следующему
 
-        detections = detectObjects(filename)
+        detectObjects(filename)
         processedFrames[numberOfCam].append(filename)
         file_controller.writeInFile(cfg.DATE_FILE, str(processedFrames))
         # будет стирать содержимое файла каждый кадр
-        return detections
 
 
-def _maskCnnDetect(inputFile, outputFile):
+def maskCnnDetect(inputFile, outputFile):
     image = mask.pipeline(inputFile, outputFile)
     return image
 
@@ -77,7 +75,7 @@ def _imageAiDetect(inputFile, outputFile):
     rectCoordinates = others.parseImageAiData(detections)
     return detections, rectCoordinates
 
-def _carNumberDetector(filename, image: Image):
+def carNumberDetector(filename, image: Image):
     from neural_network.car_number import car_detect
     from neural_network.classes.Car import Car
     carNumbers = []
@@ -89,7 +87,7 @@ def _carNumberDetector(filename, image: Image):
     return carNumbers
 
 
-def _dblogging(image: Image):
+def dblogging(image: Image):
     for i, item in enumerate(image.objects):  # для каждого объекта, найденного на кадре
         frameObject = image.objects[i]
         try:  # если сработает исключение, то это либо не машина либо номер не определен
@@ -105,7 +103,7 @@ def _dblogging(image: Image):
                                   frameObject.licenseNumber)
 
 
-def _requestToServer( filename):
+def requestToServer(filename):
     r = requests.post(cfg.pyfrontDevelopmentLink, {"filename": filename})
     if not r.status_code == 200:
         raise ValueError("Server isn't available")
@@ -113,21 +111,18 @@ def _requestToServer( filename):
 
 def detectObjects(filename):
     inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
-    numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
 
     if cfg.ALGORITHM:
-        image = _maskCnnDetect(inputFile, outputFile)
-    else:
-        image = _imageAiDetect(inputFile, outputFile)
+        image = maskCnnDetect(inputFile, outputFile)
 
     if cfg.CAR_NUMBER_DETECTOR:
-        carNumber = _carNumberDetector(filename, image)
+        image.licenseNumber = carNumberDetector(filename, image)
 
     if cfg.loggingInDB:
-        _dblogging(image)
+        dblogging(image)
 
     if cfg.sendRequestToServer:
-        _requestToServer(filename)
+        requestToServer(filename)
 
-    dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])
+    dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image

@@ -2,8 +2,8 @@ import datetime
 import re
 import os
 
+
 def parseFilename(filename: str, getNumberOfCamera=False, getDate=True):
-    numberOfCam, date = 0, datetime
     result = re.findall(r'\d_\d{14}\..+', filename)
     if not result:
         raise ValueError("Wrong date in filename")

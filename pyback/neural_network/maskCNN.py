@@ -65,10 +65,9 @@ class Mask(object):
         r = self._detectByMaskCNN(img)
         r = self._humanizeTypes(r)
         detections = _parseR(r)  # с этого момента r уже не нужен
-        img.saveDetections(detections)  # detections тоже
+        img.addDetections(detections)  # detections тоже
 
         objectsFromCurrentFrame = img.extractObjects(binaryImage, outputImageDirectory=outputPath, filename=filename)
-        print(img)
         signedImg = self._visualize_detections(img)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
         # if self.hasOldFrame:
@@ -87,9 +86,7 @@ class Mask(object):
         """
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
-        print("Начало визуализации")
         for i, currentObject in enumerate(image.objects):
-            #print(image.objects)
             if currentObject.type not in cfg.AVAILABLE_OBJECTS:
                 continue
 

@@ -20,18 +20,23 @@ class Image(object):
         return object.__new__(cls)
 
     def __init__(self, inputPath: str, objectsOnFrame=None, outputPath=None):
+        import helpers.dateHelper as dh
+        import os
+        filename = os.path.split(inputPath)[1]
+        self.fixationDatetime, self.numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
+
         self.inputPath = inputPath
         if outputPath:
             self.outputPath = outputPath
 
         if objectsOnFrame:
-            self.saveDetections(objectsOnFrame)
+            self.addDetections(objectsOnFrame)
 
     def __del__(self):
         pass
 
     def __repr__(self):
-        return "{} with objects: {}".format(self.inputPath, self.objects)
+        return "{} {} {} with objects: {}".format(self.inputPath, self.numberOfCam, self.fixationDatetime, self.objects)
 
     def read(self):
         binaryImage = cv2.imread(self.inputPath)
@@ -48,7 +53,7 @@ class Image(object):
         else:
             cv2.imwrite(self.outputPath, image)
 
-    def saveDetections(self, detections):
+    def addDetections(self, detections):
         self.objects = []
         for obj in detections:  # {'coordinates': array([526, 341, 719, 440], dtype=int32), 'type': 'person', 'scores': 0.99883527}
             if obj['type'] == "car":
@@ -81,3 +86,19 @@ class Image(object):
 
                 cv2.imwrite(os.path.join(outputDirPath, str(pathToObjectImage)), cropped)
         return objs
+
+    def saveImageByPlot(self, outputPath, image):
+        """
+        plot image saving
+        """
+        import matplotlib.pyplot as plt
+        fig = plt.figure(frameon=False)
+        ax = plt.Axes(fig, [0., 0., 1., 1.])
+        ax.set_axis_off()
+        fig.add_axes(ax)
+        ax.imshow(image)
+
+        if outputPath:
+            fig.savefig(outputPath)
+        else:
+            fig.savefig(self.outputPath)

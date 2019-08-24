@@ -1,10 +1,13 @@
 # https://docs.opencv.org/3.0-beta/doc/py_tutorials/py_feature2d/py_feature_homography/py_feature_homography.html#py-feature-homography
 
 import cv2
+import os
 from settings import Settings as cfg
 import numpy as np
 
 lastObjectId = 0
+
+
 def setIdToObject(objectId, i):
     print(objectId)
     if not isinstance(objectId, list):
@@ -53,7 +56,7 @@ def uniqueObjects(objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame:
     objectId = 0
     for previousObjects in objectsFromPreviousFrame:
         for currentObjects in objectsFromCurrentFrame:
-            if sift.compareImages(previousObjects, currentObjects):  # то это один объект
+            if compareImages(previousObjects, currentObjects):  # то это один объект
                 obj = {
                     "id": objectId,
                     "type": r['class_ids'][objectId],  # TODO исправить!!!
@@ -65,11 +68,9 @@ def uniqueObjects(objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame:
                 if saveUniqueObjects:
                     img1 = str(objectId) + ".jpg"
                     img2 = str(objectId) + "N" + ".jpg"
-                    cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1),
+                    cv2.imwrite(os.path.join(cfg.OUTPUT_DIR_MASKCNN, img1),
                                 previousObjects)
-
     return foundedUniqueObjects
-
 
 
 def compareImages(img1, img2):
@@ -78,7 +79,6 @@ def compareImages(img1, img2):
         input: 2 compared images
         conclusion: the result of the comparison [True | False]
     """
-    print(img1, "jigjsdjgidsigjsijgsdjgijgsjgjsdijgisjgs", img2)
     # Initiate SIFT detector
     sift = cv2.xfeatures2d.SIFT_create()
 
@@ -90,15 +90,14 @@ def compareImages(img1, img2):
     searchParams = dict(checks=50)
 
     flann = cv2.FlannBasedMatcher(indexParams, searchParams)
-
     matches = flann.knnMatch(des1, des2, k=2)
 
-    counter = 0
+    matches = 0
     for m, n in matches:
         if m.distance < cfg.cencitivity*n.distance:
-            counter += 1
+            matches += 1
 
-    if counter > cfg.MIN_MATCH_COUNT:
+    if matches > cfg.MIN_MATCH_COUNT:
         #print("Enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
         return True
     else:
