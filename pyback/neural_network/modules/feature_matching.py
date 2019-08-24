@@ -21,6 +21,55 @@ def setIdToObject(objectId, i):
     return id
 
 
+def checkNewFrame(r, rgb_image, objectsFromCurrentFrame, hasOldFrames=False):
+    """
+    :param r:
+    :param rgb_image:
+    :param objectsFromCurrentFrame: матрицы объектов с текущего кадра
+    :return:
+    """
+    if not hasOldFrames:
+        foundedDifferentObjects = uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
+        self._visualize_detections(rgb_image, image)
+    else:
+        self._visualize_detections(rgb_image, image)
+        self.counter = 1
+
+    self.objectsFromPreviousFrame = objectsFromCurrentFrame
+
+
+def uniqueObjects(objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame: np.ndarray, r: np.ndarray,
+                   saveUniqueObjects=False) -> np.ndarray:
+    """
+        input:
+            objectsFromPreviousFrame - an array of objects in the previous frame \n
+            objectsFromCurrentFrame - an array of objects on the current frame \n
+            r - information about objects obtained with mask rcnn \n
+        output: returns an array of objects in both frames.
+    """
+    foundedUniqueObjects = []
+    objectId = 0
+    for previousObjects in objectsFromPreviousFrame:
+        for currentObjects in objectsFromCurrentFrame:
+            if sift.compareImages(previousObjects, currentObjects):  # то это один объект
+                obj = {
+                    "id": objectId,
+                    "type": r['class_ids'][objectId],  # TODO исправить!!!
+                    "coordinates": r['rois'][objectId]
+                }
+                objectId += 1
+                # все, матрицы можем выкидывать
+                foundedUniqueObjects.append(obj)
+                if saveUniqueObjects:
+                    img1 = str(objectId) + ".jpg"
+                    img2 = str(objectId) + "N" + ".jpg"
+                    cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1),
+                                previousObjects)
+
+    return foundedUniqueObjects
+
+
+
 def compareImages(img1, img2):
     """
         OpenCV Contrib Modules

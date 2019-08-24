@@ -1,21 +1,30 @@
 import os
 import sys
-from os.path import join
 import cv2
 import numpy as np
-
 import neural_network.modules.feature_matching as sift
 import helpers.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 import helpers.directory as dirs
-
 from settings import Settings as cfg
-
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 import mrcnn.visualize
 from mrcnn.model import MaskRCNN
 
 from neural_network.classes.Image import Image
+
+
+def _parseR(r):
+    detections = []
+    for i in range(0, len(r['rois'])):  # ужасно, поправить
+        obj = {
+            'coordinates': r['rois'][i],
+            'type': r['class_ids'][i],
+            'scores': r['scores'][i],
+            'masks': r['masks'][i]
+        }
+        detections.append(obj)
+    return detections
 
 
 class Mask(object):
@@ -29,7 +38,7 @@ class Mask(object):
     COLORS = None
     objectsFromPreviousFrame = None  # objects in the previous frame
     model = None
-    counter = 0
+    hasOldFrame = False
 
     def __init__(self):
         with open(cfg.CLASSES_FILE, 'rt') as file:
@@ -53,72 +62,21 @@ class Mask(object):
         img = Image(inputPath, outputPath=outputPath)
         binaryImage = img.read()
 
-        r, rgb_image = self.detectByMaskCNN(binaryImage)
-        # r['rois'] - array of lower left and upper right corner of founded objects
+        r, rgb_image = self._detectByMaskCNN(binaryImage)
         r = self._humanizeTypes(r)
-        detections = self.parseR(r)
-        img.saveDetections(detections)
+        detections = _parseR(r)  # с этого момента r уже не нужен
+        img.saveDetections(detections)  # detections тоже
 
-        objectsFromCurrentFrame = img.extractObjects(
-            binaryImage, outputImageDirectory=outputPath, filename=filename)
+        objectsFromCurrentFrame = img.extractObjects(binaryImage, outputImageDirectory=outputPath, filename=filename)
         # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        # self._checkNewFrame(r, rgb_image, objectsFromCurrentFrame) # TODO
+        if self.hasOldFrame:
+            sift.checkNewFrame(img, rgb_image, objectsFromCurrentFrame, self.hasOldFrame)  # TODO
+        else:
+            self.hasOldFrame = True
+
 
         img.write(outputPath, binaryImage)
         return img
-
-    def parseR(self, r):
-        detections = []
-        for i in range(0, len(r['rois'])):  # ужасно, поправить
-            obj = {
-                'coordinates': r['rois'][i],
-                'type': r['class_ids'][i],
-                'scores': r['scores'][i],
-                'masks': r['masks'][i]
-            }
-            detections.append(obj)
-        return detections
-
-    def _checkNewFrame(self, r, rgb_image, objectsFromCurrentFrame):
-        if self.counter:
-            foundedDifferentObjects = self._uniqueObjects(self.objectsFromPreviousFrame, objectsFromCurrentFrame, r)
-            self.visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'],
-                                      objectId=foundedDifferentObjects)
-        else:
-            self._visualize_detections(rgb_image, r['masks'], r['rois'], r['class_ids'], r['scores'])
-            self.counter = 1
-
-        self.objectsFromPreviousFrame = objectsFromCurrentFrame
-
-    def _uniqueObjects(self, objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame: np.ndarray, r: np.ndarray,
-                       saveUniqueObjects=False) -> np.ndarray:
-        """
-            input:
-                objectsFromPreviousFrame - an array of objects in the previous frame \n
-                objectsFromCurrentFrame - an array of objects on the current frame \n
-                r - information about objects obtained with mask rcnn \n
-            output: returns an array of objects in both frames.
-        """
-        foundedUniqueObjects = []
-        objectId = 0
-        for previousObjects in objectsFromPreviousFrame:
-            for currentObjects in objectsFromCurrentFrame:
-                if sift.compareImages(previousObjects, currentObjects):  # то это один объект
-                    obj = {
-                        "id": objectId,
-                        "type": r['class_ids'][objectId],  ################# исправить!!!
-                        "coordinates": r['rois'][objectId]
-                    }
-                    objectId += 1
-                    # все, матрицы можем выкидывать
-                    foundedUniqueObjects.append(obj)
-                    if saveUniqueObjects:
-                        img1 = str(objectId) + ".jpg"
-                        img2 = str(objectId) + "N" + ".jpg"
-                        cv2.imwrite(join(cfg.OUTPUT_DIR_MASKCNN, img1),
-                                    previousObjects)
-
-        return foundedUniqueObjects
 
     def _visualize_detections(self, img: Image) -> np.ndarray:
         """
@@ -159,7 +117,7 @@ class Mask(object):
         rgb_image = bgr_image[:, :, ::-1]
         return rgb_image.astype(np.uint8)
 
-    def detectByMaskCNN(self, image: np.ndarray):  # и еще один, но чет не получается указать два возвращаемых аргумента
+    def _detectByMaskCNN(self, image: np.ndarray):
         """
             input: image - the result of cv2.imread (<filename>)
             output: r - dictionary of objects found (r ['masks'], r ['rois'], r ['class_ids'], r ['scores']), detailed help somewhere else
