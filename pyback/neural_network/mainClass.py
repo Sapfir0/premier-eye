@@ -76,9 +76,9 @@ def carNumberDetector(filename, image: Image):
     carNumbers = []
     for i, item in enumerate(image.objects):
         if image.numberOfCam in [str(1), str(2)] and isinstance(image.objects[i], Car):
-            # если камера №2 или №1 и присутсвует хотя бы один объект на кадре, то запускем тест на номера
             imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
             carNumbers = car_detect(imD)
+            image.objects[i].licenceNumber = carNumbers
     return carNumbers
 
 
@@ -111,7 +111,7 @@ def detectObjects(filename):
         image = mask.pipeline(inputFile, outputFile)
 
     if cfg.CAR_NUMBER_DETECTOR:
-        image.licenseNumber = carNumberDetector(filename, image)
+        carNumberDetector(filename, image)
 
     if cfg.loggingInDB:
         dblogging(image)

@@ -17,17 +17,19 @@ textDetector = TextDetector.get_static_module("ru")()
 textDetector.load("latest")
 
 
-def car_detect(pathToimageDir):
+def car_detect(pathToImageDir):
     carNumbers = []
-    for obj in os.listdir(pathToimageDir):  # смысл этого всего в том, что я не понял как передавать изобраджение матрицей от моего алгоритма к этому, поэтому сохраняю объект картинкой, работаю с ним и удаляю
+    for obj in os.listdir(pathToImageDir):
+        # смысл этого всего в том, что я не понял как передавать изобраджение матрицей от моего алгоритма к этому, поэтому сохраняю объект картинкой, работаю с ним и удаляю
         if "car" in obj:
             name = str(obj).replace(" ", ",")
-            carNumber = detectCarNumber(
-                os.path.join(pathToimageDir, name))  # мы сохраняем файлы с найденными объектами, а потом юзаем их
+            carNumber = detectCarNumber(os.path.join(pathToImageDir, name))
+            # мы сохраняем файлы с найденными объектами, а потом юзаем их
             # решение такое себе, т.к. мы обращаемся к долгой памяти
             carNumbers.append(carNumber)
             print(Fore.LIGHTBLUE_EX + str(carNumber))
     return carNumbers
+
 
 @tm.checkElapsedTimeAndCompair(1.5, 1, 0.5, "Машины")
 def detectCarNumber(imgPath: str) -> str:
