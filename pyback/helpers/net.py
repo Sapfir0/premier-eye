@@ -5,7 +5,7 @@ import requests
 import helpers.console as console
 from sys import exit
 
-allowDownload = False
+allowDownload = True
 
 
 def myExit(status):

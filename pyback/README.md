@@ -11,10 +11,10 @@
 
 * Cpu версия
 
-        docker run sapfir0/premier-eye
+        docker run -ti sapfir0/premier-eye
 * Gpu верия
 
-        docker run sapfir0/premier-eye:gpu
+        docker run -ti sapfir0/premier-eye:gpu
         
         
 Основная команда
