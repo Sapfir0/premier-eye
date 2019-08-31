@@ -9,8 +9,14 @@
 
 Если требуется воспользоваться докер образом этого сервиса напрямую, то юзать 
 
-    docker run sapfir0/premier-eye
+* Cpu версия
 
+        docker run sapfir0/premier-eye
+* Gpu верия
+
+        docker run sapfir0/premier-eye:gpu
+        
+        
 Основная команда
 
     python3 mainImage.py

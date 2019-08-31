@@ -10,5 +10,5 @@ WORKDIR /pyback
 RUN pip3 install Cython \
  && pip3 install -r requirements.txt
 
-#ENTRYPOINT ["python3"]
-#CMD ["mainImage.py" ]
+ENTRYPOINT ["python3"]
+CMD ["mainImage.py" ]

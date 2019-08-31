@@ -1,10 +1,10 @@
 import tracemalloc
 import helpers.others as others
+from settings import Settings
+cfg = Settings()  # единственный(нет) раз, когда мы создаем инстанс
 import neural_network.mainClass as detector
 import helpers.dateHelper as dh
-from settings import Settings as cfg
 from services.memory import getUsedRAM
-from settings import Settings
 
 
 def mainPipeline():
@@ -23,8 +23,8 @@ def mainPipeline():
             getUsedRAM(snapshot)
 
 
-if __name__ == "__main__":
-    cfg = Settings()  # единственный раз, когда мы создаем инстанс
-    tracemalloc.start()
-    mainPipeline()
+tracemalloc.start()
+mainPipeline()
+
+
 

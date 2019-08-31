@@ -86,7 +86,7 @@ class Settings(object):
 
         if self.ALGORITHM:
             if not os.path.exists(self.DATASET_DIR):
-                net.traffic(exiting=True)
+                net.trafficControl(exiting=True)
                 mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
             net.downloadAndMove(self.classNamesLink, self.CLASSES_FILE)
         else:
