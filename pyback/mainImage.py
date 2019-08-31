@@ -1,8 +1,6 @@
 import tracemalloc
 import helpers.others as others
 from settings import Settings
-cfg = Settings()  # единственный(нет) раз, когда мы создаем инстанс
-import neural_network.mainClass as detector
 import helpers.dateHelper as dh
 from services.memory import getUsedRAM
 
@@ -15,6 +13,7 @@ def mainPipeline():
 
     while True:
         imagesForEachCamer = others.checkNewFile(cfg.IMAGE_DIR, cfg.IMAGE_PATH_WHITELIST)
+        import neural_network.mainClass as detector
         for items in imagesForEachCamer.items():
             numberOfCam = items[0]
             filenames = items[1]
@@ -23,6 +22,7 @@ def mainPipeline():
             getUsedRAM(snapshot)
 
 
+cfg = Settings()  # единственный(нет) раз, когда мы создаем инстанс
 tracemalloc.start()
 mainPipeline()
 
