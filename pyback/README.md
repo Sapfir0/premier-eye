@@ -2,27 +2,27 @@
 
 <img src="resources/images/eye.svg" width="100" height="100">
 
-## Сервис для детектирования объектов
+## Service for detecting objects
 
-Требования для использования:
+Requirements for use:
 - Python >= 3.6
 
-Если требуется воспользоваться докер образом этого сервиса напрямую, то юзать 
+If you need to use the docker image of this service directly, then use
 
-* Cpu версия
+* Cpu version
 
-        docker run -ti sapfir0/premier-eye
-* Gpu верия
-
-        docker run -ti sapfir0/premier-eye:gpu
+        docker run -ti sapfir0 / premier-eye
+* Gpu version
         
-        
-Основная команда
+        docker run -ti sapfir0 / premier-eye: gpu
+        
+
+Main command:
 
     python3 mainImage.py
-> Разумеется, на windows команда будет выглядеть как `python mainImage.py`
+> Of course, on windows the command will look like `python mainImage.py`
 
-Запустить тесты алгоритмов
+Run algorithms tests
 
     python3 -m unittest tests/detections.py 
 
@@ -30,8 +30,8 @@
 ## Алгоритмы
 
 * Алгоритм 1. ImageAI
-    * Релизация в neural_network/imageAI
-    * [Пример работы](https://yadi.sk/d/DAujE-9RKx2Tmg)
+    * Implementation in neural_network/imageAI
+    * [Example of work](https://yadi.sk/d/DAujE-9RKx2Tmg)
 * Алгоритм 2. Mask R-CNN
-    * Релизация в neural_network/mask
-    * [Пример работы](https://yadi.sk/d/TgdGg0hRAFxS8g)
+    * Implementation in neural_network/mask
+    * [Example of work](https://yadi.sk/d/TgdGg0hRAFxS8g)

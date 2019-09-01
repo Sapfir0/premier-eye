@@ -4,9 +4,9 @@
 
 ## www
 
-Требования:
+Requirements:
 - flask
 - sqlite3
 - redis
 
-Разумеется, все уже поставлено в докер контейнерах, требования исключительно для нативного запуска
+Of course, everything has already been delivered in docker containers, requirements exclusively for native launch
