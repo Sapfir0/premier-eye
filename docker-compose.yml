@@ -7,8 +7,6 @@ services:
     build:
       dockerfile: Dockerfile
       context: ./pyback
-#    stdin_open: true
-#    tty: true # не работает с ними
     volumes:
       - ./pyback/data:/pyback/data
       - ./pyback/output:/pyback/output

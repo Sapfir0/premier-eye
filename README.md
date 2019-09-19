@@ -16,3 +16,44 @@ Run project
     docker-compose up
 
 Instructions for each of the modules in the corresponding directory
+
+
+
+## Service for detecting objects
+
+Requirements for use:
+- Python >= 3.6
+
+If you need to use the docker image of this service directly, then use
+
+* Cpu version
+
+        docker run -ti sapfir0/premier-eye
+* Gpu version
+        
+        docker run -ti sapfir0/premier-eye:gpu
+        
+
+Main command:
+
+    python3 mainImage.py
+> Of course, on windows the command will look like `python mainImage.py`
+
+Run algorithms tests
+
+    python3 -m unittest tests/detections.py 
+
+
+## Algorithms
+
+* Algorithm 1. Mask R-CNN
+    * Implementation in neural_network/mask
+    * [Example of work](https://yadi.sk/d/TgdGg0hRAFxS8g)
+* Algorithm 2. ImageAI __deprecated__
+    * Implementation in neural_network/imageAI
+    * [Example of work](https://yadi.sk/d/DAujE-9RKx2Tmg)
+    
+    
+# Server side
+
+[link](https://github.com/Sapfir0/web-premier-eye)
