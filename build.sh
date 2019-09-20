@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 
-docker build -t sapfir0/premier-eye:cpu -f pyback/docker/cpu/Dockerfile ./pyback
-docker build -t sapfir0/premier-eye:web -f pyfront/Dockerfile ./pyfront
+git clone https://github.com/Sapfir0/web-premier-eye
+docker-compose up --build

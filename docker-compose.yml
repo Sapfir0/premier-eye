@@ -6,10 +6,10 @@ services:
     image: sapfir0/premier-eye:cpu
     build:
       dockerfile: Dockerfile
-      context: ./pyback
+      context: .
     volumes:
-      - ./pyback/data:/pyback/data
-      - ./pyback/output:/pyback/output
+      - ./data:/data
+      - ./output:/output
 # строчки выше не очень-то и адаптивны
   redis:
     container_name: redis
@@ -22,7 +22,7 @@ services:
     image: sapfir0/premier-eye:web
     build:
       dockerfile: Dockerfile
-      context: ./pyfront
+      context: ./web-premier-eye
     command: flask run
     ports:
     - "5000:5000"
