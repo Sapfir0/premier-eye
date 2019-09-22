@@ -20,7 +20,7 @@ class Settings(object):
     CAR_NUMBER_DETECTOR = False  # детекировать номер машины(только для камер №1, №2)
     AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
 
-    sendRequestToServer = False
+    sendRequestToServer = True
     pyfrontProductionLink = "https://premier-eye.herokuapp.com"
     port = "5000"
     pyfrontDevelopmentLink = f"http://localhost:{port}"

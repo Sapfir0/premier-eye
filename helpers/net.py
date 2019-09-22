@@ -87,3 +87,9 @@ def checkAvailabilityOfServer(env):
         raise BaseException("Environment not defined")
     if not r.status_code == 200:
         raise ValueError("Server isn't available")
+
+
+def uploadImage(serverUrl, imagePath ):
+    serverUrl += "/upload"
+    images = {'file':(imagePath, open(imagePath, 'rb'))}
+    requests.post(serverUrl, files=images)

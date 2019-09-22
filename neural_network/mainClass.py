@@ -1,5 +1,4 @@
 import os
-import requests
 
 import services.database_controller as db
 import services.file_controller as file_controller
@@ -38,15 +37,6 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
             Если стоит опция в настройках checkOldProcessedFrames, то при запуске программы, мы читаем из файла наш словарь,
             соответственно, мы не обработаем файл, который был уже обработан при предыдущих запусках.
             Если у двух словарей идентичны массивы, ассоцирующуюся с одной камерой, то мы спим(спит поток:( )
-        Глава III. То, чего нет.
-            Потоки. В первоначальном задумке потоков(вероятнее всего, демонов) должно быть столько же, сколько и голов.
-            И мы бы проходились по их чахлым телесам в n потоков. Но почему-то тензорфлоу(или керас) не может запуститься в мультитреде.
-            Псевдокод многопоточки:
-                * Добавить к масиву потоков функцию со всем доступными аргументами в словаре №1
-                * После цикла пройтись по этому массиву и начать выполнение всех потоков
-                - коммит #9106cbe
-        Глава IV. лнениеАссин выпохронное.
-            Дает меньший прирост, чем потоки.
     """
     for filename in filenames:
         if numberOfCam not in processedFrames.keys():
@@ -69,6 +59,7 @@ def _imageAiDetect(inputFile, outputFile):
     detections = imageAI.pipeline(inputFile, outputFile)
     rectCoordinates = others.parseImageAiData(detections)
     return detections, rectCoordinates
+
 
 def carNumberDetector(filename, image: Image):
     from neural_network.car_number import car_detect
@@ -98,10 +89,9 @@ def dblogging(image: Image):
                                   frameObject.licenseNumber)
 
 
-def requestToServer(filename):
-    r = requests.post(cfg.pyfrontDevelopmentLink, {"filename": filename})
-    if not r.status_code == 200:
-        raise ValueError("Server isn't available")
+def requestToServer(imagePath):
+    from helpers.net import uploadImage
+    uploadImage(cfg.pyfrontDevelopmentLink, imagePath)
 
 
 def detectObjects(filename):
@@ -117,7 +107,7 @@ def detectObjects(filename):
         dblogging(image)
 
     if cfg.sendRequestToServer:
-        requestToServer(filename)
+        requestToServer(outputFile)
 
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image
