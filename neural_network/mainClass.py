@@ -91,7 +91,9 @@ def dblogging(image: Image):
 
 def requestToServer(imagePath):
     from helpers.net import uploadImage
-    uploadImage(cfg.pyfrontDevelopmentLink, imagePath)
+    with open(cfg.DATE_FILE) as f:
+        date = f.readlines()
+    uploadImage(cfg.pyfrontDevelopmentLink, imagePath, date)
 
 
 def detectObjects(filename):

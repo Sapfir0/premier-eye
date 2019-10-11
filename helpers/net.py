@@ -58,10 +58,6 @@ def downloadSamples(imagesPath: str):
 
 
 def gitClone(link, directory):
-    """
-    :param directory:
-    :param link:
-    """
     import git
 
     class Progress(git.remote.RemoteProgress):
@@ -78,18 +74,11 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
         gitClone("https://github.com/matterport/Mask_RCNN.git", os.path.join(NOMEROFF_NET_DIR, "Mask_RCNN"))
 
 
-def checkAvailabilityOfServer(env):
-    if env == "development" or "dev":
-        r = requests.get(cfg.pyfrontDevelopmentLink)
-    elif env == "production" or "prod":
-        r = requests.get(cfg.pyfrontProductionLink)
-    else:
-        raise BaseException("Environment not defined")
-    if not r.status_code == 200:
-        raise ValueError("Server isn't available")
-
-
-def uploadImage(serverUrl, imagePath ):
+def uploadImage(serverUrl, imagePath, lastFrameTime):
     serverUrl += "/upload"
-    images = {'file':(imagePath, open(imagePath, 'rb'))}
-    requests.post(serverUrl, files=images)
+    r = requests.get(serverUrl)
+    if not r.status_code != 200:
+        raise Exception("Server isn't available")
+    images = {'file': (imagePath, open(imagePath, 'rb'))}
+    data = {'date': lastFrameTime}
+    requests.post(serverUrl, data=data, files=images)

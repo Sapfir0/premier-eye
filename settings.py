@@ -22,7 +22,7 @@ class Settings(object):
 
     sendRequestToServer = True
     pyfrontProductionLink = "https://premier-eye.herokuapp.com"
-    port = "5000"
+    port = "8050"
     pyfrontDevelopmentLink = f"http://localhost:{port}"
 
     # путевые настройки

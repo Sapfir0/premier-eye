@@ -7,9 +7,9 @@ services:
     build:
       dockerfile: Dockerfile
       context: .
-    volumes:
-      - ./data:/data
-      - ./output:/output
+#    volumes:
+#      - ./data:/data
+#      - ./output:/output
 # строчки выше не очень-то и адаптивны
   redis:
     container_name: redis
