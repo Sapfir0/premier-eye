@@ -21,7 +21,6 @@ class Settings(object):
     AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
 
     sendRequestToServer = True
-    pyfrontProductionLink = "https://premier-eye.herokuapp.com"
     port = "8050"
     pyfrontDevelopmentLink = f"http://localhost:{port}"
 
@@ -83,6 +82,11 @@ class Settings(object):
         # а ниже мы сможем увидеть 3 разлчиных способа указзания большого трафика
         if self.CAR_NUMBER_DETECTOR:
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
+
+        if not os.path.isfile(self.DATE_FILE):
+            with open(self.DATE_FILE, "w") as f:
+                f.close()
+
 
         if self.ALGORITHM:
             if not os.path.exists(self.DATASET_DIR):
