@@ -27,7 +27,7 @@ class Settings(object):
     serverLocalLocation = os.environ["SERVER_LOCAL_LOCATION"]
     port = "8050"
     #pyfrontDevelopmentLink = f"http://localhost:{port}"
-    pyfrontDevelopmentLink = f"http://172.20.0.1:{port}"
+    pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{port}"
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")

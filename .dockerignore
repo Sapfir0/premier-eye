@@ -7,3 +7,4 @@ nomeroff-net
 last_data_processed.txt
 .vscode
 .idea
+.env
