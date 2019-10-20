@@ -1,6 +1,5 @@
 import os
 
-import services.database_controller as db
 import services.file_controller as file_controller
 import helpers.others as others
 import helpers.directory as dirs
@@ -73,22 +72,6 @@ def carNumberDetector(filename, image: Image):
     return carNumbers
 
 
-def dblogging(image: Image):
-    for i, item in enumerate(image.objects):  # для каждого объекта, найденного на кадре
-        frameObject = image.objects[i]
-        try:  # TODO исправить. если сработает исключение, то это либо не машина либо номер не определен
-            frameObject.licenseNumber  # тупо проверка наличия
-        except:
-            frameObject.licenseNumber = None
-
-        db.writeInfoForObjectInDB(image.numberOfCam,
-                                  frameObject.type,
-                                  image.fixationDatetime,
-                                  frameObject.coordinates,
-                                  frameObject.centerDownCoordinates,
-                                  frameObject.licenseNumber)
-
-
 def requestToServer(imagePath, image):
     from helpers.net import uploadImage
     with open(cfg.DATE_FILE) as f:
@@ -104,9 +87,6 @@ def detectObjects(filename):
 
     if cfg.CAR_NUMBER_DETECTOR:
         carNumberDetector(filename, image)
-
-    if cfg.loggingInDB:
-        dblogging(image)
 
     if cfg.sendRequestToServer:
         requestToServer(outputFile, image)
