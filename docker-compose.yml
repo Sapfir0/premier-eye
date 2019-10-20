@@ -13,7 +13,7 @@ services:
     networks:
       - webpremiereye_some-net
     environment:
-      - DOCKER_LOCAL_ADDRESS="http://172:20:0:1"
+      - DOCKER_LOCAL_ADDRESS=http://172.20.0.1
 
 networks:
   webpremiereye_some-net:
