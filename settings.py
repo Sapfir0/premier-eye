@@ -24,7 +24,7 @@ class Settings(object):
     AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
 
     sendRequestToServer = True # при false идет перемещение изображения в ручную, в обход сервер апи
-    serverLocalLocation = os.environ["SERVER_LOCAL_LOCATION"]
+    serverLocalLocation = "."
     port = "8050"
     #pyfrontDevelopmentLink = f"http://localhost:{port}"
     pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{port}"

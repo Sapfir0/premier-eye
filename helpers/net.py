@@ -79,6 +79,12 @@ def uploadImage(serverUrl, imagePath, lastFrameTime):
     r = requests.get(serverUrl)
     if not r.status_code != 200:
         raise Exception("Server isn't available")
-    images = {'file': (imagePath, open(imagePath, 'rb'))}
+    from sys import platform
+    if platform == "linux" or platform == "linux2":
+        filename = os.path.split(imagePath)[1] # TODO Only for linux!!
+    else:
+        filename = imagePath
+
+    images = {'file': (filename, open(imagePath, 'rb'))}
     data = {'date': lastFrameTime}
     requests.post(serverUrl, data=data, files=images)
