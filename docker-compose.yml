@@ -10,4 +10,9 @@ services:
     volumes:
       - ./data:/data
       - ./output:/output
-# строчки выше не очень-то и адаптивны
+    networks:
+      - webpremiereye_some-net
+
+networks:
+  webpremiereye_some-net:
+    external: true

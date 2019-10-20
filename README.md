@@ -44,6 +44,11 @@ Run algorithms tests
     python3 -m unittest tests/detections.py 
 
 
+If you want run container on interactive mode
+
+    docker run -it sapfir0/premier-eye:cpu bash^C
+
+
 ## Algorithms
 
 * Algorithm 1. Mask R-CNN

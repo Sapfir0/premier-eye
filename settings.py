@@ -7,6 +7,9 @@ import helpers.others as others
 from dotenv import load_dotenv
 import helpers.directory as dirs
 import helpers.net as net
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 class Settings(object):
@@ -20,10 +23,11 @@ class Settings(object):
     CAR_NUMBER_DETECTOR = False  # детекировать номер машины(только для камер №1, №2)
     AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
 
-    sendRequestToServer = True
+    sendRequestToServer = True # при false идет перемещение изображения в ручную, в обход сервер апи
+    serverLocalLocation = os.environ["SERVER_LOCAL_LOCATION"]
     port = "8050"
-    pyfrontDevelopmentLink = f"http://localhost:{port}"
-
+    #pyfrontDevelopmentLink = f"http://localhost:{port}"
+    pyfrontDevelopmentLink = f"http://172.20.0.1:{port}"
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")

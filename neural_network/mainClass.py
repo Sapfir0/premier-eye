@@ -96,6 +96,15 @@ def requestToServer(imagePath):
     uploadImage(cfg.pyfrontDevelopmentLink, imagePath, date)
 
 
+def moveFileToServer(imagePath):
+    sep = os.path.sep
+    list = imagePath.split(sep)[-4:]
+    outputPath = os.path.join(cfg.serverLocalLocation, sep.join(list))
+    dirs.createDirs(os.path.split(outputPath)[0])
+    print("Moving file from ", imagePath, " to ", outputPath)
+    os.rename(imagePath, outputPath)
+
+
 def detectObjects(filename):
     inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
 
@@ -110,6 +119,8 @@ def detectObjects(filename):
 
     if cfg.sendRequestToServer:
         requestToServer(outputFile)
+    else:
+        moveFileToServer(outputFile)
 
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image
