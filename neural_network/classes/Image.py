@@ -38,6 +38,15 @@ class Image(object):
     def __repr__(self):
         return "{} {} {} with objects: {}".format(self.inputPath, self.numberOfCam, self.fixationDatetime, self.objects)
 
+    def json(self):
+        localImage = {
+            "outputPath": self.outputPath,
+            "numberOfCam": self.numberOfCam,
+            "fixationDatetime": self.fixationDatetime,
+            "objects": self.objects
+        }
+        return localImage
+
     def read(self):
         binaryImage = cv2.imread(self.inputPath)
         return binaryImage

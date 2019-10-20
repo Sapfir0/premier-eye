@@ -74,17 +74,16 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
         gitClone("https://github.com/matterport/Mask_RCNN.git", os.path.join(NOMEROFF_NET_DIR, "Mask_RCNN"))
 
 
-def uploadImage(serverUrl, imagePath, lastFrameTime):
+def uploadImage(serverUrl, imagePath, imageInfo):
+    from sys import platform
     serverUrl += "/upload"
     r = requests.get(serverUrl)
     if not r.status_code != 200:
         raise Exception("Server isn't available")
-    from sys import platform
     if platform == "linux" or platform == "linux2":
-        filename = os.path.split(imagePath)[1] # TODO Only for linux!!
+        filename = os.path.split(imagePath)[1]  # TODO Only for linux!!
     else:
         filename = imagePath
 
     images = {'file': (filename, open(imagePath, 'rb'))}
-    data = {'date': lastFrameTime}
-    requests.post(serverUrl, data=data, files=images)
+    requests.post(serverUrl, data=imageInfo.json(), files=images)

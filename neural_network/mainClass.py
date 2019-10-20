@@ -89,20 +89,11 @@ def dblogging(image: Image):
                                   frameObject.licenseNumber)
 
 
-def requestToServer(imagePath):
+def requestToServer(imagePath, image):
     from helpers.net import uploadImage
     with open(cfg.DATE_FILE) as f:
         date = f.readlines()
-    uploadImage(cfg.pyfrontDevelopmentLink, imagePath, date)
-
-
-def moveFileToServer(imagePath):
-    sep = os.path.sep
-    list = imagePath.split(sep)[-4:]
-    outputPath = os.path.join(cfg.serverLocalLocation, sep.join(list))
-    dirs.createDirs(os.path.split(outputPath)[0])
-    print("Moving file from ", imagePath, " to ", outputPath)
-    os.rename(imagePath, outputPath)
+    uploadImage(cfg.pyfrontDevelopmentLink, imagePath, image)
 
 
 def detectObjects(filename):
@@ -118,9 +109,7 @@ def detectObjects(filename):
         dblogging(image)
 
     if cfg.sendRequestToServer:
-        requestToServer(outputFile)
-    else:
-        moveFileToServer(outputFile)
+        requestToServer(outputFile, image)
 
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image
