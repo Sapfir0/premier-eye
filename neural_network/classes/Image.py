@@ -13,7 +13,6 @@ class Image(object):
     fixationDatetime: datetime.datetime = None
     objects: list = []
 
-
     def __new__(cls, inputPath, *args, **kwargs):
         if not others.isImage(inputPath):
             print("This is incorrectly image format. Skipping " + inputPath)

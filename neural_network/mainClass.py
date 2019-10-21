@@ -82,8 +82,7 @@ def requestToServer(imagePath, image):
 def detectObjects(filename):
     inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
 
-    if cfg.ALGORITHM:
-        image = mask.pipeline(inputFile, outputFile)
+    image = mask.pipeline(inputFile, outputFile)
 
     if cfg.CAR_NUMBER_DETECTOR:
         carNumberDetector(filename, image)

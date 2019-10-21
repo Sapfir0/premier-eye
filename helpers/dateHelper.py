@@ -8,14 +8,7 @@ def parseFilename(filename: str, getNumberOfCamera=False, getDate=True):
     if not result:
         raise ValueError("Wrong date in filename")
     numberOfCam, date = filename.split("_")
-    date = date.split(".")[0]
-    year = int(date[0:4])
-    month = int(date[4:6])
-    day = int(date[6:8])
-    hours = int(date[8:10])
-    minutes = int(date[10:12])
-    seconds = int(date[12:14])
-    parsedData = datetime.datetime(year, month, day, hours, minutes, seconds)
+    parsedData = datetime.datetime.strptime(date, '%Y%m%d%H%M%S.jpg')
     if getNumberOfCamera and getDate:
         return parsedData, numberOfCam
     elif getDate:
