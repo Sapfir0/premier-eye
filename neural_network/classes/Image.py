@@ -32,19 +32,31 @@ class Image(object):
         if objectsOnFrame:
             self.addDetections(objectsOnFrame)
 
-    def __del__(self):
-        pass
-
     def __repr__(self):
         return "{} {} {} with objects: {}".format(self.inputPath, self.numberOfCam, self.fixationDatetime, self.objects)
 
     def json(self):
+        import json
+        objects = []
+        # print(type(self.objects), self.objects)
+        # if self.objects:
+        #     for obj in self.objects:
+        #         if obj['type'] == "car":
+        #             pass
+        #             #objects.append(Car(obj).json())
+        #         elif obj['type'] == "person":
+        #             pass
+        #             #objects.append(Person(obj).json())
+
         localImage = {
             "outputPath": self.outputPath,
             "numberOfCam": self.numberOfCam,
             "fixationDatetime": self.fixationDatetime,
-            "objects": self.objects
+            "objects": objects
         }
+        print(localImage)
+        #print(json.dumps(localImage, indent=4))
+        exit(-1)
         return localImage
 
     def read(self):

@@ -18,3 +18,13 @@ class Object_(ABC):
 
     def __repr__(self):
         return "type: {}".format(self.type)
+
+    def json(self):
+        diction = {
+            'id': self.id,
+            'scores': self.scores,
+            'coordinates': self.coordinates,
+            'CD': self.centerDownCoordinates,
+            'masks': self.masks
+        }
+        return diction

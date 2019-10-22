@@ -74,7 +74,7 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
         gitClone("https://github.com/matterport/Mask_RCNN.git", os.path.join(NOMEROFF_NET_DIR, "Mask_RCNN"))
 
 
-def uploadImage(serverUrl, imagePath, imageInfo):
+def uploadImage(serverUrl, imagePath, image):
     from sys import platform
     serverUrl += "/upload"
     r = requests.get(serverUrl)
@@ -85,5 +85,6 @@ def uploadImage(serverUrl, imagePath, imageInfo):
     else:
         filename = imagePath
 
-    images = {'file': (filename, open(imagePath, 'rb'))}
-    requests.post(serverUrl, data=imageInfo.json(), files=images)
+    print(image)
+    images = {'file': (filename, open(imagePath, 'rb'))} # само изображение, а image - это инстанс
+    requests.post(serverUrl, data=image.json(), files=images)
