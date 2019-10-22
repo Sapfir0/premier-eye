@@ -40,7 +40,6 @@ class Image(object):
             if isinstance(date, datetime.datetime):
                 return date.__str__()
 
-        # print(type(self.objects[0]), self.objects[0])
         localImage = {
             "outputPath": self.outputPath,
             "numberOfCam": self.numberOfCam,
@@ -50,12 +49,12 @@ class Image(object):
             mydict = {  # это поля класса object, мне не оч нравится
                 'type': obj.type,
                 'scores': obj.scores,
-                'centerDownCoordinates': obj.centerDownCoordinates}
+                'centerDownCoordinates': obj.centerDownCoordinates
+            }
             localImage.update({i: mydict})
-
         import json
-        #myjson = json.dumps(localImage, indent=4, default=myconverter)
-        return localImage
+        myjson = json.dumps(localImage, indent=4, default=myconverter)
+        return myjson
 
     def read(self):
         binaryImage = cv2.imread(self.inputPath)

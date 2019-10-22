@@ -86,5 +86,13 @@ def uploadImage(serverUrl, imagePath, image):
         filename = imagePath
 
     print(type(image.json()), image.json())
-    images = {'file': (filename, open(imagePath, 'rb'))} # само изображение, а image - это инстанс
-    requests.post(serverUrl, data=image.json(), files=images)
+    tempjson = "./temp.json"
+    with open(tempjson, 'w') as f:
+        f.write(image.json())
+
+    files = [
+        ('file', (filename, open(imagePath, 'rb'), 'image/jpg')),
+        ('json', ('temp.json', open(tempjson, 'rb'), 'application/json'))]
+
+    requests.post(serverUrl, files=files)
+
