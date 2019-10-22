@@ -1,4 +1,4 @@
-import helpers.others as others
+import services.others as others
 import datetime
 import cv2
 
@@ -20,7 +20,7 @@ class Image(object):
         return object.__new__(cls)
 
     def __init__(self, inputPath: str, objectsOnFrame=None, outputPath=None):
-        import helpers.dateHelper as dh
+        import services.dateHelper as dh
         import os
         filename = os.path.split(inputPath)[1]
         self.fixationDatetime, self.numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
@@ -39,20 +39,21 @@ class Image(object):
         def myconverter(date):
             if isinstance(date, datetime.datetime):
                 return date.__str__()
+        import json
 
         localImage = {
             "outputPath": self.outputPath,
             "numberOfCam": self.numberOfCam,
             "fixationDatetime": self.fixationDatetime
         }
+
         for i, obj in enumerate(self.objects):
             mydict = {  # это поля класса object, мне не оч нравится
-                'type': obj.type,
-                'scores': obj.scores,
-                'centerDownCoordinates': obj.centerDownCoordinates
+                'type': obj.type, #TODO хаос тут исправить
+                'scores': obj.scores,  # почему-то тоже нулл. значения вроде таких 0.9981159
+                'centerDownCoordinates': obj.centerDownCoordinates  # если есть лист, то в нем только первый элемент будет не налл
             }
             localImage.update({i: mydict})
-        import json
         myjson = json.dumps(localImage, indent=4, default=myconverter)
         return myjson
 

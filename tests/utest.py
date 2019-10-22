@@ -4,7 +4,7 @@ import unittest
 # import maskCNN
 from neural_network.modules.decart import DecartCoordinates as decart
 import datetime
-import helpers.dateHelper as dh
+import services.dateHelper as dh
 
 
 class FunctionTest(unittest.TestCase):

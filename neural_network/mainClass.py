@@ -1,18 +1,16 @@
 import os
 
 import services.file_controller as file_controller
-import helpers.others as others
-import helpers.directory as dirs
+import services.others as others
+import services.directory as dirs
 from neural_network.classes import Image
 from settings import Settings as cfg
+from services.net import uploadImage
 
 
 if cfg.ALGORITHM:
     from neural_network.maskCNN import Mask
     mask = Mask()
-else:
-    from neural_network.imageAi import ImageAI
-    imageAI = ImageAI()
 
 
 currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
@@ -52,12 +50,6 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
         # будет стирать содержимое файла каждый кадр
 
 
-def _imageAiDetect(inputFile, outputFile):
-    detections = imageAI.pipeline(inputFile, outputFile)
-    rectCoordinates = others.parseImageAiData(detections)
-    return detections, rectCoordinates
-
-
 def carNumberDetector(filename, image: Image):
     from neural_network.car_number import car_detect
     from neural_network.classes.Car import Car
@@ -70,13 +62,6 @@ def carNumberDetector(filename, image: Image):
     return carNumbers
 
 
-def requestToServer(imagePath, image):
-    from helpers.net import uploadImage
-    with open(cfg.DATE_FILE) as f:
-        date = f.readlines()
-    uploadImage(cfg.pyfrontDevelopmentLink, imagePath, image)
-
-
 def detectObjects(filename):
     inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
 
@@ -86,7 +71,7 @@ def detectObjects(filename):
         carNumberDetector(filename, image)
 
     if cfg.sendRequestToServer:
-        requestToServer(outputFile, image)
+        uploadImage(cfg.pyfrontDevelopmentLink, outputFile, image)
 
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image

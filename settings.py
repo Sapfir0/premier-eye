@@ -3,10 +3,10 @@ from os.path import join
 import mrcnn.utils
 import colorama
 import mrcnn.config
-import helpers.others as others
+import services.others as others
 from dotenv import load_dotenv
-import helpers.directory as dirs
-import helpers.net as net
+import services.directory as dirs
+import services.net as net
 from dotenv import load_dotenv
 
 load_dotenv()

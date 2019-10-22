@@ -2,7 +2,7 @@ import wget
 import os
 from colorama import Fore
 import requests
-import helpers.console as console
+import services.console as console
 from sys import exit
 
 allowDownload = True

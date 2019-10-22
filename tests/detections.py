@@ -5,7 +5,7 @@ from os.path import join
 import os
 import json
 from neural_network.maskCNN import Mask
-import helpers.net as net
+import services.net as net
 
 
 
