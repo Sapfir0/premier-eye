@@ -85,6 +85,6 @@ def uploadImage(serverUrl, imagePath, image):
     else:
         filename = imagePath
 
-    print(image)
+    print(type(image.json()), image.json())
     images = {'file': (filename, open(imagePath, 'rb'))} # само изображение, а image - это инстанс
     requests.post(serverUrl, data=image.json(), files=images)

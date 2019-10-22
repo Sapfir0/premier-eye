@@ -14,8 +14,6 @@ else:
     from neural_network.imageAi import ImageAI
     imageAI = ImageAI()
 
-from neural_network.modules.decart import DecartCoordinates
-decart = DecartCoordinates()
 
 currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 

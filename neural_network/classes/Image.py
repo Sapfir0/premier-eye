@@ -36,27 +36,25 @@ class Image(object):
         return "{} {} {} with objects: {}".format(self.inputPath, self.numberOfCam, self.fixationDatetime, self.objects)
 
     def json(self):
-        import json
-        objects = []
-        # print(type(self.objects), self.objects)
-        # if self.objects:
-        #     for obj in self.objects:
-        #         if obj['type'] == "car":
-        #             pass
-        #             #objects.append(Car(obj).json())
-        #         elif obj['type'] == "person":
-        #             pass
-        #             #objects.append(Person(obj).json())
+        def myconverter(date):
+            if isinstance(date, datetime.datetime):
+                return date.__str__()
 
+        # print(type(self.objects[0]), self.objects[0])
         localImage = {
             "outputPath": self.outputPath,
             "numberOfCam": self.numberOfCam,
-            "fixationDatetime": self.fixationDatetime,
-            "objects": objects
+            "fixationDatetime": self.fixationDatetime
         }
-        print(localImage)
-        #print(json.dumps(localImage, indent=4))
-        exit(-1)
+        for i, obj in enumerate(self.objects):
+            mydict = {  # это поля класса object, мне не оч нравится
+                'type': obj.type,
+                'scores': obj.scores,
+                'centerDownCoordinates': obj.centerDownCoordinates}
+            localImage.update({i: mydict})
+
+        import json
+        #myjson = json.dumps(localImage, indent=4, default=myconverter)
         return localImage
 
     def read(self):
