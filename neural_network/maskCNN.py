@@ -29,7 +29,6 @@ class Mask(object):
     """
         Mask R-CNN
     """
-    objectOnFrames = 0  # сколько кадров мы видели объект(защитит от ложных срабатываний)
     SAVE_COLORMAP = False
     CLASS_NAMES = None
     COLORS = None

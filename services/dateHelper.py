@@ -29,21 +29,21 @@ def checkDateFile(dateFile: str):
             return dateFromFile
 
 
-def getDateOrHours(filename: str, getHours=True, getDate=True):
+def checkCorrectness(filename):
     result = re.findall(r'\d_\d{14}\..+', filename)
     if not result:
         raise ValueError("Wrong date in filename")
 
-    n, date = filename.split("_")
-    date = date.split(".")[0]
-    parsedData = date[0:8]
-    hours = date[8:10]
 
-    if getHours and getDate:
-        return parsedData, hours
-    elif getDate:
-        return parsedData
-    elif getHours:
-        return hours
-    else:
-        raise Exception("No parsed data, check arguments")
+def getDate(filename):
+    checkCorrectness(filename)
+    date = filename.split("_")[0].split(".")[0]
+    parsedData = date[0:8]
+    return parsedData
+
+
+def getHours(filename):
+    checkCorrectness(filename)
+    date = filename.split("_")[0].split(".")[0]
+    hours = date[8:10]
+    return hours
