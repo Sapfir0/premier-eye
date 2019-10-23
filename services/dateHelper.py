@@ -28,7 +28,8 @@ def checkDateFile(dateFile: str):
 
 
 def checkCorrectness(filename):
-    result = re.findall(r'\d_\d{14}\..+', filename)
+    regexp = r'\d_\d{14}\..+'
+    result = re.findall(regexp, filename)
     if not result:
         raise ValueError("Wrong date in filename")
 

@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class Object_(ABC):
+    type:str = "object"
     id: int = None
     scores = None
     coordinates = []  # LDx, LDy, RUx, RUy
@@ -18,13 +19,13 @@ class Object_(ABC):
         return f"{{type: {self.type}, scores: {self.scores}," \
                f" masks: {self.masks}, centerDownCoordinates: {self.centerDownCoordinates} }}"
 
-    def json(self):
-        diction = {
+    def json(self) -> dict:
+        diction = {  # маски передавать не будем
             'id': self.id,
-            'scores': self.scores,
-            'coordinates': self.coordinates,
-            'CD': self.centerDownCoordinates,
-            'masks': self.masks
+            'type': self.type,
+            'scores': self.scores.item(), #TODO хаос тут исправить
+            'coordinates': self.coordinates.tolist(),  # почему-то тоже нулл. значения вроде таких 0.9981159
+            'CD': self.centerDownCoordinates # если есть лист, то в нем только первый элемент будет не налл
         }
         return diction
 

@@ -47,14 +47,10 @@ class Image(object):
             "fixationDatetime": self.fixationDatetime,
             "filename": self.filename
         }
-
+        # print("тут без нуллов", self.objects)
         for i, obj in enumerate(self.objects):
-            mydict = {  # это поля класса object, мне не оч нравится
-                'type': obj.type, #TODO хаос тут исправить
-                'scores': obj.scores,  # почему-то тоже нулл. значения вроде таких 0.9981159
-                'centerDownCoordinates': obj.centerDownCoordinates  # если есть лист, то в нем только первый элемент будет не налл
-            }
-            localImage.update({i: mydict})
+            localImage.update({i: obj.json()})
+
         myjson = json.dumps(localImage, indent=4, default=myconverter)
         return myjson
 
