@@ -8,6 +8,7 @@ from neural_network.classes.Person import Person
 
 class Image(object):
     inputPath: str = None
+    filename: str = None
     outputPath: str = None
     numberOfCam: int = None
     fixationDatetime: datetime.datetime = None
@@ -24,7 +25,7 @@ class Image(object):
         import os
         filename = os.path.split(inputPath)[1]
         self.fixationDatetime, self.numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
-
+        self.filename = filename
         self.inputPath = inputPath
         if outputPath:
             self.outputPath = outputPath
@@ -42,9 +43,9 @@ class Image(object):
         import json
 
         localImage = {
-            "outputPath": self.outputPath,
             "numberOfCam": self.numberOfCam,
-            "fixationDatetime": self.fixationDatetime
+            "fixationDatetime": self.fixationDatetime,
+            "filename": self.filename
         }
 
         for i, obj in enumerate(self.objects):

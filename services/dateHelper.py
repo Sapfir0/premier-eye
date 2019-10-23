@@ -4,9 +4,7 @@ import os
 
 
 def parseFilename(filename: str, getNumberOfCamera=False, getDate=True):
-    result = re.findall(r'\d_\d{14}\..+', filename)
-    if not result:
-        raise ValueError("Wrong date in filename")
+    checkCorrectness(filename)
     numberOfCam, date = filename.split("_")
     parsedData = datetime.datetime.strptime(date, '%Y%m%d%H%M%S.jpg')
     if getNumberOfCamera and getDate:

@@ -1,11 +1,9 @@
 wget
 python-dotenv
-Cython
 numpy
 requests
 sqlalchemy
 scikit_image
-pandas
 pycocotools
 matplotlib
 opencv-python==3.4.2.16
@@ -18,5 +16,3 @@ IPython
 gitPython
 tqdm 
 imutils
-imgaug 
-https://github.com/OlafenwaMoses/ImageAI/releases/download/2.0.3/imageai-2.0.3-py3-none-any.whl
