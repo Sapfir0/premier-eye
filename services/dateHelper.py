@@ -4,18 +4,9 @@ import os
 
 
 def parseFilename(filename: str, getNumberOfCamera=False, getDate=True):
-    result = re.findall(r'\d_\d{14}\..+', filename)
-    if not result:
-        raise ValueError("Wrong date in filename")
+    checkCorrectness(filename)
     numberOfCam, date = filename.split("_")
-    date = date.split(".")[0]
-    year = int(date[0:4])
-    month = int(date[4:6])
-    day = int(date[6:8])
-    hours = int(date[8:10])
-    minutes = int(date[10:12])
-    seconds = int(date[12:14])
-    parsedData = datetime.datetime(year, month, day, hours, minutes, seconds)
+    parsedData = datetime.datetime.strptime(date, '%Y%m%d%H%M%S.jpg')
     if getNumberOfCamera and getDate:
         return parsedData, numberOfCam
     elif getDate:
@@ -36,21 +27,22 @@ def checkDateFile(dateFile: str):
             return dateFromFile
 
 
-def getDateOrHours(filename: str, getHours=True, getDate=True):
-    result = re.findall(r'\d_\d{14}\..+', filename)
+def checkCorrectness(filename):
+    regexp = r'\d_\d{14}\..+'
+    result = re.findall(regexp, filename)
     if not result:
         raise ValueError("Wrong date in filename")
 
-    n, date = filename.split("_")
-    date = date.split(".")[0]
-    parsedData = date[0:8]
-    hours = date[8:10]
 
-    if getHours and getDate:
-        return parsedData, hours
-    elif getDate:
-        return parsedData
-    elif getHours:
-        return hours
-    else:
-        raise Exception("No parsed data, check arguments")
+def getDate(filename):
+    checkCorrectness(filename)
+    date = filename.split("_")[0].split(".")[0]
+    parsedData = date[0:8]
+    return parsedData
+
+
+def getHours(filename):
+    checkCorrectness(filename)
+    date = filename.split("_")[0].split(".")[0]
+    hours = date[8:10]
+    return hours

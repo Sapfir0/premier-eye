@@ -21,7 +21,6 @@ def getUsedRAM(snapshot):
         print(Fore.BLUE + "Total allocated size: %.1f KiB" % kbytes)
 
 
-
 def display_top(snapshot, key_type='lineno', limit=10):
     snapshot = snapshot.filter_traces((
         tracemalloc.Filter(False, "<frozen importlib._bootstrap>"),

@@ -3,9 +3,9 @@ import sys
 import cv2
 import numpy as np
 import neural_network.modules.feature_matching as sift
-import helpers.timeChecker as timeChecker
+import services.timeChecker as timeChecker
 import neural_network.modules.extra as extra
-import helpers.directory as dirs
+import services.directory as dirs
 from settings import Settings as cfg
 from neural_network.classes.Image import Image
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
@@ -29,7 +29,6 @@ class Mask(object):
     """
         Mask R-CNN
     """
-    objectOnFrames = 0  # сколько кадров мы видели объект(защитит от ложных срабатываний)
     SAVE_COLORMAP = False
     CLASS_NAMES = None
     COLORS = None

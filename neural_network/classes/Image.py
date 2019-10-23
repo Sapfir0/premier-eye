@@ -1,4 +1,4 @@
-import helpers.others as others
+import services.others as others
 import datetime
 import cv2
 
@@ -8,6 +8,7 @@ from neural_network.classes.Person import Person
 
 class Image(object):
     inputPath: str = None
+    filename: str = None
     outputPath: str = None
     numberOfCam: int = None
     fixationDatetime: datetime.datetime = None
@@ -20,11 +21,11 @@ class Image(object):
         return object.__new__(cls)
 
     def __init__(self, inputPath: str, objectsOnFrame=None, outputPath=None):
-        import helpers.dateHelper as dh
+        import services.dateHelper as dh
         import os
         filename = os.path.split(inputPath)[1]
         self.fixationDatetime, self.numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
-
+        self.filename = filename
         self.inputPath = inputPath
         if outputPath:
             self.outputPath = outputPath
@@ -32,20 +33,26 @@ class Image(object):
         if objectsOnFrame:
             self.addDetections(objectsOnFrame)
 
-    def __del__(self):
-        pass
-
     def __repr__(self):
         return "{} {} {} with objects: {}".format(self.inputPath, self.numberOfCam, self.fixationDatetime, self.objects)
 
     def json(self):
+        def myconverter(date):
+            if isinstance(date, datetime.datetime):
+                return date.__str__()
+        import json
+
         localImage = {
-            "outputPath": self.outputPath,
             "numberOfCam": self.numberOfCam,
             "fixationDatetime": self.fixationDatetime,
-            "objects": self.objects
+            "filename": self.filename
         }
-        return localImage
+        # print("тут без нуллов", self.objects)
+        for i, obj in enumerate(self.objects):
+            localImage.update({i: obj.json()})
+
+        myjson = json.dumps(localImage, indent=4, default=myconverter)
+        return myjson
 
     def read(self):
         binaryImage = cv2.imread(self.inputPath)

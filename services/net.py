@@ -2,7 +2,7 @@ import wget
 import os
 from colorama import Fore
 import requests
-import helpers.console as console
+import services.console as console
 from sys import exit
 
 allowDownload = True
@@ -74,7 +74,7 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
         gitClone("https://github.com/matterport/Mask_RCNN.git", os.path.join(NOMEROFF_NET_DIR, "Mask_RCNN"))
 
 
-def uploadImage(serverUrl, imagePath, imageInfo):
+def uploadImage(serverUrl, imagePath, image):
     from sys import platform
     serverUrl += "/upload"
     r = requests.get(serverUrl)
@@ -85,5 +85,14 @@ def uploadImage(serverUrl, imagePath, imageInfo):
     else:
         filename = imagePath
 
-    images = {'file': (filename, open(imagePath, 'rb'))}
-    requests.post(serverUrl, data=imageInfo.json(), files=images)
+    print(type(image.json()), image.json())
+    tempjson = "./temp.json"
+    with open(tempjson, 'w') as f:
+        f.write(image.json())
+
+    files = [
+        ('file', (filename, open(imagePath, 'rb'), 'image/jpg')),
+        ('json', ('temp.json', open(tempjson, 'rb'), 'application/json'))]
+
+    requests.post(serverUrl, files=files)
+

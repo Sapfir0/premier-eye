@@ -2,7 +2,7 @@ import sys
 from colorama import Fore
 import matplotlib.image as mpimg
 from settings import Settings as cfg
-import helpers.timeChecker as tm
+import services.timeChecker as tm
 import os
 sys.path.append(cfg.NOMEROFF_NET_DIR)
 from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing

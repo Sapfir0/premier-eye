@@ -1,22 +1,17 @@
 import os
 
-import services.database_controller as db
 import services.file_controller as file_controller
-import helpers.others as others
-import helpers.directory as dirs
+import services.others as others
+import services.directory as dirs
 from neural_network.classes import Image
 from settings import Settings as cfg
+from services.net import uploadImage
 
 
 if cfg.ALGORITHM:
     from neural_network.maskCNN import Mask
     mask = Mask()
-else:
-    from neural_network.imageAi import ImageAI
-    imageAI = ImageAI()
 
-from neural_network.modules.decart import DecartCoordinates
-decart = DecartCoordinates()
 
 currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
@@ -55,12 +50,6 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
         # будет стирать содержимое файла каждый кадр
 
 
-def _imageAiDetect(inputFile, outputFile):
-    detections = imageAI.pipeline(inputFile, outputFile)
-    rectCoordinates = others.parseImageAiData(detections)
-    return detections, rectCoordinates
-
-
 def carNumberDetector(filename, image: Image):
     from neural_network.car_number import car_detect
     from neural_network.classes.Car import Car
@@ -73,43 +62,16 @@ def carNumberDetector(filename, image: Image):
     return carNumbers
 
 
-def dblogging(image: Image):
-    for i, item in enumerate(image.objects):  # для каждого объекта, найденного на кадре
-        frameObject = image.objects[i]
-        try:  # TODO исправить. если сработает исключение, то это либо не машина либо номер не определен
-            frameObject.licenseNumber  # тупо проверка наличия
-        except:
-            frameObject.licenseNumber = None
-
-        db.writeInfoForObjectInDB(image.numberOfCam,
-                                  frameObject.type,
-                                  image.fixationDatetime,
-                                  frameObject.coordinates,
-                                  frameObject.centerDownCoordinates,
-                                  frameObject.licenseNumber)
-
-
-def requestToServer(imagePath, image):
-    from helpers.net import uploadImage
-    with open(cfg.DATE_FILE) as f:
-        date = f.readlines()
-    uploadImage(cfg.pyfrontDevelopmentLink, imagePath, image)
-
-
 def detectObjects(filename):
     inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
 
-    if cfg.ALGORITHM:
-        image = mask.pipeline(inputFile, outputFile)
+    image = mask.pipeline(inputFile, outputFile)
 
     if cfg.CAR_NUMBER_DETECTOR:
         carNumberDetector(filename, image)
 
-    if cfg.loggingInDB:
-        dblogging(image)
-
     if cfg.sendRequestToServer:
-        requestToServer(outputFile, image)
+        uploadImage(cfg.pyfrontDevelopmentLink, outputFile, image)
 
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image

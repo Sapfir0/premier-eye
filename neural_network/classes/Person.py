@@ -3,4 +3,9 @@ from neural_network.classes.Object_ import Object_
 
 class Person(Object_):
     type = "person"
-    pass
+
+    def json(self) -> dict:
+        objectJson = super().json()
+        objectJson.update({'type': self.type})
+        return objectJson
+
