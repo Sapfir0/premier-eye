@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class Object_(ABC):
-    type:str = "object"
+    type: str = "object"
     id: int = None
     scores = None
     coordinates = []  # LDx, LDy, RUx, RUy

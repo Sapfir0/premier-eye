@@ -85,7 +85,7 @@ def uploadImage(serverUrl, imagePath, image):
     else:
         filename = imagePath
 
-    print(type(image.json()), image.json())
+    #print(type(image.json()), image.json())
     tempjson = "./temp.json"
     with open(tempjson, 'w') as f:
         f.write(image.json())

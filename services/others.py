@@ -72,6 +72,6 @@ def getIOdirs(filename, IMAGE_DIR, OUTPUT_DIR_MASKCNN):
     date = dh.getDate(filename)
     hours = dh.getHours(filename)
     inputFile = os.path.join(IMAGE_DIR, filename)
-    outputFile = os.path.join(OUTPUT_DIR_MASKCNN, numberOfCam, date, hours, filename)
+    outputFile = os.path.join(OUTPUT_DIR_MASKCNN, numberOfCam, str(date), str(hours), filename)
     print(f"Analyzing {inputFile}")
     return inputFile, outputFile, dateTime

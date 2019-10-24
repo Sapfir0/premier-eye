@@ -1,12 +1,14 @@
-import datetime
+from datetime import datetime
 import re
 import os
+
+datetimePattern = '%Y%m%d%H%M%S.jpg'
 
 
 def parseFilename(filename: str, getNumberOfCamera=False, getDate=True):
     checkCorrectness(filename)
     numberOfCam, date = filename.split("_")
-    parsedData = datetime.datetime.strptime(date, '%Y%m%d%H%M%S.jpg')
+    parsedData = datetime.strptime(date, datetimePattern)
     if getNumberOfCamera and getDate:
         return parsedData, numberOfCam
     elif getDate:
@@ -34,15 +36,18 @@ def checkCorrectness(filename):
         raise ValueError("Wrong date in filename")
 
 
-def getDate(filename):
+def getDateFromFilename(filename):
     checkCorrectness(filename)
-    date = filename.split("_")[0].split(".")[0]
-    parsedData = date[0:8]
-    return parsedData
+    date = filename.split("_")[1]
+    dateTime = datetime.strptime(date, datetimePattern)
+    return dateTime
+
+
+def getDate(filename):
+    dateTime = getDateFromFilename(filename)
+    return dateTime.date()
 
 
 def getHours(filename):
-    checkCorrectness(filename)
-    date = filename.split("_")[0].split(".")[0]
-    hours = date[8:10]
-    return hours
+    dateTime = getDateFromFilename(filename)
+    return dateTime.hour
