@@ -16,15 +16,14 @@ class Settings(object):
     colorama.init(autoreset=True)
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
-    ALGORITHM = 1
     checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
-    CAR_NUMBER_DETECTOR = False  # детекировать номер машины(только для камер №1, №2)
+    CAR_NUMBER_DETECTOR: bool = bool(os.environ['ENABLE_CAR_DETECTOR'])  # детекировать номер машины(только для камер №1, №2)
     AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
 
     sendRequestToServer = True
-    port = "8050"
-    pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{port}"
+    SERVER_PORT = os.getenv('SERVER_PORT')
+    pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{SERVER_PORT}"
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "data")
@@ -35,9 +34,8 @@ class Settings(object):
     DATE_FILE = "last_data_processed.txt"
     # Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
-    LOGS_DIR = "logs"
     CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
-    OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')  # АЛГОРИТМ 2
+    OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')
     # car detector
     NOMEROFF_NET_DIR = join(APP_PATH, 'nomeroff-net')
     MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, 'Mask_RCNN')
@@ -49,7 +47,7 @@ class Settings(object):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
-        DETECTION_MIN_CONFIDENCE = 0.86  # минимальный процент отображения прямоугольника
+        DETECTION_MIN_CONFIDENCE = float(os.getenv('DETECTION_MIN_CONFIDENCE')) # минимальный процент отображения прямоугольника
         NUM_CLASSES = 81
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
@@ -80,11 +78,10 @@ class Settings(object):
             with open(self.DATE_FILE, "w") as f:
                 f.close()
 
-        if self.ALGORITHM:
-            if not os.path.exists(self.DATASET_DIR):
-                net.trafficControl(exiting=True)
-                mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-            net.downloadAndMove(self.classNamesLink, self.CLASSES_FILE)
+        if not os.path.exists(self.DATASET_DIR):
+            net.trafficControl(exiting=True)
+            mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
+        net.downloadAndMove(self.classNamesLink, self.CLASSES_FILE)
 
         net.downloadSamples(self.IMAGE_DIR)
 

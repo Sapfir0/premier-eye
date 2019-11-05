@@ -16,3 +16,4 @@ IPython
 gitPython
 tqdm 
 imutils
+imgaug

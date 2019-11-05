@@ -6,13 +6,10 @@ import services.directory as dirs
 from neural_network.classes import Image
 from settings import Settings as cfg
 from services.net import uploadImage
+from neural_network.maskCNN import Mask
 
 
-if cfg.ALGORITHM:
-    from neural_network.maskCNN import Mask
-    mask = Mask()
-
-
+mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
 
 
@@ -55,10 +52,9 @@ def carNumberDetector(filename, image: Image):
     from neural_network.classes.Car import Car
     carNumbers = []
     for i, item in enumerate(image.objects):
-        if image.numberOfCam in [str(1), str(2)] and isinstance(image.objects[i], Car):
+        if image.numberOfCam in ["1", "2"] and isinstance(image.objects[i], Car):
             imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
-            carNumbers = car_detect(imD)
-            image.objects[i].licenceNumber = carNumbers
+            image.objects[i].licenceNumber = car_detect(imD)
     return carNumbers
 
 
