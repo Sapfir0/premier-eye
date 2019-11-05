@@ -1,23 +1,41 @@
-
+import subprocess
+from threading import Thread
 from http.server import BaseHTTPRequestHandler, HTTPServer
+
 PORT = 8010
 paramChanged = False
-
+mainPID = None
 
 class TestHandler(BaseHTTPRequestHandler):
     def do_POST(self):
         global paramChanged
         content_len = int(self.headers.get('Content-Length'))
         post_body: bytes = self.rfile.read(content_len)
-        print(post_body.decode())
+        print(post_body.decode())  # TODO тут будет записыватьт в енв файл наши измененные параметры
         paramChanged = True
-        #self.send_response(200, "It's ok".encode())
-        self.wfile.write("sd".encode())  # не робит тоже
 
 
-async def startServer():
+def startServer():
     myServer = HTTPServer(("localhost", PORT), TestHandler)
     myServer.serve_forever()
 
 
-startServer()
+def killProcess(pid):
+    subprocess.Popen('taskkill /F /PID {0}'.format(pid), shell=True)
+
+
+def runProgram():
+    global paramChanged, mainPID
+
+    if paramChanged:
+        killProcess(mainPID)
+        paramChanged = False
+    else:
+        import os
+        path = os.path.join(os.path.split(__file__)[0], "mainImage.py")
+        pid = subprocess.call(["python", path])
+        mainPID = pid
+
+
+Thread(target=startServer).start()
+Thread(target=runProgram).start()
