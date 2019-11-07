@@ -33,7 +33,7 @@ def runProgram():
     else:
         import os
         path = os.path.join(os.path.split(__file__)[0], "mainImage.py")
-        pid = subprocess.call(["python", path])
+        pid = subprocess.Popen(["python", path]).pid
         mainPID = pid
 
 
