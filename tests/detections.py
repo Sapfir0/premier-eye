@@ -8,7 +8,6 @@ from neural_network.maskCNN import Mask
 import services.net as net
 
 
-
 class DetectionsTest(unittest.TestCase):
     dirName = "detections"
     cacheDirectory = True

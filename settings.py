@@ -30,7 +30,7 @@ class Settings(object):
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
     OUTPUT_DIR = join(APP_PATH, "output")
     IMAGE_DIR = join(DATA_PATH, "1_2")  # важная настройка
-
+    LOGS_DIR = join(APP_PATH, "logs")
     DATE_FILE = "last_data_processed.txt"
     # Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
