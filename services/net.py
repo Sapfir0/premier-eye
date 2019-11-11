@@ -85,14 +85,15 @@ def uploadImage(serverUrl, imagePath, image):
     else:
         filename = imagePath
 
-    #print(type(image.json()), image.json())
-    tempjson = "./temp.json"
-    with open(tempjson, 'w') as f:
-        f.write(image.json())
+    import tempfile
+    with tempfile.NamedTemporaryFile(delete=False) as temp:  # рр на винде приходится не юзать преимущества темфайла
+        temp.write(image.json().encode('utf-8'))
+        temp.flush()
 
-    files = [
-        ('file', (filename, open(imagePath, 'rb'), 'image/jpg')),
-        ('json', ('temp.json', open(tempjson, 'rb'), 'application/json'))]
-
+        files = [
+            ('file', (filename, open(imagePath, 'rb'), 'image/jpg')),
+            ('json', (temp.name, open(temp.name, 'rb'), 'application/json'))]
+        temp.close()
+# также я не удаляю файл, что нужно бы
     requests.post(serverUrl, files=files)
 
