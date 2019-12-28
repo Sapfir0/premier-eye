@@ -97,9 +97,4 @@ def compareImages(img1, img2):
         if m.distance < cfg.cencitivity*n.distance:
             matches += 1
 
-    if matches > cfg.MIN_MATCH_COUNT:
-        #print("Enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
-        return True
-    else:
-        #print("Not enough matches are found - %d/%d" % (counter,cfg.MIN_MATCH_COUNT) )
-        return False
+    return matches > cfg.MIN_MATCH_COUNT

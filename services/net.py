@@ -76,6 +76,8 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
 
 def uploadImage(serverUrl, imagePath, image):
     from sys import platform
+    import tempfile
+
     serverUrl += "/upload"
     r = requests.get(serverUrl)
     if not r.status_code != 200:
@@ -85,7 +87,6 @@ def uploadImage(serverUrl, imagePath, image):
     else:
         filename = imagePath
 
-    import tempfile
     with tempfile.NamedTemporaryFile(delete=False) as temp:  # рр на винде приходится не юзать преимущества темфайла
         temp.write(image.json().encode('utf-8'))
         temp.flush()
