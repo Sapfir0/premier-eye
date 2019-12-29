@@ -16,7 +16,7 @@ class Settings(object):
     colorama.init(autoreset=True)
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
-    checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
+    checkOldProcessedFrames = True  # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR: bool = bool(os.environ['ENABLE_CAR_DETECTOR'])  # детекировать номер машины(только для камер №1, №2)
     AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
@@ -61,7 +61,6 @@ class Settings(object):
     cencitivity = 0.7  # не особо влияет на что-то
 
     classNamesLink = "https://vk.com/doc84996630_511662034?hash=67486781e1f2e80f74&dl=ccef7e31f207091030"
-    imageAInetworkLink = "https://www.dropbox.com/s/69msiog3cqct3l5/resnet50_coco_best_v2.0.1.h5"
     packages = ["cv2", "tensorflow", "keras"]
 
     def __init__(self):

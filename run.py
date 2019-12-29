@@ -1,31 +1,52 @@
 import subprocess
-from threading import Thread
-from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 from settings import Settings as cfg
+from flask import Flask, jsonify
 
 PORT = 8010
 paramChanged = False
 paramValue = None
 mainPID = None
 
-
-class TestHandler(BaseHTTPRequestHandler):
-    def do_POST(self):
-        global paramChanged, paramValue
-        content_len = int(self.headers.get('Content-Length'))
-        post_body: bytes = self.rfile.read(content_len)
-        paramChanged = True
-        paramValue = post_body.decode()  # TODO тут будет записыватьт в енв файл наши измененные параметры
+app = Flask(__name__)
 
 
-def startServer():
-    myServer = HTTPServer(("localhost", PORT), TestHandler)
-    myServer.serve_forever()
+@app.route('/detectionList')
+def detectionList():  # найти станадртную реализацию
+    detections = {}
+    with open(cfg.CLASSES_FILE, 'rt') as file:
+        classes = file.read().rstrip('\n').split('\n')
+
+    for obj in classes:
+        for availableObj in cfg.AVAILABLE_OBJECTS:
+            if obj == availableObj:
+                detections.update({obj: True})
+            elif obj != availableObj and obj not in detections.keys():
+                detections.update({obj: False}) # сыграл на принципе работы апдейт
+    return jsonify(detections)
+
+
+if __name__ == '__main__':
+    app.run(port=PORT, host="localhost")
+
 
 
 def killProcess(pid):
     subprocess.Popen('taskkill /F /PID {0}'.format(pid), shell=True)
+
+
+def runProgram():
+    global paramChanged, mainPID
+    while True:  # цикл №0  ломает все
+        if paramChanged:
+            killProcess(mainPID)
+            paramChanged = False
+            # изменить конфиг в енв
+            changeStringInFileTo()
+        else:
+            path = os.path.join(cfg.APP_PATH, "mainImage.py")
+            pid = subprocess.Popen(["python", path]).pid
+            mainPID = pid
 
 
 def changeStringInFileTo():
@@ -49,21 +70,3 @@ def changeStringInFileTo():
         for i in range(stringWithParam):
             f.readline()
         f.writelines(paramValue)
-
-
-def runProgram():
-    global paramChanged, mainPID
-    #while True:  # цикл №0  ломает все
-    if paramChanged:
-        killProcess(mainPID)
-        paramChanged = False
-        # изменить конфиг в енв
-        changeStringInFileTo()
-    else:
-        path = os.path.join(cfg.APP_PATH, "mainImage.py")
-        pid = subprocess.Popen(["python", path]).pid
-        mainPID = pid
-
-
-Thread(target=startServer).start()
-Thread(target=runProgram).start()
