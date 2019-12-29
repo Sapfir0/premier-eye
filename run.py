@@ -26,30 +26,25 @@ def detectionList():  # найти станадртную реализацию
     return jsonify(detections)
 
 
-if __name__ == '__main__':
-    app.run(port=PORT, host="localhost")
-
-
-
 def killProcess(pid):
     subprocess.Popen('taskkill /F /PID {0}'.format(pid), shell=True)
 
 
 def runProgram():
     global paramChanged, mainPID
-    while True:  # цикл №0  ломает все
-        if paramChanged:
-            killProcess(mainPID)
-            paramChanged = False
-            # изменить конфиг в енв
-            changeStringInFileTo()
-        else:
-            path = os.path.join(cfg.APP_PATH, "mainImage.py")
-            pid = subprocess.Popen(["python", path]).pid
-            mainPID = pid
+    #while True:  # цикл №0  ломает все
+    if paramChanged:
+        killProcess(mainPID)
+        paramChanged = False  # ахахха эвент драйвер от сани
+        # изменить конфиг в енв
+        changeStringInFileTo()
+    else:
+        path = os.path.join(cfg.APP_PATH, "mainImage.py")
+        pid = subprocess.Popen(["python", path]).pid
+        mainPID = pid
 
 
-def changeStringInFileTo():
+def changeStringInFileTo(): # TODO переписать
     def detectLine():
         stringWithParam = 0
         with open(filepath, 'r') as f:
@@ -70,3 +65,10 @@ def changeStringInFileTo():
         for i in range(stringWithParam):
             f.readline()
         f.writelines(paramValue)
+
+
+if __name__ == '__main__':
+    runProgram()
+    print("я тутыыафыаыфпфпфвпфпф")
+    app.run(port=PORT, host="localhost")
+

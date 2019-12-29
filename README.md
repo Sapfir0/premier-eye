@@ -1,7 +1,7 @@
 # Premier Eye
 
 
-<img src="./pyback/resources/images/eye.svg" width="100" height="100">
+<img src="./resources/images/eye.png" width="100" height="100" alt="Глаз">
 
 ## Program for detecting objects
 
