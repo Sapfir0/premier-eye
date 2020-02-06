@@ -2,6 +2,7 @@ import subprocess
 import os
 from settings import Settings as cfg
 from flask import Flask, jsonify
+import argparse
 
 PORT = 8010
 paramChanged = False
@@ -68,7 +69,11 @@ def changeStringInFileTo(): # TODO переписать
 
 
 if __name__ == '__main__':
-    runProgram()
-    print("я тутыыафыаыфпфпфвпфпф")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--no-run-detections', action='store_true', default=False, help='Решил, что будет возможность запускать сервер отдельно от распознавалки')
+    args = parser.parse_args()
+
+    if not args.no_run_detections:
+        runProgram()
     app.run(port=PORT, host="localhost")
 

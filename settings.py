@@ -16,7 +16,7 @@ class Settings(object):
     colorama.init(autoreset=True)
 
     # Настройки высокого уровня, которые можно вынести как тригеры в вебе
-    checkOldProcessedFrames = True  # если True, обработанные файлы второй раз не попадут в очередь на обработку
+    checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
     SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR: bool = bool(os.environ['ENABLE_CAR_DETECTOR'])  # детекировать номер машины(только для камер №1, №2)
     AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
@@ -73,7 +73,7 @@ class Settings(object):
         if self.CAR_NUMBER_DETECTOR:
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
-        if not os.path.isfile(self.DATE_FILE):
+        if not os.path.isfile(self.DATE_FILE): # мне кажется, это создание файла
             with open(self.DATE_FILE, "w") as f:
                 f.close()
 
