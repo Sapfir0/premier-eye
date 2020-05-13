@@ -62,3 +62,10 @@ If you want run container on interactive mode
 # Server side
 
 [link](https://github.com/Sapfir0/web-premier-eye)
+
+
+
+### Информация для dev-ops
+
+Если соединение установить не получается, проверить через `docker network inspect @netName@` ip адрес к которому подключен
+сервер, и если требуется, изменить параметр `DOCKER_LOCALL_ADDRESS`.

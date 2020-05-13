@@ -7,9 +7,8 @@ sqlalchemy
 scikit_image
 pycocotools
 matplotlib
-opencv-python==3.4.2.16
-opencv-contrib-python==3.4.2.16
-mrcnn
+opencv-python
+opencv-contrib-python
 colorama
 keras
 tensorflow

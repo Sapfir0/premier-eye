@@ -11,13 +11,15 @@ services:
       - ./data:/data
       - ./output:/output
     networks:
-      - webpremiereye_some-net
+      - web-premier-eye_some-net
     environment:
-      - DOCKER_LOCAL_ADDRESS=http://172.20.0.1
+      - DOCKER_LOCAL_ADDRESS=http://172.30.0.2
     env_file:
       - .env
 
 
+
 networks:
-  webpremiereye_some-net:
-    external: true
+  web-premier-eye_some-net:
+    external:
+      true
