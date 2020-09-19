@@ -1,0 +1,17 @@
+{
+    "filename": "1_44434.jpg",
+    "numberOfCam": "1",
+    "fixationDatetime": "2019-07-18 14:44:34",
+    "0": {
+        "type": "car",
+        "scores": 99.8,
+        "coordinates": [1,2,3,4],
+        "licenseNumber": "s"
+    },
+    "1": {
+        "type": "car",
+        "scores": 98.1,
+        "coordinates": [1,2,3,4],
+        "licenseNumber": "s"
+    }
+}

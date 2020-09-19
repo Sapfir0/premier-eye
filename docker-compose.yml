@@ -1,25 +1,30 @@
-version: '3.3'
-
+version: '3'
 services:
-  pyback:
-    container_name: pyback
-    image: sapfir0/premier-eye:cpu
+  server:
+    restart: always
+    env_file: application/.env
+    image: sapfir0/web-premier-eye:server
     build:
-      dockerfile: FastDockerfile
-      context: .
+      context: application
+      dockerfile: Dockerfile
+    ports:
+      - "8050:8050"
     volumes:
-      - ./data:/data
-      - ./output:/output
+      - "./application/static/uploads:/pyfront/application/static/uploads"
+      - "./data.db:/pyfront/application/data.db"
     networks:
-      - web-premier-eye_some-net
-    environment:
-      - DOCKER_LOCAL_ADDRESS=http://172.30.0.2
-    env_file:
-      - .env
+      - some-net
 
-
+  client:
+    restart: always
+    image: sapfir0/web-premier-eye:client
+    build:
+      context: SPA
+      dockerfile: Dockerfile
+    ports:
+      - "5000:80"
+    stdin_open: true
 
 networks:
-  web-premier-eye_some-net:
-    external:
-      true
+  some-net:
+    driver: bridge

@@ -1,0 +1,15 @@
+data
+output
+logs
+__pycache__
+last_data_processed.txt
+.vscode
+nomeroff-net
+.idea
+*.mp4
+*.avi
+*.ogg
+venv
+web-premier-eye
+temp.json
+Mask_RCNN

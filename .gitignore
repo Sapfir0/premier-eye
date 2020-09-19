@@ -1,15 +1,54 @@
-data
-output
-logs
-__pycache__
-last_data_processed.txt
-.vscode
-nomeroff-net
+node_modules
+/dist
+.vs
+# local env files
+.env.local
+.env.*.local
+
+build
+dist
+yarn.lock
+# Log files
+npm-debug.log*
+
+# Editor directories and files
 .idea
-*.mp4
-*.avi
-*.ogg
-venv
-web-premier-eye
-temp.json
-Mask_RCNN
+.vscode
+*.suo
+*.njsproj
+*.sln
+*.sw?
+*.db
+package-lock.json
+__pycache__
+application/static/uploads/*
+
+bin
+Debug
+obj
+
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+.DS_Store
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+src/Old/elm-stuff

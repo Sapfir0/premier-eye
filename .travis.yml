@@ -1,0 +1,17 @@
+sudo: required
+language: node_js
+services:
+- docker
+before_script:
+- cd application && docker build -t sapfir0/web-premier-eye:server .
+- cd ../SPA && docker build -t sapfir0/web-premier-eye:client .
+after_success:
+- docker login --username $DOCKER_USER --password $DOCKER_PASS
+- docker push sapfir0/web-premier-eye:client
+- docker push sapfir0/web-premier-eye:server
+#deploy:
+#  provider: heroku
+#  skip_cleanup: true
+#  app: web-premier-eye
+#  api_key:
+#    secure: G5JRpMrG3fsheJDHUxDlIc+g9hRqtifOWC7ozEB8yR/Gj+cg/O1+v2uWfPcwhmI7otgVZ8vtNXnVAvirS4z+9hsWTLZNCpdqCrdY2uRBY0IloEicyVIOcBg7akIgH9Kn4QOQAaT8talh/7xCspEEVTi8MM8oo+IwFhnuIfrBluvvUU0KzoTLfz+CYO9X7EbDR0cjPG+s1ZwbbedaCAWjHxAYEU8nemlxB8osUjqsI7TUncPjecqqKcnAmVo4JkN1iwPvuNtl/fEyfT7jY8W2e7x8NKVRCLNBgcVjsuJUOIGFvWgPDP9YFk97tDyfh/kxFw1Q4LOmJUH2wIJGZQPBMs6h5sSkzXwjoD5ITxJel2XVjXbuzmu6C0tkVLE2JxKfxSHtiaqaismk46BCmAYmR/T1fPwWCwX02dWlxbUyiz+1vCfxTwfKrWGH9DdzpaSAEBsMlOytj+iNchVBuroNA1eU/zItiHa8u1g0esNIgw7egW4HO1QZQeDwbezmTS2PmDtjHs0DkrVL3qs/seo0o8BYbTBIe5qx3iEa/5ClTFI0TXPDCRD0XrDWCkyhRfA4Mw154rr0JWbTsC8sYqZAYKcmdt/WuMIgl9/g+p4lqVFRd8/rzFunb+m/8F4NlCe2OZxWe6rLKTQggG4MVM7sTfMnqWMbtCUrzuXBFw5KZTA=

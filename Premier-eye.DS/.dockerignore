@@ -1,0 +1,11 @@
+#data
+output
+logs
+__pycache__
+.vscode
+nomeroff-net
+last_data_processed.txt
+.idea
+#.env
+temp.json
+Mask_RCNN
