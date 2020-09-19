@@ -5,12 +5,12 @@ services:
     env_file: application/.env
     image: sapfir0/web-premier-eye:server
     build:
-      context: application
+      context: Premier-eye.API
       dockerfile: Dockerfile
     ports:
       - "8050:8050"
     volumes:
-      - "./application/static/uploads:/pyfront/application/static/uploads"
+      - "./Premier-eye.API/static/uploads:/pyfront/application/static/uploads"
       - "./data.db:/pyfront/application/data.db"
     networks:
       - some-net
@@ -19,7 +19,7 @@ services:
     restart: always
     image: sapfir0/web-premier-eye:client
     build:
-      context: SPA
+      context: Premier-eye.SPA
       dockerfile: Dockerfile
     ports:
       - "5000:80"
