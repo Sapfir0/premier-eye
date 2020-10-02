@@ -1,5 +1,5 @@
 import cv2
-from settings import Settings as cfg
+from config.settings import Settings as cfg
 
 class Heatmap():
     def createHeatMap(self, image, filename):

@@ -26,20 +26,20 @@ class Settings(object):
     pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{SERVER_PORT}"
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
-    DATA_PATH = join(APP_PATH, "data")
+    DATA_PATH = join(APP_PATH, "../data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
-    OUTPUT_DIR = join(APP_PATH, "output")
+    OUTPUT_DIR = join(APP_PATH, "../output")
     IMAGE_DIR = join(DATA_PATH, "1_2")  # важная настройка
-    LOGS_DIR = join(APP_PATH, "logs")
-    DATE_FILE = join(APP_PATH, "last_data_processed.txt")
+    LOGS_DIR = join(APP_PATH, "../logs")
+    DATE_FILE = join(APP_PATH, "../last_data_processed.txt")
     # Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
     CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
     OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')
     # car detector
-    NOMEROFF_NET_DIR = join(APP_PATH, 'nomeroff-net')
-    MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, 'Mask_RCNN')
-    MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, 'logs')
+    NOMEROFF_NET_DIR = join(APP_PATH, '../nomeroff-net')
+    MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, '../Mask_RCNN')
+    MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, '../logs')
 
     # Mask cnn advanced
     # Configuration that will be used by the Mask-RCNN library
@@ -64,7 +64,7 @@ class Settings(object):
     packages = ["cv2", "tensorflow", "keras"]
 
     def __init__(self):
-        load_dotenv(os.path.join(self.APP_PATH, '.env'))
+        load_dotenv(os.path.join(self.APP_PATH, '../.env'))
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN]
         dirs.createDirsFromList(must_exist_dirs)

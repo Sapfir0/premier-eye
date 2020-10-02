@@ -6,8 +6,8 @@ import neural_network.modules.feature_matching as sift
 import services.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 import services.directory as dirs
-from settings import Settings as cfg
-from neural_network.classes.Image import Image
+from config.settings import Settings as cfg
+from Models.Image import Image
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 from mrcnn.model import MaskRCNN
 

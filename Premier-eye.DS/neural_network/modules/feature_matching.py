@@ -2,27 +2,10 @@
 
 import cv2
 import os
-from settings import Settings as cfg
+from config.settings import Settings as cfg
 import numpy as np
 
 lastObjectId = 0
-
-
-def setIdToObject(objectId, i):
-    print(objectId)
-    if not isinstance(objectId, list):
-        return "-"
-    if objectId[i] <= lastObjectId:
-        lastObjectId = objectId
-        objectId = lastObjectId+1
-    
-    print(i >= len(objectId), i, len(objectId))
-    if i >= len(objectId):
-        return i
-
-    id = objectId[i]['id']
-
-    return id
 
 
 def checkNewFrame(rgb_image, objectsFromCurrentFrame, objectsFromPreviousFrame, hasOldFrames=False):
@@ -59,7 +42,7 @@ def uniqueObjects(objectsFromPreviousFrame: np.ndarray, objectsFromCurrentFrame:
             if compareImages(previousObjects, currentObjects):  # то это один объект
                 obj = {
                     "id": objectId,
-                    "type": r['class_ids'][objectId],  # TODO исправить!!!
+                    "type": r['class_ids'][objectId],  # TODO исправить
                     "coordinates": r['rois'][objectId]
                 }
                 objectId += 1

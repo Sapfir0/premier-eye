@@ -1,11 +1,11 @@
 import sys
 from colorama import Fore
 import matplotlib.image as mpimg
-from settings import Settings as cfg
+from config.settings import Settings as cfg
 import services.timeChecker as tm
 import os
 sys.path.append(cfg.NOMEROFF_NET_DIR)
-from NomeroffNet import  filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing
+from NomeroffNet import filters, RectDetector, TextDetector, OptionsDetector, Detector, textPostprocessing
 
 nnet = Detector(cfg.MASK_RCNN_DIR, cfg.MASK_RCNN_LOG_DIR)
 nnet.loadModel("latest")

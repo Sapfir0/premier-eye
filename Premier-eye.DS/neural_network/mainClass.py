@@ -3,8 +3,8 @@ import os
 import services.file_controller as file_controller
 import services.others as others
 import services.directory as dirs
-from neural_network.classes import Image
-from settings import Settings as cfg
+from Models import Image
+from config.settings import Settings as cfg
 from services.net import uploadImage
 from neural_network.maskCNN import Mask
 
@@ -49,7 +49,7 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
 
 def carNumberDetector(filename, image: Image):
     from neural_network.car_number import car_detect
-    from neural_network.classes.Car import Car
+    from Models.Car import Car
     carNumbers = []
     for i, item in enumerate(image.objects):
         if image.numberOfCam in ["1", "2"] and isinstance(image.objects[i], Car):

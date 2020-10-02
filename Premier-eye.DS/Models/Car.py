@@ -1,4 +1,4 @@
-from neural_network.classes.Object_ import Object_
+from Models.Object_ import Object_
 
 
 class Car(Object_):

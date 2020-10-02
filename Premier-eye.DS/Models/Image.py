@@ -2,8 +2,8 @@ import services.others as others
 import datetime
 import cv2
 
-from neural_network.classes.Car import Car
-from neural_network.classes.Person import Person
+from Models.Car import Car
+from Models.Person import Person
 
 
 class Image(object):

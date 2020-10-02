@@ -16,7 +16,7 @@ def myExit(status):
 def trafficControl(downloadingFile="", exiting=False):
     global allowDownload
     if allowDownload:
-        return 0  # если разрешили однажды, сда больше не зайдем
+        return 0  # если разрешили однажды, сюда больше не зайдем
 
     if console.confirm("Do you want to start downloading {}? May be dangerous for traffic".format(downloadingFile)):
         allowDownload = True
