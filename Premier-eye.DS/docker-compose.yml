@@ -10,16 +10,16 @@ services:
     volumes:
       - ./data:/data
       - ./output:/output
-    networks:
-      - web-premier-eye_some-net
+#    networks:
+#      - web-premier-eye_some-net
     environment:
       - DOCKER_LOCAL_ADDRESS=http://172.30.0.2
     env_file:
       - .env
 
 
-
-networks:
-  web-premier-eye_some-net:
-    external:
-      true
+#
+#networks:
+#  web-premier-eye_some-net:
+#    external:
+#      true

@@ -15,13 +15,8 @@ load_dotenv()
 class Settings(object):
     colorama.init(autoreset=True)
 
-    # Настройки высокого уровня, которые можно вынести как тригеры в вебе
-    checkOldProcessedFrames = False  # если True, обработанные файлы второй раз не попадут в очередь на обработку
-    SAVE_COLORMAP = False
     CAR_NUMBER_DETECTOR: bool = bool(os.environ['ENABLE_CAR_DETECTOR'])  # детекировать номер машины(только для камер №1, №2)
-    AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
 
-    sendRequestToServer = True
     SERVER_PORT = os.getenv('SERVER_PORT')
     pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{SERVER_PORT}"
     # путевые настройки
@@ -54,14 +49,6 @@ class Settings(object):
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
 
     TEST_IMAGE_DIR = join(DATA_PATH, "test_images")
-    IMAGE_PATH_WHITELIST = ["detections.json"]
-    # Алгоритм сравнения
-    MIN_MATCH_COUNT = 20  # меньше этого числа совпадений, будем считать что объекты разные
-    FLANN_INDEX_KDTREE = 0  # алгоритм
-    cencitivity = 0.7  # не особо влияет на что-то
-
-    classNamesLink = "https://vk.com/doc84996630_511662034?hash=67486781e1f2e80f74&dl=ccef7e31f207091030"
-    packages = ["cv2", "tensorflow", "keras"]
 
     def __init__(self):
         load_dotenv(os.path.join(self.APP_PATH, '../.env'))

@@ -2,7 +2,7 @@ FROM tensorflow/tensorflow:latest-py3
 
 RUN apt-get update
 
-RUN apt-get install -y libsm6 libfontconfig1 libxrender1 libxtst6 git
+RUN apt-get install -y libsm6 libfontconfig1 libxrender1 libxtst6 git libgl1-mesa-glx
 
 COPY . /pyback
 WORKDIR /pyback
