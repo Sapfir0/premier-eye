@@ -1,7 +1,8 @@
 import React from 'react';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
 import {camersCount} from "../../config/app";
-import {Button, List, ListItem} from "semantic-ui-react";
-
+import {withStyles} from "@material-ui/core/styles";
 
 const styles = {
     root: {
@@ -11,6 +12,7 @@ const styles = {
 };
 
 interface IProps {
+    classes: any,
     onCameraChange: (cameraId: number) => void
 }
 
@@ -25,6 +27,7 @@ class CamerasList extends React.Component<IProps> {
     }
 
     render() {
+        const {classes} = this.props;
 
         let camerasMenu = [];
         for (let i = 1; i < camersCount + 1; i++) {
@@ -33,12 +36,12 @@ class CamerasList extends React.Component<IProps> {
                     button key={i}
                     onClick={(event) => this.handleListItemClick(event, i)}
                 >
-                    <Button>Camera {i} </Button>
+                    Camera {i}
                 </ListItem>
             )
         }
         return (
-            <div>
+            <div className={classes.root}>
                 <List component="nav" aria-label="main mailbox folders">
                     {camerasMenu}
                 </List>
@@ -49,4 +52,4 @@ class CamerasList extends React.Component<IProps> {
 
 }
 
-export default CamerasList
+export default  withStyles(styles)(CamerasList)

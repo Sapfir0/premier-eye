@@ -17,6 +17,10 @@ class Settings(object):
 
     CAR_NUMBER_DETECTOR: bool = bool(os.environ['ENABLE_CAR_DETECTOR'])  # детекировать номер машины(только для камер №1, №2)
 
+    packages = ["cv2", "tensorflow", "keras"]
+    AVAILABLE_OBJECTS = ['car', 'person', 'truck']  # искомые объекты
+    IMAGE_PATH_WHITELIST = ["detections.json"]
+
     SERVER_PORT = os.getenv('SERVER_PORT')
     pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{SERVER_PORT}"
     # путевые настройки

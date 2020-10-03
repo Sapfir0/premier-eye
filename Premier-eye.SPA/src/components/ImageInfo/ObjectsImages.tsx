@@ -1,6 +1,6 @@
-
+import DirectionsCar from "@material-ui/icons/DirectionsCar";
+import PersonIcon from "@material-ui/icons/Person";
 import React from "react";
-import {Icon} from "semantic-ui-react";
 
 interface objectsPictures {
     'icon': JSX.Element,
@@ -8,8 +8,8 @@ interface objectsPictures {
 }
 
 const detectionsImages: { [objectName: string]: objectsPictures } = {
-    'car': {'icon': <Icon name="car"/>, 'title': 'Автомобиль'},
-    'person': {'icon': <Icon name="users"/>, 'title': 'Человек'},
+    'car': {'icon': <DirectionsCar/>, 'title': 'Автомобиль'},
+    'person': {'icon': <PersonIcon/>, 'title': 'Человек'},
 }
 
 
