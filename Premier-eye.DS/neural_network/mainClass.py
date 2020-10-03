@@ -68,7 +68,7 @@ def detectObjects(filename):
         carNumberDetector(filename, image)
 
     if cfg.sendRequestToServer:
-        uploadImage(cfg.pyfrontDevelopmentLink, outputFile, image)
+        uploadImage(cfg.apiLink, outputFile, image)
 
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image

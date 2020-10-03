@@ -6,6 +6,7 @@ import neural_network.modules.feature_matching as sift
 import services.timeChecker as timeChecker
 import neural_network.modules.extra as extra
 import services.directory as dirs
+import mrcnn.config
 from config.settings import Settings as cfg
 from Models.Image import Image
 sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
@@ -25,6 +26,22 @@ def _parseR(r):
     return detections
 
 
+# Mask cnn advanced
+# Configuration that will be used by the Mask-RCNN library
+def getMaskConfig(confidence: float):
+    class MaskRCNNConfig(mrcnn.config.Config):
+        NAME = "coco_pretrained_model_config"
+        GPU_COUNT = 1
+        IMAGES_PER_GPU = 1
+        DETECTION_MIN_CONFIDENCE = confidence  # минимальный процент отображения прямоугольника
+        NUM_CLASSES = 81
+        IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
+        IMAGE_MAX_DIM = 768
+        DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
+
+    return MaskRCNNConfig()
+
+
 class Mask(object):
     """
         Mask R-CNN
@@ -41,7 +58,7 @@ class Mask(object):
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=cfg.MaskRCNNConfig())
+        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=getMaskConfig(cfg.detectionMinConfidence))
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
