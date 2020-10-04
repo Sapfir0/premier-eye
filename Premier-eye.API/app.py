@@ -13,11 +13,11 @@ def registerBlueprints(app):
 
 def createApp(configClass=Config):
     staticFolder = 'static'
-    app = Flask(__name__, static_folder=staticFolder)
-    app.config.from_object(configClass)
-    registerBlueprints(app)
-    CORS(app, resources={r'/*': {'origins': '*'}})
-    return app
+    configApp = Flask(__name__, static_folder=staticFolder)
+    configApp.config.from_object(configClass)
+    registerBlueprints(configApp)
+    CORS(configApp, resources={r'/*': {'origins': '*'}})
+    return configApp
 
 
 app = createApp(cfg)

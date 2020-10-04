@@ -13,7 +13,7 @@ services:
     networks:
       - premier-eye_some-net
     environment:
-      - DOCKER_LOCAL_ADDRESS=http://172.20.0.1
+      - DOCKER_LOCAL_ADDRESS=http://172.18.0.2
     env_file:
       - .env
 
