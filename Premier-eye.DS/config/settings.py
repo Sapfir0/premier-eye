@@ -9,12 +9,14 @@ import services.net as net
 from dotenv import load_dotenv
 from configparser import ConfigParser
 
+load_dotenv()
+
 
 class Settings(object):
     colorama.init(autoreset=True)
 
     SERVER_PORT = os.getenv('SERVER_PORT')
-    apiLink = f"http://localhost:{SERVER_PORT}"
+    apiLink = f"{os.getenv('DOCKER_LOCAL_ADDRESS')}:{SERVER_PORT}"
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "../data")
@@ -39,23 +41,27 @@ class Settings(object):
     config = ConfigParser()
     config.read(pathToConfig)
 
-    detectionMinConfidence = config.get('UserParams', 'DETECTION_MIN_CONFIDENCE')
+    detectionMinConfidence: float = config.getfloat('UserParams', 'DETECTION_MIN_CONFIDENCE')
+    checkOldProcessedFrames = config.getboolean('UserParams', 'checkOldProcessedFrames')
+    IMAGE_PATH_WHITELIST = config.get('FixedParams', 'IMAGE_PATH_WHITELIST')
+    AVAILABLE_OBJECTS = config.get('UserParams', 'AVAILABLE_OBJECTS').split()
+    sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
 
     def __init__(self):
-        CAR_NUMBER_DETECTOR = self.config.get('UserParams', 'CAR_NUMBER_DETECTOR')
+        CAR_NUMBER_DETECTOR = self.config.getboolean('UserParams', 'CAR_NUMBER_DETECTOR')
         classNamesLink = self.config.get('FixedParams', 'classNamesLink')
 
         load_dotenv(os.path.join(self.APP_PATH, '../.env'))
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN]
         dirs.createDirsFromList(must_exist_dirs)
-        others.checkVersion(self.config.get('FixedParams', 'packages'))
+        others.checkVersion(self.config.get('FixedParams', 'packages').split())
 
         # а ниже мы сможем увидеть 3 разлчиных способа указзания большого трафика
         if CAR_NUMBER_DETECTOR:
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
-        if not os.path.isfile(self.DATE_FILE): #это создание файла
+        if not os.path.isfile(self.DATE_FILE):  # это создание файла
             with open(self.DATE_FILE, "w") as f:
                 f.close()
 

@@ -1,25 +1,24 @@
 version: '3.3'
 
 services:
-  pyback:
-    container_name: pyback
+  detection:
+    container_name: detection
     image: sapfir0/premier-eye:cpu
     build:
-      dockerfile: FastDockerfile
+      dockerfile: Dockerfile.Fast
       context: .
     volumes:
       - ./data:/data
       - ./output:/output
-#    networks:
-#      - web-premier-eye_some-net
+    networks:
+      - premier-eye_some-net
     environment:
-      - DOCKER_LOCAL_ADDRESS=http://172.30.0.2
+      - DOCKER_LOCAL_ADDRESS=http://172.20.0.1
     env_file:
       - .env
 
 
-#
-#networks:
-#  web-premier-eye_some-net:
-#    external:
-#      true
+networks:
+  premier-eye_some-net:
+    external:
+      true

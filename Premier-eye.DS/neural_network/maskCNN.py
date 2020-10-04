@@ -2,9 +2,8 @@ import os
 import sys
 import cv2
 import numpy as np
-import neural_network.modules.feature_matching as sift
 import services.timeChecker as timeChecker
-import neural_network.modules.extra as extra
+import services.extra as extra
 import services.directory as dirs
 import mrcnn.config
 from config.settings import Settings as cfg
@@ -49,7 +48,6 @@ class Mask(object):
     SAVE_COLORMAP = False
     CLASS_NAMES = None
     COLORS = None
-    objectsFromPreviousFrame = None  # objects in the previous frame
     model = None
     hasOldFrame = False
 
@@ -58,7 +56,7 @@ class Mask(object):
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=getMaskConfig(cfg.detectionMinConfidence))
+        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=getMaskConfig(float(cfg.detectionMinConfidence)))
         self.model.load_weights(cfg.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
@@ -78,13 +76,7 @@ class Mask(object):
         detections = _parseR(self._humanizeTypes(self._detectByMaskCNN(img)))
         img.addDetections(detections)  # detections тоже
 
-        objectsFromCurrentFrame = img.extractObjects(binaryImage, outputImageDirectory=outputPath, filename=filename)
         signedImg = self._visualize_detections(img)
-        # запоминаем найденные изображения, а потом сравниваем их с найденными на следующем кадре
-        # if self.hasOldFrame:
-        #     sift.checkNewFrame(img, rgb_image, objectsFromCurrentFrame, self.hasOldFrame)  # TODO
-        # else:
-        #     self.hasOldFrame = True
 
         img.write(outputPath, signedImg)
         return img
