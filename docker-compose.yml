@@ -2,7 +2,7 @@ version: '3'
 services:
   server:
     restart: always
-    env_file: application/.env
+    env_file: Premier-eye.API/.env
     image: sapfir0/web-premier-eye:server
     build:
       context: Premier-eye.API

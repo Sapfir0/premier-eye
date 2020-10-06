@@ -13,3 +13,6 @@ venv
 web-premier-eye
 temp.json
 Mask_RCNN
+pytorch*
+darknet
+env
