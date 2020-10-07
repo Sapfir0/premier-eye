@@ -2,6 +2,9 @@ from datetime import datetime
 import re
 import os
 
+datetimePatternFileName = '%Y%m%d%H%M%S.jpg'
+regexpPatternFilename = r'\d_\d{14}\..+'
+
 
 def getDate(filename):
     dateTime = getDateFromFilename(filename)
@@ -16,7 +19,7 @@ def getHours(filename):
 def parseFilename(filename: str, getNumberOfCamera=False, getDate=True):
     checkCorrectness(filename)
     numberOfCam, date = filename.split("_")
-    parsedData = datetime.strptime(date, cfg.datetimePattern)
+    parsedData = datetime.strptime(date, datetimePatternFileName)
     if getNumberOfCamera and getDate:
         return parsedData, numberOfCam
     elif getDate:
@@ -38,7 +41,7 @@ def checkDateFile(dateFile: str):
 
 
 def checkCorrectness(filename):
-    result = re.findall(cfg.regexp, filename)
+    result = re.findall(regexpPatternFilename, filename)
     if not result:
         raise ValueError("Wrong date in filename")
 
@@ -46,7 +49,7 @@ def checkCorrectness(filename):
 def getDateFromFilename(filename):
     checkCorrectness(filename)
     date = filename.split("_")[1]
-    dateTime = datetime.strptime(date, datetimePattern)
+    dateTime = datetime.strptime(date, datetimePatternFileName)
     return dateTime
 
 

@@ -15,9 +15,6 @@ load_dotenv()
 class Settings(object):
     colorama.init(autoreset=True)
 
-    CAR_NUMBER_DETECTOR: bool = bool(os.environ['ENABLE_CAR_DETECTOR'])  # детекировать номер машины(только для камер №1, №2)
-
-
     SERVER_PORT = os.getenv('SERVER_PORT')
     apiLink = f"{os.getenv('DOCKER_LOCAL_ADDRESS')}:{SERVER_PORT}"
     # путевые настройки
@@ -37,13 +34,10 @@ class Settings(object):
     MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, '../Mask_RCNN')
     MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, '../logs')
 
-    datetimePatternFileName = '%Y%m%d%H%M%S.jpg'
-    regexpPatternFilename = r'\d_\d{14}\..+'
 
     pathToConfig = join(APP_PATH, "config.ini")
 
     TEST_IMAGE_DIR = join(DATA_PATH, "test_images")
-
 
     config = ConfigParser()
     config.read(pathToConfig)
@@ -57,7 +51,6 @@ class Settings(object):
 
 
     def __init__(self):
-        CAR_NUMBER_DETECTOR = self.config.getboolean('UserParams', 'CAR_NUMBER_DETECTOR')
         classNamesLink = self.config.get('FixedParams', 'classNamesLink')
 
         load_dotenv(os.path.join(self.APP_PATH, '../.env'))
@@ -67,7 +60,7 @@ class Settings(object):
         others.checkVersion(self.config.get('FixedParams', 'packages').split())
 
         # а ниже мы сможем увидеть 3 разлчиных способа указзания большого трафика
-        if CAR_NUMBER_DETECTOR:
+        if self.carNumberDetector:
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
         if not os.path.isfile(self.DATE_FILE):  # это создание файла
