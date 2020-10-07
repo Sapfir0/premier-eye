@@ -71,5 +71,6 @@ def detectObjects(filename):
         api = InteractionService.apiInteractionService()
         api.uploadImage(outputFile, image)
 
+
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image

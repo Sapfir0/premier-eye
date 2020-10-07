@@ -51,6 +51,7 @@ class Settings(object):
     sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
     carNumberDetector = config.getboolean('UserParams', 'carNumberDetector')
 
+
     def __init__(self):
         CAR_NUMBER_DETECTOR = self.config.getboolean('UserParams', 'CAR_NUMBER_DETECTOR')
         classNamesLink = self.config.get('FixedParams', 'classNamesLink')
