@@ -3,3 +3,4 @@ Flask
 Flask-Cors
 python-dotenv
 sqlalchemy
+flask_restplus

@@ -9,3 +9,4 @@ opencv-python
 colorama
 IPython
 gitPython
+dependency_injector
