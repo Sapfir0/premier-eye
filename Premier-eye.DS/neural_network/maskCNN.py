@@ -89,7 +89,7 @@ class Mask(object):
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
         for i, currentObject in enumerate(image.objects):
-            if currentObject.type not in cfg.AVAILABLE_OBJECTS:
+            if currentObject.type not in cfg.availableObjects:
                 continue
 
             y1, x1, y2, x2 = currentObject.coordinates

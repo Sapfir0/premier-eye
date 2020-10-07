@@ -19,7 +19,7 @@ def detectionList():  # найти станадртную реализацию
         classes = file.read().rstrip('\n').split('\n')
 
     for obj in classes:
-        for availableObj in cfg.AVAILABLE_OBJECTS:
+        for availableObj in cfg.availableObjects:
             if obj == availableObj:
                 detections.update({obj: True})
             elif obj != availableObj and obj not in detections.keys():

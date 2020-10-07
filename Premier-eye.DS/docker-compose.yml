@@ -5,7 +5,7 @@ services:
     container_name: detection
     image: sapfir0/premier-eye:cpu
     build:
-      dockerfile: Dockerfile.Fast
+      dockerfile: Dockerfile
       context: .
     volumes:
       - ./data:/data

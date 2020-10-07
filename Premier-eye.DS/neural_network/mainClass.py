@@ -64,7 +64,7 @@ def detectObjects(filename):
 
     image = mask.pipeline(inputFile, outputFile)
 
-    if cfg.CAR_NUMBER_DETECTOR:
+    if cfg.carNumberDetector:
         carNumberDetector(filename, image)
 
     if cfg.sendRequestToServer:
