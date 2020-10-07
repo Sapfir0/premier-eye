@@ -2,12 +2,12 @@ import os
 from os.path import join
 import mrcnn.utils
 import colorama
-import mrcnn.config
 import services.others as others
 from dotenv import load_dotenv
 import services.directory as dirs
 import services.net as net
 from dotenv import load_dotenv
+from configparser import ConfigParser
 
 load_dotenv()
 
@@ -17,8 +17,9 @@ class Settings(object):
 
     CAR_NUMBER_DETECTOR: bool = bool(os.environ['ENABLE_CAR_DETECTOR'])  # детекировать номер машины(только для камер №1, №2)
 
+
     SERVER_PORT = os.getenv('SERVER_PORT')
-    pyfrontDevelopmentLink = os.environ['DOCKER_LOCAL_ADDRESS'] + f":{SERVER_PORT}"
+    apiLink = f"{os.getenv('DOCKER_LOCAL_ADDRESS')}:{SERVER_PORT}"
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "../data")
@@ -36,38 +37,47 @@ class Settings(object):
     MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, '../Mask_RCNN')
     MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, '../logs')
 
-    # Mask cnn advanced
-    # Configuration that will be used by the Mask-RCNN library
-    class MaskRCNNConfig(mrcnn.config.Config):
-        NAME = "coco_pretrained_model_config"
-        GPU_COUNT = 1
-        IMAGES_PER_GPU = 1
-        DETECTION_MIN_CONFIDENCE = float(os.getenv('DETECTION_MIN_CONFIDENCE')) # минимальный процент отображения прямоугольника
-        NUM_CLASSES = 81
-        IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
-        IMAGE_MAX_DIM = 768
-        DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
+    datetimePatternFileName = '%Y%m%d%H%M%S.jpg'
+    regexpPatternFilename = r'\d_\d{14}\..+'
+
+    pathToConfig = join(APP_PATH, "config.ini")
 
     TEST_IMAGE_DIR = join(DATA_PATH, "test_images")
 
+
+    config = ConfigParser()
+    config.read(pathToConfig)
+
+    detectionMinConfidence: float = config.getfloat('UserParams', 'detectionMinConfidence')
+    checkOldProcessedFrames = config.getboolean('UserParams', 'checkOldProcessedFrames')
+    imagePathWhitelist = config.get('FixedParams', 'imagePathWhitelist')
+    availableObjects = config.get('UserParams', 'availableObjects').split()
+    sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
+    carNumberDetector = config.getboolean('UserParams', 'carNumberDetector')
+
+
     def __init__(self):
+        CAR_NUMBER_DETECTOR = self.config.getboolean('UserParams', 'CAR_NUMBER_DETECTOR')
+        classNamesLink = self.config.get('FixedParams', 'classNamesLink')
+
         load_dotenv(os.path.join(self.APP_PATH, '../.env'))
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN]
         dirs.createDirsFromList(must_exist_dirs)
-        others.checkVersion(self.packages)
+        others.checkVersion(self.config.get('FixedParams', 'packages').split())
+
         # а ниже мы сможем увидеть 3 разлчиных способа указзания большого трафика
-        if self.CAR_NUMBER_DETECTOR:
+        if CAR_NUMBER_DETECTOR:
             net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
 
-        if not os.path.isfile(self.DATE_FILE): # мне кажется, это создание файла
+        if not os.path.isfile(self.DATE_FILE):  # это создание файла
             with open(self.DATE_FILE, "w") as f:
                 f.close()
 
         if not os.path.exists(self.DATASET_DIR):
             net.trafficControl(exiting=True)
             mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-        net.downloadAndMove(self.classNamesLink, self.CLASSES_FILE)
+        net.downloadAndMove(classNamesLink, self.CLASSES_FILE)
 
         net.downloadSamples(self.IMAGE_DIR)
 

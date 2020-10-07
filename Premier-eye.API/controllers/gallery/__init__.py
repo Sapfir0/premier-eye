@@ -8,13 +8,12 @@ blueprint = Blueprint(
     static_folder='static'
 )
 
-
 routes = {
-    'getImage': '/gallery/<filename>',
+    'getImage': '/<filename>',
     'getAllImages': '/gallery',
-    'getJsonInfo': '/gallery/<filename>/info',
-    'getInfoFromCamera': '/gallery/camera/<cameraId>',
-    'getImageBetweenDatesFromCamera': '/gallery/cameraDelta<cameraId>',
-    'getObjectsFromRectangleOnImage': '/gallery/<filename>/objects',
-    'getObjectsFromRectangleOnImageVisualize': '/gallery/<filename>/objectsVisualize'
+    'getJsonInfo': '/<filename>/info',
+    'getInfoFromCamera': '/camera/<cameraId>',
+    'getImageBetweenDatesFromCamera': '/cameraDelta<cameraId>',
+    'getObjectsFromRectangleOnImage': '/<filename>/objects',
+    'getObjectsFromRectangleOnImageVisualize': '/<filename>/objectsVisualize'
 }

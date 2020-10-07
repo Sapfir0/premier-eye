@@ -44,13 +44,13 @@ def checkElapsedTimeAndCompair(criticalTime, permissibleTime, greatTime, helperS
 
 def getColorForTime(currentTime, criticalTime, permissibleTime, greatTime):
     from colorama import Fore
-    if (currentTime >= criticalTime):
+    if currentTime >= criticalTime:
         return Fore.RED, "critical"
-    elif (currentTime < criticalTime and currentTime >= permissibleTime):
+    elif currentTime < criticalTime and currentTime >= permissibleTime:
         return Fore.LIGHTRED_EX, "not permissable"
-    elif (currentTime < permissibleTime and currentTime >= greatTime):
+    elif currentTime < permissibleTime and currentTime >= greatTime:
         return Fore.YELLOW, "permissable"
-    elif (currentTime < greatTime):
+    elif currentTime < greatTime:
         return Fore.GREEN, "ok"
     else:
         pass

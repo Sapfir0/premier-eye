@@ -12,7 +12,7 @@ def mainPipeline():
         processedFrames = dh.checkDateFile(cfg.DATE_FILE)
 
     while True:
-        imagesForEachCamer = others.checkNewFile(cfg.IMAGE_DIR, cfg.IMAGE_PATH_WHITELIST)
+        imagesForEachCamer = others.checkNewFile(cfg.IMAGE_DIR, cfg.imagePathWhitelist)
         for items in imagesForEachCamer.items():
             (numberOfCam, filenames) = items
             detector.predicated(numberOfCam, filenames, processedFrames)

@@ -5,12 +5,13 @@ import services.others as others
 import services.directory as dirs
 from Models import Image
 from config.settings import Settings as cfg
-from services.net import uploadImage
+from services.apiInteractionService import ApiInteractionService
 from neural_network.maskCNN import Mask
-
+from config.containers import InteractionService
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
+
 
 
 def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
@@ -63,12 +64,13 @@ def detectObjects(filename):
 
     image = mask.pipeline(inputFile, outputFile)
 
-    #if cfg.CAR_NUMBER_DETECTOR:
-    if None:
+    if cfg.carNumberDetector:
         carNumberDetector(filename, image)
 
     if cfg.sendRequestToServer:
-        uploadImage(cfg.pyfrontDevelopmentLink, outputFile, image)
+        api = InteractionService.apiInteractionService()
+        api.uploadImage(outputFile, image)
+
 
     dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image
