@@ -73,28 +73,3 @@ def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
         gitClone("https://github.com/ria-com/nomeroff-net.git", NOMEROFF_NET_DIR)
         gitClone("https://github.com/matterport/Mask_RCNN.git", os.path.join(NOMEROFF_NET_DIR, "Mask_RCNN"))
 
-
-def uploadImage(serverUrl, imagePath, image):
-    from sys import platform
-    import tempfile
-
-    serverUrl += "/upload"
-    r = requests.get(serverUrl)
-    if not r.status_code != 200:
-        raise Exception("Server isn't available")
-    if platform == "linux" or platform == "linux2":
-        filename = os.path.split(imagePath)[1]  # TODO Only for linux!!
-    else:
-        filename = imagePath
-
-    with tempfile.NamedTemporaryFile(delete=False) as temp:  # рр на винде приходится не юзать преимущества темфайла
-        temp.write(image.json().encode('utf-8'))
-        temp.flush()
-
-        files = [
-            ('file', (filename, open(imagePath, 'rb'), 'image/jpg')),
-            ('json', (temp.name, open(temp.name, 'rb'), 'application/json'))]
-        temp.close()
-# также я не удаляю файл, что нужно бы
-    requests.post(serverUrl, files=files)
-

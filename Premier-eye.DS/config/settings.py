@@ -46,6 +46,7 @@ class Settings(object):
     IMAGE_PATH_WHITELIST = config.get('FixedParams', 'IMAGE_PATH_WHITELIST')
     AVAILABLE_OBJECTS = config.get('UserParams', 'AVAILABLE_OBJECTS').split()
     sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
+    CAR_NUMBER_DETECTOR = config.getboolean('UserParams', 'CAR_NUMBER_DETECTOR')
 
     def __init__(self):
         CAR_NUMBER_DETECTOR = self.config.getboolean('UserParams', 'CAR_NUMBER_DETECTOR')

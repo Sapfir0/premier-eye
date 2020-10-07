@@ -33,7 +33,6 @@ def display_top(snapshot, key_type='lineno', limit=10):
         filename = os.sep.join(frame.filename.split(os.sep)[-2:])
         line = linecache.getline(frame.filename, frame.lineno).strip()
 
-
     other = top_stats[limit:]
     if other:
         size = sum(stat.size for stat in other)

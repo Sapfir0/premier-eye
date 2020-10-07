@@ -1,0 +1,4 @@
+
+galleryRoutes = {
+    'upload': '/upload'
+}
