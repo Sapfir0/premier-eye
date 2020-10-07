@@ -4,19 +4,12 @@ from controllers.base import blueprint
 
 import os
 import json
-
 from services.jsonWorking import parseJson, addObjectToSession
 from config import Config as cfg
 from services.directory import getOutputDir
 from controllers.base import routes
-
 from database.models.Images import Images, session
 import requests
-
-
-@blueprint.route(routes['hi'], methods=['GET'])
-def hi():
-    return "Server is up!"
 
 
 @blueprint.route(routes['detectionList'], methods=['GET'])

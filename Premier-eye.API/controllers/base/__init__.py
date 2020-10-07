@@ -1,4 +1,5 @@
 from flask import Blueprint
+from flask_restplus import Api
 
 blueprint = Blueprint(
     'base_blueprint',
@@ -14,3 +15,4 @@ routes = {
     'detectionList': '/detectionList',
     'deleteImage': '/deleteImage/<filename>'
 }
+

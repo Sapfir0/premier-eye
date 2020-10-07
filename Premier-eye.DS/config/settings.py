@@ -34,6 +34,9 @@ class Settings(object):
     MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, '../Mask_RCNN')
     MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, '../logs')
 
+    datetimePatternFileName = '%Y%m%d%H%M%S.jpg'
+    regexpPatternFilename = r'\d_\d{14}\..+'
+
     pathToConfig = join(APP_PATH, "config.ini")
 
     TEST_IMAGE_DIR = join(DATA_PATH, "test_images")
@@ -41,11 +44,13 @@ class Settings(object):
     config = ConfigParser()
     config.read(pathToConfig)
 
-    detectionMinConfidence: float = config.getfloat('UserParams', 'DETECTION_MIN_CONFIDENCE')
+    detectionMinConfidence: float = config.getfloat('UserParams', 'detectionMinConfidence')
     checkOldProcessedFrames = config.getboolean('UserParams', 'checkOldProcessedFrames')
-    IMAGE_PATH_WHITELIST = config.get('FixedParams', 'IMAGE_PATH_WHITELIST')
-    AVAILABLE_OBJECTS = config.get('UserParams', 'AVAILABLE_OBJECTS').split()
+    imagePathWhitelist = config.get('FixedParams', 'imagePathWhitelist')
+    availableObjects = config.get('UserParams', 'availableObjects').split()
     sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
+    carNumberDetector = config.getboolean('UserParams', 'carNumberDetector')
+
 
     def __init__(self):
         CAR_NUMBER_DETECTOR = self.config.getboolean('UserParams', 'CAR_NUMBER_DETECTOR')

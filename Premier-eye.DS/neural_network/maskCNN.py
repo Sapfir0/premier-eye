@@ -5,11 +5,11 @@ import numpy as np
 import services.timeChecker as timeChecker
 import services.extra as extra
 import services.directory as dirs
-import mrcnn.config
+import Mask_RCNN.mrcnn.config
 from config.settings import Settings as cfg
 from Models.Image import Image
-sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
-from mrcnn.model import MaskRCNN
+# sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
+from Mask_RCNN.mrcnn.model import MaskRCNN
 
 
 def _parseR(r):
@@ -28,7 +28,7 @@ def _parseR(r):
 # Mask cnn advanced
 # Configuration that will be used by the Mask-RCNN library
 def getMaskConfig(confidence: float):
-    class MaskRCNNConfig(mrcnn.config.Config):
+    class MaskRCNNConfig(Mask_RCNN.mrcnn.config.Config):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
@@ -89,7 +89,7 @@ class Mask(object):
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
         for i, currentObject in enumerate(image.objects):
-            if currentObject.type not in cfg.AVAILABLE_OBJECTS:
+            if currentObject.type not in cfg.availableObjects:
                 continue
 
             y1, x1, y2, x2 = currentObject.coordinates

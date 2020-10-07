@@ -6,26 +6,34 @@ from config import Config as cfg
 from controllers.gallery import routes
 import database.dbAPI as db
 from datetime import datetime
+from flask_restplus import Namespace, Resource
+
+api = Namespace('Gallery')
 
 
 @blueprint.route(routes['getImage'])
-def getImage(filename):
-    try:
-        outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
-    except ValueError as err:
-        return str(err), 404
+@api.route(routes['getImage'])
+class Image(Resource):
+    @api.response(400, "Incorrect filename")
+    @api.response(404, "Image not found")
+    def get(self, filename):
+        try:
+            outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
+        except ValueError as err:
+            return str(err), 400
 
-    if os.path.exists(os.path.split(outputPath)[0]):
-        return send_from_directory(os.path.split(outputPath)[0], filename)
-    else:
-        return jsonify({"error": "Error while loading image"}), 404
+        if os.path.exists(os.path.split(outputPath)[0]):
+            return send_from_directory(os.path.split(outputPath)[0], filename)
+        else:
+            return jsonify({"error": "Error while loading image"}), 404
 
 
 @blueprint.route(routes['getAllImages'], methods=['GET'])
-def getAllImages():
-    return jsonify(recursiveSearch(cfg.UPLOAD_FOLDER))
+@api.route(routes['getAllImages'])
+class ImageList(Resource):
+    def get(self):
+        return jsonify(recursiveSearch(cfg.UPLOAD_FOLDER))
 
-# функции, работающие с фс
 
 
 @blueprint.route(routes['getJsonInfo'])
