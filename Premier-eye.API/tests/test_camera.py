@@ -8,10 +8,10 @@ class Camera(unittest.TestCase):
 
     camerasList = [1, 2, 3]
 
-    def test_IsAllCamerasAvailable(self):
-        for camera in self.camerasList:
-            r = requests.get(f"{self.routeUrl}/{camera}")
-            self.assertEqual(200, r.status_code)
+    # def test_IsAllCamerasAvailable(self):
+    #     for camera in self.camerasList:
+    #         r = requests.get(f"{self.routeUrl}/{camera}")
+    #         self.assertEqual(200, r.status_code)
 
 
 if __name__ == '__main__':
