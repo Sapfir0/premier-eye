@@ -22,6 +22,6 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest requests
     - name: Build docker
-      with: './Premier-eye.DS'
       run: |
+        cd ./Premier-eye.DS
         docker-compose up --build -d
