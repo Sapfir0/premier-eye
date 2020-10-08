@@ -24,4 +24,4 @@ jobs:
     - name: Build docker
       run: |
         cd ./Premier-eye.DS
-        docker-compose up --build -d
+        docker build -t carRecognition .
