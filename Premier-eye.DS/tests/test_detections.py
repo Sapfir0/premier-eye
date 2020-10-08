@@ -13,13 +13,14 @@ class DetectionsTest(unittest.TestCase):
     cacheDirectory = True
 
     TEST_IMAGE_DIR = join(os.getcwd(), "data", "test_images")
+    if not os.path.exists(TEST_IMAGE_DIR):
+        os.mkdir(TEST_IMAGE_DIR)
 
     def setUp(self):
         # скачаем тестовую обстановку
         link = "https://vk.com/doc84996630_511877903?hash=b0be058a17a0081383&dl=4ae52327d30cae1c59"
         name = f"{self.dirName}.tar.gz"
         archivePath = join(self.TEST_IMAGE_DIR, name)
-
         net.downloadAndMove(link, join(self.TEST_IMAGE_DIR, name))  # на этом этапе мы не знамем навзание фала по ссылке
         tar = tarfile.open(archivePath, 'r')
         tar.extractall(self.TEST_IMAGE_DIR)

@@ -54,7 +54,7 @@ def getJsonInfo(filename):
 def getInfoFromCamera(cameraId):
     cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
     if not os.path.exists(cameraPath):
-        return jsonify({"error": "Error while loading camera"}), 404
+        return jsonify({"error": "Error while loading camera"}), 400
     imgList = recursiveSearch(cameraPath)
     return jsonify(imgList)
 

@@ -6,6 +6,8 @@ datetimePattern = '%Y%m%d%H%M%S.jpg'
 
 
 def recursiveSearch(directory, listOfImages=None):
+    if not os.path.exists(directory):
+        return []
     if listOfImages is None:
         listOfImages = []
     for files in os.listdir(directory):

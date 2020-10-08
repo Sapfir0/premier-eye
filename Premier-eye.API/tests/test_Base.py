@@ -5,10 +5,7 @@ import requests
 
 
 class Base(unittest.TestCase):
-
-    def test_ServerIsOk(self):
-        r = requests.get(cfg.serverUrl)
-        self.assertEqual(r.status_code, 200)
+    pass
 
 
 if __name__ == '__main__':
