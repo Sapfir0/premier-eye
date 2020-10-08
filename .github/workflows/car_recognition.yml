@@ -1,4 +1,4 @@
-name: API
+name: DS
 
 on: [push]
 
@@ -21,9 +21,7 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install flake8 pytest requests
-    - name: "Build docker-compose"
+    - name: Build docker
+      with: './Premier-eye.DS'
       run: |
         docker-compose up --build -d
-    - name: Test with pytest
-      run: |
-        pytest
