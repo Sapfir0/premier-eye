@@ -10,13 +10,6 @@
 It is required to create the data and output folder on the device before starting work, and place the images there for detective work.
 By default, 3 standard ones are downloaded, on which you can test the system.
 
-Run project
-
-    docker-compose up
-
-Instructions for each of the modules in the corresponding directory
-
-
 
 ## Module for detecting objects
 

@@ -1,11 +1,13 @@
 import React from "react";
+import {Collapse, Divider, List, ListItem, ListItemText} from "@material-ui/core";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {withStyles} from '@material-ui/core/styles';
 import TitledWarning from "../atoms/TitledWarning";
 import TitledCameraNumber from "../atoms/TitledCameraNumber";
 import {ObjectInfo, IImageInfo } from "./IImageInfo";
 import {getDiffSecond} from "../../services/Time";
 import {getSettings, Settings} from "./SettingsHelper";
 import {detectionsImages} from "./ObjectsImages";
-import {Divider, Header, Icon, List, ListItem} from "semantic-ui-react";
 
 const  styles = {
     root: {
@@ -20,6 +22,7 @@ const  styles = {
 
 interface IProps {
     info: IImageInfo,
+    classes: any
 }
 
 interface IState {
@@ -60,20 +63,20 @@ class ImageInfo extends React.Component<IProps, IState> {
             let collapse = {}
             const element = this.state.settings.find(item => item.id === each.id)
             if (element != undefined) {
-                // collapse = <Collapse
-                //     in={element.open}
-                //     timeout="auto"
-                //     unmountOnExit
-                // >
-                //     <List component="div" disablePadding>
-                //         <ListItem> Степень уверенности: {each.scores * 100}% </ListItem>
-                //     </List>
-                // </Collapse>
+                collapse = <Collapse
+                    in={element.open}
+                    timeout="auto"
+                    unmountOnExit
+                >
+                    <List component="div" disablePadding>
+                        <ListItem> Степень уверенности: {each.scores * 100}% </ListItem>
+                    </List>
+                </Collapse>
             }
             return <React.Fragment key={each.id}>
                 <ListItem button onClick={() => this.handleClick(each.id)}>
-                    <Icon >{detectionsImages[each.typesOfObject].icon} </Icon >
-                    <Header inset primary={detectionsImages[each.typesOfObject].title}/>
+                    <ListItemIcon>{detectionsImages[each.typesOfObject].icon} </ListItemIcon>
+                    <ListItemText inset primary={detectionsImages[each.typesOfObject].title}/>
                 </ListItem>
                 <Divider/>
                 {collapse}
@@ -104,7 +107,7 @@ class ImageInfo extends React.Component<IProps, IState> {
 
     render() {
         const myData = this.props.info
-        // const {classes} = this.props;
+        const {classes} = this.props;
 
         let objects: JSX.Element | undefined;
         if (myData.objects) {
@@ -113,12 +116,12 @@ class ImageInfo extends React.Component<IProps, IState> {
 
         const warningDateDiff = this.warningIfBigDiffBetweenDates(new Date(myData.createdAt), new Date(myData.fixationDatetime));
         if (myData.numberOfCam < 0) {
-            return <div> Информация с камеры недоступна </div>
+            return <div className={classes.error}> Информация с камеры недоступна </div>
         }
 
 
         return (
-            <div>
+            <div className={classes.root}>
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItem>
                         <TitledCameraNumber cameraId={myData.numberOfCam}/>
@@ -133,4 +136,4 @@ class ImageInfo extends React.Component<IProps, IState> {
     }
 }
 
-export default ImageInfo
+export default withStyles(styles)(ImageInfo)

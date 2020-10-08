@@ -8,12 +8,14 @@ blueprint = Blueprint(
     static_folder='static'
 )
 
+namespace = '/gallery'
+
 routes = {
-    'getImage': '/<filename>',
-    'getAllImages': '/gallery',
-    'getJsonInfo': '/<filename>/info',
-    'getInfoFromCamera': '/camera/<cameraId>',
-    'getImageBetweenDatesFromCamera': '/cameraDelta<cameraId>',
-    'getObjectsFromRectangleOnImage': '/<filename>/objects',
-    'getObjectsFromRectangleOnImageVisualize': '/<filename>/objectsVisualize'
+    'getImage': f'{namespace}/<filename>',
+    'getAllImages': f'{namespace}/images',
+    'getImageInfo': f'{namespace}/<filename>/info',
+    'getAllImagesFromCamera': f'{namespace}/camera/<cameraId>',
+    'getImageBetweenDatesFromCamera': f'{namespace}/cameraDelta<cameraId>',
+    'getObjectsFromRectangleOnImage': f'{namespace}/<filename>/objects',
+    'getObjectsFromRectangleOnImageVisualize': f'{namespace}/<filename>/objectsVisualize'
 }

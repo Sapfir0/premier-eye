@@ -8,10 +8,9 @@ import database.dbAPI as db
 from datetime import datetime
 from flask_restplus import Namespace, Resource
 
-api = Namespace('Gallery')
+api = Namespace('')
 
 
-@blueprint.route(routes['getImage'])
 @api.route(routes['getImage'])
 class Image(Resource):
     @api.response(400, "Incorrect filename")
@@ -28,35 +27,35 @@ class Image(Resource):
             return jsonify({"error": "Error while loading image"}), 404
 
 
-@blueprint.route(routes['getAllImages'], methods=['GET'])
 @api.route(routes['getAllImages'])
 class ImageList(Resource):
     def get(self):
         return jsonify(recursiveSearch(cfg.UPLOAD_FOLDER))
 
 
+@api.route(routes['getImageInfo'])
+class ImageInformation(Resource):
+    def get(self, filename):
+        imageInfo = db.getImageByFilename(filename)
 
-@blueprint.route(routes['getJsonInfo'])
-def getJsonInfo(filename):
-    imageInfo = db.getImageByFilename(filename)
+        if imageInfo is None:
+            return "Image not found", 404
 
-    if imageInfo is None:
-        return "Image not found", 404
+        if imageInfo['hasObjects']:
+            objectInfo = db.getObjects(filename)
+            imageInfo.update({"objects": objectInfo})
 
-    if imageInfo['hasObjects']:
-        objectInfo = db.getObjects(filename)
-        imageInfo.update({"objects": objectInfo})
-
-    return jsonify(dict(imageInfo))
+        return jsonify(dict(imageInfo))
 
 
-@blueprint.route(routes['getInfoFromCamera'], methods=['GET'])
-def getInfoFromCamera(cameraId):
-    cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
-    if not os.path.exists(cameraPath):
-        return jsonify({"error": "Error while loading camera"}), 400
-    imgList = recursiveSearch(cameraPath)
-    return jsonify(imgList)
+@api.route(routes['getAllImagesFromCamera'])
+class CameraImagesList(Resource):
+    def get(self, cameraId):
+        cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
+        if not os.path.exists(cameraPath):
+            return jsonify({"error": "Error while loading camera"}), 400
+        imgList = recursiveSearch(cameraPath)
+        return jsonify(imgList)
 
 
 @blueprint.route(routes['getImageBetweenDatesFromCamera'], methods=['POST'])
