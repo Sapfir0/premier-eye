@@ -4,9 +4,9 @@ import requests
 
 
 class Camera(unittest.TestCase):
-    routeUrl = cfg.serverUrl + "gallery/camera"
+    routeUrl = cfg.serverUrl + "camera"
 
-    camerasList = [1,2,3]
+    camerasList = [1, 2, 3]
 
     def test_IsAllCamerasAvailable(self):
         for camera in self.camerasList:

@@ -53,8 +53,6 @@ def getJsonInfo(filename):
 @blueprint.route(routes['getInfoFromCamera'], methods=['GET'])
 def getInfoFromCamera(cameraId):
     cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
-    if not os.path.exists(cameraPath):
-        return jsonify({"error": "Error while loading camera"}), 404
     imgList = recursiveSearch(cameraPath)
     return jsonify(imgList)
 
