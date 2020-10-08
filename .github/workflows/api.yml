@@ -22,13 +22,13 @@ jobs:
         python -m pip install --upgrade pip
         pip install flake8 pytest requests
     - name: Build API
-        run: |
-          cd Premier-eye.API
-          docker build -t sapfir0/web-premier-eye:server .
+      run: |
+        cd Premier-eye.API
+        docker build -t sapfir0/web-premier-eye:server .
     - name: Build SPA
-        run: |
-          cd Premier-eye.SPA
-          docker build -t sapfir0/web-premier-eye:client .
+      run: |
+        cd Premier-eye.SPA
+        docker build -t sapfir0/web-premier-eye:client .
     - name: Build docker-compose
       run: |
         docker-compose up --build -d
