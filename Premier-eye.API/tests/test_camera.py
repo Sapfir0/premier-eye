@@ -4,7 +4,7 @@ import requests
 
 
 class Camera(unittest.TestCase):
-    routeUrl = cfg.serverUrl + "camera"
+    routeUrl = cfg.serverUrl + "gallery/camera"
 
     camerasList = [1,2,3]
 
