@@ -20,7 +20,7 @@ from werkzeug.datastructures import FileStorage
 api = Namespace('gallery')
 
 upload_parser = api.parser()
-upload_parser.add_argument('file', location='file',
+upload_parser.add_argument('file', location='files', help='Camera file',
                            type=FileStorage, required=True)
 
 
@@ -50,7 +50,7 @@ class Image(Resource):
 
         file = request.files['file']
         if not file and not allowedFile(file.filename):
-            raise Exception
+            return make_response({"error": "Incorrect file"}, 400)
 
         filename = secure_filename(file.filename)
         outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
