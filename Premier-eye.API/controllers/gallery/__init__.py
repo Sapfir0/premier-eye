@@ -11,11 +11,13 @@ blueprint = Blueprint(
 namespace = '/gallery'
 
 routes = {
-    'getImage': f'{namespace}/<filename>',
-    'getAllImages': f'{namespace}/images',
-    'getImageInfo': f'{namespace}/<filename>/info',
-    'getAllImagesFromCamera': f'{namespace}/camera/<cameraId>',
-    'getImageBetweenDatesFromCamera': f'{namespace}/cameraDelta<cameraId>',
-    'getObjectsFromRectangleOnImage': f'{namespace}/<filename>/objects',
-    'getObjectsFromRectangleOnImageVisualize': f'{namespace}/<filename>/objectsVisualize'
+    'image': '/image/<filename>',
+    'getAllImages': '/images',
+    'getImageInfo': '/<filename>/info',
+    'getAllImagesFromCamera': '/camera/<cameraId>',
+    'getImageBetweenDatesFromCamera': '/cameraDelta<cameraId>',
+    'getObjectsFromRectangleOnImage': '/<filename>/objects',
+    'getObjectsFromRectangleOnImageVisualize': '/<filename>/objectsVisualize'
 }
+
+

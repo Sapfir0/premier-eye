@@ -10,9 +10,7 @@ class ApiInteractionService(BaseInteractionService):
     # def __init__(self, config: Settings):
     #     super(config)
 
-
     def uploadImage(self, imagePath: str, image):
-
         if platform == "linux" or platform == "linux2":
             filename = os.path.split(imagePath)[1]  # TODO Only for linux!!
         else:
@@ -27,5 +25,5 @@ class ApiInteractionService(BaseInteractionService):
                 ('json', (temp.name, open(temp.name, 'rb'), 'application/json'))]
             temp.close()
         # также я не удаляю файл, что нужно бы
-        self.post(galleryRoutes['upload'],  files=files)
+        self.post(galleryRoutes['upload'](os.path.basename(filename)),  files=files)
 

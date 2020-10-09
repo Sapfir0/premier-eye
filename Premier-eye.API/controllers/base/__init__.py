@@ -1,5 +1,4 @@
 from flask import Blueprint
-from flask_restplus import Api
 
 blueprint = Blueprint(
     'base_blueprint',
@@ -9,9 +8,10 @@ blueprint = Blueprint(
     static_folder='static'
 )
 
+namespace = '/'
+
 routes = {
     'uploadFile': '/upload',
-    'hi': '/',
     'detectionList': '/detectionList',
     'deleteImage': '/deleteImage/<filename>'
 }

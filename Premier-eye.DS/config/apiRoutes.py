@@ -1,4 +1,4 @@
 
 galleryRoutes = {
-    'upload': '/upload'
+    'upload': (lambda filename: f'/gallery/image/{filename}')
 }
