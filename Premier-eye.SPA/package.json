@@ -11,6 +11,9 @@
     "lint": "eslint src/** -c ./.eslintrc.js "
   },
   "dependencies": {
+    "@material-ui/core": "^4.9.11",
+    "@material-ui/icons": "^4.9.1",
+    "@material-ui/lab": "^4.0.0-alpha.51",
     "@sweet-monads/either": "^2.1.4",
     "axios": "^0.20.0",
     "connected-react-router": "^6.8.0",
