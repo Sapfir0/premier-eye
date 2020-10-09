@@ -1,5 +1,7 @@
 import os
-import services.dateHelper as dh
+import sys
+sys.path.append('..')
+from Common.filename import parseFilename, getDate, getHours
 from colorama import Fore
 
 
@@ -41,7 +43,7 @@ def checkNewFile(currentImageDir: str, IMAGE_PATH_WHITELIST) -> dict:
         if filename in IMAGE_PATH_WHITELIST:
             continue
         else:
-            numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True, getDate=False)
+            numberOfCam = parseFilename(filename, getNumberOfCamera=True, getDate=False)
 
         if numberOfCam in numbersOfCamers.keys():
             numbersOfCamers[numberOfCam].append(filename)
@@ -68,9 +70,9 @@ def isImage(filepath):
 
 
 def getIOdirs(filename, IMAGE_DIR, OUTPUT_DIR_MASKCNN):
-    dateTime, numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
-    date = dh.getDate(filename)
-    hours = dh.getHours(filename)
+    dateTime, numberOfCam = parseFilename(filename, getNumberOfCamera=True)
+    date = getDate(filename)
+    hours = getHours(filename)
     inputFile = os.path.join(IMAGE_DIR, filename)
     outputFile = os.path.join(OUTPUT_DIR_MASKCNN, numberOfCam, str(date), str(hours), filename)
     print(f"Analyzing {inputFile}")
