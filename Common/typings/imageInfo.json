@@ -1,0 +1,15 @@
+{
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "string"
+        },
+        "scores": {
+            "type": "float"
+        }
+    },
+    "type": "object"
+
+}

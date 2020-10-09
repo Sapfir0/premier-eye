@@ -8,7 +8,7 @@ import json
 
 
 class ApiInteractionService(BaseInteractionService):
-    def postImageInfo(self, ):
+    def postImageInfo(self, imageInfo):
         pass
 
     def uploadImage(self, imagePath: str):

@@ -7,14 +7,17 @@ from database.models.Persons import Persons
 from database.models.Objects_ import Objects_
 from database.models.Images import Images, session
 from database.models.Coordinates import Coordinates
+import json
+import os
+from config import Config
 
 
 def initImageInfo(api: Namespace):
-    model = api.model('ObjectInfo', {
-        'id': fields.Integer,
-        'type': fields.String,
-        'scores': fields.Float,
-    })
+    imageInfoDtoPath = os.path.join(Config.dtoDirectory, 'imageInfo.json')
+    with open(imageInfoDtoPath) as json_schema:
+        schema = json.load(json_schema)
+
+    model = api.schema_model('ObjectInfo', schema)
 
     @api.route(routes['getImageInfo'])
     class ImageInformation(Resource):
