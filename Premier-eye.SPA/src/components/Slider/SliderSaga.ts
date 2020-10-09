@@ -10,7 +10,7 @@ import {ISliderSaga} from "../../typings/ISaga";
 import {GET_IMAGES_FROM_CAMERA, GET_INFO_IMAGE, SLIDER_ACTIONS} from "../../store/actionNames/sliderActionNames";
 import {SliderBasePayload, SrcPayload} from "../../typings/sliderTypes";
 import {put, takeEvery } from "redux-saga/effects";
-import {IImageInfo} from "../ImageInfo/IImageInfo";
+import {IImageInfo} from "../../typings/IImageInfo";
 
 
 @injectable()
