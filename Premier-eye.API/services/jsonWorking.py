@@ -4,6 +4,7 @@ from database.models.Persons import Persons
 from database.models.Objects_ import Objects_
 from database.models.Images import Images, session
 from database.models.Coordinates import Coordinates
+from flask import make_response
 
 
 def addObjectToSession(objects):
@@ -22,7 +23,10 @@ def addObjectToSession(objects):
             person = Persons(objectId=countOfObjectsInDB)
             session.add(person)
         else:
-            raise Exception("Undefined object")
+            make_response({"error": "Undefined object"}, 400)
 
         session.add(coordinates)
         session.add(Object)
+
+        session.commit()
+        session.flush()
