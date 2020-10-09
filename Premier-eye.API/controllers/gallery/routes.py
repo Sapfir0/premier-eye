@@ -10,7 +10,7 @@ from datetime import datetime
 from flask_restplus import Namespace, Resource
 import os
 import json
-from services.jsonWorking import parseJson, addObjectToSession
+from services.jsonWorking import addObjectToSession
 from config import Config as cfg
 from services.directory import getOutputDir
 from database.models.Images import Images, session
@@ -21,6 +21,7 @@ api = Namespace('gallery')
 upload_parser = api.parser()
 upload_parser.add_argument('file', location='files', help='Camera file',
                            type=FileStorage, required=True)
+upload_parser.add_argument('')
 
 
 @api.route(routes['image'])
@@ -40,16 +41,16 @@ class Image(Resource):
         def allowedFile(filename):
             return '.' in filename and filename.rsplit('.', 1)[1].lower() in cfg.ALLOWED_EXTENSIONS
 
-        print(request.files)
-
         if 'file' not in request.files and request.files['file'].filename == '':
             return make_response({"error": "No image"}, 400)
-        if 'json' not in request.files:
-            return make_response({"error": "No image info in json"}, 400)
 
         file = request.files['file']
         if not file and not allowedFile(file.filename):
             return make_response({"error": "Incorrect file"}, 400)
+
+        imageInfo = request.form
+        if not imageInfo['objects'] or not imageInfo['numberOfCam'] or not imageInfo['fixationDatetime']:
+            return make_response({"error": "Incorrect image info"})
 
         filename = secure_filename(file.filename)
         outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
@@ -57,18 +58,19 @@ class Image(Resource):
             os.makedirs(os.path.split(outputPath)[0])
         file.save(outputPath)
 
-        rawJson: str = request.files['json'].read().decode("utf-8")
-        # один из типов получение джсона(тут немного странный), я записываю джсон в файл на другой стороне, а тут ситываю
-        deserializedJson: dict = json.loads(rawJson)
-
-        image = Images(outputPath, *parseJson(deserializedJson))
+        image = Images(outputPath, imageInfo['filename'], int(imageInfo['numberOfCam']), datetime.strptime(imageInfo['fixationDatetime'], '%Y-%m-%d %H:%M:%S'))
         session.add(image)  # TODO вынести работу с БД в другой поток, она долгая
-        addObjectToSession(deserializedJson)
+
+        # fixedImageInfo = imageInfo['objects'].replace('car', '"car"').replace('person', '\'person\'')
+        # print(fixedImageInfo)
+        # dictObjects = eval(fixedImageInfo)
+        # print(dictObjects)
+        # addObjectToSession(dictObjects)
 
         session.commit()
         session.flush()
 
-        return redirect(f"/gallery/{filename}")
+        return make_response({'success': 'Image created'}, 200)
 
 
 @api.route(routes['getAllImages'])

@@ -21,11 +21,10 @@ class Images(Base):
     createdAt = Column(DateTime, default=datetime.now())
     updatedAt = Column(DateTime, default=datetime.now())
 
-    def __init__(self, imagePath: str, filename: str, numberOfCam: int, fixationDatetime, hasObjects: bool):
+    def __init__(self, imagePath: str, filename: str, numberOfCam: int, fixationDatetime):
         self.init_db()
         self.path = imagePath
         self.filename = filename
         self.numberOfCam = numberOfCam
         self.fixationDatetime = fixationDatetime
-        self.hasObjects = hasObjects
 

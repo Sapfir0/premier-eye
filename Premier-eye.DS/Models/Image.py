@@ -37,22 +37,14 @@ class Image(object):
         return "{} {} {} with objects: {}".format(self.inputPath, self.numberOfCam, self.fixationDatetime, self.objects)
 
     def json(self):
-        def myconverter(date):
-            if isinstance(date, datetime.datetime):
-                return date.__str__()
-        import json
-
         localImage = {
             "numberOfCam": self.numberOfCam,
             "fixationDatetime": self.fixationDatetime,
             "filename": self.filename
         }
-        # print("тут без нуллов", self.objects)
-        for i, obj in enumerate(self.objects):
-            localImage.update({i: obj.json()})
 
-        myjson = json.dumps(localImage, indent=4, default=myconverter)
-        return myjson
+        localImage.update({"objects": [self.objects]})
+        return localImage
 
     def read(self):
         binaryImage = cv2.imread(self.inputPath)
