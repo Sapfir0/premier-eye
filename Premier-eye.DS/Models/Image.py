@@ -34,7 +34,11 @@ class Image(object):
         return "{}  with objects: {}".format(self.inputPath, self.objects)
 
     def json(self):
-        return self.objects
+        jsonObjects = []
+        for obj in self.objects:
+            jsonable = obj.json()
+            jsonObjects.append(jsonable)
+        return jsonObjects
 
     def read(self):
         binaryImage = cv2.imread(self.inputPath)

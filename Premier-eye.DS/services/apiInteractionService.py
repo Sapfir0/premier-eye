@@ -8,8 +8,10 @@ import json
 
 
 class ApiInteractionService(BaseInteractionService):
-    def postImageInfo(self, imageInfo):
-        pass
+    def postImageInfo(self, imagePath: str, imageInfo):
+        jsonInfo = {"objects": imageInfo.json()}
+        self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
+
 
     def uploadImage(self, imagePath: str):
         if platform == "linux" or platform == "linux2":

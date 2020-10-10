@@ -22,10 +22,13 @@ def initImageInfo(api: Namespace):
     @api.route(routes['getImageInfo'])
     class ImageInformation(Resource):
         def get(self, filename):
-            imageInfo = db.getImageByFilename(filename)
+            imageInfo = db.getImageByFilename(filename).all()
 
-            if imageInfo is None:
+            if len(imageInfo) != 1:
                 return make_response({"error": "Image not found"}, 400)
+
+            objectInfo = session.query(Objects_).filter(Objects_.id == imageInfo[0].id).all()
+            # if objectInfo
 
             if imageInfo['hasObjects']:
                 objectInfo = db.getObjects(filename)
@@ -35,14 +38,17 @@ def initImageInfo(api: Namespace):
 
         @api.expect(model)
         def post(self, filename):
-            objects = request.form
-            countOfImagesInDB = session.query(Images).count() + 1  # imageId
+            objects = request.json['objects']
+            currentImage = session.query(Images).filter(Images.filename == filename).all()
+            if len(currentImage) != 1:
+                return make_response({"error": f"Image with {filename} filename not found"}, 400)
+            imageId = currentImage[0].id
             # +1 т.к. у нас возвращается текущее колво строк, а мы будем инсертить еще одну
             countOfObjectsInDB = session.query(Objects_).count() + 1  # objectId TODO
             for detected in objects:
                 coordinates = Coordinates(detected['coordinates'])
                 Object = Objects_(scores=detected['scores'], typesOfObject=detected['type'],
-                                  imageId=countOfImagesInDB, coordinatesId=countOfObjectsInDB)
+                                  imageId=imageId, coordinatesId=countOfObjectsInDB)
 
                 if detected['type'] == 'car':  # TODO кал
                     car = Cars(carNumber=detected['licenseNumber'], objectId=countOfObjectsInDB)

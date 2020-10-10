@@ -17,7 +17,6 @@ class Images(Base):
     filename = Column(String(30), unique=True)
     numberOfCam = Column(Integer)
     fixationDatetime = Column(DateTime, unique=True)
-    hasObjects = Column(Boolean)
     createdAt = Column(DateTime, default=datetime.now())
     updatedAt = Column(DateTime, default=datetime.now())
 

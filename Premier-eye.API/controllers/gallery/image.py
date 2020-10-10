@@ -9,12 +9,14 @@ from config import Config as cfg
 from services.directory import getOutputDir
 from database.models.Images import Images, session
 from werkzeug.datastructures import FileStorage
+import sys
+sys.path.append('..')
+from Common.services.filename import parseFilename
 
 
 def initImage(api):
     upload_parser = api.parser()
-    upload_parser.add_argument('file', location='files', help='Camera file',
-                               type=FileStorage, required=True)
+    upload_parser.add_argument('file', location='files', help='Image from camera', type=FileStorage, required=True)
 
     @api.route(routes['image'])
     class Image(Resource):
@@ -40,17 +42,22 @@ def initImage(api):
             if not file and not allowedFile(file.filename):
                 return make_response({"error": "Incorrect file"}, 400)
 
-            imageInfo = request.form
-            if not imageInfo['objects'] or not imageInfo['numberOfCam'] or not imageInfo['fixationDatetime']:
-                return make_response({"error": "Incorrect image info"})
-
-            filename = secure_filename(file.filename)
             outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
             if not os.path.exists(os.path.split(outputPath)[0]):
                 os.makedirs(os.path.split(outputPath)[0])
             file.save(outputPath)
 
-            image = Images(outputPath, imageInfo['filename'], int(imageInfo['numberOfCam']), datetime.strptime(imageInfo['fixationDatetime'], '%Y-%m-%d %H:%M:%S'))
+            try:
+                date, numberOfCam = parseFilename(filename, True, True)
+            except:
+                return make_response({"error": "Incorrect filename"}, 400)
+
+            image = Images(outputPath, filename, int(numberOfCam), date)
+
+            existingImage = session.query(Images).filter(Images.filename == filename).all()
+            if existingImage:
+                return make_response({"error": "Image with this filename exists"}, 400)
+
             session.add(image)  # TODO вынести работу с БД в другой поток, она долгая
 
             session.commit()
