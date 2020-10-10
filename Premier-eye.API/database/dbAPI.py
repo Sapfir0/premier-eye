@@ -7,7 +7,6 @@ from database.models.Coordinates import Coordinates
 from datetime import datetime
 
 
-
 def getImageByFilename(filename):
     conn = engine.connect()
 

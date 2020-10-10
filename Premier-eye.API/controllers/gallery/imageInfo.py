@@ -22,17 +22,13 @@ def initImageInfo(api: Namespace):
     @api.route(routes['getImageInfo'])
     class ImageInformation(Resource):
         def get(self, filename):
-            imageInfo = db.getImageByFilename(filename).all()
+            imageInfo = db.getImageByFilename(filename)
 
-            if len(imageInfo) != 1:
+            if imageInfo is None:
                 return make_response({"error": "Image not found"}, 400)
 
-            objectInfo = session.query(Objects_).filter(Objects_.id == imageInfo[0].id).all()
-            # if objectInfo
-
-            if imageInfo['hasObjects']:
-                objectInfo = db.getObjects(filename)
-                imageInfo.update({"objects": objectInfo})
+            objectInfo = db.getObjects(filename)
+            imageInfo.update({"objects": objectInfo})
 
             return jsonify(dict(imageInfo))
 
