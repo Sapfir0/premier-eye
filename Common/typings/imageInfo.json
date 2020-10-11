@@ -15,12 +15,11 @@
         "objects": {
             "type": "array",
             "items": {
-                "type": "ObjectInfo"
+                "$ref": "#/definitions/ObjectInfo"
             }
         }
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["numberOfCam", "filename", "fixationDatetime", "createdAt", "objects"],
-    "$ref": "ObjectInfo.json#/definitions/ObjectInfo"
+    "required": ["numberOfCam", "filename", "fixationDatetime", "createdAt", "objects"]
 }

@@ -10,9 +10,10 @@ export interface ImageInfo {
   filename: string;
   fixationDatetime: string;
   createdAt: string;
-  objects: {
-    id: number;
-    type: string;
-    scores: number;
-  }[];
+  objects: ObjectInfo[];
+}
+export interface ObjectInfo {
+  id: number;
+  type: string;
+  scores: number;
 }

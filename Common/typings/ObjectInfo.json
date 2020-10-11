@@ -1,20 +1,17 @@
 {
-    "definitions": {
-        "ObjectInfo": {
-            "properties": {
-                "id": {
-                    "type": "integer"
-                },
-                "type": {
-                    "type": "string"
-                },
-                "scores": {
-                    "type": "number"
-                }
-            },
-            "type": "object",
-            "additionalProperties": false,
-            "required": ["id", "type", "scores"]
+    "properties": {
+        "id": {
+            "type": "integer"
+        },
+        "type": {
+            "type": "string"
+        },
+        "scores": {
+            "type": "number"
         }
-    }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "type", "scores"]
+
 }

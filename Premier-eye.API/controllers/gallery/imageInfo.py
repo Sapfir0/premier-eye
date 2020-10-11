@@ -26,6 +26,7 @@ def initImageInfo(api: Namespace):
         schema = json.load(json_schema)
     objectModel = api.schema_model('ObjectInfo', schema)
 
+    @api.expect(objectModel)
     @api.route(routes['getImageInfo'])
     class ImageInformation(Resource):
         def get(self, filename):
