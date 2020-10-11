@@ -4,14 +4,12 @@ import services.file_controller as file_controller
 import services.others as others
 import services.directory as dirs
 from Models import Image
-from config.settings import Settings as cfg
+from config.settings import config
 from services.apiInteractionService import ApiInteractionService
 from neural_network.maskCNN import Mask
-from config.containers import InteractionService
 
 mask = Mask()
-currentImageDir = os.path.join(os.getcwd(), cfg.IMAGE_DIR)
-
+currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
 
 
 def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
@@ -44,7 +42,7 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
 
         detectObjects(filename)
         processedFrames[numberOfCam].append(filename)
-        file_controller.writeInFile(cfg.DATE_FILE, str(processedFrames))
+        file_controller.writeInFile(config.DATE_FILE, str(processedFrames))
         # будет стирать содержимое файла каждый кадр
 
 
@@ -60,15 +58,15 @@ def carNumberDetector(filename, image: Image):
 
 
 def detectObjects(filename):
-    inputFile, outputFile, dateTime = others.getIOdirs(filename, cfg.IMAGE_DIR, cfg.OUTPUT_DIR_MASKCNN)
+    api = ApiInteractionService(config)
+    inputFile, outputFile, dateTime = others.getIOdirs(filename, config.IMAGE_DIR, config.OUTPUT_DIR_MASKCNN)
 
     image = mask.pipeline(inputFile, outputFile)
 
-    if cfg.carNumberDetector:
+    if config.carNumberDetector:
         carNumberDetector(filename, image)
 
-    if cfg.sendRequestToServer:
-        api = InteractionService.apiInteractionService()
+    if config.sendRequestToServer:
         api.uploadImage(outputFile)
         api.postImageInfo(outputFile, image)
 

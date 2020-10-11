@@ -5,9 +5,7 @@ import {IUrlService} from "./typings/IUrlService";
 
 @injectable()
 class UrlService implements IUrlService {
-    public history = createBrowserHistory({
-        getUserConfirmation: (message, callback) => callback(window.confirm(message))
-    })
+    public history = createBrowserHistory()
 
     public redirect = (url: string): void => {
         this.history.push(url.toString())

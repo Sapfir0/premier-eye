@@ -6,7 +6,7 @@ import services.timeChecker as timeChecker
 import services.extra as extra
 import services.directory as dirs
 import Mask_RCNN.mrcnn.config
-from config.settings import Settings as cfg
+from config.settings import config
 from Models.Image import Image
 # sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 from Mask_RCNN.mrcnn.model import MaskRCNN
@@ -52,12 +52,12 @@ class Mask(object):
     hasOldFrame = False
 
     def __init__(self):
-        with open(cfg.CLASSES_FILE, 'rt') as file:
+        with open(config.CLASSES_FILE, 'rt') as file:
             self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
 
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        self.model = MaskRCNN(mode="inference", model_dir=cfg.LOGS_DIR, config=getMaskConfig(float(cfg.detectionMinConfidence)))
-        self.model.load_weights(cfg.DATASET_DIR, by_name=True)
+        self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=getMaskConfig(float(config.detectionMinConfidence)))
+        self.model.load_weights(config.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
@@ -89,7 +89,7 @@ class Mask(object):
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
         for i, currentObject in enumerate(image.objects):
-            if currentObject.type not in cfg.availableObjects:
+            if currentObject.type not in config.availableObjects:
                 continue
 
             y1, x1, y2, x2 = currentObject.coordinates

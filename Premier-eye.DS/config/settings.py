@@ -12,7 +12,7 @@ from configparser import ConfigParser
 load_dotenv()
 
 
-class Settings(object):
+class Settings:
     colorama.init(autoreset=True)
 
     SERVER_PORT = os.getenv('SERVER_PORT')
@@ -74,3 +74,5 @@ class Settings(object):
 
         net.downloadSamples(self.IMAGE_DIR)
 
+
+config = Settings()

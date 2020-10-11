@@ -41,6 +41,9 @@ module.exports = (env) => {
             filename: "js/[name].[hash].bundle.js",
             chunkFilename: 'js/[name].[hash].bundle.js',
         },
+        node: {
+            fs: 'empty'
+        },
         devtool,
         resolve: {
             extensions: ['.tsx', '.ts', ".js"]

@@ -15,11 +15,16 @@ from services.directory import recursiveSearch, getOutputDir
 
 
 def initImageInfo(api: Namespace):
-    imageInfoDtoPath = os.path.join(Config.dtoDirectory, 'imageInfo.json')
+    imageInfoDtoPath = os.path.join(Config.dtoDirectory, 'ImageInfo.json')
     with open(imageInfoDtoPath) as json_schema:
         schema = json.load(json_schema)
 
-    model = api.schema_model('ObjectInfo', schema)
+    model = api.schema_model('ImageInfo', schema)
+
+    objectInfoDtoPath = os.path.join(Config.dtoDirectory, 'ObjectInfo.json')
+    with open(objectInfoDtoPath) as json_schema:
+        schema = json.load(json_schema)
+    objectModel = api.schema_model('ObjectInfo', schema)
 
     @api.route(routes['getImageInfo'])
     class ImageInformation(Resource):

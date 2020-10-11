@@ -5,25 +5,6 @@ import requests
 import services.console as console
 from sys import exit
 
-allowDownload = True
-
-
-def myExit(status):
-    print("Exiting")
-    exit(status)
-
-
-def trafficControl(downloadingFile="", exiting=False):
-    global allowDownload
-    if allowDownload:
-        return 0  # если разрешили однажды, сюда больше не зайдем
-
-    if console.confirm("Do you want to start downloading {}? May be dangerous for traffic".format(downloadingFile)):
-        allowDownload = True
-        return True
-    if exiting:  # мы сюда дойдем только если юзер сказал нет
-        myExit(-1)
-    return False
 
 
 def downloadAndMove(downloadLink: str, destinationDir='.', aLotOfTraffic=False):
@@ -32,9 +13,6 @@ def downloadAndMove(downloadLink: str, destinationDir='.', aLotOfTraffic=False):
     if destinationDir != '.' and os.path.exists(destinationDir):
         print("File {} is exists".format(destinationDir))
         return 0
-
-    if aLotOfTraffic:
-        trafficControl(exiting=True)  # если юзер не захочет скачивать, приложение завершится
 
     try:
         file = wget.download(downloadLink)
@@ -69,6 +47,5 @@ def gitClone(link, directory):
 
 def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
     if not os.path.exists(NOMEROFF_NET_DIR):
-        trafficControl(exiting=True)
         gitClone("https://github.com/ria-com/nomeroff-net.git", NOMEROFF_NET_DIR)
 

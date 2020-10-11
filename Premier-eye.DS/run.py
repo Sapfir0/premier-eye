@@ -1,6 +1,6 @@
 import subprocess
 import os
-from config.settings import Settings as cfg
+
 from flask import Flask, jsonify
 import argparse
 

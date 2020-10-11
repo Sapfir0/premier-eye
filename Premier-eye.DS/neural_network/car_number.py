@@ -1,7 +1,7 @@
 import sys
 from colorama import Fore
 import matplotlib.image as mpimg
-from config.settings import Settings as cfg
+ Settings as cfg
 import services.timeChecker as tm
 import os
 sys.path.append(cfg.NOMEROFF_NET_DIR)

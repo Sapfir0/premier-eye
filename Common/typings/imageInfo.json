@@ -1,15 +1,26 @@
 {
     "properties": {
-        "id": {
+        "numberOfCam": {
             "type": "integer"
         },
-        "type": {
+        "filename": {
             "type": "string"
         },
-        "scores": {
-            "type": "float"
+        "fixationDatetime": {
+            "type": "string"
+        },
+        "createdAt": {
+            "type": "string"
+        },
+        "objects": {
+            "type": "array",
+            "items": {
+                "type": "ObjectInfo"
+            }
         }
     },
-    "type": "object"
-
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["numberOfCam", "filename", "fixationDatetime", "createdAt", "objects"],
+    "$ref": "ObjectInfo.json#/definitions/ObjectInfo"
 }
