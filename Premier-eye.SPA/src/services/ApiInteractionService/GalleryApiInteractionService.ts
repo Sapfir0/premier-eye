@@ -1,6 +1,6 @@
 import {IGalleryApiInteractionService} from "../typings/ApiTypes";
 import ApiInteractionService from "../ApiInteractionService";
-import {ApiRoutes} from "../../config/apiRoutes";
+import {API_URL, ApiRoutes} from "../../config/apiRoutes";
 
 
 export default class GalleryApiInteractionService extends ApiInteractionService implements IGalleryApiInteractionService {
@@ -9,6 +9,10 @@ export default class GalleryApiInteractionService extends ApiInteractionService 
     }
     public getInfoImage = (src: string) => {
         return this.get(ApiRoutes.GALLERY.GET_INFO_IMAGE(src))
+    }
+
+    public getInfoImageByIndex = (cameraId: number, currentImageIndex: number) => {
+        return this.get(ApiRoutes.GALLERY.GET_IMAGE_INFO_BY_INDEX, {}, API_URL, {params: {cameraId: cameraId, indexOfImage: currentImageIndex}})
     }
 
     public getAllImages = () => {

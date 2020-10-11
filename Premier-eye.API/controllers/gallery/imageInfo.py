@@ -10,6 +10,8 @@ from database.models.Coordinates import Coordinates
 import json
 import os
 from config import Config
+from services.directory import recursiveSearch, getOutputDir
+
 
 
 def initImageInfo(api: Namespace):
@@ -61,3 +63,24 @@ def initImageInfo(api: Namespace):
                 session.commit()
                 session.flush()
 
+    imageInfoIndex = api.parser()
+    imageInfoIndex.add_argument('cameraId', location='args', type=str, required=True)
+    imageInfoIndex.add_argument('indexOfImage', location='args', type=str, required=True)
+
+    @api.route(routes['getImageInfoByIndexOfImage'])
+    class ImageInfoByIndexOfImage(Resource):
+        @api.expect(imageInfoIndex)
+        def get(self):
+            query = request.args
+
+            cameraPath = os.path.join(Config.UPLOAD_FOLDER, query['cameraId'])
+            if not os.path.exists(cameraPath):
+                return jsonify({"error": "Error while loading camera"}), 400
+            imgList = recursiveSearch(cameraPath)
+            filename = imgList[int(query['indexOfImage'])]
+
+            objectInfo = db.getObjects(filename)
+            imageInfo = db.getImageByFilename(filename)
+            imageInfo.update({"objects": objectInfo})
+
+            return jsonify(dict(imageInfo))

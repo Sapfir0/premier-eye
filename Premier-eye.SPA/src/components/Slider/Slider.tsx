@@ -38,10 +38,10 @@ class Slider extends React.Component<ISlider> {
 
     handleCurrentStepChange = (step: number) => {
         this.props.actions.changeCurrentStep(this.props.currentCameraId, step)
+        this.props.actions.getInfoImage(this.props.imagesList[step])
     }
 
     render() {
-        console.log(this.props.imageInfo)
         return (
             <div className="slider">
                 <CamerasList onCameraChange={this.handleCameraChange}/>

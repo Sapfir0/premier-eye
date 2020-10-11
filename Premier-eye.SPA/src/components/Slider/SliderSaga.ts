@@ -7,8 +7,13 @@ import {ISliderPrivateAction} from "../../typings/IAction";
 import {Either} from "@sweet-monads/either";
 import {BaseInteractionError} from "../../services/Errors/BaseInteractionError";
 import {ISliderSaga} from "../../typings/ISaga";
-import {GET_IMAGES_FROM_CAMERA, GET_INFO_IMAGE, SLIDER_ACTIONS} from "../../store/actionNames/sliderActionNames";
-import {SliderBasePayload, SrcPayload} from "../../typings/sliderTypes";
+import {
+    CHANGE_CURRENT_STEP,
+    GET_IMAGES_FROM_CAMERA,
+    GET_INFO_IMAGE,
+    SLIDER_ACTIONS
+} from "../../store/actionNames/sliderActionNames";
+import {ChangeStepPayload, SliderBasePayload, SrcPayload} from "../../typings/sliderTypes";
 import {put, takeEvery } from "redux-saga/effects";
 import {IImageInfo} from "../../typings/IImageInfo";
 
@@ -29,7 +34,8 @@ export default class SliderSaga implements ISliderSaga {
         this.cameraFetcher = cameraFetcher
 
         this.getImagesFromCamera = this.getImagesFromCamera.bind(this)
-        this.getInfoAboutImageFromCamera = this.getInfoAboutImageFromCamera.bind(this)
+        this.getInfoAboutImageFromCameraByFilename = this.getInfoAboutImageFromCameraByFilename.bind(this)
+        this.getInfoAboutImageFromCameraByIndexOfImage = this.getInfoAboutImageFromCameraByIndexOfImage.bind(this)
 
     }
 
@@ -43,8 +49,19 @@ export default class SliderSaga implements ISliderSaga {
         yield put(parsed.value)
     }
 
-    public *getInfoAboutImageFromCamera(action: ActionTypePayload<SrcPayload, SLIDER_ACTIONS>) {
+    public *getInfoAboutImageFromCameraByFilename(action: ActionTypePayload<SrcPayload, SLIDER_ACTIONS>) {
         const either: Either<BaseInteractionError, IImageInfo> = yield this.galleryFetcher.getInfoImage(action.payload.src)
+
+        const parsed = either
+            .mapRight((info) => this.actions.setInfoImage(info))
+            .mapLeft((error) => this.actions.setError(error))
+
+        yield put(parsed.value)
+    }
+
+
+    public *getInfoAboutImageFromCameraByIndexOfImage(action: ActionTypePayload<ChangeStepPayload, SLIDER_ACTIONS>) {
+        const either: Either<BaseInteractionError, IImageInfo> = yield this.galleryFetcher.getInfoImageByIndex(action.payload.cameraId, action.payload.currentStep)
 
         const parsed = either
             .mapRight((info) => this.actions.setInfoImage(info))
@@ -55,7 +72,7 @@ export default class SliderSaga implements ISliderSaga {
 
     public *watch(): Generator {
         yield takeEvery(GET_IMAGES_FROM_CAMERA, this.getImagesFromCamera)
-        yield takeEvery(GET_INFO_IMAGE, this.getInfoAboutImageFromCamera)
+        yield takeEvery(CHANGE_CURRENT_STEP, this.getInfoAboutImageFromCameraByIndexOfImage)
     }
 
 }

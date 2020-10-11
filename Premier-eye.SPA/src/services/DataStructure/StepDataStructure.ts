@@ -8,12 +8,11 @@ export default class StepDataStructure {
         this.steps = new Map<CameraId, CurrentStep>()
     }
 
-
-    getCurrentStep = (cameraId: CameraId) => {
+    public getCurrentStep = (cameraId: CameraId) => {
         return this.steps.get(cameraId)
     }
 
-    changeStepOnCurrentCamera = (cameraId: CameraId, currentStep: CurrentStep) => {
+    public changeStepOnCurrentCamera = (cameraId: CameraId, currentStep: CurrentStep) => {
         this.steps.set(cameraId, currentStep)
         return new Map(this.steps)
     }
