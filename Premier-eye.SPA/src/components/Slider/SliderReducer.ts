@@ -16,8 +16,7 @@ import {
 } from "../../store/actionNames/sliderActionNames";
 import {sliderStore} from "./SliderStore";
 import {injectable} from "inversify";
-import {render} from "react-dom";
-import {IImageInfo} from "../ImageInfo/IImageInfo";
+
 
 
 @injectable()

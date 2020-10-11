@@ -1,4 +1,4 @@
-import {IImageInfo} from "../components/ImageInfo/IImageInfo";
+import {IImageInfo} from "./IImageInfo";
 import StepDataStructure from "../services/DataStructure/StepDataStructure";
 import {IdPayload} from "./common";
 

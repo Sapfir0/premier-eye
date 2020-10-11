@@ -1,9 +1,8 @@
 import {ActionTypePayload, ActionTypePure, ErrorPayload, IdPayload} from "./common";
 import {SLIDER_ACTIONS} from "../store/actionNames/sliderActionNames";
 import {ChangeStepPayload, ImagesInfoPayload, ImagesUrlPayload, SrcPayload} from "./sliderTypes";
-import {IImageInfo} from "../components/ImageInfo/IImageInfo";
 import {BaseInteractionError} from "../services/Errors/BaseInteractionError";
-
+import {IImageInfo} from "../typings/IImageInfo"
 
 export interface ISliderPublicAction {
     getImagesFromCamera: (cameraId: number) => ActionTypePayload<IdPayload, SLIDER_ACTIONS>

@@ -1,10 +1,11 @@
+import WarningIcon from "@material-ui/icons/Warning";
 import React from "react";
-import {Icon, Popup} from "semantic-ui-react";
+import Tooltip from "@material-ui/core/Tooltip";
 
 
 export default function TitledWarning(props: { text: string; }) {
     const longText = props.text;
-    return (<Popup title={longText} aria-label="add">
-        <Icon name="warning sign" color="orange" />
-    </Popup>)
+    return (<Tooltip title={longText} aria-label="add">
+        <WarningIcon style={{color: "orange"}}/>
+    </Tooltip>)
 }

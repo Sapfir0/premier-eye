@@ -2,12 +2,14 @@ import React from 'react';
 import ImageView from '../ImageView/ImageView'
 import ImageInfo from "../ImageInfo/ImageInfo"
 import CamerasList from "../CamerasList/CamerasList"
-import {IImageInfo} from "../ImageInfo/IImageInfo";
+import {withStyles} from '@material-ui/core/styles';
+import {IImageInfo} from "../../typings/IImageInfo";
 import {ISliderPublicAction} from "../../typings/IAction";
 import "./Slider.pcss"
 import StepDataStructure from "../../services/DataStructure/StepDataStructure";
 
 export interface ISlider {
+
     imagesList: Array<string>,
     imageInfo: IImageInfo | null
     actions: ISliderPublicAction
@@ -36,10 +38,10 @@ class Slider extends React.Component<ISlider> {
 
     handleCurrentStepChange = (step: number) => {
         this.props.actions.changeCurrentStep(this.props.currentCameraId, step)
+        this.props.actions.getInfoImage(this.props.imagesList[step])
     }
 
     render() {
-
         return (
             <div className="slider">
                 <CamerasList onCameraChange={this.handleCameraChange}/>

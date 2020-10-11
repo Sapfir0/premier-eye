@@ -5,11 +5,12 @@ const GALLERY_HIGH_LEVEL_DOMAIN = "/gallery"
 
 
 const GALLERY = {
-    GET_INFO_IMAGE: (imageName: string) => `${GALLERY_HIGH_LEVEL_DOMAIN}/${imageName}/info`,
+    GET_INFO_IMAGE: (imageName: string) => `${GALLERY_HIGH_LEVEL_DOMAIN}/image/${imageName}/info`,
     GET_IMAGES_FROM_CAMERA: (cameraId: number) => `${GALLERY_HIGH_LEVEL_DOMAIN}/camera/${cameraId}`,
-    GET_IMAGE: (imageName: string) => `${GALLERY_HIGH_LEVEL_DOMAIN}/${imageName}`,
+    GET_IMAGE: (imageName: string) => `${GALLERY_HIGH_LEVEL_DOMAIN}/image/${imageName}`,
     GET_ALL_IMAGES: `${GALLERY_HIGH_LEVEL_DOMAIN}/gallery`,
-    GET_CAMERA_INFO: (cameraId: number) => `${GALLERY_HIGH_LEVEL_DOMAIN}/camera/${cameraId}`
+    GET_CAMERA_INFO: (cameraId: number) => `${GALLERY_HIGH_LEVEL_DOMAIN}/camera/${cameraId}`,
+    GET_IMAGE_INFO_BY_INDEX: `${GALLERY_HIGH_LEVEL_DOMAIN}/image/info`
 }
 
 

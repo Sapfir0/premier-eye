@@ -9,7 +9,7 @@ import {
 } from "../../store/actionNames/sliderActionNames";
 import {ChangeStepPayload, ImagesInfoPayload, ImagesUrlPayload, SrcPayload} from "../../typings/sliderTypes";
 import {ISliderPrivateAction, ISliderPublicAction} from "../../typings/IAction";
-import {IImageInfo} from "../ImageInfo/IImageInfo";
+import {IImageInfo} from "../../typings/IImageInfo";
 import {BaseInteractionError} from "../../services/Errors/BaseInteractionError";
 
 
@@ -50,6 +50,7 @@ export default class SliderAction implements ISliderPrivateAction, ISliderPublic
             src
         }
     })
+
 
     public setInfoImage = (imageInfo: IImageInfo): ActionTypePayload<ImagesInfoPayload, SLIDER_ACTIONS> => ({
         type: SET_INFO_IMAGE,

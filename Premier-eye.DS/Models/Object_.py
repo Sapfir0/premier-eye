@@ -7,16 +7,14 @@ class Object_(ABC):
     scores = None
     coordinates = []  # LDx, LDy, RUx, RUy
     centerDownCoordinates = []  # CDx, CDy
-    masks = []
 
     def __init__(self, detections):
         self.coordinates = detections['coordinates']
         self.scores = detections['scores']
-        self.masks = detections['masks']
 
     def __repr__(self):
         return f"{{type: {self.type}, scores: {self.scores}," \
-               f" masks: {self.masks}, centerDownCoordinates: {self.centerDownCoordinates} }}"
+               f"centerDownCoordinates: {self.centerDownCoordinates} }}"
 
     def json(self) -> dict:
         diction = {  # маски передавать не будем

@@ -1,19 +1,15 @@
-from flask import Blueprint
 
-blueprint = Blueprint(
-    'gallery_blueprint',
-    __name__,
-    url_prefix='',
-    template_folder='templates',
-    static_folder='static'
-)
+namespace = '/gallery'
 
 routes = {
-    'getImage': '/<filename>',
-    'getAllImages': '/gallery',
-    'getJsonInfo': '/<filename>/info',
-    'getInfoFromCamera': '/camera/<cameraId>',
-    'getImageBetweenDatesFromCamera': '/cameraDelta<cameraId>',
+    'image': '/image/<filename>',
+    'getAllImages': '/images',
+    'getImageInfo': '/image/<filename>/info',
+    'getImageInfoByIndexOfImage': '/image/info',
+    'getAllImagesFromCamera': '/camera/<string:cameraId>',
+    'getImageBetweenDatesFromCamera': '/cameraDelta<string:cameraId>',
     'getObjectsFromRectangleOnImage': '/<filename>/objects',
     'getObjectsFromRectangleOnImageVisualize': '/<filename>/objectsVisualize'
 }
+
+

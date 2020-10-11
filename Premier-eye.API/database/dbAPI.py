@@ -7,14 +7,13 @@ from database.models.Coordinates import Coordinates
 from datetime import datetime
 
 
-
 def getImageByFilename(filename):
     conn = engine.connect()
 
     selectStmt = select([Image]).where(Image.filename == filename)
     res = conn.execute(selectStmt).fetchone()  # можно сделать fetchall и если будет больше одного результата, вернуть фолс
     if res is None:
-        raise ValueError(f"Image {filename} not found on database")
+        return res
     return dict(res)
 
 

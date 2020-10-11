@@ -1,31 +1,25 @@
 from services.baseInteractionService import BaseInteractionService
 from sys import platform
-import tempfile
 from config.apiRoutes import galleryRoutes
 import os
 from config.settings import Settings
+from Models import Image
+import json
 
 
 class ApiInteractionService(BaseInteractionService):
-    # def __init__(self, config: Settings):
-    #     super(config)
+    def postImageInfo(self, imagePath: str, imageInfo):
+        jsonInfo = {"objects": imageInfo.json()}
+        self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
 
 
-    def uploadImage(self, imagePath: str, image):
-
+    def uploadImage(self, imagePath: str):
         if platform == "linux" or platform == "linux2":
             filename = os.path.split(imagePath)[1]  # TODO Only for linux!!
         else:
             filename = imagePath
 
-        with tempfile.NamedTemporaryFile(delete=False) as temp:  # рр на винде приходится не юзать преимущества темфайла
-            temp.write(image.json().encode('utf-8'))
-            temp.flush()
+        files = [('file', (filename, open(imagePath, 'rb'), 'image/jpg'))]
 
-            files = [
-                ('file', (filename, open(imagePath, 'rb'), 'image/jpg')),
-                ('json', (temp.name, open(temp.name, 'rb'), 'application/json'))]
-            temp.close()
-        # также я не удаляю файл, что нужно бы
-        self.post(galleryRoutes['upload'],  files=files)
+        self.post(galleryRoutes['upload'](os.path.basename(filename)), files=files)
 

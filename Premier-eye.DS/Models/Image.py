@@ -10,8 +10,6 @@ class Image(object):
     inputPath: str = None
     filename: str = None
     outputPath: str = None
-    numberOfCam: int = None
-    fixationDatetime: datetime.datetime = None
     objects: list = []
 
     def __new__(cls, inputPath, *args, **kwargs):
@@ -24,7 +22,6 @@ class Image(object):
         import services.dateHelper as dh
         import os
         filename = os.path.split(inputPath)[1]
-        self.fixationDatetime, self.numberOfCam = dh.parseFilename(filename, getNumberOfCamera=True)
         self.filename = filename
         self.inputPath = inputPath
         if outputPath:
@@ -34,25 +31,14 @@ class Image(object):
             self.addDetections(objectsOnFrame)
 
     def __repr__(self):
-        return "{} {} {} with objects: {}".format(self.inputPath, self.numberOfCam, self.fixationDatetime, self.objects)
+        return "{}  with objects: {}".format(self.inputPath, self.objects)
 
     def json(self):
-        def myconverter(date):
-            if isinstance(date, datetime.datetime):
-                return date.__str__()
-        import json
-
-        localImage = {
-            "numberOfCam": self.numberOfCam,
-            "fixationDatetime": self.fixationDatetime,
-            "filename": self.filename
-        }
-        # print("тут без нуллов", self.objects)
-        for i, obj in enumerate(self.objects):
-            localImage.update({i: obj.json()})
-
-        myjson = json.dumps(localImage, indent=4, default=myconverter)
-        return myjson
+        jsonObjects = []
+        for obj in self.objects:
+            jsonable = obj.json()
+            jsonObjects.append(jsonable)
+        return jsonObjects
 
     def read(self):
         binaryImage = cv2.imread(self.inputPath)
