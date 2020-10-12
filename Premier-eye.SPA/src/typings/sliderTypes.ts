@@ -1,4 +1,4 @@
-import {IImageInfo} from "./IImageInfo";
+import {definitions} from "./Dto";
 import StepDataStructure from "../services/DataStructure/StepDataStructure";
 import {IdPayload} from "./common";
 
@@ -12,7 +12,7 @@ export type ChangeStepPayload = {
 }
 
 export type ImagesInfoPayload = {
-    imageInfo: IImageInfo
+    imageInfo: definitions['ImageInfo']
 }
 
 export type SrcPayload = {
@@ -22,7 +22,7 @@ export type SrcPayload = {
 export type SliderBasePayload = ImagesInfoPayload & ImagesUrlPayload & SrcPayload & ChangeStepPayload & IdPayload
 
 export type SliderStore = {
-    imageInfo: IImageInfo | null
+    imageInfo: definitions['ImageInfo'] | null
     imagesList: Array<string>
     currentCameraId: number
     stepsStore: StepDataStructure

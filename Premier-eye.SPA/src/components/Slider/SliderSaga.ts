@@ -15,7 +15,7 @@ import {
 } from "../../store/actionNames/sliderActionNames";
 import {ChangeStepPayload, SliderBasePayload, SrcPayload} from "../../typings/sliderTypes";
 import {put, takeEvery } from "redux-saga/effects";
-import {IImageInfo} from "../../typings/IImageInfo";
+import {definitions} from "../../typings/Dto";
 
 
 @injectable()
@@ -50,7 +50,7 @@ export default class SliderSaga implements ISliderSaga {
     }
 
     public *getInfoAboutImageFromCameraByFilename(action: ActionTypePayload<SrcPayload, SLIDER_ACTIONS>) {
-        const either: Either<BaseInteractionError, IImageInfo> = yield this.galleryFetcher.getInfoImage(action.payload.src)
+        const either: Either<BaseInteractionError, definitions['ImageInfo']> = yield this.galleryFetcher.getInfoImage(action.payload.src)
 
         const parsed = either
             .mapRight((info) => this.actions.setInfoImage(info))
@@ -61,7 +61,7 @@ export default class SliderSaga implements ISliderSaga {
 
 
     public *getInfoAboutImageFromCameraByIndexOfImage(action: ActionTypePayload<ChangeStepPayload, SLIDER_ACTIONS>) {
-        const either: Either<BaseInteractionError, IImageInfo> = yield this.galleryFetcher.getInfoImageByIndex(action.payload.cameraId, action.payload.currentStep)
+        const either: Either<BaseInteractionError, definitions['ImageInfo']> = yield this.galleryFetcher.getInfoImageByIndex(action.payload.cameraId, action.payload.currentStep)
 
         const parsed = either
             .mapRight((info) => this.actions.setInfoImage(info))

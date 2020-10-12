@@ -21,7 +21,15 @@ initImage(api)
 class ImageList(Resource):
     @api.response(200, "Success")
     def get(self):
-        return jsonify(recursiveSearch(cfg.UPLOAD_FOLDER))
+        return make_response(recursiveSearch(cfg.UPLOAD_FOLDER), 200)
+
+
+@api.route(routes['getCameras'])
+class CamerasList(Resource):
+    @api.response(200, "Success")
+    def get(self):
+        cameras = os.listdir(cfg.UPLOAD_FOLDER)
+        return make_response({'items': cameras}, 200)
 
 
 @api.route(routes['getAllImagesFromCamera'])
@@ -29,9 +37,9 @@ class CameraImagesList(Resource):
     def get(self, cameraId):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
         if not os.path.exists(cameraPath):
-            return jsonify({"error": "Error while loading camera"}), 400
+            return make_response({"error": "Error while loading camera"}, 400)
         imgList = recursiveSearch(cameraPath)
-        return jsonify(imgList)
+        return make_response(imgList, 200)
 
 
 @api.route(routes['getImageBetweenDatesFromCamera'])

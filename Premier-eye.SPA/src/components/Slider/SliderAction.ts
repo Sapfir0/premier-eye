@@ -9,8 +9,8 @@ import {
 } from "../../store/actionNames/sliderActionNames";
 import {ChangeStepPayload, ImagesInfoPayload, ImagesUrlPayload, SrcPayload} from "../../typings/sliderTypes";
 import {ISliderPrivateAction, ISliderPublicAction} from "../../typings/IAction";
-import {IImageInfo} from "../../typings/IImageInfo";
 import {BaseInteractionError} from "../../services/Errors/BaseInteractionError";
+import {definitions} from "../../typings/Dto";
 
 
 @injectable()
@@ -52,7 +52,7 @@ export default class SliderAction implements ISliderPrivateAction, ISliderPublic
     })
 
 
-    public setInfoImage = (imageInfo: IImageInfo): ActionTypePayload<ImagesInfoPayload, SLIDER_ACTIONS> => ({
+    public setInfoImage = (imageInfo: definitions['ImageInfo']): ActionTypePayload<ImagesInfoPayload, SLIDER_ACTIONS> => ({
         type: SET_INFO_IMAGE,
         payload: {
             imageInfo

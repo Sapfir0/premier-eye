@@ -2,7 +2,8 @@ import {ActionTypePayload, ActionTypePure, ErrorPayload, IdPayload} from "./comm
 import {SLIDER_ACTIONS} from "../store/actionNames/sliderActionNames";
 import {ChangeStepPayload, ImagesInfoPayload, ImagesUrlPayload, SrcPayload} from "./sliderTypes";
 import {BaseInteractionError} from "../services/Errors/BaseInteractionError";
-import {IImageInfo} from "../typings/IImageInfo"
+import {definitions} from "./Dto";
+
 
 export interface ISliderPublicAction {
     getImagesFromCamera: (cameraId: number) => ActionTypePayload<IdPayload, SLIDER_ACTIONS>
@@ -14,7 +15,7 @@ export interface ISliderPublicAction {
 
 export interface ISliderPrivateAction {
     setImagesUrlFromCamera: (imagesUrl: string[]) => ActionTypePayload<ImagesUrlPayload, SLIDER_ACTIONS>
-    setInfoImage: (imageInfo: IImageInfo) => ActionTypePayload<ImagesInfoPayload, SLIDER_ACTIONS>
+    setInfoImage: (imageInfo: definitions['ImageInfo']) => ActionTypePayload<ImagesInfoPayload, SLIDER_ACTIONS>
     unsetError: () => ActionTypePure<SLIDER_ACTIONS>
     setError: (error: BaseInteractionError) => ActionTypePayload<ErrorPayload, SLIDER_ACTIONS>
 }
