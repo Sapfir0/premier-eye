@@ -7,7 +7,7 @@ from database.models.Persons import Persons
 from database.models.Objects_ import Objects_
 from database.models.Images import Images, session
 from database.models.Coordinates import Coordinates
-import json
+from services.model import getModel
 import os
 from config import Config
 from services.directory import recursiveSearch, getOutputDir
@@ -15,11 +15,6 @@ from services.directory import recursiveSearch, getOutputDir
 
 
 def initImageInfo(api: Namespace):
-    imageInfoDtoPath = os.path.join(Config.dtoDirectory, 'ImageInfo.json')
-    with open(imageInfoDtoPath) as json_schema:
-        schema = json.load(json_schema)
-
-    model = api.schema_model('ImageInfo', schema)
 
     @api.route(routes['getImageInfo'])
     class ImageInformation(Resource):
@@ -34,6 +29,7 @@ def initImageInfo(api: Namespace):
 
             return jsonify(dict(imageInfo))
 
+        model = getModel("ImageInfo", api)
         @api.expect(model)
         def post(self, filename):
             objects = request.json['objects']

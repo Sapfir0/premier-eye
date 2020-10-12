@@ -10,7 +10,7 @@ from config import Config as cfg
 from services.directory import getOutputDir
 from controllers.gallery.imageInfo import initImageInfo
 from controllers.gallery.image import initImage
-
+from services.model import getModel
 
 api = Namespace('gallery')
 initImageInfo(api)
@@ -25,21 +25,26 @@ class ImageList(Resource):
 
 
 @api.route(routes['getCameras'])
-class CamerasList(Resource):
-    @api.response(200, "Success")
+class CameraList(Resource):
+    model = getModel("CameraList", api)
+
+    @api.response(200, "Success", model)
     def get(self):
         cameras = os.listdir(cfg.UPLOAD_FOLDER)
         return make_response({'items': cameras}, 200)
 
 
 @api.route(routes['getAllImagesFromCamera'])
-class CameraImagesList(Resource):
+class CameraImageList(Resource):
+    model = getModel("CameraImageList", api)
+
+    @api.response(200, "Success", model)
     def get(self, cameraId):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
         if not os.path.exists(cameraPath):
             return make_response({"error": "Error while loading camera"}, 400)
         imgList = recursiveSearch(cameraPath)
-        return make_response(imgList, 200)
+        return make_response({'items': imgList}, 200)
 
 
 @api.route(routes['getImageBetweenDatesFromCamera'])

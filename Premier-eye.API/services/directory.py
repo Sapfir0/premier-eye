@@ -1,11 +1,12 @@
 import os
 from config import Config as cfg
 from datetime import datetime
+from typing import List
 
 datetimePattern = '%Y%m%d%H%M%S.jpg'
 
 
-def recursiveSearch(directory, listOfImages=None):
+def recursiveSearch(directory, listOfImages=None) -> List[str]:
     if not os.path.exists(directory):
         return []
     if listOfImages is None:
