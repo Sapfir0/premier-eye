@@ -17,10 +17,7 @@ class UploadImage(unittest.TestCase):
         return files
 
     def test_uploadImageWithInfoUniqueConstrainAreFailure(self):
-        files = []
-        files = self.addImage(files)
-        r = requests.post(self.routeUrl, files=files)
-        self.assertEqual(400, r.status_code)
+        pass
 
     def test_TimeTestInCorrectSituation(self):
         pass
@@ -28,33 +25,17 @@ class UploadImage(unittest.TestCase):
     def test_NoImageHere(self):
         files = []
         r = requests.post(self.routeUrl, files=files)
-        self.assertNotEqual(200, r.status_code)
+        self.assertEqual(400, r.status_code)
 
-    def test_NoImageNoJson(self):
-        files = []
-        r = requests.post(self.routeUrl, files=files)
-        self.assertNotEqual(200, r.status_code)
 
     def test_IncorrectJsonImageFixationDatetime(self):
-        files = []
-        jsonPath = os.path.join(cfg.APP_PATH, "res", "incorrectJsonFixa.json")
-        files = self.addImage(files)
-        r = requests.post(self.routeUrl, files=files)
-        self.assertNotEqual(200, r.status_code)
+        pass
 
     def test_IncorrectJsonImageNumberOfCamera(self):
-        files = []
-        jsonPath = os.path.join(cfg.APP_PATH, "res", "incorrectJsonNumberOfCamera.json")
-        files = self.addImage(files)
-        r = requests.post(self.routeUrl, files=files)
-        self.assertNotEqual(200, r.status_code)
+        pass
 
     def test_IncorrectImageFilename(self):
-        files = []
-        jsonPath = os.path.join(cfg.APP_PATH, "res", "incorrectJsonImageFilename.json")
-        files = self.addImage(files)
-        r = requests.post(self.routeUrl, files=files)
-        self.assertNotEqual(200, r.status_code)
+        pass
 
     def test_ImageFilenameFromTheFutureMustBeDenied(self):
         pass

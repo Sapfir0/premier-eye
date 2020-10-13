@@ -10,13 +10,8 @@ from config import Config as cfg
 from services.directory import getOutputDir
 from controllers.gallery.imageInfo import initImageInfo
 from controllers.gallery.image import initImage
-<<<<<<< HEAD
 from services.model import getModel
 
-=======
-
-
->>>>>>> master
 api = Namespace('gallery')
 initImageInfo(api)
 initImage(api)
@@ -24,13 +19,7 @@ initImage(api)
 
 @api.route(routes['getAllImages'])
 class ImageList(Resource):
-<<<<<<< HEAD
     model = getModel("ImageList", api)
-=======
-    @api.response(200, "Success")
-    def get(self):
-        return jsonify(recursiveSearch(cfg.UPLOAD_FOLDER))
->>>>>>> master
 
     @api.response(200, "Success", model)
     def get(self):

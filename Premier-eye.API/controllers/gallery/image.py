@@ -1,8 +1,7 @@
 from flask import jsonify, send_from_directory, request, make_response
 from flask import redirect, request
-from werkzeug.utils import secure_filename
+from typing import Dict
 from controllers.gallery import routes, namespace
-from datetime import datetime
 from flask_restplus import Namespace, Resource
 import os
 from config import Config as cfg
@@ -33,7 +32,9 @@ def initImage(api):
             def allowedFile(filename):
                 return '.' in filename and filename.rsplit('.', 1)[1].lower() in cfg.ALLOWED_EXTENSIONS
 
-            if 'file' not in request.files and request.files['file'].filename == '':
+            arguments: Dict = request.files.to_dict()
+
+            if 'file' not in arguments or request.files['file'].filename == '':
                 return make_response({"error": "No image"}, 400)
 
             file = request.files['file']
