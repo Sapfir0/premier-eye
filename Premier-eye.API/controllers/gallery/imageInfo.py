@@ -29,7 +29,10 @@ def initImageInfo(api: Namespace):
 
             return jsonify(dict(imageInfo))
 
+<<<<<<< HEAD
         model = getModel("ImageInfo", api)
+=======
+>>>>>>> master
         @api.expect(model)
         def post(self, filename):
             objects = request.json['objects']

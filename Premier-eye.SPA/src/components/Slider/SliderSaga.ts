@@ -50,6 +50,7 @@ export default class SliderSaga implements ISliderSaga {
     }
 
     public *getInfoAboutImageFromCameraByFilename(action: ActionTypePayload<SrcPayload, SLIDER_ACTIONS>) {
+<<<<<<< HEAD
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = yield this.galleryFetcher.getInfoImage(action.payload.src)
 
         const parsed = either
@@ -62,6 +63,20 @@ export default class SliderSaga implements ISliderSaga {
 
     public *getInfoAboutImageFromCameraByIndexOfImage(action: ActionTypePayload<ChangeStepPayload, SLIDER_ACTIONS>) {
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = yield this.galleryFetcher.getInfoImageByIndex(action.payload.cameraId, action.payload.currentStep)
+=======
+        const either: Either<BaseInteractionError, IImageInfo> = yield this.galleryFetcher.getInfoImage(action.payload.src)
+>>>>>>> master
+
+        const parsed = either
+            .mapRight((info) => this.actions.setInfoImage(info))
+            .mapLeft((error) => this.actions.setError(error))
+
+        yield put(parsed.value)
+    }
+
+
+    public *getInfoAboutImageFromCameraByIndexOfImage(action: ActionTypePayload<ChangeStepPayload, SLIDER_ACTIONS>) {
+        const either: Either<BaseInteractionError, IImageInfo> = yield this.galleryFetcher.getInfoImageByIndex(action.payload.cameraId, action.payload.currentStep)
 
         const parsed = either
             .mapRight((info) => this.actions.setInfoImage(info))

@@ -32,7 +32,8 @@
     "reflect-metadata": "^0.1.13",
     "typeface-roboto": "0.0.75",
     "typescript": "^4.0.2",
-    "webpack": "^4.42.0"
+    "webpack": "^4.42.0",
+    "semantic-ui-react": "^1.3.0"
   },
   "devDependencies": {
     "@manifoldco/swagger-to-ts": "^2.1.0",

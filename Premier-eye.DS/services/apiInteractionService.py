@@ -13,7 +13,6 @@ class ApiInteractionService(BaseInteractionService):
         jsonInfo = {"objects": imageInfo.json()}
         self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
 
-
     def uploadImage(self, imagePath: str):
         if platform == "linux" or platform == "linux2":
             filename = os.path.split(imagePath)[1]  # TODO Only for linux!!
