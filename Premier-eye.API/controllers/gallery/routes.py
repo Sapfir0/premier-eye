@@ -19,7 +19,9 @@ initImage(api)
 
 @api.route(routes['getAllImages'])
 class ImageList(Resource):
-    @api.response(200, "Success")
+    model = getModel("ImageList", api)
+
+    @api.response(200, "Success", model)
     def get(self):
         return make_response(recursiveSearch(cfg.UPLOAD_FOLDER), 200)
 
