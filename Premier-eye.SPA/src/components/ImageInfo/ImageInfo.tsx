@@ -4,7 +4,7 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import {withStyles} from '@material-ui/core/styles';
 import TitledWarning from "../atoms/TitledWarning";
 import TitledCameraNumber from "../atoms/TitledCameraNumber";
-import {ObjectInfo, IImageInfo } from "../../typings/IImageInfo";
+import {definitions} from "../../typings/Dto";
 import {getDiffSecond} from "../../services/Time";
 import {getSettings, Settings} from "./SettingsHelper";
 import {detectionsImages} from "./ObjectsImages";
@@ -21,7 +21,7 @@ const  styles = {
 };
 
 interface IProps {
-    info: IImageInfo,
+    info: definitions['ImageInfo'],
     classes: any
 }
 
@@ -45,7 +45,7 @@ class ImageInfo extends React.Component<IProps, IState> {
         }));
     };
 
-    getObjectsUIRepresentation = (data: Array<ObjectInfo>) => {
+    getObjectsUIRepresentation = (data: Array<definitions['ObjectInfo']>) => {
         let objects: JSX.Element;
 
         if (!this.state.settings) {
@@ -59,7 +59,7 @@ class ImageInfo extends React.Component<IProps, IState> {
             data[i].id = i + 1
         }
 
-        const parse = (each: ObjectInfo) => {
+        const parse = (each: definitions['ObjectInfo']) => {
             let collapse = {}
             const element = this.state.settings.find(item => item.id === each.id)
             if (element != undefined) {
@@ -75,15 +75,15 @@ class ImageInfo extends React.Component<IProps, IState> {
             }
             return <React.Fragment key={each.id}>
                 <ListItem button onClick={() => this.handleClick(each.id)}>
-                    <ListItemIcon>{detectionsImages[each.typesOfObject].icon} </ListItemIcon>
-                    <ListItemText inset primary={detectionsImages[each.typesOfObject].title}/>
+                    <ListItemIcon>{detectionsImages[each.type].icon} </ListItemIcon>
+                    <ListItemText inset primary={detectionsImages[each.type].title}/>
                 </ListItem>
                 <Divider/>
                 {collapse}
             </React.Fragment>
         }
 
-        const red = (pV: Array<JSX.Element>, cV: ObjectInfo) => {
+        const red = (pV: Array<JSX.Element>, cV: definitions['ObjectInfo']) => {
             pV.push(parse(cV));
             return pV;
         }

@@ -1,0 +1,25 @@
+{
+    "properties": {
+        "numberOfCam": {
+            "type": "integer"
+        },
+        "filename": {
+            "type": "string"
+        },
+        "fixationDatetime": {
+            "type": "string"
+        },
+        "createdAt": {
+            "type": "string"
+        },
+        "objects": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/ObjectInfo"
+            }
+        }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["numberOfCam", "filename", "fixationDatetime", "createdAt", "objects"]
+}

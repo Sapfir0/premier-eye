@@ -1,7 +1,5 @@
 import os
-import sys
-sys.path.append('..')
-from Common.services.filename import parseFilename, getDate, getHours
+from premier_eye_common.filename import parseFilename, getDate, getHours
 from colorama import Fore
 
 

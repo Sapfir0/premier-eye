@@ -13,7 +13,7 @@ class Config(object):
 
     detectionProgramUrl = "http://localhost:8010"
 
-    dtoDirectory = os.path.join(Path(APP_PATH).parents[0], 'Common', 'typings')
+    dtoDirectory = os.path.join(APP_PATH, 'typings')
 
     UPLOAD_FOLDER = os.path.join(APP_PATH, "static", "uploads")
     if not os.path.exists(UPLOAD_FOLDER):

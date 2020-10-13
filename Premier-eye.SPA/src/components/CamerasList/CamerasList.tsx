@@ -1,7 +1,6 @@
 import React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import {camersCount} from "../../config/app";
 import {withStyles} from "@material-ui/core/styles";
 
 const styles = {
@@ -30,7 +29,7 @@ class CamerasList extends React.Component<IProps> {
         const {classes} = this.props;
 
         let camerasMenu = [];
-        for (let i = 1; i < camersCount + 1; i++) {
+        for (let i = 1; i < 4 + 1; i++) {
             camerasMenu.push(
                 <ListItem
                     button key={i}

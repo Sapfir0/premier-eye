@@ -1,7 +1,6 @@
 import requests
-from requests import Request
+from config.settings import config
 from config.settings import Settings
-from dependency_injector import containers, providers
 
 
 class BaseInteractionService:
@@ -11,14 +10,14 @@ class BaseInteractionService:
         self.cfg = config
 
     def get(self, url, host=None):
-        return self.query('GET', url, host=host )
+        return self.query('GET', url, host=host)
 
     def post(self, url, data=None, json=None, host=None, files=None):
         return self.query('POST', url, data=data, host=host, json=json, files=files,)
 
     def query(self, method: str, url: str, data=None, json=None, files=None, host=None, ):
         if host is None:
-            host = "http://localhost:8050" # TODO ааа почему DI не работает
+            host = self.cfg.apiLink
         reqUrl = host + url
 
         return requests.request(method, reqUrl, data=data, json=json, files=files)

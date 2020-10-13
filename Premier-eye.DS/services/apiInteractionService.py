@@ -2,16 +2,16 @@ from services.baseInteractionService import BaseInteractionService
 from sys import platform
 from config.apiRoutes import galleryRoutes
 import os
-from config.settings import Settings
+from config.settings import config
 from Models import Image
 import json
 
 
 class ApiInteractionService(BaseInteractionService):
+
     def postImageInfo(self, imagePath: str, imageInfo):
         jsonInfo = {"objects": imageInfo.json()}
         self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
-
 
     def uploadImage(self, imagePath: str):
         if platform == "linux" or platform == "linux2":
