@@ -10,3 +10,4 @@ colorama
 IPython
 gitPython
 dependency_injector
+premier-eye-common

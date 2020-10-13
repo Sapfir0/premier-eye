@@ -1,5 +1,5 @@
 import os
-from premier_eye_common.services.filename import parseFilename, getDate, getHours
+from premier_eye_common.filename import parseFilename, getDate, getHours
 from colorama import Fore
 
 

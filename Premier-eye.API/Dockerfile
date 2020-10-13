@@ -2,7 +2,6 @@ FROM python:3.7-alpine
 
 WORKDIR /api
 COPY requirements.txt requirements.txt
-RUN pip install -i https://test.pypi.org/simple/ premier-eye-common
 
 RUN pip3 install -r requirements.txt
 ENV FLASK_APP app.py

@@ -9,7 +9,6 @@ COPY requirements.txt requirements.txt
 RUN pip3 install Cython \
  && pip3 install -r requirements.txt
 RUN git clone https://github.com/leekunhee/Mask_RCNN && cd Mask_RCNN && pip3 install -r requirements.txt && python3 setup.py install
-RUN pip install -i https://test.pypi.org/simple/ Premier-eye.Common
 
 COPY . /pyback
 WORKDIR /pyback

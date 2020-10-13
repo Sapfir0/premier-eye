@@ -9,7 +9,7 @@ from config import Config as cfg
 from services.directory import getOutputDir
 from database.models.Images import Images, session
 from werkzeug.datastructures import FileStorage
-from premier_eye_common.services.filename import parseFilename
+from premier_eye_common.filename import parseFilename
 
 
 def initImage(api):
