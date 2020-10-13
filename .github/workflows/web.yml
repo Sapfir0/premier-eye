@@ -25,10 +25,6 @@ jobs:
       run: |
         cd Premier-eye.API
         docker build -t sapfir0/web-premier-eye:server .
-    - name: Test with pytest
-      run: |
-        cd Premier-eye.API
-        pytest
     - name: Build SPA
       run: |
         cd Premier-eye.SPA
@@ -36,3 +32,7 @@ jobs:
     - name: Build docker-compose
       run: |
         docker-compose up --build -d
+    - name: Test with pytest
+      run: |
+        cd Premier-eye.API
+        pytest
