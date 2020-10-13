@@ -21,11 +21,7 @@ const  styles = {
 };
 
 interface IProps {
-<<<<<<< HEAD
     info: definitions['ImageInfo'],
-=======
-    info: IImageInfo,
->>>>>>> master
     classes: any
 }
 
@@ -79,13 +75,8 @@ class ImageInfo extends React.Component<IProps, IState> {
             }
             return <React.Fragment key={each.id}>
                 <ListItem button onClick={() => this.handleClick(each.id)}>
-<<<<<<< HEAD
                     <ListItemIcon>{detectionsImages[each.type].icon} </ListItemIcon>
                     <ListItemText inset primary={detectionsImages[each.type].title}/>
-=======
-                    <ListItemIcon>{detectionsImages[each.typesOfObject].icon} </ListItemIcon>
-                    <ListItemText inset primary={detectionsImages[each.typesOfObject].title}/>
->>>>>>> master
                 </ListItem>
                 <Divider/>
                 {collapse}

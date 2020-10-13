@@ -52,11 +52,7 @@ export default class SliderAction implements ISliderPrivateAction, ISliderPublic
     })
 
 
-<<<<<<< HEAD
     public setInfoImage = (imageInfo: definitions['ImageInfo']): ActionTypePayload<ImagesInfoPayload, SLIDER_ACTIONS> => ({
-=======
-    public setInfoImage = (imageInfo: IImageInfo): ActionTypePayload<ImagesInfoPayload, SLIDER_ACTIONS> => ({
->>>>>>> master
         type: SET_INFO_IMAGE,
         payload: {
             imageInfo
