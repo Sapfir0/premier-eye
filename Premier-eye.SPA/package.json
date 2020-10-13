@@ -7,8 +7,8 @@
     "start": "./node_modules/.bin/webpack-dev-server --inline --hot --watch --env.NODE_ENV=dev",
     "start:test": "./node_modules/.bin/webpack-dev-server --inline --hot --watch --env.NODE_ENV=test",
     "build": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=prod",
-    "build:dev": "./node_modules/.bin/webpack -p --progress --profile ---env.NODE_ENV=dev",
-    "build:test": "./node_modules/.bin/webpack -p --progress --profile ---env.NODE_ENV=test",
+    "build:dev": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=dev",
+    "build:test": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=test",
     "lint": "eslint src/** -c ./.eslintrc.js",
     "buildJsonSchemas": "npx @manifoldco/swagger-to-ts http://localhost:8050/swagger.json --output src/typings/Dto.ts"
   },

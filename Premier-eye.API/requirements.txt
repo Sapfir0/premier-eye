@@ -4,3 +4,4 @@ Flask-Cors
 python-dotenv
 sqlalchemy
 flask_restplus
+Werkzeug==0.16.1

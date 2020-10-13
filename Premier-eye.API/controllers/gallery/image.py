@@ -9,8 +9,6 @@ from config import Config as cfg
 from services.directory import getOutputDir
 from database.models.Images import Images, session
 from werkzeug.datastructures import FileStorage
-import sys
-sys.path.append('..')
 from Common.services.filename import parseFilename
 
 

@@ -1,6 +1,4 @@
 import os
-import sys
-sys.path.append('..')
 from Common.services.filename import parseFilename, getDate, getHours
 from colorama import Fore
 

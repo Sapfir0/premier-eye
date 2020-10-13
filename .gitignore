@@ -4,7 +4,7 @@ node_modules
 # local env files
 .env.local
 .env.*.local
-
+Premier_eye.Common.egg-info
 build
 dist
 yarn.lock
