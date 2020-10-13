@@ -35,13 +35,6 @@ class UploadImage(unittest.TestCase):
         r = requests.post(self.routeUrl, files=files)
         self.assertNotEqual(200, r.status_code)
 
-    def test_IncorrectJsonImageFilename(self):
-        files = []
-        jsonPath = os.path.join(cfg.APP_PATH, "res", "incorrectJsonImageFilename.json")
-        files = self.addImage(files)
-        r = requests.post(self.routeUrl, files=files)
-        self.assertNotEqual(200, r.status_code)
-
     def test_IncorrectJsonImageFixationDatetime(self):
         files = []
         jsonPath = os.path.join(cfg.APP_PATH, "res", "incorrectJsonFixa.json")
