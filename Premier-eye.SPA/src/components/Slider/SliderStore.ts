@@ -1,7 +1,12 @@
-import {ISliderStore} from "../../typings/sliderTypes";
+import { ISliderStore } from "../../typings/sliderTypes";
 import StepDataStructure from "../../services/DataStructure/StepDataStructure";
 import { action, observable } from "mobx";
 import { definitions } from "typings/Dto";
+import { Either } from "@sweet-monads/either";
+import { BaseInteractionError } from "services/Errors/BaseInteractionError";
+import { inject } from "inversify";
+import { TYPES } from "typings/types";
+import { ICameraApiInteractionService, IGalleryApiInteractionService } from "services/typings/ApiTypes";
 
 
 export class SliderStore {
@@ -9,52 +14,52 @@ export class SliderStore {
     @observable imageInfo: definitions['ImageInfo'] | null = null
     @observable currentCameraId: number = 1
     stepMap: Map<number, number> = new Map<number, number>()
+    @observable errors: BaseInteractionError | null = null
 
+    private readonly galleryFetcher: IGalleryApiInteractionService
+    private readonly cameraFetcher: ICameraApiInteractionService
 
-    constructor() {
-        
+    constructor(
+        @inject(TYPES.GalleryApiInteractionService) galleryFetcher: IGalleryApiInteractionService,
+        @inject(TYPES.CameraApiInteractionService) cameraFetcher: ICameraApiInteractionService,
+    ) {
+        this.galleryFetcher = galleryFetcher
+        this.cameraFetcher = cameraFetcher
     }
 
     @action
-    public changeCurrentStep = (cameraId: number, currentStep: number) => {
-        const either: Either<BaseInteractionError, definitions['ImageInfo']> = yield this.galleryFetcher.getInfoImageByIndex(action.payload.cameraId, action.payload.currentStep)
+    public changeCurrentStep = async (cameraId: number, currentStep: number) => {
+        const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImageByIndex(cameraId, currentStep)
 
-        const parsed = either
-            .mapRight((info) => this.actions.setInfoImage(info))
-            .mapLeft((error) => this.actions.setError(error))
+        if (either.isLeft()) {
+            this.errors = either.value
+        } else {
+            this.imageInfo = either.value
+        }
 
-        yield put(parsed.value)
     }
 
     @action
-    public changeCurrentCamera = (cameraId: number) => {
-        
+    public changeCurrentCamera = async (cameraId: number) => {
+        const either: Either<BaseInteractionError, string[]> = await this.cameraFetcher.getImageFromCamera(cameraId)
+            
+        if (either.isLeft()) {
+            this.errors = either.value
+        } else {
+            this.imagesList = either.value
+        }
     }
 
     @action
-    public getInfoImage = (src: string) => {
-        
+    public getInfoImage = async (src: string) => {
+        const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImage(src)
+
+        if (either.isLeft()) {
+            this.errors = either.value
+        } else {
+            this.imageInfo = either.value
+        }
     }
-
-    // public *getImagesFromCamera(action: ActionTypePayload<IdPayload, SLIDER_ACTIONS>) {
-    //     const either: Either<BaseInteractionError, string[]> = yield this.cameraFetcher.getImageFromCamera(action.payload.id)
-
-    //     const parsed = either
-    //         .mapRight((imagesUrl) => this.actions.setImagesUrlFromCamera(imagesUrl))
-    //         .mapLeft((error) => this.actions.setError(error))
-
-    //     yield put(parsed.value)
-    // }
-
-    // public *getInfoAboutImageFromCameraByFilename(action: ActionTypePayload<SrcPayload, SLIDER_ACTIONS>) {
-    //     const either: Either<BaseInteractionError, definitions['ImageInfo']> = yield this.galleryFetcher.getInfoImage(action.payload.src)
-
-    //     const parsed = either
-    //         .mapRight((info) => this.actions.setInfoImage(info))
-    //         .mapLeft((error) => this.actions.setError(error))
-
-    //     yield put(parsed.value)
-    // }
 
 
 
