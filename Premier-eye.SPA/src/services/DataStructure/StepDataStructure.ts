@@ -4,8 +4,14 @@ type CurrentStep = number
 
 export default class StepDataStructure {
     steps: Map<CameraId, CurrentStep>
-    constructor() {
+    constructor(camerasCount?: number) {
         this.steps = new Map<CameraId, CurrentStep>()
+
+        if (camerasCount) {
+            for (let i=0; i< camerasCount; i++) {
+                this.steps.set(i, 0)
+            }
+        }
     }
 
     public getCurrentStep = (cameraId: CameraId) => {

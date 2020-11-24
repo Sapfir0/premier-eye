@@ -60,6 +60,9 @@ class ImageView extends React.Component<IProps> {
     };
 
     render() {
+        // this.props.images.map((src: string, index: number) => {console.log(src)})
+        console.log(this.props)
+
         const {classes} = this.props;
 
         let slideBlock;

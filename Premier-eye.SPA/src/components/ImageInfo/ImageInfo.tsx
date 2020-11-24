@@ -73,10 +73,11 @@ class ImageInfo extends React.Component<IProps, IState> {
                     </List>
                 </Collapse>
             }
+            console.log(detectionsImages, each)
             return <React.Fragment key={each.id}>
                 <ListItem button onClick={() => this.handleClick(each.id)}>
-                    <ListItemIcon>{detectionsImages[each.type].icon} </ListItemIcon>
-                    <ListItemText inset primary={detectionsImages[each.type].title}/>
+                    <ListItemIcon>{detectionsImages[each.typesOfObject].icon} </ListItemIcon>
+                    <ListItemText inset primary={detectionsImages[each.typesOfObject].title}/>
                 </ListItem>
                 <Divider/>
                 {collapse}

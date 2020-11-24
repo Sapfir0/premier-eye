@@ -4,27 +4,31 @@ import ImageInfo from "../ImageInfo/ImageInfo"
 import CamerasList from "../CamerasList/CamerasList"
 import "./Slider.pcss"
 import { SliderStore } from './SliderStore';
+import {observer} from "mobx-react";
+import {makeObservable} from "mobx";
 
 export interface ISlider {
     store: SliderStore
 }
 
 
+@observer
 class Slider extends React.Component<ISlider> {
 
     constructor(props: ISlider) {
         super(props);
     }
 
-    componentDidMount() {
-        this.props.store.getImagesFromCamera(this.props.store.currentCameraId)
+    async componentDidMount() {
+        // this.props.store.getImagesFromCamera(this.props.store.currentCameraId)
+        this.props.store.changeCurrentCamera(1)
         this.props.store.changeCurrentStep(this.props.store.currentCameraId, 0)
     }
 
     handleCameraChange = (cameraId: number) => {
-        this.props.store.getImagesFromCamera(cameraId)
+        // this.props.store.getImagesFromCamera(cameraId)
         this.props.store.changeCurrentCamera(cameraId)
-        const currentStep = this.props.store.stepMap.get(cameraId) === undefined ? 0 : this.props.stepMap.get(cameraId)
+        const currentStep = this.props.store.stepMap.get(cameraId) === undefined ? 0 : this.props.store.stepMap.get(cameraId)
         this.props.store.changeCurrentStep(cameraId, currentStep!)
     }
 
@@ -34,6 +38,8 @@ class Slider extends React.Component<ISlider> {
     }
 
     render() {
+        console.log(this.props.store.imageInfo)
+        console.log(this.props.store.imagesList)
         return (
             <div className="slider">
                 <CamerasList onCameraChange={this.handleCameraChange}/>
