@@ -19,7 +19,8 @@ def initObjectInfo(api: Namespace):
     @api.route(routes['getImageObjectInfoByIndexOfImage'])
     class ObjectInformation(Resource):
         model = getModel("ObjectInfo", api)
-        @api.expect(model)
+
+        @api.response(200, "Success", model)
         def get(self):
             pass
 

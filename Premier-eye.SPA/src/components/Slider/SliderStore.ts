@@ -38,7 +38,7 @@ export class SliderStore {
         if (either.isLeft()) {
             this.errors = either.value
         } else {
-            this.imageInfo = toJS(either.value)
+            this.imageInfo = either.value
         }
 
     }
@@ -61,7 +61,7 @@ export class SliderStore {
         if (either.isLeft()) {
             this.errors = either.value
         } else {
-            this.imageInfo = toJS(either.value)
+            this.imageInfo = either.value
         }
     }
 
