@@ -3,8 +3,11 @@
         "id": {
             "type": "integer"
         },
-        "src": {
+        "type": {
             "type": "string"
+        },
+        "scores": {
+            "type": "float"
         }
     },
     "type": "object"
