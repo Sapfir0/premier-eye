@@ -33,9 +33,7 @@ export class SliderStore {
     @action
     public changeCurrentStep = async (cameraId: number, currentStep: number) => {
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImageByIndex(cameraId, currentStep)
-        console.log(either)
         this.stepMap = this.stepsStore.changeStepOnCurrentCamera(cameraId, currentStep)
-        console.log(this.stepMap)
 
         if (either.isLeft()) {
             this.errors = either.value
@@ -54,20 +52,17 @@ export class SliderStore {
         } else {
             this.imagesList = either.value
         }
-        console.log(this.imagesList)
     }
 
     @action
     public getInfoImage = async (src: string) => {
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImage(src)
-        console.log(either)
 
         if (either.isLeft()) {
             this.errors = either.value
         } else {
             this.imageInfo = toJS(either.value)
         }
-        console.log(this.imageInfo)
     }
 
 
