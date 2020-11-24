@@ -7,14 +7,10 @@ import {ISliderPublicAction} from "../../typings/IAction";
 import "./Slider.pcss"
 import StepDataStructure from "../../services/DataStructure/StepDataStructure";
 import {definitions} from "../../typings/Dto";
+import { SliderStore } from './SliderStore';
 
 export interface ISlider {
-
-    imagesList: Array<string>,
-    imageInfo: definitions['ImageInfo'] | null
-    actions: ISliderPublicAction
-    currentCameraId: number
-    stepMap: Map<number, number>
+    store: SliderStore
 }
 
 
@@ -25,20 +21,20 @@ class Slider extends React.Component<ISlider> {
     }
 
     componentDidMount() {
-        this.props.actions.getImagesFromCamera(this.props.currentCameraId)
-        this.props.actions.changeCurrentStep(this.props.currentCameraId, 0)
+        this.props.store.getImagesFromCamera(this.props.store.currentCameraId)
+        this.props.store.changeCurrentStep(this.props.store.currentCameraId, 0)
     }
 
     handleCameraChange = (cameraId: number) => {
-        this.props.actions.getImagesFromCamera(cameraId)
-        this.props.actions.changeCurrentCamera(cameraId)
-        const currentStep = this.props.stepMap.get(cameraId) === undefined ? 0 : this.props.stepMap.get(cameraId)
-        this.props.actions.changeCurrentStep(cameraId, currentStep!)
+        this.props.store.getImagesFromCamera(cameraId)
+        this.props.store.changeCurrentCamera(cameraId)
+        const currentStep = this.props.store.stepMap.get(cameraId) === undefined ? 0 : this.props.stepMap.get(cameraId)
+        this.props.store.changeCurrentStep(cameraId, currentStep!)
     }
 
     handleCurrentStepChange = (step: number) => {
-        this.props.actions.changeCurrentStep(this.props.currentCameraId, step)
-        this.props.actions.getInfoImage(this.props.imagesList[step])
+        this.props.store.changeCurrentStep(this.props.store.currentCameraId, step)
+        this.props.store.getInfoImage(this.props.store.imagesList[step])
     }
 
     render() {
@@ -46,18 +42,18 @@ class Slider extends React.Component<ISlider> {
             <div className="slider">
                 <CamerasList onCameraChange={this.handleCameraChange}/>
                 {
-                    this.props.imagesList &&
+                    this.props.store.imagesList &&
                     <ImageView
-                        currentStep={this.props.stepMap.get(this.props.currentCameraId)!}
+                        currentStep={this.props.store.stepMap.get(this.props.store.currentCameraId)!}
                         changeCurrentStep={this.handleCurrentStepChange}
-                        images={this.props.imagesList}
-                        updateStateByInfo={this.props.actions.getInfoImage}
+                        images={this.props.store.imagesList}
+                        updateStateByInfo={this.props.store.getInfoImage}
                     />
                 }
                 {
-                    this.props.imageInfo &&
+                    this.props.store.imageInfo &&
                     <ImageInfo
-                        info={this.props.imageInfo}
+                        info={this.props.store.imageInfo}
                     />
                 }
 
