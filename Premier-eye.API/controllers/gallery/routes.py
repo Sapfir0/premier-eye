@@ -10,12 +10,13 @@ from config import Config as cfg
 from services.directory import getOutputDir
 from controllers.gallery.imageInfo import initImageInfo
 from controllers.gallery.image import initImage
+from controllers.gallery.objectsInfo import initObjectInfo
 from services.model import getModel
 
 api = Namespace('gallery')
 initImageInfo(api)
 initImage(api)
-
+initObjectInfo(api)
 
 @api.route(routes['getAllImages'])
 class ImageList(Resource):

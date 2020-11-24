@@ -26,8 +26,8 @@ def initImageInfo(api: Namespace):
 
             objectInfo = db.getObjects(filename)
             imageInfo.update({"objects": objectInfo})
-
             return jsonify(dict(imageInfo))
+
 
         model = getModel("ImageInfo", api)
         @api.expect(model)
@@ -41,7 +41,7 @@ def initImageInfo(api: Namespace):
             countOfObjectsInDB = session.query(Objects_).count() + 1  # objectId TODO
             for detected in objects:
                 coordinates = Coordinates(detected['coordinates'])
-                Object = Objects_(scores=detected['scores'], typesOfObject=detected['type'],
+                Object = Objects_(scores=detected['scores'], type=detected['type'],
                                   imageId=imageId, coordinatesId=countOfObjectsInDB)
 
                 if detected['type'] == 'car':  # TODO кал
@@ -78,5 +78,6 @@ def initImageInfo(api: Namespace):
             objectInfo = db.getObjects(filename)
             imageInfo = db.getImageByFilename(filename)
             imageInfo.update({"objects": objectInfo})
+            print(objectInfo)
 
             return jsonify(dict(imageInfo))

@@ -11,6 +11,7 @@ export interface definitions {
     createdAt: string;
     objects: definitions["ObjectInfo"][];
   };
+  ObjectInfo: { id: number; type: string; scores: number };
   ImageList: { items: string[] };
   CameraList: { items: string[] };
   CameraImageList: { items: string[] };
