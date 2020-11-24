@@ -1,14 +1,14 @@
-import { ISliderStore } from "../../typings/sliderTypes";
-import StepDataStructure from "../../services/DataStructure/StepDataStructure";
 import { action, observable } from "mobx";
-import { definitions } from "typings/Dto";
+import { definitions } from "../../typings/Dto";
 import { Either } from "@sweet-monads/either";
 import { BaseInteractionError } from "services/Errors/BaseInteractionError";
-import { inject } from "inversify";
-import { TYPES } from "typings/types";
+import {inject, injectable} from "inversify";
+import { TYPES } from "../../typings/types";
 import { ICameraApiInteractionService, IGalleryApiInteractionService } from "services/typings/ApiTypes";
+import {act} from "react-dom/test-utils";
 
 
+@injectable()
 export class SliderStore {
     @observable imagesList: Array<string> = []
     @observable imageInfo: definitions['ImageInfo'] | null = null
@@ -59,6 +59,11 @@ export class SliderStore {
         } else {
             this.imageInfo = either.value
         }
+    }
+
+    @action
+    public getImagesFromCamera = async (cameraId: number) => {
+
     }
 
 

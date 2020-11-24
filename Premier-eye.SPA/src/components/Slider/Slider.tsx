@@ -2,11 +2,7 @@ import React from 'react';
 import ImageView from '../ImageView/ImageView'
 import ImageInfo from "../ImageInfo/ImageInfo"
 import CamerasList from "../CamerasList/CamerasList"
-import {withStyles} from '@material-ui/core/styles';
-import {ISliderPublicAction} from "../../typings/IAction";
 import "./Slider.pcss"
-import StepDataStructure from "../../services/DataStructure/StepDataStructure";
-import {definitions} from "../../typings/Dto";
 import { SliderStore } from './SliderStore';
 
 export interface ISlider {

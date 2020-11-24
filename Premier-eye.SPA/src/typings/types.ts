@@ -9,9 +9,8 @@ const TYPES = {
     GalleryApiInteractionService: Symbol.for('GalleryApiInteractionService'),
     CameraApiInteractionService: Symbol.for('CameraApiInteractionService'),
 
-    SliderAction: Symbol.for('SliderAction'),
-    SliderReducer: Symbol.for('SliderReducer'),
-    SliderSaga: Symbol.for('SliderSaga'),
+    SliderStore: Symbol.for('SliderStore'),
+
 
 }
 

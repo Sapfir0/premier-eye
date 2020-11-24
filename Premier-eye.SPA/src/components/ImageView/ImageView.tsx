@@ -7,7 +7,6 @@ import SwipeableViews from 'react-swipeable-views';
 import {withStyles} from "@material-ui/core/styles";
 import NotFoundImage from "../atoms/NotFoundImage";
 import {API_URL, ApiRoutes} from "../../config/apiRoutes";
-import {ISliderPublicAction} from "../../typings/IAction";
 
 
 const styles = {
