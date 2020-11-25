@@ -1,5 +1,5 @@
 from flask import jsonify, make_response, request
-from controllers.gallery import routes
+from controllers.objectInfo import routes
 import database.dbAPI as db
 from flask_restplus import Namespace, Resource, fields
 from database.models.Cars import Cars
@@ -11,18 +11,16 @@ from services.model import getModel
 import os
 from config import Config
 from services.directory import recursiveSearch, getOutputDir
+from services.model import getModel
 
 
+api = Namespace('objectInfo')
 
-def initObjectInfo(api: Namespace):
+@api.route(routes['getObjectInfoByIndexOfImage'])
+class ObjectInformation(Resource):
+    model = getModel("ObjectInfo", api)
 
-    @api.route(routes['getImageObjectInfoByIndexOfImage'])
-    class ObjectInformation(Resource):
-        model = getModel("ObjectInfo", api)
+    @api.response(200, "Success", model)
+    def get(self):
+        pass
 
-        @api.response(200, "Success", model)
-        def get(self):
-            pass
-
-
-   
