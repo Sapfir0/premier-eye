@@ -10,6 +10,7 @@ from database.models.Images import Images, session
 from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename
 from services.model import getModel
+from services.directory import recursiveSearch
 
 
 api = Namespace('camera')

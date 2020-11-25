@@ -38,8 +38,6 @@ class Slider extends React.Component<ISlider> {
     }
 
     render() {
-        console.log(this.props.store.imageInfo)
-        console.log(this.props.store.imagesList)
         return (
             <div className="slider">
                 <CamerasList onCameraChange={this.handleCameraChange}/>

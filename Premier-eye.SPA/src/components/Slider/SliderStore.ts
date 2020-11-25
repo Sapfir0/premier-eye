@@ -45,12 +45,12 @@ export class SliderStore {
 
     @action
     public changeCurrentCamera = async (cameraId: number) => {
-        const either: Either<BaseInteractionError, string[]> = await this.cameraFetcher.getImageFromCamera(cameraId)
+        const either: Either<BaseInteractionError, {items: string[]}> = await this.cameraFetcher.getImageFromCamera(cameraId)
         this.currentCameraId = cameraId
         if (either.isLeft()) {
             this.errors = either.value
         } else {
-            this.imagesList = either.value
+            this.imagesList = either.value.items
         }
     }
 

@@ -31,5 +31,4 @@ export interface IGalleryApiInteractionService {
 
 export interface ICameraApiInteractionService {
     getImageFromCamera: (cameraId: number) => AsyncEither<any>
-    getCameraInfo: (cameraId: number) => AsyncEither<any>
 }
