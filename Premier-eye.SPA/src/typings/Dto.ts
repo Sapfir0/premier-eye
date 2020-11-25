@@ -4,6 +4,8 @@
  */
 
 export interface definitions {
+  ImageList: { items: string[] };
+  CameraImageList: { items: string[] };
   ImageInfo: {
     numberOfCam: number;
     filename: string;
@@ -12,7 +14,4 @@ export interface definitions {
     objects: definitions["ObjectInfo"][];
   };
   ObjectInfo: { id: number; type: string; scores: number };
-  ImageList: { items: string[] };
-  CameraList: { items: string[] };
-  CameraImageList: { items: string[] };
 }

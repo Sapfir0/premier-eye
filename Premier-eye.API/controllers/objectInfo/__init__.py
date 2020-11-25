@@ -1,7 +1,7 @@
 namespace = '/gallery'
 
 routes = {
-    'getObjectInfo': '/image/<filename>/info',
-    'getObjectInfoByIndexOfImage': '/image/info',
+    'getObjectInfo': '/<filename>/info',
+    'getObjectInfoByIndexOfImage': '/info',
 
 }
