@@ -4,7 +4,7 @@ import requests
 
 
 class Gallery(unittest.TestCase):
-    routeUrl = cfg.serverUrl + "gallery"
+    routeUrl = cfg.serverUrl + "image"
 
     def test_GetAllImagesNotEmpty(self):
         r = requests.get(self.routeUrl)

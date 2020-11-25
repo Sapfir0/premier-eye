@@ -9,14 +9,14 @@ class Objects_(Base):
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     scores = Column(Float)
 
-    typesOfObject = Column(String(20))
+    type = Column(String(20))
     imageId = Column(Integer)
     coordinatesId = Column(Integer)
     createdAt = Column(DateTime, default=datetime.now())
     updatedAt = Column(DateTime, default=datetime.now())
 
-    def __init__(self, scores=scores, typesOfObject=typesOfObject, imageId=imageId, coordinatesId=coordinatesId):
+    def __init__(self, scores=scores, type=type, imageId=imageId, coordinatesId=coordinatesId):
         self.scores = scores
-        self.typesOfObject = typesOfObject
+        self.type = type
         self.imageId = imageId
         self.coordinatesId = coordinatesId

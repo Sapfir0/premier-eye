@@ -1,61 +1,18 @@
 from flask import jsonify, send_from_directory, request, make_response
 from flask import redirect, request
-from services.directory import recursiveSearch, getOutputDir
-from controllers.gallery import routes, namespace
-import database.dbAPI as db
-from datetime import datetime
+from typing import Dict
+from controllers.computeImage import routes, namespace
 from flask_restplus import Namespace, Resource
 import os
 from config import Config as cfg
 from services.directory import getOutputDir
-from controllers.gallery.imageInfo import initImageInfo
-from controllers.gallery.image import initImage
+from database.models.Images import Images, session
+from werkzeug.datastructures import FileStorage
+from premier_eye_common.filename import parseFilename
 from services.model import getModel
 
-api = Namespace('gallery')
-initImageInfo(api)
-initImage(api)
 
-
-@api.route(routes['getAllImages'])
-class ImageList(Resource):
-    model = getModel("ImageList", api)
-
-    @api.response(200, "Success", model)
-    def get(self):
-        return make_response(recursiveSearch(cfg.UPLOAD_FOLDER), 200)
-
-@api.route(routes['getAllImagesFromCamera'])
-class CameraImagesList(Resource):
-    def get(self, cameraId):
-        cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
-        if not os.path.exists(cameraPath):
-            return jsonify({"error": "Error while loading camera"}), 400
-        imgList = recursiveSearch(cameraPath)
-        return jsonify(imgList)
-
-@api.route(routes['getCameras'])
-class CameraList(Resource):
-    model = getModel("CameraList", api)
-
-    @api.response(200, "Success", model)
-    def get(self):
-        cameras = os.listdir(cfg.UPLOAD_FOLDER)
-        return make_response({'items': cameras}, 200)
-
-
-@api.route(routes['getAllImagesFromCamera'])
-class CameraImageList(Resource):
-    model = getModel("CameraImageList", api)
-
-    @api.response(200, "Success", model)
-    def get(self, cameraId):
-        cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
-        if not os.path.exists(cameraPath):
-            return make_response({"error": "Error while loading camera"}, 400)
-        imgList = recursiveSearch(cameraPath)
-        return make_response({'items': imgList}, 200)
-
+api = Namespace('computeImage')
 
 @api.route(routes['getImageBetweenDatesFromCamera'])
 class ImageByDateIntervalFromCamera(Resource):

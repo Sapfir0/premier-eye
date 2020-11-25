@@ -21,7 +21,7 @@ export type SrcPayload = {
 
 export type SliderBasePayload = ImagesInfoPayload & ImagesUrlPayload & SrcPayload & ChangeStepPayload & IdPayload
 
-export type SliderStore = {
+export type ISliderStore = {
     imageInfo: definitions['ImageInfo'] | null
     imagesList: Array<string>
     currentCameraId: number

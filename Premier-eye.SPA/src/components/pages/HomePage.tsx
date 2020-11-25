@@ -1,11 +1,13 @@
 import React from "react";
-import SliderContainer from "../Slider/SliderContainer";
+import Slider from "../Slider/Slider";
+import {myContainer} from "../../config/inversify.config";
+import {TYPES} from "../../typings/types";
 
 
 export default function HomePage() {
     return (
         <>
-            <SliderContainer/>
+            <Slider store={myContainer.get(TYPES.SliderStore)}/>
         </>
 
     )
