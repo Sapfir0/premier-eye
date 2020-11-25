@@ -5,7 +5,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import {withStyles} from "@material-ui/core/styles";
-import NotFoundImage from "../atoms/NotFoundImage";
+import NotFoundImage from "../Atomics/NotFoundImage";
 import {API_URL, ApiRoutes} from "../../config/apiRoutes";
 
 
