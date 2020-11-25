@@ -2,12 +2,12 @@ import React from "react";
 import {Collapse, Divider, List, ListItem, ListItemText} from "@material-ui/core";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 import {withStyles} from '@material-ui/core/styles';
-import TitledWarning from "../atoms/TitledWarning";
-import TitledCameraNumber from "../atoms/TitledCameraNumber";
+import TitledCameraNumber from "../Atomics/TitledCameraNumber";
 import {definitions} from "../../typings/Dto";
-import {getDiffSecond} from "../../services/Time";
 import {getSettings, Settings} from "./SettingsHelper";
 import {detectionsImages} from "./ObjectsImages";
+import {WarningIfBigDiffBetweenDates} from "../Atomics/Warning/Warning"
+
 
 const  styles = {
     root: {
@@ -95,15 +95,6 @@ class ImageInfo extends React.Component<IProps, IState> {
 
     }
 
-    warningIfBigDiffBetweenDates = (createdDate: Date, fixationDate: Date, maxDiff = 60 * 60) => {
-        const bigDateDiff = getDiffSecond(createdDate, fixationDate) > maxDiff
-        let warningDateDiff;
-        if (bigDateDiff) {
-            const longText = `Запись в базе данных появилась ${createdDate}.`
-            warningDateDiff = <TitledWarning text={longText}/>
-        }
-        return warningDateDiff
-    }
 
     render() {
         const myData = this.props.info
@@ -114,7 +105,7 @@ class ImageInfo extends React.Component<IProps, IState> {
             objects = this.getObjectsUIRepresentation(myData.objects)
         }
 
-        const warningDateDiff = this.warningIfBigDiffBetweenDates(new Date(myData.createdAt), new Date(myData.fixationDatetime));
+        const warningDateDiff = WarningIfBigDiffBetweenDates(new Date(myData.createdAt), new Date(myData.fixationDatetime));
         if (myData.numberOfCam < 0) {
             return <div className={classes.error}> Информация с камеры недоступна </div>
         }
