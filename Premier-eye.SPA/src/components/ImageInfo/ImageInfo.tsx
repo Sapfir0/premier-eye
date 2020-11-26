@@ -4,10 +4,10 @@ import ListItemIcon from "@material-ui/core/ListItemIcon";
 import { withStyles } from '@material-ui/core/styles';
 import TitledCameraNumber from "../Atomics/TitledCameraNumber";
 import { definitions } from "../../typings/Dto";
-import { getSettings, Settings } from "./SettingsHelper";
-import { detectionsImages } from "./ObjectsImages";
+import {ImageInfoStore} from "./ImageInfoStore"
+import { detectionsImages } from "../Atomics/ObjectsImages";
 import { WarningIfBigDiffBetweenDates } from "../Atomics/Warning/Warning"
-
+import {ObjectCollapseInfo} from "./ObjectCollapseInfo"
 
 const styles = {
     root: {
@@ -23,62 +23,30 @@ const styles = {
 interface IProps {
     info: definitions['ImageInfo'],
     classes: any
-}
-
-interface IState {
-    settings: Array<Settings>
+    store: ImageInfoStore<definitions['ImageInfo']>
 }
 
 
-class ImageInfo extends React.Component<IProps, IState> {
+
+class ImageInfo extends React.Component<IProps> {
     constructor(props: IProps) {
         super(props)
-        this.state = { settings: getSettings(10) }; // учет максимум 10 объектов на кадре
     }
-
-    handleClick = (id: number) => {
-        this.setState(state => ({
-            ...state,
-            settings: state.settings.map((item: Settings) =>
-                item.id === id ? { ...item, open: !item.open } : item
-            )
-        }));
-    };
 
     getObjectsUIRepresentation = (data: Array<definitions['ObjectInfo']>) => {
         let objects: JSX.Element;
-
-        if (!this.state.settings) {
-            this.setState({
-                settings: getSettings(data.length)
-            })
-        }
-
-        for (let i = 0; i < data.length; i++) { // фиксим объект, нам было бы удобно, чтобы у него был порядковый номер
-            data[i].id = i + 1
-        }
+        this.props.store.setCollapses(data.length)
 
         const parse = (each: definitions['ObjectInfo']) => {
-            let collapse = {}
-            const element = this.state.settings.find(item => item.id === each.id)
-            if (element != undefined) {
-                collapse = <Collapse
-                    in={element.open}
-                    timeout="auto"
-                    unmountOnExit
-                >
-                    <List component="div" disablePadding>
-                        <ListItem> Степень уверенности: {each.scores * 100}% </ListItem>
-                    </List>
-                </Collapse>
-            }
+            const element = this.props.store.collapses.find(item => item.id === each.id)
+
             return <React.Fragment key={each.id}>
-                <ListItem button onClick={() => this.handleClick(each.id)}>
+                <ListItem button onClick={() => this.props.store.toggleCollapse(each.id)}>
                     <ListItemIcon>{detectionsImages[each.type].icon} </ListItemIcon>
                     <ListItemText inset primary={detectionsImages[each.type].title} />
                 </ListItem>
                 <Divider />
-                {collapse}
+                {element && <ObjectCollapseInfo isOpen={} scores={each.scores}  />}
             </React.Fragment>
         }
 
