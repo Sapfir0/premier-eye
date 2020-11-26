@@ -20,13 +20,11 @@ class Slider extends React.Component<ISlider> {
     }
 
     async componentDidMount() {
-        // this.props.store.getImagesFromCamera(this.props.store.currentCameraId)
         this.props.store.changeCurrentCamera(1)
         this.props.store.changeCurrentStep(this.props.store.currentCameraId, 0)
     }
 
     handleCameraChange = (cameraId: number) => {
-        // this.props.store.getImagesFromCamera(cameraId)
         this.props.store.changeCurrentCamera(cameraId)
         const currentStep = this.props.store.stepMap.get(cameraId) === undefined ? 0 : this.props.store.stepMap.get(cameraId)
         this.props.store.changeCurrentStep(cameraId, currentStep!)
@@ -34,7 +32,6 @@ class Slider extends React.Component<ISlider> {
 
     handleCurrentStepChange = (step: number) => {
         this.props.store.changeCurrentStep(this.props.store.currentCameraId, step)
-        this.props.store.getInfoImage(this.props.store.imagesList[step])
     }
 
     render() {

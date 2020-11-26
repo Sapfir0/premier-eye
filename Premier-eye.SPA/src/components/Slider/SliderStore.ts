@@ -1,4 +1,4 @@
-import {action, makeObservable, observable, toJS} from "mobx";
+import {action, makeObservable, observable, runInAction, toJS} from "mobx";
 import { definitions } from "../../typings/Dto";
 import { Either } from "@sweet-monads/either";
 import { BaseInteractionError } from "services/Errors/BaseInteractionError";
@@ -31,38 +31,50 @@ export class SliderStore {
     }
 
     @action
-    public changeCurrentStep = async (cameraId: number, currentStep: number) => {
+    public async changeCurrentStep(cameraId: number, currentStep: number) {
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImageByIndex(cameraId, currentStep)
-        this.stepMap = this.stepsStore.changeStepOnCurrentCamera(cameraId, currentStep)
+        
+        runInAction(() => {
+            this.stepMap = this.stepsStore.changeStepOnCurrentCamera(cameraId, currentStep)
 
-        if (either.isLeft()) {
-            this.errors = either.value
-        } else {
-            this.imageInfo = either.value
-        }
-
+            if (either.isLeft()) {
+                this.errors = either.value
+            } else {
+                this.imageInfo = either.value
+            }    
+        })
+        
+      
     }
 
     @action
-    public changeCurrentCamera = async (cameraId: number) => {
+    public async changeCurrentCamera(cameraId: number) {
         const either: Either<BaseInteractionError, {items: string[]}> = await this.cameraFetcher.getImageFromCamera(cameraId)
-        this.currentCameraId = cameraId
-        if (either.isLeft()) {
-            this.errors = either.value
-        } else {
-            this.imagesList = either.value.items
-        }
+
+        runInAction(() => {
+            this.currentCameraId = cameraId
+            if (either.isLeft()) {
+                this.errors = either.value
+            } else {
+                console.log(either.value)
+                this.imagesList = either.value.items
+            }
+        })
+
     }
 
-    @action
-    public getInfoImage = async (src: string) => {
+    @action // deprecated
+    public async getInfoImage(src: string) { // пока не используем
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImage(src)
 
-        if (either.isLeft()) {
-            this.errors = either.value
-        } else {
-            this.imageInfo = either.value
-        }
+        runInAction(() => {
+            if (either.isLeft()) {
+                this.errors = either.value
+            } else {
+                this.imageInfo = either.value
+            }
+        })
+
     }
 
 
