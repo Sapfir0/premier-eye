@@ -30,13 +30,10 @@ class CameraImageList(Resource):
 
 @api.route(routes['getCameraList'])
 class CamerasList(Resource):
-    model = getModel("CameraImageList", api)
+    model = getModel("CameraList", api)
 
     @api.response(200, "Success", model)
-    def get(self, cameraId):
-        cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
-        if not os.path.exists(cameraPath):
-            return make_response({"error": "Error while loading camera"}, 400)
-        imgList = recursiveSearch(cameraPath)
-        return make_response({'items': imgList}, 200)
+    def get(self):
+        cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
+        return make_response({'items': os.path.listdir(cameraPath)}, 200)
 
