@@ -7,7 +7,7 @@ import React from "react";
 import Button from "@material-ui/core/Button";
 import Settings from "../pages/Settings";
 import HomePage from "../pages/HomePage";
-import ClientRoutes from "../../config/clientRoutes";
+import {ClientRoutes} from "../../config/clientRoutes";
 
 
 

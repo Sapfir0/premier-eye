@@ -4,10 +4,10 @@
  */
 
 export interface definitions {
-  ImageList: { items: definitions["camera"][] };
+  ImageList: { items: definitions["Camera"][] };
   Image: { id: string; src: string };
-  CameraImageList: { items: definitions["camera"][] };
-  CameraList: { items: definitions["camera"][] };
+  CameraImageList: { items: definitions["Camera"][] };
+  CameraList: { items: definitions["Camera"][] };
   Camera: { id: string };
   ImageInfo: {
     numberOfCam: number;

@@ -1,6 +1,6 @@
 import React from 'react';
 import HomePage from "./pages/HomePage"
-import ClientRoutes from "../config/clientRoutes";
+import {ClientRoutes} from "../config/clientRoutes";
 import ButtonAppBar from "./RoutedHeader/Header";
 import {
     BrowserRouter as Router,

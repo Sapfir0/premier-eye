@@ -1,6 +1,6 @@
 import {AxiosError, AxiosResponse} from "axios";
 import {injectable} from "inversify";
-import ClientRoutes from "../config/clientRoutes";
+import {ClientRoutes} from "../config/clientRoutes";
 import {Either, left, right} from "@sweet-monads/either";
 import {IApiHelper} from "./typings/ApiTypes";
 import {NetworkError} from "./Errors/NetworkError";
