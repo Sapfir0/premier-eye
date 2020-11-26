@@ -26,10 +26,10 @@ export interface IGalleryApiInteractionService {
     getImage: (imageId: string) => AsyncEither<any>
     getAllImages: () => AsyncEither<any>
     getInfoImage: (src: string) => AsyncEither<any>
-    getInfoImageByIndex: (cameraId: number, indexOfImage: number) => AsyncEither<any>
+    getInfoImageByIndex: (cameraId: string, indexOfImage: number) => AsyncEither<any>
 }
 
 export interface ICameraApiInteractionService {
-    getImageFromCamera: (cameraId: number) => AsyncEither<any>
+    getImageFromCamera: (cameraId: string) => AsyncEither<any>
     getCamerasList: () => AsyncEither<any>
 }

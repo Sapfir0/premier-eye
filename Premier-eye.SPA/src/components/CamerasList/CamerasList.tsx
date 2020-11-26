@@ -23,7 +23,7 @@ class CamerasList extends React.Component<IProps> {
         super(props);
     }
 
-    handleListItemClick = (cameraId: string) => (event: MouseEvent<HTMLDivElement, MouseEvent>) => {
+    handleListItemClick = (cameraId: string) => (event: any) => {
         this.props.onCameraChange(cameraId);
         console.log("Кликнули на камеру ", cameraId);
     }

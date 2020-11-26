@@ -20,7 +20,7 @@ class Slider extends React.Component<ISlider> {
     }
 
     async componentDidMount() {
-        this.props.store.changeCurrentCamera(1)
+        this.props.store.changeCurrentCamera("1")
         this.props.store.changeCurrentStep(this.props.store.currentCameraId, 0)
         this.props.store.getCameraList()
     }

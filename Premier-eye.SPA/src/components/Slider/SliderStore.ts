@@ -13,8 +13,8 @@ import StepDataStructure from "../../services/DataStructure/StepDataStructure";
 export class SliderStore {
     @observable imagesList: Array<string> = []
     @observable imageInfo: definitions['ImageInfo'] | null = null
-    @observable currentCameraId: number = 1
-    stepMap: Map<number, number> = new StepDataStructure().steps
+    @observable currentCameraId: string = "1"
+    stepMap: Map<string, number> = new StepDataStructure().steps
     @observable errors: BaseInteractionError | null = null
     stepsStore: StepDataStructure = new StepDataStructure()
     @observable camerasList: definitions['CameraList'] = {items: []}
@@ -47,7 +47,7 @@ export class SliderStore {
     }
 
     @action
-    public async changeCurrentStep(cameraId: number, currentStep: number) {
+    public async changeCurrentStep(cameraId: string, currentStep: number) {
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImageByIndex(cameraId, currentStep)
         
         runInAction(() => {
@@ -64,7 +64,7 @@ export class SliderStore {
     }
 
     @action
-    public async changeCurrentCamera(cameraId: number) {
+    public async changeCurrentCamera(cameraId: string) {
         const either: Either<BaseInteractionError, {items: string[]}> = await this.cameraFetcher.getImageFromCamera(cameraId)
 
         runInAction(() => {

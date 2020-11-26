@@ -4,7 +4,7 @@ import {ApiRoutes} from "../../config/apiRoutes";
 
 
 export default class CameraApiInteractionService extends ApiInteractionService implements ICameraApiInteractionService {
-    public getImageFromCamera = (cameraId: number) => {
+    public getImageFromCamera = (cameraId: string) => {
         return this.get(ApiRoutes.CAMERA.GET_ALL_IMAGES_FROM_CAMERA(cameraId))
     }
 
