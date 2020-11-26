@@ -35,7 +35,9 @@ class CamerasList(Resource):
     @api.response(200, "Success", model)
     def get(self):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
-        return make_response({'items': os.path.listdir(cameraPath)}, 200)
+        cameraList = [{'id': camera} for camera in os.listdir(cameraPath)]
+
+        return make_response({'items': cameraList}, 200)
 
 
 

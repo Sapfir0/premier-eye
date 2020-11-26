@@ -1,7 +1,8 @@
 import React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import {withStyles} from "@material-ui/core/styles";
+import { withStyles } from "@material-ui/core/styles";
+import { definitions } from '../../typings/Dto';
 
 const styles = {
     root: {
@@ -12,8 +13,9 @@ const styles = {
 
 interface IProps {
     classes: any,
-    onCameraChange: (cameraId: number) => void
-    
+    cameras: definitions['CameraList']
+    onCameraChange: (cameraId: string) => void
+
 }
 
 class CamerasList extends React.Component<IProps> {
@@ -21,25 +23,23 @@ class CamerasList extends React.Component<IProps> {
         super(props);
     }
 
-    handleListItemClick = (event: any, index: number) => {
-        this.props.onCameraChange(index);
-        console.log("Кликнули на камеру ", index);
+    handleListItemClick = (cameraId: string) => (event: MouseEvent<HTMLDivElement, MouseEvent>) => {
+        this.props.onCameraChange(cameraId);
+        console.log("Кликнули на камеру ", cameraId);
     }
 
     render() {
-        const {classes} = this.props;
+        const { classes } = this.props;
 
-        let camerasMenu = [];
-        for (let i = 1; i < 4 + 1; i++) {
-            camerasMenu.push(
-                <ListItem
-                    button key={i}
-                    onClick={(event) => this.handleListItemClick(event, i)}
-                >
-                    Camera {i}
-                </ListItem>
-            )
-        }
+        const camerasMenu = this.props.cameras.items.map((camera) =>
+            <ListItem
+                button key={camera.id}
+                onClick={this.handleListItemClick(camera.id)}
+            >
+                Camera {camera.id}
+            </ListItem>
+        )
+
         return (
             <div className={classes.root}>
                 <List component="nav" aria-label="main mailbox folders">
@@ -52,4 +52,4 @@ class CamerasList extends React.Component<IProps> {
 
 }
 
-export default  withStyles(styles)(CamerasList)
+export default withStyles(styles)(CamerasList)

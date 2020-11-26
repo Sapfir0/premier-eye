@@ -6,7 +6,8 @@ const ClientRoutes = {
     BadGateway: "/badGateway",
     Login: "/login",
     Index: "/",
-    Settings: '/settings'
+    Settings: '/settings',
+    AreaMap: '/map'
 
 } as const
 

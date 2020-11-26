@@ -1,5 +1,4 @@
 import "reflect-metadata";
-
 import ApiHelper from "../services/ApiHelper";
 import {TYPES} from "../typings/types";
 import {

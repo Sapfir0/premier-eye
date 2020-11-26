@@ -17,6 +17,7 @@ export class SliderStore {
     stepMap: Map<number, number> = new StepDataStructure().steps
     @observable errors: BaseInteractionError | null = null
     stepsStore: StepDataStructure = new StepDataStructure()
+    @observable camerasList: definitions['CameraList'] = {items: []}
 
     private readonly galleryFetcher: IGalleryApiInteractionService
     private readonly cameraFetcher: ICameraApiInteractionService
@@ -28,6 +29,21 @@ export class SliderStore {
         this.galleryFetcher = galleryFetcher
         this.cameraFetcher = cameraFetcher
         makeObservable(this)
+    }
+
+    @action
+    public async getCameraList() {
+        const either: Either<BaseInteractionError, definitions['CameraList']> = await this.cameraFetcher.getCamerasList()
+        
+        runInAction(() => {
+            if (either.isLeft()) {
+                this.errors = either.value
+            } else {
+                this.camerasList = either.value
+                console.log(this.camerasList);
+                
+            }    
+        })
     }
 
     @action
