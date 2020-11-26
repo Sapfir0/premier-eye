@@ -1,0 +1,13 @@
+{
+    "properties": {
+        "id": {
+            "type": "string"
+        },
+        "src": {
+            "type": "string"
+        }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["id", "src"]
+}
