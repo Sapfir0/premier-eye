@@ -75,3 +75,14 @@ class Image(Resource):
         session.flush()
 
         return make_response({'success': 'Image created'}, 200)
+
+
+
+
+@api.route(routes['imageById'])
+class ObjectInformation(Resource):
+    model = getModel("Image", api)
+
+    @api.response(200, "Success", model)
+    def get(self, imageById):
+        pass

@@ -37,3 +37,12 @@ class CamerasList(Resource):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
         return make_response({'items': os.path.listdir(cameraPath)}, 200)
 
+
+
+@api.route(routes['getCamera'])
+class ObjectInformation(Resource):
+    model = getModel("Camera", api)
+
+    @api.response(200, "Success", model)
+    def get(self, cameraId):
+        pass

@@ -24,3 +24,4 @@ class ObjectInformation(Resource):
     def get(self):
         pass
 
+
