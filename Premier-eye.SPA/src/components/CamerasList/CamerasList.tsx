@@ -13,6 +13,7 @@ const styles = {
 interface IProps {
     classes: any,
     onCameraChange: (cameraId: number) => void
+    
 }
 
 class CamerasList extends React.Component<IProps> {

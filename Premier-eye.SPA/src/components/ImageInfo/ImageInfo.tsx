@@ -84,9 +84,7 @@ class ImageInfo extends React.Component<IProps, IState> {
 
 
         objects = <List component="nav">
-            {
-                data.map((el: definitions['ObjectInfo']) => parse(el))
-            }
+            {data.map((el: definitions['ObjectInfo']) => parse(el))}
         </List>
         return objects
 
