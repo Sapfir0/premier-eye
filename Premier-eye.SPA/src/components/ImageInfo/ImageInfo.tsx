@@ -9,6 +9,7 @@ import {detectionsImages} from "../Atomics/ObjectsImages";
 import {WarningIfBigDiffBetweenDates} from "../Atomics/Warning/Warning"
 import {ObjectCollapseInfo} from "./ObjectCollapseInfo"
 import {observer} from "mobx-react";
+import {CollapsableData, ObjectInfo} from "./ObjectInfo";
 
 const styles = {
     root: {
@@ -17,8 +18,7 @@ const styles = {
     numberOfCam: {
         display: 'flex',
     },
-    error: {
-    }
+    error: {}
 };
 
 interface IProps {
@@ -27,8 +27,6 @@ interface IProps {
     store: ImageInfoStore<definitions['ObjectInfo']>
 }
 
-type CollapsableData = ICollapse & definitions['ObjectInfo']
-
 
 @observer
 class ImageInfo extends React.Component<IProps> {
@@ -36,31 +34,17 @@ class ImageInfo extends React.Component<IProps> {
         super(props)
     }
 
-    getObjectsUIRepresentation = (data: Array<CollapsableData>) => {
-        const parse = (each: CollapsableData) => {
-            console.log(each.open)
-            return <React.Fragment key={each.id}>
-                <ListItem button onClick={() => this.props.store.toggleCollapse(each.id)}>
-                    <ListItemIcon>{detectionsImages[each.type].icon} </ListItemIcon>
-                    <ListItemText inset primary={detectionsImages[each.type].title}/>
-                </ListItem>
-                <Divider/>
-                <ObjectCollapseInfo isOpen={each.open} scores={each.scores} />
-            </React.Fragment>
-        }
-
-
-        return <List component="nav">
-            {data.map((el: CollapsableData) => parse(el))}
+    getObjectsUIRepresentation = (data: Array<CollapsableData>) =>
+        <List component="nav">
+            {data.map((el: CollapsableData) =>
+                <ObjectInfo store={this.props.store} key={el.id} element={el}/>
+            )}
         </List>
-
-    }
 
 
     render() {
         const myData = this.props.info
-        const { classes } = this.props;
-
+        const {classes} = this.props;
 
         let objects: JSX.Element | undefined;
         if (myData.objects && myData.objects.length !== 0) {
@@ -77,7 +61,7 @@ class ImageInfo extends React.Component<IProps> {
             <div className={classes.root}>
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItem>
-                        <TitledCameraNumber cameraId={myData.numberOfCam} />
+                        <TitledCameraNumber cameraId={myData.numberOfCam}/>
                     </ListItem>
                     <ListItem> {myData.filename} </ListItem>
                     <ListItem> {myData.fixationDatetime.toString()} {warningDateDiff}</ListItem>
