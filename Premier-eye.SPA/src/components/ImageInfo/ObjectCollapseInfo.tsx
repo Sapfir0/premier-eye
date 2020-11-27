@@ -1,4 +1,5 @@
 import { List, ListItem, Collapse } from "@material-ui/core"
+import React from "react"
 
 
 export const ObjectCollapseInfo = (isOpen: boolean, scores: number) => (

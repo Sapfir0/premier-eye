@@ -46,7 +46,7 @@ class ImageInfo extends React.Component<IProps> {
                     <ListItemText inset primary={detectionsImages[each.type].title} />
                 </ListItem>
                 <Divider />
-                {element && <ObjectCollapseInfo isOpen={} scores={each.scores}  />}
+                {element && <ObjectCollapseInfo isOpen={each.open} scores={each.scores}  />}
             </React.Fragment>
         }
 
