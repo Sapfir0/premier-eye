@@ -12,7 +12,6 @@ import BaseInteractionService from "../services/BaseInteractionService";
 import ApiInteractionService from "../services/ApiInteractionService";
 import GalleryApiInteractionService from "../services/ApiInteractionService/GalleryApiInteractionService";
 import {IUrlService} from "../services/typings/IUrlService";
-import UrlService from "../services/UrlService";
 import CameraApiInteractionService from "../services/ApiInteractionService/CameraApiInteractionService";
 import {SliderStore} from "../components/Slider/SliderStore";
 
@@ -23,8 +22,6 @@ myContainer.bind<IApiHelper>(TYPES.ApiHelper).to(ApiHelper)
 myContainer.bind<IBaseInteractionService>(TYPES.BaseInteractionService).to(BaseInteractionService)
 
 myContainer.bind<IApiInteractionService>(TYPES.ApiInteractionService).to(ApiInteractionService)
-
-myContainer.bind<IUrlService>(TYPES.UrlService).to(UrlService)
 
 myContainer.bind(TYPES.SliderStore).to(SliderStore)
 
