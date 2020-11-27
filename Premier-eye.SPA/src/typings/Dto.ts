@@ -16,5 +16,5 @@ export interface definitions {
     createdAt: string;
     objects: definitions["ObjectInfo"][];
   };
-  ObjectInfo: { id: number; type: string; scores: number };
+  ObjectInfo: { id: string; type: string; scores: number };
 }

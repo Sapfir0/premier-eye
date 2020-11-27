@@ -6,6 +6,7 @@ import "./Slider.pcss"
 import { SliderStore } from './SliderStore';
 import { observer } from "mobx-react";
 import { makeObservable } from "mobx";
+import { ImageInfoStore } from '../ImageInfo/ImageInfoStore';
 
 export interface ISlider {
     store: SliderStore
@@ -55,6 +56,7 @@ class Slider extends React.Component<ISlider> {
                 {
                     this.props.store.imageInfo &&
                     <ImageInfo
+                        store={new ImageInfoStore()}
                         info={this.props.store.imageInfo}
                     />
                 }
