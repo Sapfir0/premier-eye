@@ -16,7 +16,7 @@ export class ImageInfoStore<TCollapsedData extends {id: string}> {
     }
 
     emptyCollapses(countOfCollapses: number) {
-        this.collapses = Range(0, countOfCollapses).map((el) => ({ id: el.toString(), open: false })).toArray()
+        this.collapses = Range(0, countOfCollapses).map((el) => ({ id: el.toString(), open: false })).toArray() as Array<ICollapse & TCollapsedData>
         return this.collapses
     }
 
@@ -28,8 +28,7 @@ export class ImageInfoStore<TCollapsedData extends {id: string}> {
     toggleCollapse(id: string) {
         this.collapses = this.collapses.map((item: ICollapse) =>
             item.id === id ? { ...item, open: !item.open } : item
-        )
-        console.log(this.collapses)
+        ) as Array<ICollapse & TCollapsedData>
     }
 
 }

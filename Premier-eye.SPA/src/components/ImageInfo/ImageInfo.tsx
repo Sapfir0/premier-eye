@@ -27,6 +27,7 @@ interface IProps {
     store: ImageInfoStore<definitions['ObjectInfo']>
 }
 
+type CollapsableData = ICollapse & definitions['ObjectInfo']
 
 
 @observer
@@ -35,8 +36,8 @@ class ImageInfo extends React.Component<IProps> {
         super(props)
     }
 
-    getObjectsUIRepresentation = (data: Array<definitions['ObjectInfo']>) => {
-        const parse = (each: ICollapse & definitions['ObjectInfo']) => {
+    getObjectsUIRepresentation = (data: Array<CollapsableData>) => {
+        const parse = (each: CollapsableData) => {
             console.log(each.open)
             return <React.Fragment key={each.id}>
                 <ListItem button onClick={() => this.props.store.toggleCollapse(each.id)}>
@@ -50,7 +51,7 @@ class ImageInfo extends React.Component<IProps> {
 
 
         return <List component="nav">
-            {data.map((el: definitions['ObjectInfo']) => parse(el))}
+            {data.map((el: CollapsableData) => parse(el))}
         </List>
 
     }
