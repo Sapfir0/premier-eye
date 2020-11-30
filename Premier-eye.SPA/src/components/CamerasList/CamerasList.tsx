@@ -33,7 +33,7 @@ class CamerasList extends React.Component<IProps> {
         )
 
         return (
-            <div className={styles.root}>
+            <div className={styles.camerasList}>
                 <List component="nav" aria-label="main mailbox folders">
                     {camerasMenu}
                 </List>
