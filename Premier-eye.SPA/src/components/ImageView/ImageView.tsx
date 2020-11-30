@@ -1,32 +1,12 @@
 import React from 'react';
-import MobileStepper from '@material-ui/core/MobileStepper';
 import NotFoundImage from "../Atomics/NotFoundImage";
 import "./ImageView.pcss"
-import {NextButton, BackButton} from "./Buttons"
+import {ISliderBlock, SlideBlock} from "./SliderBlock"
 
-interface IImageView {
-    images: Array<string>,
+
+interface IImageView extends ISliderBlock {
     updateStateByInfo: (src: string) => void
-    changeCurrentStep: (step: number) => void
-    currentStep: number
 }
-
-
-export class SlideBlock extends React.Component<IImageView> {
-    render() {
-        return <>
-            <MobileStepper
-                steps={this.props.images.length}
-                position="static"
-                variant="progress"
-                activeStep={this.props.currentStep}
-                nextButton={<NextButton {...this.props} isDisabled={this.props.currentStep === 0} />}
-                backButton={<BackButton {...this.props} isDisabled={this.props.currentStep === this.props.images.length - 1} />}
-            />
-        </>
-    }
-}
-
 
 export default class ImageView extends React.Component<IImageView> {
     constructor(props: IImageView) {
