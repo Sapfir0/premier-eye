@@ -21,7 +21,7 @@ const styles = {
     error: {}
 };
 
-interface IProps {
+interface IImageInfo {
     info: definitions['ImageInfo'],
     classes: any
     store: ImageInfoStore<definitions['ObjectInfo']>
@@ -29,8 +29,8 @@ interface IProps {
 
 
 @observer
-class ImageInfo extends React.Component<IProps> {
-    constructor(props: IProps) {
+class ImageInfo extends React.Component<IImageInfo> {
+    constructor(props: IImageInfo) {
         super(props)
     }
 

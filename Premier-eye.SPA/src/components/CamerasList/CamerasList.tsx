@@ -2,14 +2,12 @@ import React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import { definitions } from '../../typings/Dto';
-import styles from "./CamerasList.pcss"
+import "./CamerasList.pcss"
 
 
 interface IProps {
-    classes: any,
     cameras: definitions['CameraList']
     onCameraChange: (cameraId: string) => void
-
 }
 
 class CamerasList extends React.Component<IProps> {
@@ -33,7 +31,7 @@ class CamerasList extends React.Component<IProps> {
         )
 
         return (
-            <div className={styles.camerasList}>
+            <div className="camerasList">
                 <List component="nav" aria-label="main mailbox folders">
                     {camerasMenu}
                 </List>

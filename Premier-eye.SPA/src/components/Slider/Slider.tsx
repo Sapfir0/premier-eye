@@ -14,7 +14,7 @@ export interface ISlider {
 
 
 @observer
-class Slider extends React.Component<ISlider> {
+export default class Slider extends React.Component<ISlider> {
 
     constructor(props: ISlider) {
         super(props);
@@ -66,5 +66,3 @@ class Slider extends React.Component<ISlider> {
     }
 }
 
-
-export default Slider;

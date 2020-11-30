@@ -7,43 +7,19 @@ import SwipeableViews from 'react-swipeable-views';
 import {withStyles} from "@material-ui/core/styles";
 import NotFoundImage from "../Atomics/NotFoundImage";
 import {API_URL, ApiRoutes} from "../../config/apiRoutes";
+import "./ImageView.pcss"
 
 
-const styles = {
-    imageView: {
-        maxWidth: 400,
-        flexGrow: 1,
-    },
-    header: {
-        display: 'flex',
-        alignItems: 'center',
-        height: 50,
-    },
-    img: {
-        height: 255,
-        display: 'block',
-        maxWidth: 400,
-        overflow: 'hidden',
-        width: '100%',
-
-        backgroundColor: 'red',
-        color: 'white',
-    },
-
-}
-
-interface IProps {
+interface IImageView {
     images: Array<string>,
-    classes: any,
     updateStateByInfo: (src: string) => void
     changeCurrentStep: (step: number) => void
     currentStep: number
 }
 
 
-
-class ImageView extends React.Component<IProps> {
-    constructor(props: IProps) {
+export default class ImageView extends React.Component<IImageView> {
+    constructor(props: IImageView) {
         super(props);
     }
 
@@ -60,9 +36,6 @@ class ImageView extends React.Component<IProps> {
     };
 
     render() {
-
-        const {classes} = this.props;
-
         let slideBlock;
         if(this.props.images.hasOwnProperty("error")) {
             slideBlock = <NotFoundImage />
@@ -76,7 +49,7 @@ class ImageView extends React.Component<IProps> {
                 {this.props.images.map((src: string, index: number) => (
                     <div key={src}>
                         {Math.abs(this.props.currentStep - index) <= 2 ? (
-                            <img className={classes.img} src={API_URL + ApiRoutes.GALLERY.GET_IMAGE(src)} alt={src}/>
+                            <img className="img" src={API_URL + ApiRoutes.GALLERY.GET_IMAGE(src)} alt={src}/>
                         ) : null}
                     </div>
                 ))}
@@ -103,13 +76,9 @@ class ImageView extends React.Component<IProps> {
         }
 
         return (
-            <div className={classes.imageView}>
+            <div className="imageView">
                 {slideBlock}
             </div>
         );
     }
-
-
 }
-
-export default withStyles(styles)(ImageView);
