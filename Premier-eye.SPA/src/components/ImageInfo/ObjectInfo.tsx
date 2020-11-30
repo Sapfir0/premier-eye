@@ -19,7 +19,7 @@ export const ObjectInfo = ({ element, store }: IObjectInfo) => {
     const toggleCollapse = (id: string) => () => {
         store.toggleCollapse(id)
     }
-    <>
+    return <>
         <ListItem button onClick={toggleCollapse(element.id)}>
             <ListItemIcon>{detectionsImages[element.type].icon} </ListItemIcon>
             <ListItemText inset primary={detectionsImages[element.type].title} />
