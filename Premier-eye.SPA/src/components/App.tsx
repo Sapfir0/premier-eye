@@ -8,6 +8,8 @@ import {
     Route,
     Link
 } from "react-router-dom";
+import Settings from './pages/Settings';
+import { AreaMap } from './AreaMap/AreaMap';
 
 
 function App() {
@@ -16,6 +18,8 @@ function App() {
             <ButtonAppBar/>
             <Switch>
                 <Route path={ClientRoutes.Index} component={HomePage}/>
+                <Route path={ClientRoutes.Settings} component={Settings} />
+                <Route path={ClientRoutes.AreaMap} component={AreaMap} />
             </Switch>
         </Router>
     );
