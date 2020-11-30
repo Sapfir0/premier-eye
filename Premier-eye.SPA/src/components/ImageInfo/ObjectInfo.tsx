@@ -1,10 +1,10 @@
 import React from "react";
-import {Divider, ListItem, ListItemText} from "@material-ui/core";
+import { Divider, ListItem, ListItemText } from "@material-ui/core";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
-import {detectionsImages} from "../Atomics/ObjectsImages";
-import {ObjectCollapseInfo} from "./ObjectCollapseInfo";
-import {ICollapse, ImageInfoStore} from "./ImageInfoStore";
-import {definitions} from "../../typings/Dto";
+import { detectionsImages } from "../Atomics/ObjectsImages";
+import { ObjectCollapseInfo } from "./ObjectCollapseInfo";
+import { ICollapse, ImageInfoStore } from "./ImageInfoStore";
+import { definitions } from "../../typings/Dto";
 
 export type CollapsableData = ICollapse & definitions['ObjectInfo']
 
@@ -14,13 +14,17 @@ export interface IObjectInfo {
 }
 
 
-export const ObjectInfo = ({element, store}: IObjectInfo) => (
+
+export const ObjectInfo = ({ element, store }: IObjectInfo) => {
+    const toggleCollapse = (id: string) => () => {
+        store.toggleCollapse(id)
+    }
     <>
-        <ListItem button onClick={() => store.toggleCollapse(element.id)}>
+        <ListItem button onClick={toggleCollapse(element.id)}>
             <ListItemIcon>{detectionsImages[element.type].icon} </ListItemIcon>
-            <ListItemText inset primary={detectionsImages[element.type].title}/>
+            <ListItemText inset primary={detectionsImages[element.type].title} />
         </ListItem>
-        <Divider/>
+        <Divider />
         <ObjectCollapseInfo isOpen={element.open} scores={element.scores} />
     </>
-)
+}
