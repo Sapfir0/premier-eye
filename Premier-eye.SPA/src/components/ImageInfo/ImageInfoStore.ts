@@ -1,4 +1,5 @@
 import { Range } from "immutable"
+import { injectable } from "inversify"
 import {makeObservable, observable} from "mobx"
 
 
@@ -8,6 +9,7 @@ export interface ICollapse {
 }
 
 
+@injectable()
 export class ImageInfoStore<TCollapsedData extends {id: string}> {
     @observable collapses: Array<ICollapse & TCollapsedData> = []
 

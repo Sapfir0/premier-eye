@@ -2,11 +2,11 @@ import React from 'react';
 import ImageView from '../ImageView/ImageView'
 import ImageInfo from "../ImageInfo/ImageInfo"
 import CamerasList from "../CamerasList/CamerasList"
-import "./Slider.pcss"
 import { SliderStore } from './SliderStore';
 import { observer } from "mobx-react";
-import { makeObservable } from "mobx";
-import { ImageInfoStore } from '../ImageInfo/ImageInfoStore';
+import { myContainer } from '../../config/inversify.config';
+import { TYPES } from '../../typings/types';
+import "./Slider.pcss"
 
 export interface ISlider {
     store: SliderStore
@@ -56,11 +56,10 @@ export default class Slider extends React.Component<ISlider> {
                 {
                     this.props.store.imageInfo &&
                     <ImageInfo
-                        store={new ImageInfoStore()}
+                        store={myContainer.get(TYPES.ImageInfoStore)}
                         info={this.props.store.imageInfo}
                     />
                 }
-
             </div>
         );
     }

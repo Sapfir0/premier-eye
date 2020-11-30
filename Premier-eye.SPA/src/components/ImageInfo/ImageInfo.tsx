@@ -1,35 +1,23 @@
 import React from "react";
 import {Divider, List, ListItem, ListItemText} from "@material-ui/core";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
 import {withStyles} from '@material-ui/core/styles';
 import TitledCameraNumber from "../Atomics/TitledCameraNumber";
 import {definitions} from "../../typings/Dto";
 import {ICollapse, ImageInfoStore} from "./ImageInfoStore"
-import {detectionsImages} from "../Atomics/ObjectsImages";
 import {WarningIfBigDiffBetweenDates} from "../Atomics/Warning/Warning"
-import {ObjectCollapseInfo} from "./ObjectCollapseInfo"
 import {observer} from "mobx-react";
-import {CollapsableData, ObjectInfo} from "./ObjectInfo";
+import {CollapsableData, ObjectInfo} from "./Widgets/ObjectInfo";
+import "./ImageInfo.pcss"
 
-const styles = {
-    root: {
-        marginRight: "15px"
-    },
-    numberOfCam: {
-        display: 'flex',
-    },
-    error: {}
-};
 
 interface IImageInfo {
     info: definitions['ImageInfo'],
-    classes: any
     store: ImageInfoStore<definitions['ObjectInfo']>
 }
 
 
 @observer
-class ImageInfo extends React.Component<IImageInfo> {
+export default class ImageInfo extends React.Component<IImageInfo> {
     constructor(props: IImageInfo) {
         super(props)
     }
@@ -44,7 +32,6 @@ class ImageInfo extends React.Component<IImageInfo> {
 
     render() {
         const myData = this.props.info
-        const {classes} = this.props;
 
         let objects: JSX.Element | undefined;
         if (myData.objects && myData.objects.length !== 0) {
@@ -58,7 +45,7 @@ class ImageInfo extends React.Component<IImageInfo> {
 
 
         return (
-            <div className={classes.root}>
+            <div className="imageInfo">
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItem>
                         <TitledCameraNumber cameraId={myData.numberOfCam}/>
@@ -73,4 +60,3 @@ class ImageInfo extends React.Component<IImageInfo> {
     }
 }
 
-export default withStyles(styles)(ImageInfo)
