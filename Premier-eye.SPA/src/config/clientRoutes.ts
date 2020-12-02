@@ -5,7 +5,7 @@ const ClientRoutes = {
     Forbidden: "/forbidden",
     BadGateway: "/badGateway",
     Login: "/login",
-    Index: "/",
+    Index: "/home",
     Settings: '/settings',
     AreaMap: '/map'
 

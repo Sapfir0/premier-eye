@@ -6,7 +6,8 @@ import {
     BrowserRouter as Router,
     Switch,
     Route,
-    Link
+    Link,
+    Redirect
 } from "react-router-dom";
 import Settings from './pages/Settings';
 import { AreaMap } from './AreaMap/AreaMap';
@@ -23,6 +24,7 @@ function App() {
 
                 <Route path={ClientRoutes.Index} component={HomePage}/>
 
+                <Redirect to={ClientRoutes.Index} />
             </Switch>
         </Router>
     );
