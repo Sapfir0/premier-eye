@@ -15,7 +15,7 @@ export class SliderStore {
     @observable imageInfo: definitions['ImageInfo'] | null = null
     @observable currentCameraId: string = "1"
     stepMap: Map<string, number> = new StepDataStructure().steps
-    @observable errors: BaseInteractionError | null = null
+    @observable errors: BaseInteractionError[] = []
     stepsStore: StepDataStructure = new StepDataStructure()
     @observable camerasList: definitions['CameraList'] = {items: []}
 
@@ -37,7 +37,7 @@ export class SliderStore {
         
         runInAction(() => {
             if (either.isLeft()) {
-                this.errors = either.value
+                this.errors.push(either.value)
             } else {
                 this.camerasList = either.value
                 console.log(this.camerasList);
@@ -54,7 +54,7 @@ export class SliderStore {
             this.stepMap = this.stepsStore.changeStepOnCurrentCamera(cameraId, currentStep)
 
             if (either.isLeft()) {
-                this.errors = either.value
+                this.errors.push(either.value)
             } else {
                 this.imageInfo = either.value
             }    
@@ -70,9 +70,8 @@ export class SliderStore {
         runInAction(() => {
             this.currentCameraId = cameraId
             if (either.isLeft()) {
-                this.errors = either.value
+                this.errors.push(either.value)
             } else {
-                console.log(either.value)
                 this.imagesList = either.value.items
             }
         })
@@ -85,7 +84,7 @@ export class SliderStore {
 
         runInAction(() => {
             if (either.isLeft()) {
-                this.errors = either.value
+                this.errors.push(either.value)
             } else {
                 this.imageInfo = either.value
             }

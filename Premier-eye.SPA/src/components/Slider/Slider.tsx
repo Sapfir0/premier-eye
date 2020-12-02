@@ -6,6 +6,8 @@ import { SliderStore } from './SliderStore';
 import { observer } from "mobx-react";
 import { myContainer } from '../../config/inversify.config';
 import { TYPES } from '../../typings/types';
+import {ErrorMessage} from "../ErrorMessage/ErrorMessage"
+import {ErrorMessageList} from "../ErrorMessage/ErrorMessageList"
 import "./Slider.pcss"
 
 export interface ISlider {
@@ -59,6 +61,10 @@ export default class Slider extends React.Component<ISlider> {
                         store={myContainer.get(TYPES.ImageInfoStore)}
                         info={this.props.store.imageInfo}
                     />
+                }
+                {
+                    this.props.store.errors &&
+                    <ErrorMessageList errors={this.props.store.errors} />
                 }
             </div>
         );

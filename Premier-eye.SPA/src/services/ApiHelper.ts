@@ -17,7 +17,7 @@ class ApiHelper implements IApiHelper {
         catch (e) {
             const error = {...e}
             console.warn(error)
-            return left<NetworkError, AxiosResponse<T>>(new NetworkError(error.response?.data ?? "Null error"))
+            return left<NetworkError, AxiosResponse<T>>(new NetworkError(error.response?.data.error ?? "Null error"))
         }
     }
 }
