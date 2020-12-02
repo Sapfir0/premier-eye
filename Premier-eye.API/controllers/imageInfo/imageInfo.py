@@ -71,8 +71,9 @@ class ImageInfoByIndexOfImage(Resource):
         query = request.args
 
         cameraPath = os.path.join(Config.UPLOAD_FOLDER, query['cameraId'])
+
         if not os.path.exists(cameraPath):
-            return jsonify({"error": "Error while loading camera"}), 400
+            return make_response({"error": "Error while loading camera"}, 400)
         imgList = recursiveSearch(cameraPath)
         filename = imgList[int(query['indexOfImage'])]
 
@@ -81,4 +82,4 @@ class ImageInfoByIndexOfImage(Resource):
         imageInfo.update({"objects": objectInfo})
         print(objectInfo)
 
-        return jsonify(dict(imageInfo))
+        return make_response(dict(imageInfo), 200)

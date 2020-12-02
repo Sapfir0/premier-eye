@@ -18,9 +18,11 @@ function App() {
         <Router>
             <ButtonAppBar/>
             <Switch>
-                <Route path={ClientRoutes.Index} component={HomePage}/>
                 <Route path={ClientRoutes.Settings} component={Settings} />
                 <Route path={ClientRoutes.AreaMap} component={AreaMap} />
+
+                <Route path={ClientRoutes.Index} component={HomePage}/>
+
             </Switch>
         </Router>
     );
