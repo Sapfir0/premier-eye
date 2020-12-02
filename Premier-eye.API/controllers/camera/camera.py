@@ -21,7 +21,9 @@ class CameraImageList(Resource):
 
     @api.response(200, "Success", model)
     def get(self, cameraId):
+        print("GET")
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
+        print(cameraPath)
 
         if not os.path.exists(cameraPath):
             return make_response({"error": "Error while loading camera"}, 400)
