@@ -17,8 +17,8 @@ export class SlideBlock extends React.Component<ISliderBlock> {
                 position="static"
                 variant="progress"
                 activeStep={this.props.currentStep}
-                nextButton={<NextButton {...this.props} isDisabled={this.props.currentStep === 0} />}
-                backButton={<BackButton {...this.props} isDisabled={this.props.currentStep === this.props.images.length - 1} />}
+                nextButton={<NextButton {...this.props} isDisabled={this.props.currentStep === this.props.images.length - 1} />}
+                backButton={<BackButton {...this.props} isDisabled={this.props.currentStep === 0} />}
             />
         </>
     }
