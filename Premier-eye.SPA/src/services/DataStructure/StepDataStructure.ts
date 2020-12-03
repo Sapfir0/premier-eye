@@ -1,5 +1,5 @@
 
-type CameraId = number
+type CameraId = string
 type CurrentStep = number
 
 export default class StepDataStructure {
@@ -7,9 +7,9 @@ export default class StepDataStructure {
     constructor(camerasCount?: number) {
         this.steps = new Map<CameraId, CurrentStep>()
 
-        if (camerasCount) {
+        if (camerasCount !== undefined) {
             for (let i=0; i< camerasCount; i++) {
-                this.steps.set(i, 0)
+                this.steps.set(i.toString(), 0)
             }
         }
     }

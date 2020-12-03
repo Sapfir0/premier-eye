@@ -1,118 +1,51 @@
 import React from "react";
-import {Collapse, Divider, List, ListItem, ListItemText} from "@material-ui/core";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
+import {Divider, List, ListItem, ListItemText} from "@material-ui/core";
 import {withStyles} from '@material-ui/core/styles';
 import TitledCameraNumber from "../Atomics/TitledCameraNumber";
 import {definitions} from "../../typings/Dto";
-import {getSettings, Settings} from "./SettingsHelper";
-import {detectionsImages} from "./ObjectsImages";
+import {ICollapse, ImageInfoStore} from "./ImageInfoStore"
 import {WarningIfBigDiffBetweenDates} from "../Atomics/Warning/Warning"
+import {observer} from "mobx-react";
+import {CollapsableData, ObjectInfo} from "./Widgets/ObjectInfo";
+import "./ImageInfo.pcss"
 
 
-const  styles = {
-    root: {
-        marginRight: "15px"
-    },
-    numberOfCam: {
-        display: 'flex',
-    },
-    error: {
-    }
-};
-
-interface IProps {
+interface IImageInfo {
     info: definitions['ImageInfo'],
-    classes: any
-}
-
-interface IState {
-    settings: Array<Settings>
+    store: ImageInfoStore<definitions['ObjectInfo']>
 }
 
 
-class ImageInfo extends React.Component<IProps, IState> {
-    constructor(props: IProps) {
+@observer
+export default class ImageInfo extends React.Component<IImageInfo> {
+    constructor(props: IImageInfo) {
         super(props)
-        this.state = {settings: getSettings(10)}; // учет максимум 10 объектов на кадре
     }
 
-    handleClick = (id: number) => {
-        this.setState(state => ({
-            ...state,
-            settings: state.settings.map((item: Settings) =>
-                item.id === id ? {...item, open: !item.open} : item
-            )
-        }));
-    };
-
-    getObjectsUIRepresentation = (data: Array<definitions['ObjectInfo']>) => {
-        let objects: JSX.Element;
-
-        if (!this.state.settings) {
-            this.setState({
-                    settings: getSettings(data.length)
-                }
-            )
-        }
-
-        for (let i = 0; i < data.length; i++) { // фиксим объект, нам было бы удобно, чтобы у него был порядковый номер
-            data[i].id = i + 1
-        }
-
-        const parse = (each: definitions['ObjectInfo']) => {
-            let collapse = {}
-            const element = this.state.settings.find(item => item.id === each.id)
-            if (element != undefined) {
-                collapse = <Collapse
-                    in={element.open}
-                    timeout="auto"
-                    unmountOnExit
-                >
-                    <List component="div" disablePadding>
-                        <ListItem> Степень уверенности: {each.scores * 100}% </ListItem>
-                    </List>
-                </Collapse>
-            }
-            return <React.Fragment key={each.id}>
-                <ListItem button onClick={() => this.handleClick(each.id)}>
-                    <ListItemIcon>{detectionsImages[each.type].icon} </ListItemIcon>
-                    <ListItemText inset primary={detectionsImages[each.type].title}/>
-                </ListItem>
-                <Divider/>
-                {collapse}
-            </React.Fragment>
-        }
-
-        const red = (pV: Array<JSX.Element>, cV: definitions['ObjectInfo']) => {
-            pV.push(parse(cV));
-            return pV;
-        }
-
-        objects = <List component="nav">
-            {data.reduce(red, [])}
+    getObjectsUIRepresentation = (data: Array<CollapsableData>) =>
+        <List component="nav">
+            {data.map((el: CollapsableData) =>
+                <ObjectInfo store={this.props.store} key={el.id} element={el}/>
+            )}
         </List>
-        return objects
-
-    }
 
 
     render() {
         const myData = this.props.info
-        const {classes} = this.props;
 
         let objects: JSX.Element | undefined;
-        if (myData.objects) {
-            objects = this.getObjectsUIRepresentation(myData.objects)
+        if (myData.objects && myData.objects.length !== 0) {
+            if (this.props.store.collapses.length === 0) {
+                this.props.store.setCollapses(myData.objects)
+            }
+            objects = this.getObjectsUIRepresentation(this.props.store.collapses)
         }
 
         const warningDateDiff = WarningIfBigDiffBetweenDates(new Date(myData.createdAt), new Date(myData.fixationDatetime));
-        if (myData.numberOfCam < 0) {
-            return <div className={classes.error}> Информация с камеры недоступна </div>
-        }
 
 
         return (
-            <div className={classes.root}>
+            <div className="imageInfo">
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItem>
                         <TitledCameraNumber cameraId={myData.numberOfCam}/>
@@ -127,4 +60,3 @@ class ImageInfo extends React.Component<IProps, IState> {
     }
 }
 
-export default withStyles(styles)(ImageInfo)

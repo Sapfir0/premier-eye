@@ -16,6 +16,7 @@ class Config(object):
     dtoDirectory = os.path.join(APP_PATH, 'typings')
 
     UPLOAD_FOLDER = os.path.join(APP_PATH, "static", "uploads")
+    print(UPLOAD_FOLDER)
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
 

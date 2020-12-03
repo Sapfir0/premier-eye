@@ -11,7 +11,7 @@ export default class GalleryApiInteractionService extends ApiInteractionService 
         return this.get(ApiRoutes.IMAGE_INFO.GET_INFO_IMAGE(src))
     }
 
-    public getInfoImageByIndex = (cameraId: number, currentImageIndex: number) => {
+    public getInfoImageByIndex = (cameraId: string, currentImageIndex: number) => {
         return this.get(ApiRoutes.IMAGE_INFO.GET_IMAGE_INFO_BY_INDEX, {}, API_URL, {params: {cameraId: cameraId, indexOfImage: currentImageIndex}})
     }
 

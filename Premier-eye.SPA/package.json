@@ -10,7 +10,7 @@
     "build:dev": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=dev",
     "build:test": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=test",
     "lint": "eslint src/** -c ./.eslintrc.js",
-    "buildJsonSchemas": "npx @manifoldco/swagger-to-ts http://localhost:8050/swagger.json --output src/typings/Dto.ts"
+    "buildJsonSchemas": "npx openapi-typescript http://localhost:8050/swagger.json --output src/typings/Dto.ts"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.1",
@@ -34,7 +34,7 @@
     "webpack": "^4.42.0"
   },
   "devDependencies": {
-    "@manifoldco/swagger-to-ts": "^2.1.0",
+    "@material-ui/types": "^5.1.0",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
@@ -56,6 +56,7 @@
     "eslint": "^7.14.0",
     "html-webpack-plugin": "^4.4.1",
     "mini-css-extract-plugin": "^0.9.0",
+    "openapi-typescript": "^2.4.2",
     "postcss-loader": "^4.1.0",
     "style-loader": "^1.2.1",
     "webpack-cli": "^3.3.12",

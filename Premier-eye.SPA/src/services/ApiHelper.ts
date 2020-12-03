@@ -1,6 +1,6 @@
 import {AxiosError, AxiosResponse} from "axios";
 import {injectable} from "inversify";
-import ClientRoutes from "../config/clientRoutes";
+import {ClientRoutes} from "../config/clientRoutes";
 import {Either, left, right} from "@sweet-monads/either";
 import {IApiHelper} from "./typings/ApiTypes";
 import {NetworkError} from "./Errors/NetworkError";
@@ -17,7 +17,7 @@ class ApiHelper implements IApiHelper {
         catch (e) {
             const error = {...e}
             console.warn(error)
-            return left<NetworkError, AxiosResponse<T>>(new NetworkError(error.response?.data ?? "Null error"))
+            return left<NetworkError, AxiosResponse<T>>(new NetworkError(error.response?.data.error ?? "Null error"))
         }
     }
 }

@@ -5,11 +5,13 @@ const ClientRoutes = {
     Forbidden: "/forbidden",
     BadGateway: "/badGateway",
     Login: "/login",
-    Index: "/"
+    Index: "/home",
+    Settings: '/settings',
+    AreaMap: '/map'
 
 } as const
 
 export type ClientRouteType = typeof ClientRoutes[keyof typeof ClientRoutes]
 
 
-export default ClientRoutes
+export {ClientRoutes}

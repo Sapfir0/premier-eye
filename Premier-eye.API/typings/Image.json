@@ -3,15 +3,11 @@
         "id": {
             "type": "string"
         },
-        "type": {
+        "src": {
             "type": "string"
-        },
-        "scores": {
-            "type": "number"
         }
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "type", "scores"]
-
+    "required": ["id", "src"]
 }

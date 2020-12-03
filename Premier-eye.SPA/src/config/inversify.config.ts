@@ -1,5 +1,4 @@
 import "reflect-metadata";
-
 import ApiHelper from "../services/ApiHelper";
 import {TYPES} from "../typings/types";
 import {
@@ -12,10 +11,9 @@ import {Container} from "inversify";
 import BaseInteractionService from "../services/BaseInteractionService";
 import ApiInteractionService from "../services/ApiInteractionService";
 import GalleryApiInteractionService from "../services/ApiInteractionService/GalleryApiInteractionService";
-import {IUrlService} from "../services/typings/IUrlService";
-import UrlService from "../services/UrlService";
 import CameraApiInteractionService from "../services/ApiInteractionService/CameraApiInteractionService";
 import {SliderStore} from "../components/Slider/SliderStore";
+import { ImageInfoStore } from "../components/ImageInfo/ImageInfoStore";
 
 const myContainer = new Container();
 
@@ -25,9 +23,8 @@ myContainer.bind<IBaseInteractionService>(TYPES.BaseInteractionService).to(BaseI
 
 myContainer.bind<IApiInteractionService>(TYPES.ApiInteractionService).to(ApiInteractionService)
 
-myContainer.bind<IUrlService>(TYPES.UrlService).to(UrlService)
-
 myContainer.bind(TYPES.SliderStore).to(SliderStore)
+myContainer.bind(TYPES.ImageInfoStore).to(ImageInfoStore)
 
 myContainer.bind<IGalleryApiInteractionService>(TYPES.GalleryApiInteractionService).to(GalleryApiInteractionService)
 myContainer.bind<ICameraApiInteractionService>(TYPES.CameraApiInteractionService).to(CameraApiInteractionService)

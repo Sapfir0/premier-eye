@@ -15,16 +15,6 @@ services:
     networks:
       - some-net
 
-  client:
-    restart: always
-    image: sapfir0/web-premier-eye:client
-    build:
-      context: Premier-eye.SPA
-      dockerfile: Dockerfile
-    ports:
-      - "3000:80"
-    stdin_open: true
-
 networks:
   some-net:
     driver: bridge
