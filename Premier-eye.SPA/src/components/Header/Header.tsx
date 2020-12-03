@@ -15,9 +15,6 @@ export const NavButton = (props: {route: string, name: string}) =>
 
 
 export default function ButtonAppBar() {
-    const location = useLocation();
-    console.log(location.pathname);
-
     return (
         <div className="header">
                 <NavButton route={ClientRoutes.Index} name="Home"  />

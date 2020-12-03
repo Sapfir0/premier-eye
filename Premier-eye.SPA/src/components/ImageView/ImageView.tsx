@@ -1,8 +1,9 @@
 import React from 'react';
 import NotFoundImage from "../Atomics/NotFoundImage";
 import "./ImageView.pcss"
-import {ISliderBlock, SlideBlock} from "./SliderBlock"
-
+import { ISliderBlock, SlideBlock } from "./SliderBlock"
+import SwipeableViews from "react-swipeable-views"
+import { ApiRoutes, API_URL } from '../../config/apiRoutes';
 
 interface IImageView extends ISliderBlock {
     updateStateByInfo: (src: string) => void
@@ -18,17 +19,23 @@ export default class ImageView extends React.Component<IImageView> {
     };
 
     public render() {
-        let slideBlock;
-        if (this.props.images.hasOwnProperty("error")) {
-            slideBlock = <NotFoundImage />
-        }
-        else {
-            slideBlock = <SlideBlock {...this.props} />
-        }
-
         return (
             <div className="imageView">
-                {slideBlock}
+                <SwipeableViews
+                    index={this.props.currentStep}
+                    onChangeIndex={this.handleStepChange}
+                    enableMouseEvents
+                >
+                    {this.props.images.map((src: string, index: number) => (
+                        <div key={src}>
+                            {Math.abs(this.props.currentStep - index) <= 2 ? (
+                                <img className="img" src={API_URL + ApiRoutes.GALLERY.GET_IMAGE(src)} alt={src} />
+                            ) : null}
+                        </div>
+                    ))}
+                </SwipeableViews>
+
+                <SlideBlock {...this.props} />
             </div>
         );
     }

@@ -1,5 +1,5 @@
 import React from 'react'
-import {NextButton, BackButton} from "./Buttons"
+import { NextButton, BackButton } from "./Buttons"
 import MobileStepper from '@material-ui/core/MobileStepper';
 
 
