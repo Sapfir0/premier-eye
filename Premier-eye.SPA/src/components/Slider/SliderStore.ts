@@ -41,7 +41,6 @@ export class SliderStore {
             } else {
                 this.camerasList = either.value
                 console.log(this.camerasList);
-                
             }    
         })
     }
@@ -59,8 +58,6 @@ export class SliderStore {
                 this.imageInfo = either.value
             }    
         })
-        
-      
     }
 
     @action
