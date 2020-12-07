@@ -6,7 +6,6 @@ import { SliderStore } from './SliderStore';
 import { observer } from "mobx-react";
 import { myContainer } from '../../config/inversify.config';
 import { TYPES } from '../../typings/types';
-import {ErrorMessage} from "../ErrorMessage/ErrorMessage"
 import {ErrorMessageList} from "../ErrorMessage/ErrorMessageList"
 import "./Slider.pcss"
 
@@ -39,6 +38,7 @@ export default class Slider extends React.Component<ISlider> {
     }
 
     render() {
+        console.log("reslider")
         return (
             <div className="slider">
                 <CamerasList

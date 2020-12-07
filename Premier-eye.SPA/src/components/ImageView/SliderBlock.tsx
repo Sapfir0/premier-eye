@@ -3,10 +3,13 @@ import { NextButton, BackButton } from "./Buttons"
 import MobileStepper from '@material-ui/core/MobileStepper';
 
 
-export interface ISliderBlock {
+export interface IBaseSliderBlock {
     images: Array<string>
-    changeCurrentStep: (step: number) => void
     currentStep: number
+}
+
+export interface ISliderBlock extends IBaseSliderBlock {
+    changeCurrentStep: (step: number) => void
 }
 
 export class SlideBlock extends React.Component<ISliderBlock> {
