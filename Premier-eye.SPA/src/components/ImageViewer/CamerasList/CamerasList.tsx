@@ -1,7 +1,7 @@
 import React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { definitions } from '../../typings/Dto';
+import { definitions } from '../../../typings/Dto';
 import "./CamerasList.pcss"
 import {BaseCamerasList} from "./BaseCamerasMenu"
 

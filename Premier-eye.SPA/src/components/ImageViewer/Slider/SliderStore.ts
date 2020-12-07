@@ -1,12 +1,12 @@
 import {action, makeObservable, observable, runInAction, toJS} from "mobx";
-import { definitions } from "../../typings/Dto";
+import { definitions } from "../../../typings/Dto";
 import { Either } from "@sweet-monads/either";
 import { BaseInteractionError } from "services/Errors/BaseInteractionError";
 import {inject, injectable} from "inversify";
-import { TYPES } from "../../typings/types";
+import { TYPES } from "../../../typings/types";
 import { ICameraApiInteractionService, IGalleryApiInteractionService } from "services/typings/ApiTypes";
 import {act} from "react-dom/test-utils";
-import StepDataStructure from "../../services/DataStructure/StepDataStructure";
+import StepDataStructure from "../../../services/DataStructure/StepDataStructure";
 
 
 @injectable()

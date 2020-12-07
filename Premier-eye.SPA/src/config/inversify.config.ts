@@ -12,7 +12,7 @@ import BaseInteractionService from "../services/BaseInteractionService";
 import ApiInteractionService from "../services/ApiInteractionService";
 import GalleryApiInteractionService from "../services/ApiInteractionService/GalleryApiInteractionService";
 import CameraApiInteractionService from "../services/ApiInteractionService/CameraApiInteractionService";
-import {SliderStore} from "../components/Slider/SliderStore";
+import {SliderStore} from "../components/ImageViewer/Slider/SliderStore";
 import { ImageInfoStore } from "../components/ImageInfo/ImageInfoStore";
 
 const myContainer = new Container();

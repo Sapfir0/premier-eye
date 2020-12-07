@@ -1,9 +1,9 @@
 import React from 'react';
-import NotFoundImage from "../Atomics/NotFoundImage";
+import NotFoundImage from "../../Atomics/NotFoundImage";
 import "./ImageView.pcss"
 import { IBaseSliderBlock, ISliderBlock, SlideBlock } from "./SliderBlock"
 import SwipeableViews from "react-swipeable-views"
-import { ApiRoutes, API_URL } from '../../config/apiRoutes';
+import { ApiRoutes, API_URL } from '../../../config/apiRoutes';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { definitions } from 'typings/Dto';

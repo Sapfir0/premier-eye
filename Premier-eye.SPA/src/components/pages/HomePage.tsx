@@ -1,5 +1,5 @@
 import React from "react";
-import Slider from "../Slider/Slider";
+import Slider from "../ImageViewer/Slider/Slider";
 import {myContainer} from "../../config/inversify.config";
 import {TYPES} from "../../typings/types";
 

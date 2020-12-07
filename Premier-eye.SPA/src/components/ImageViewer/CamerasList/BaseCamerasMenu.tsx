@@ -1,6 +1,6 @@
 import React from 'react';
 import ListItem from '@material-ui/core/ListItem';
-import { definitions } from '../../typings/Dto';
+import { definitions } from '../../../typings/Dto';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -33,3 +33,5 @@ export const BaseCamerasTable = (props: IBaseCamerasMenu) => (
         </TableRow>
     )}</Table>
 )
+
+

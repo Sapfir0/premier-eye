@@ -1,6 +1,6 @@
 import { Button, List, Table } from "@material-ui/core";
-import { SliderStore } from "../../components/Slider/SliderStore";
-import { BaseCamerasList, BaseCamerasTable } from "../../components/CamerasList/BaseCamerasMenu";
+import { SliderStore } from "../ImageViewer/Slider/SliderStore";
+import { BaseCamerasList, BaseCamerasTable } from "../ImageViewer/CamerasList/BaseCamerasMenu";
 import React from "react";
 import { myContainer } from "../../config/inversify.config";
 import { TYPES } from "../../typings/types";

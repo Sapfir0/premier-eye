@@ -1,12 +1,12 @@
 import React from 'react';
 import ImageView from '../ImageView/ImageView'
-import ImageInfo from "../ImageInfo/ImageInfo"
+import ImageInfo from "../../ImageInfo/ImageInfo"
 import CamerasList from "../CamerasList/CamerasList"
 import { SliderStore } from './SliderStore';
 import { observer } from "mobx-react";
-import { myContainer } from '../../config/inversify.config';
-import { TYPES } from '../../typings/types';
-import {ErrorMessageList} from "../ErrorMessage/ErrorMessageList"
+import { myContainer } from '../../../config/inversify.config';
+import { TYPES } from '../../../typings/types';
+import {ErrorMessageList} from "../../Atomics/ErrorMessage/ErrorMessageList"
 import "./Slider.pcss"
 import {ChangeDateButton} from "./DataChanger"
 
