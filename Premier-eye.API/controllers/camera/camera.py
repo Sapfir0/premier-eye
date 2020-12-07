@@ -29,7 +29,8 @@ class CameraImageList(Resource):
         lastImageDate = os.listdir(cameraPath)[-1]
 
         imgList = recursiveSearch(cameraPath)
-        return make_response({'images': imgList, 'onlineDate': lastImageDate, 'id': cameraId}, 200)
+        indexedImgList = [{'id': i, 'src': src} for i, src in enumerate(imgList)]
+        return make_response({'images': indexedImgList, 'onlineDate': lastImageDate, 'id': cameraId}, 200)
 
 
 @api.route(routes['getCameraList'])

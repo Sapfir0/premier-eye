@@ -68,6 +68,7 @@ export class SliderStore {
                 this.errors.push(either.value)
             } else {
                 this.camera = either.value
+                console.log(this.camera.images)
             }
         })
 
