@@ -24,7 +24,7 @@ export default class Slider extends React.Component<ISlider> {
 
     async componentDidMount() {
         this.props.store.changeCurrentCamera("1")
-        this.props.store.changeCurrentStep(this.props.store.currentCameraId, 0)
+        this.props.store.changeCurrentStep(this.props.store.camera.id, 0)
         this.props.store.getCameraList()
     }
 
@@ -35,7 +35,7 @@ export default class Slider extends React.Component<ISlider> {
     }
 
     handleCurrentStepChange = (step: number) => {
-        this.props.store.changeCurrentStep(this.props.store.currentCameraId, step)
+        this.props.store.changeCurrentStep(this.props.store.camera.id, step)
     }
 
     render() {
@@ -48,11 +48,11 @@ export default class Slider extends React.Component<ISlider> {
                 />
 
                 {
-                    this.props.store.imagesList &&
+                    this.props.store.camera.images &&
                     <ImageView
-                        currentStep={this.props.store.stepMap.get(this.props.store.currentCameraId)!}
+                        currentStep={this.props.store.stepMap.get(this.props.store.camera.id)!}
                         changeCurrentStep={this.handleCurrentStepChange}
-                        images={this.props.store.imagesList}
+                        images={this.props.store.camera.images}
                         updateStateByInfo={this.props.store.getInfoImage}
                     />
                 }

@@ -6,7 +6,6 @@
 export interface definitions {
   ImageList: { items: definitions["Camera"][] };
   Image: { id: string; src: string };
-  CameraImageList: { items: definitions["Camera"][] };
   CameraList: { items: definitions["Camera"][] };
   Camera: { id: string };
   ImageInfo: {
