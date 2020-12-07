@@ -9,7 +9,7 @@ import {
     Link,
     Redirect
 } from "react-router-dom";
-import Settings from './pages/Settings';
+import SettingsPage from './pages/Settings';
 import { AreaMap } from './AreaMap/AreaMap';
 import "./App.pcss"
 
@@ -19,7 +19,7 @@ function App() {
         <Router>
             <ButtonAppBar/>
             <Switch>
-                <Route path={ClientRoutes.Settings} component={Settings} />
+                <Route path={ClientRoutes.Settings} component={SettingsPage} />
                 <Route path={ClientRoutes.AreaMap} component={AreaMap} />
 
                 <Route path={ClientRoutes.Index} component={HomePage}/>
