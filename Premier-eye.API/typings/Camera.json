@@ -15,5 +15,5 @@
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "onlineDate", "items"]
+    "required": ["id", "onlineDate", "images"]
 }

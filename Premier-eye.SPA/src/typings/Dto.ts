@@ -6,8 +6,8 @@
 export interface definitions {
   ImageList: { items: definitions["Camera"][] };
   Image: { id: string; src: string };
+  Camera: { id: string; onlineDate: string; images: definitions["Image"][] };
   CameraList: { items: definitions["Camera"][] };
-  Camera: { id: string };
   ImageInfo: {
     numberOfCam: number;
     filename: string;
