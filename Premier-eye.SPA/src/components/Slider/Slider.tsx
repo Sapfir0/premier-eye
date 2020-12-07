@@ -8,6 +8,7 @@ import { myContainer } from '../../config/inversify.config';
 import { TYPES } from '../../typings/types';
 import {ErrorMessageList} from "../ErrorMessage/ErrorMessageList"
 import "./Slider.pcss"
+import { Button } from '@material-ui/core';
 
 export interface ISlider {
     store: SliderStore
@@ -55,6 +56,7 @@ export default class Slider extends React.Component<ISlider> {
                         updateStateByInfo={this.props.store.getInfoImage}
                     />
                 }
+                <div><Button >{(new Date()).toLocaleDateString()} </Button></div>
                 {
                     this.props.store.imageInfo &&
                     <ImageInfo
