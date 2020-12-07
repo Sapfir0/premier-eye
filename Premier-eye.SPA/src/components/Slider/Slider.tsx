@@ -24,7 +24,7 @@ export default class Slider extends React.Component<ISlider> {
 
     async componentDidMount() {
         this.props.store.changeCurrentCamera("1")
-        this.props.store.changeCurrentStep(this.props.store.camera.id, 0)
+        this.props.store.changeCurrentStep("1", 0)
         this.props.store.getCameraList()
     }
 
@@ -35,7 +35,9 @@ export default class Slider extends React.Component<ISlider> {
     }
 
     handleCurrentStepChange = (step: number) => {
-        this.props.store.changeCurrentStep(this.props.store.camera.id, step)
+        if (this.props.store.camera !== null) {
+            this.props.store.changeCurrentStep(this.props.store.camera.id, step)
+        }
     }
 
     render() {
@@ -48,7 +50,7 @@ export default class Slider extends React.Component<ISlider> {
                 />
 
                 {
-                    this.props.store.camera.images &&
+                    this.props.store.camera && this.props.store.camera.images &&
                     <ImageView
                         currentStep={this.props.store.stepMap.get(this.props.store.camera.id)!}
                         changeCurrentStep={this.handleCurrentStepChange}
@@ -58,8 +60,9 @@ export default class Slider extends React.Component<ISlider> {
                 }
                 <div><Button >{(new Date()).toLocaleDateString()} </Button></div>
                 {
-                    this.props.store.imageInfo &&
+                    this.props.store.camera && this.props.store.imageInfo &&
                     <ImageInfo
+                        cameraOnlineDate={new Date(this.props.store.camera.onlineDate)}
                         store={myContainer.get(TYPES.ImageInfoStore)}
                         info={this.props.store.imageInfo}
                     />

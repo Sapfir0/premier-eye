@@ -1,10 +1,11 @@
 import React from 'react'
 import { NextButton, BackButton } from "./Buttons"
 import MobileStepper from '@material-ui/core/MobileStepper';
+import { definitions } from 'typings/Dto';
 
 
 export interface IBaseSliderBlock {
-    images: Array<string>
+    images: Array<definitions['Image']>
     currentStep: number
 }
 

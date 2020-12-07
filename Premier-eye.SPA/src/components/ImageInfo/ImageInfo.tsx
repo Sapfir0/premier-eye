@@ -15,6 +15,7 @@ import { getDiffDay } from "../../services/Time";
 interface IImageInfo {
     info: definitions['ImageInfo'],
     store: ImageInfoStore<definitions['ObjectInfo']>
+    cameraOnlineDate: Date
 }
 
 
@@ -61,7 +62,7 @@ export default class ImageInfo extends React.Component<IImageInfo> {
                     <ListItem> {myData.fixationDatetime.toString()} {warningDateDiff}</ListItem>
                     
                     {objects}
-                    {this.getOldImageWarning(new Date(myData.fixationDatetime))}
+                    {this.getOldImageWarning(this.props.cameraOnlineDate)}
                 </List>
             </div>
         );
