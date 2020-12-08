@@ -24,14 +24,4 @@ export const BaseCamerasList = (props: IBaseCamerasMenu) => (
     )}</>
 )
 
-export const BaseCamerasTable = (props: IBaseCamerasMenu) => (
-    <Table>{props.cameras.map((camera) =>
-        <TableRow>
-            <TableCell>
-                Camera {camera.id}
-            </TableCell>
-        </TableRow>
-    )}</Table>
-)
-
 
