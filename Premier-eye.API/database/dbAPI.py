@@ -4,6 +4,7 @@ from database.models.Images import Images as Image
 from database.models.Images import engine
 from database.models.Objects_ import Objects_ as Object_
 from database.models.Coordinates import Coordinates
+from database.models.Camera import Camera
 from datetime import datetime
 
 
@@ -20,6 +21,14 @@ def getImageByFilename(filename):
 def getAllFilenames():
     conn = engine.connect()
     selectStmt = select([Image.filename])
+    res = conn.execute(selectStmt).fetchall()
+    stringRes = [i[0] for i in res]
+    return stringRes
+
+
+def getCamera(cameraId: int):
+    conn = engine.connect()
+    selectStmt = select([Camera.id])
     res = conn.execute(selectStmt).fetchall()
     stringRes = [i[0] for i in res]
     return stringRes

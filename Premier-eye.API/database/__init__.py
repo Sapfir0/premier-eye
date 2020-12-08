@@ -3,6 +3,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import scoped_session, sessionmaker
 from config import Config as cfg
 from database.config import DatabaseConfig
+import os.path
 
 engine_parameters = {
     "convert_unicode": True,
@@ -11,14 +12,21 @@ engine_parameters = {
     "echo": False,
 }
 
-dbconfig = DatabaseConfig(cfg.APP_PATH)
-engine = create_engine(dbconfig.DATABASE, **engine_parameters)
+dbconfig = DatabaseConfig(cfg.APP_PATH, cfg.DATABASE_NAME)
+engine = create_engine(dbconfig.DATABASE_PATH, **engine_parameters)
 
 session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=engine))
 
 Base = declarative_base()
 Base.query = session.query_property()
 Base.metadata.create_all(bind=engine)
+print("inited")
+# def init_database():
+#     if (not os.path.isfile(os.path.join(cfg.APP_PATH, cfg.DATABASE_NAME))):
+#         print("Database not found, creating")
+
+#     else:
+#         print("Database founded")
 
 
 def checkConcordance():

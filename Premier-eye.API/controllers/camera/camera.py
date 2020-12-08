@@ -11,7 +11,7 @@ from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
 from services.directory import recursiveSearch
-
+from database.dbAPI import getCamera
 
 api = Namespace('camera')
 
@@ -23,8 +23,10 @@ class CameraImageList(Resource):
     def get(self, cameraId):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
 
+        res = getCamera(cameraId)
+        print(res)
         if not os.path.exists(cameraPath):
-            return make_response({"error": "Error while loading camera"}, 400)
+            return make_response({"error": "Error while loading camera on filesystem"}, 400)
 
         lastImageDate = os.listdir(cameraPath)[-1]
 

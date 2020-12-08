@@ -8,16 +8,16 @@ class databasesDialect(Enum):
 
 
 class DatabaseConfig:
-    DATABASE = ''
+    DATABASE_PATH = ''
     APP_PATH = ''
 
-    def __init__(self, APP_PATH):
-        self.DATABASE = self.getDatabasePath(databasesDialect.sqlite)
+    def __init__(self, APP_PATH, DATABASE_NAME):
+        self.DATABASE_PATH = self.getDatabasePath(databasesDialect.sqlite, DATABASE_NAME)
         self.APP_PATH = APP_PATH
 
-    def getDatabasePath(self, dialect: databasesDialect):
+    def getDatabasePath(self, dialect: databasesDialect, dbName):
         if dialect.sqlite == dialect:
-            database = "sqlite:///" + os.path.join(self.APP_PATH, 'data.db')
+            database = "sqlite:///" + os.path.join(self.APP_PATH, dbName)
         elif dialect.mysql == dialect:
             username = os.environ.get("DB_USERNAME")
             password = os.environ.get("DB_PASSWORD")
