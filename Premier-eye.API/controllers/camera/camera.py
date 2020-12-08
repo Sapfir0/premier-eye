@@ -23,8 +23,6 @@ class CameraImageList(Resource):
     def get(self, cameraId):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
 
-        res = getCamera(cameraId)
-        print(res)
         if not os.path.exists(cameraPath):
             return make_response({"error": "Error while loading camera on filesystem"}, 400)
 
