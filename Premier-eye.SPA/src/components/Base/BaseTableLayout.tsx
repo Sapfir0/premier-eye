@@ -1,13 +1,12 @@
 import React, {ReactNode} from "react";
-import {convert, getCellProps, getMappingForCell} from "./BaseTableUtils";
+import {convert, getMappingForCell} from "./BaseTableUtils";
 import {TableCell, Table, TableRow, TableBody, TableContainer, TableHead} from "@material-ui/core"
+import { HeadersBaseSettings } from "../../typings/common";
 
 
 export interface IBaseTableLayout<T> {
     list?: Array<T>
     headers: HeadersBaseSettings<T>
-    strictTableProps?: StrictTableProps
-    rowProps?: (entity: T) => StrictTableRowProps
 }
 
 
@@ -15,7 +14,7 @@ export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Com
 
     public render(): React.ReactElement {
         return (
-            <Table  {...this.props.strictTableProps} >
+            <Table  >
                 <TableHead><TableRow>{this.renderHeaders(this.props.headers)}</TableRow></TableHead>
                 <TableBody>{this.renderBody(this.props.list)}</TableBody>
             </Table>
@@ -26,30 +25,9 @@ export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Com
         const headerElements: Array<JSX.Element> = []
 
         headerNames.forEach((header, name) => {
-            const filterButton = header.buttons?.filterButton;
-            const sortButton = header.buttons?.sortButton;
 
-            const handleSortClick = () => {
-                sortButton?.callback(name, sortButton?.sortDirection)
-            }
-            const handleFilterClick = () => {
-                filterButton?.callback(name)
-            }
-
-            const sortElement = sortButton?.element(handleSortClick, sortButton?.active, sortButton?.sortDirection)
-            const filterElement = header.buttons?.filterButton?.element(handleFilterClick, filterButton?.active as boolean)
-
-            let widthParam = null
-            if (header.width) {
-                widthParam = {width: header.width}
-            }
-
-            headerElements.push(<TableCell {...widthParam} key={name.toString()}>
+            headerElements.push(<TableCell key={name.toString()}>
                 {header.text}
-
-                {filterElement}
-                {sortElement}
-
             </TableCell>)
         })
         return headerElements
@@ -61,10 +39,9 @@ export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Com
             const {id, ...itemData} = item;
 
             const mappedFields = getMappingForCell(this.props.headers) // TODO проверить, правильно ли инициализирован
-            const rowProps = this.props.rowProps && this.props.rowProps(item)
 
             return (
-                <TableRow {...rowProps}  key={id.toString()}>
+                <TableRow key={id.toString()}>
 
                     {mappedFields.map((nameOfField: any) => this.renderCell(item, nameOfField, id))}
 
@@ -74,14 +51,11 @@ export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Com
 
     protected renderCell = (item: any, column: keyof T, rowId: number): ReactNode => {
         const cellValue = item[column];
-        console.log(item, column);
         
         const convertedValue = convert(this.props.headers, column, cellValue, item) // работает не так уж долго, как я думал
-        const cellProps = getCellProps(this.props.headers, column, cellValue, item)
-        console.log(convertedValue);
         
         return (
-            <TableCell {...cellProps} key={`${rowId}.${column}`}>
+            <TableCell key={`${rowId}.${column}`}>
                 {convertedValue}
             </TableCell>
         )

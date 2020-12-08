@@ -18,7 +18,7 @@ export class Settings extends React.Component<ISettings> {
     }
 
     render() {
-        const headers: HeadersBaseSettings<any> = new Map<string, HeaderName<any>>()
+        const headers: HeadersBaseSettings<any> = new Map<string | "", HeaderName<any>>()
 
         headers.set('id', {text: "Идентификатор камеры", convertFunction: (cameraId: string) => `Camera ${cameraId}`})
         
@@ -26,7 +26,7 @@ export class Settings extends React.Component<ISettings> {
             <h1>Настройки</h1>
             <Button >Добавить камеру</Button>
             <Table>
-                <BaseTableLayout headers={headers} list={this.props.sliderStore.camerasList.items} />
+                <BaseTableLayout<any, any> headers={headers} list={this.props.sliderStore.camerasList.items} />
             </Table>
         </>
 
