@@ -18,11 +18,11 @@ export class Settings extends React.Component<ISettings> {
         this.props.sliderStore.getCameraList()
     }
 
-    addNewCamera(event: React.MouseEvent<HTMLButtonElement, MouseEvent>) {
+    addNewCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         this.props.sliderStore.addNewCamera(this.props.sliderStore.nameOfCamera)
     }
 
-    changeNewCameraName(event: React.ChangeEvent<HTMLInputElement>) {
+    changeNewCameraName = (event: React.ChangeEvent<HTMLInputElement>) => {
         this.props.sliderStore.nameOfCamera = event.target.value
     }
 
@@ -38,13 +38,11 @@ export class Settings extends React.Component<ISettings> {
             {this.props.sliderStore.isCreating && <>
                 <Input onChange={this.changeNewCameraName} />
                 <Button onClick={this.addNewCamera}>Добавить</Button>
-                <Button onClick={this.props.sliderStore.stopCreatingNewCamera} >Отмена</Button>
+                <Button onClick={this.props.sliderStore.stopCreatingNewCamera}>Отмена</Button>
             </>}
 
-            <Table>
-                <BaseTableLayout<any, any> headers={headers} list={this.props.sliderStore.camerasList.items} />
-            </Table>
+            <BaseTableLayout<any, any> headers={headers} list={this.props.sliderStore.camerasList.items} />
+            
         </>
-
     }
 }
