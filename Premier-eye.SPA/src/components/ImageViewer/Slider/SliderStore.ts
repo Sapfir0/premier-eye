@@ -18,6 +18,9 @@ export class SliderStore {
     stepsStore: StepDataStructure = new StepDataStructure()
     @observable camerasList: definitions['CameraList'] = {items: []}
 
+    nameOfCamera: string = ""
+    @observable isCreating=false
+
     private readonly galleryFetcher: IGalleryApiInteractionService
     private readonly cameraFetcher: ICameraApiInteractionService
 
@@ -31,6 +34,16 @@ export class SliderStore {
     }
 
     @action
+    public startCreatingNewCamera = () => {
+        this.isCreating = true
+    }
+
+    @action
+    public stopCreatingNewCamera = () => {
+        this.isCreating = false
+    }
+
+    @action
     public async getCameraList() {
         const either: Either<BaseInteractionError, definitions['CameraList']> = await this.cameraFetcher.getCamerasList()
         
@@ -40,6 +53,19 @@ export class SliderStore {
             } else {
                 this.camerasList = either.value
                 console.log(this.camerasList);
+            }    
+        })
+    }
+
+    @action
+    public async addNewCamera(cameraDto: definitions['CameraDTO']) {
+        const either: Either<BaseInteractionError, definitions['CameraDTO']> = await this.cameraFetcher.addNewCamera(cameraDto)
+        
+        runInAction(() => {
+            if (either.isLeft()) {
+                this.errors.push(either.value)
+            } else {
+                this.getCameraList()
             }    
         })
     }
