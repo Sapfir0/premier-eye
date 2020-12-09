@@ -67,6 +67,3 @@ def getCoord(filename):
     return stringRes
 
 
-
-
-

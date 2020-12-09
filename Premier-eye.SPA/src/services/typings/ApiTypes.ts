@@ -3,6 +3,7 @@ import {NetworkError} from "../Errors/NetworkError";
 import {Either} from "@sweet-monads/either";
 import {AsyncEither} from "../../typings/common";
 import {BaseInteractionError} from "../Errors/BaseInteractionError";
+import { definitions } from "typings/Dto";
 
 
 export interface IApiHelper {
@@ -32,4 +33,5 @@ export interface IGalleryApiInteractionService {
 export interface ICameraApiInteractionService {
     getImageFromCamera: (cameraId: string) => AsyncEither<any>
     getCamerasList: () => AsyncEither<any>
+    addNewCamera: (cameraDto: definitions['Camera']) => AsyncEither<any>
 }

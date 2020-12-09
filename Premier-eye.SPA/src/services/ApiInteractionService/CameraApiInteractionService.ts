@@ -1,6 +1,7 @@
 import {ICameraApiInteractionService} from "../typings/ApiTypes";
 import ApiInteractionService from "../ApiInteractionService";
 import {ApiRoutes} from "../../config/apiRoutes";
+import { definitions } from "typings/Dto";
 
 
 export default class CameraApiInteractionService extends ApiInteractionService implements ICameraApiInteractionService {
@@ -10,5 +11,9 @@ export default class CameraApiInteractionService extends ApiInteractionService i
 
     public getCamerasList = () => {
         return this.get(ApiRoutes.CAMERA.GET_CAMERAS_LIST)
+    }
+
+    public addNewCamera = (cameraDto: definitions['Camera']) => {
+        return this.put(ApiRoutes.CAMERA.CAMERA, cameraDto)
     }
 }
