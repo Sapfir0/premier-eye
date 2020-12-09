@@ -3,6 +3,9 @@
         "id": {
             "type": "string"
         },
+        "name": {
+            "type": "string"  
+        },
         "onlineDate": {
             "type": "date"
         },
