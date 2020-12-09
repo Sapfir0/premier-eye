@@ -11,14 +11,21 @@ from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
 from services.directory import recursiveSearch
-from database.dbAPI import getCamera
+from database.dbAPI import getCamera, addNewCamera
 
 api = Namespace('camera')
 
 @api.route(routes['getAllImagesFromCamera'])
 class CameraImageList(Resource):
-    model = getModel("Camera", api)
 
+    cameraModel = getModel("DTO/Camera", api)
+    @api.expect(cameraModel)
+    def post(self, cameraDto):
+        addNewCamera(cameraDto)
+        return make_response({'operation': 'success'})
+
+
+    model = getModel("Camera", api)
     @api.response(200, "Success", model)
     def get(self, cameraId):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
