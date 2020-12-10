@@ -21,7 +21,8 @@ class CameraImageList(Resource):
     cameraModel = getModel("Camera", api, directory="DTO")
     @api.expect(cameraModel)
     def post(self):
-        addNewCamera(cameraModel)
+        cameraDTO = request.json
+        addNewCamera(cameraDTO)
         return make_response({'operation': 'success'})
 
 

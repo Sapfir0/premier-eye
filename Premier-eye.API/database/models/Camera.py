@@ -7,11 +7,13 @@ class Camera(Base):
     __tablename__ = "camera"
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
-    location = Column(String(15))
+    name = Column(String(35))
+    location = Column(String(15), nullable=True)
     createdAt = Column(DateTime, default=datetime.now())
     updatedAt = Column(DateTime, default=datetime.now())
 
-    def __init__(self, location=location):
+    def __init__(self, name=name, location=location):
         self.location = location
+        self.name = name
 
 

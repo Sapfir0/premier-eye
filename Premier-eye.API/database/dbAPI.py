@@ -10,7 +10,7 @@ from datetime import datetime
 def addNewCamera(cameraDto):
     conn = engine.connect()
     
-    selectStmt = insert([Camera], values=cameraDto)
+    selectStmt = (insert(Camera).values(**cameraDto))
     res = conn.execute(selectStmt)
     return dict(res)
 
