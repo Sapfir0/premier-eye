@@ -58,8 +58,8 @@ export class SliderStore {
     }
 
     @action
-    public async addNewCamera(cameraDto: definitions['DTO/Camera']) {
-        const either: Either<BaseInteractionError, definitions['DTO/Camera']> = await this.cameraFetcher.addNewCamera(cameraDto)
+    public async addNewCamera(cameraDto: definitions['DTOCamera']) {
+        const either: Either<BaseInteractionError, definitions['DTOCamera']> = await this.cameraFetcher.addNewCamera(cameraDto)
         
         runInAction(() => {
             if (either.isLeft()) {
