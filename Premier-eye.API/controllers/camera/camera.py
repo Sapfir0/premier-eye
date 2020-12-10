@@ -18,10 +18,10 @@ api = Namespace('camera')
 @api.route(routes['getAllImagesFromCamera'])
 class CameraImageList(Resource):
 
-    cameraModel = getModel("DTO/Camera", api)
+    cameraModel = getModel("Camera", api, directory="DTO")
     @api.expect(cameraModel)
-    def post(self, cameraDto):
-        addNewCamera(cameraDto)
+    def post(self):
+        addNewCamera(cameraModel)
         return make_response({'operation': 'success'})
 
 
