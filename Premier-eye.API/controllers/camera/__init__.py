@@ -2,7 +2,7 @@
 namespace = '/camera'
 
 routes = {
-    'getAllImagesFromCamera': '/<string:cameraId>/images',
+    'getAllImagesFromCamera': '/',
     'getCameraList': '/list',
     'getCamera': '/<string:cameraId>',
 }

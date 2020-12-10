@@ -3,7 +3,7 @@
         "items": {
             "type": "array",
             "items": {
-                "$ref": "#/definitions/Camera"
+                "$ref": "#/definitions/Image"
             }
         }
     },

@@ -1,6 +1,6 @@
 import { Range } from "immutable"
 import { injectable } from "inversify"
-import {makeObservable, observable} from "mobx"
+import {action, makeObservable, observable} from "mobx"
 
 
 export interface ICollapse {
@@ -17,16 +17,19 @@ export class ImageInfoStore<TCollapsedData extends {id: string}> {
         makeObservable(this)
     }
 
+    @action
     emptyCollapses(countOfCollapses: number) {
         this.collapses = Range(0, countOfCollapses).map((el) => ({ id: el.toString(), open: false })).toArray() as Array<ICollapse & TCollapsedData>
         return this.collapses
     }
 
+    @action
     setCollapses(existingData: TCollapsedData[]) {
         this.collapses = existingData.map((el) => ({...el, open: false}))
         return this.collapses
     }
 
+    @action
     toggleCollapse(id: string) {
         this.collapses = this.collapses.map((item: ICollapse) =>
             item.id === id ? { ...item, open: !item.open } : item

@@ -10,6 +10,7 @@ const TYPES = {
 
     SliderStore: Symbol.for('SliderStore'),
     ImageInfoStore: Symbol.for('ImageInfoStore'),
+    AreaMapStore: Symbol.for('AreaMapStore'),
 
 }
 

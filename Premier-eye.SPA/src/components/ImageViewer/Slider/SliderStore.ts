@@ -1,23 +1,25 @@
 import {action, makeObservable, observable, runInAction, toJS} from "mobx";
-import { definitions } from "../../typings/Dto";
+import { definitions } from "../../../typings/Dto";
 import { Either } from "@sweet-monads/either";
 import { BaseInteractionError } from "services/Errors/BaseInteractionError";
 import {inject, injectable} from "inversify";
-import { TYPES } from "../../typings/types";
+import { TYPES } from "../../../typings/types";
 import { ICameraApiInteractionService, IGalleryApiInteractionService } from "services/typings/ApiTypes";
 import {act} from "react-dom/test-utils";
-import StepDataStructure from "../../services/DataStructure/StepDataStructure";
+import StepDataStructure from "../../../services/DataStructure/StepDataStructure";
 
 
 @injectable()
 export class SliderStore {
-    @observable imagesList: Array<string> = []
+    @observable camera: definitions['Camera'] | null = null
     @observable imageInfo: definitions['ImageInfo'] | null = null
-    @observable currentCameraId: string = "1"
     stepMap: Map<string, number> = new StepDataStructure().steps
     @observable errors: BaseInteractionError[] = []
     stepsStore: StepDataStructure = new StepDataStructure()
     @observable camerasList: definitions['CameraList'] = {items: []}
+
+    nameOfCamera: string = ""
+    @observable isCreating=false
 
     private readonly galleryFetcher: IGalleryApiInteractionService
     private readonly cameraFetcher: ICameraApiInteractionService
@@ -32,6 +34,16 @@ export class SliderStore {
     }
 
     @action
+    public startCreatingNewCamera = () => {
+        this.isCreating = true
+    }
+
+    @action
+    public stopCreatingNewCamera = () => {
+        this.isCreating = false
+    }
+
+    @action
     public async getCameraList() {
         const either: Either<BaseInteractionError, definitions['CameraList']> = await this.cameraFetcher.getCamerasList()
         
@@ -41,7 +53,19 @@ export class SliderStore {
             } else {
                 this.camerasList = either.value
                 console.log(this.camerasList);
-                
+            }    
+        })
+    }
+
+    @action
+    public async addNewCamera(cameraDto: definitions['DTOCamera']) {
+        const either: Either<BaseInteractionError, definitions['DTOCamera']> = await this.cameraFetcher.addNewCamera(cameraDto)
+        
+        runInAction(() => {
+            if (either.isLeft()) {
+                this.errors.push(either.value)
+            } else {
+                this.getCameraList()
             }    
         })
     }
@@ -59,20 +83,18 @@ export class SliderStore {
                 this.imageInfo = either.value
             }    
         })
-        
-      
     }
 
     @action
     public async changeCurrentCamera(cameraId: string) {
-        const either: Either<BaseInteractionError, {items: string[]}> = await this.cameraFetcher.getImageFromCamera(cameraId)
+        const either: Either<BaseInteractionError, definitions['Camera']> = await this.cameraFetcher.getImageFromCamera(cameraId)
 
         runInAction(() => {
-            this.currentCameraId = cameraId
             if (either.isLeft()) {
                 this.errors.push(either.value)
             } else {
-                this.imagesList = either.value.items
+                this.camera = either.value
+                console.log(this.camera.images)
             }
         })
 

@@ -19,7 +19,7 @@ export default function ButtonAppBar() {
         <div className="header">
                 <NavButton route={ClientRoutes.Index} name="Home"  />
                 <NavButton route={ClientRoutes.AreaMap} name="Map"  />
- 
+                <NavButton route={ClientRoutes.Settings} name="Settings" />
         </div>
     );
 }

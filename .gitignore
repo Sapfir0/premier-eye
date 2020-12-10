@@ -11,6 +11,7 @@ yarn.lock
 # Log files
 npm-debug.log*
 
+schema.json
 # Editor directories and files
 .idea
 .vscode

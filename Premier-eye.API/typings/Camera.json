@@ -2,9 +2,21 @@
     "properties": {
         "id": {
             "type": "string"
+        },
+        "name": {
+            "type": "string"  
+        },
+        "onlineDate": {
+            "type": "date"
+        },
+        "images": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/Image"
+            }
         }
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["id"]
+    "required": ["id", "onlineDate", "images"]
 }

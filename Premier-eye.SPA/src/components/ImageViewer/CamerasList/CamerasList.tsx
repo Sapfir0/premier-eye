@@ -1,9 +1,9 @@
 import React from 'react';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
-import { definitions } from '../../typings/Dto';
+import { definitions } from '../../../typings/Dto';
 import "./CamerasList.pcss"
-
+import {BaseCamerasList} from "./BaseCamerasMenu"
 
 interface IProps {
     cameras: definitions['CameraList']
@@ -21,19 +21,10 @@ class CamerasList extends React.Component<IProps> {
     }
 
     render() {
-        const camerasMenu = this.props.cameras.items.map((camera) =>
-            <ListItem
-                button key={camera.id}
-                onClick={this.handleListItemClick(camera.id)}
-            >
-                Camera {camera.id}
-            </ListItem>
-        )
-
         return (
             <div className="camerasList">
                 <List component="nav" aria-label="main mailbox folders">
-                    {camerasMenu}
+                    <BaseCamerasList cameras={this.props.cameras.items} />
                 </List>
             </div>
         );

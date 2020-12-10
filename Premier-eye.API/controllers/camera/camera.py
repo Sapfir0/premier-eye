@@ -8,27 +8,37 @@ from config import Config as cfg
 from services.directory import getOutputDir
 from database.models.Images import Images, session
 from werkzeug.datastructures import FileStorage
-from premier_eye_common.filename import parseFilename
+from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
 from services.directory import recursiveSearch
-
+from database.dbAPI import getCamera, addNewCamera
 
 api = Namespace('camera')
 
 @api.route(routes['getAllImagesFromCamera'])
 class CameraImageList(Resource):
-    model = getModel("CameraImageList", api)
 
+    cameraModel = getModel("Camera", api, directory="DTO")
+    @api.expect(cameraModel)
+    def post(self):
+        cameraDTO = request.json
+        addNewCamera(cameraDTO)
+        return make_response({'operation': 'success'})
+
+
+    model = getModel("Camera", api)
     @api.response(200, "Success", model)
     def get(self, cameraId):
-        print("GET")
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
-        print(cameraPath)
 
         if not os.path.exists(cameraPath):
-            return make_response({"error": "Error while loading camera"}, 400)
+            return make_response({"error": "Error while loading camera on filesystem"}, 400)
+
+        lastImageDate = os.listdir(cameraPath)[-1]
+
         imgList = recursiveSearch(cameraPath)
-        return make_response({'items': imgList}, 200)
+        indexedImgList = [{'id': i, 'src': src} for i, src in enumerate(imgList)]
+        return make_response({'images': indexedImgList, 'onlineDate': lastImageDate, 'id': cameraId}, 200)
 
 
 @api.route(routes['getCameraList'])
@@ -43,11 +53,3 @@ class CamerasList(Resource):
         return make_response({'items': cameraList}, 200)
 
 
-
-@api.route(routes['getCamera'])
-class ObjectInformation(Resource):
-    model = getModel("Camera", api)
-
-    @api.response(200, "Success", model)
-    def get(self, cameraId):
-        pass

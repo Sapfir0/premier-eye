@@ -4,11 +4,16 @@
  */
 
 export interface definitions {
-  ImageList: { items: definitions["Camera"][] };
+  ImageList: { items: definitions["Image"][] };
   Image: { id: string; src: string };
-  CameraImageList: { items: definitions["Camera"][] };
+  "DTOCamera": { name: string };
+  Camera: {
+    id: string;
+    name?: string;
+    onlineDate: string;
+    images: definitions["Image"][];
+  };
   CameraList: { items: definitions["Camera"][] };
-  Camera: { id: string };
   ImageInfo: {
     numberOfCam: number;
     filename: string;

@@ -1,10 +1,8 @@
 
 const ClientRoutes = {
-    Logout: "/logout",
     NotFound: "/notFound",
     Forbidden: "/forbidden",
     BadGateway: "/badGateway",
-    Login: "/login",
     Index: "/home",
     Settings: '/settings',
     AreaMap: '/map'

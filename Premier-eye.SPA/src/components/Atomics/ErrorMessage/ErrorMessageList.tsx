@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import { ErrorMessage } from './ErrorMessage';
-import {BaseInteractionError} from "../../services/Errors/BaseInteractionError"
+import {BaseInteractionError} from "../../../services/Errors/BaseInteractionError"
 
 export interface IErrorMessageList {
     errors: BaseInteractionError[]

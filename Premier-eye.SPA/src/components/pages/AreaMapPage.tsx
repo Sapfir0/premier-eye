@@ -1,13 +1,13 @@
 import React from "react";
-import Slider from "../ImageViewer/Slider/Slider";
+import {AreaMap} from "../AreaMap/AreaMap";
 import {myContainer} from "../../config/inversify.config";
 import {TYPES} from "../../typings/types";
 
 
-export default function HomePage() {
+export default function AreaMapPage() {
     return (
         <>
-            <Slider store={myContainer.get(TYPES.SliderStore)}/>
+            <AreaMap areaStore={myContainer.get(TYPES.AreaMapStore)}/>
         </>
 
     )

@@ -9,8 +9,8 @@ import {
     Link,
     Redirect
 } from "react-router-dom";
-import Settings from './pages/Settings';
-import { AreaMap } from './AreaMap/AreaMap';
+import SettingsPage from './pages/Settings';
+import AreaMapPage from './pages/AreaMapPage';
 import "./App.pcss"
 
 
@@ -19,8 +19,8 @@ function App() {
         <Router>
             <ButtonAppBar/>
             <Switch>
-                <Route path={ClientRoutes.Settings} component={Settings} />
-                <Route path={ClientRoutes.AreaMap} component={AreaMap} />
+                <Route path={ClientRoutes.Settings} component={SettingsPage} />
+                <Route path={ClientRoutes.AreaMap} component={AreaMapPage} />
 
                 <Route path={ClientRoutes.Index} component={HomePage}/>
 

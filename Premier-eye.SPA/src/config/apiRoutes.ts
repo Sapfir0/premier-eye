@@ -22,8 +22,9 @@ const MATH = {
 
 const CAMERA_HIGH_LEVEL_DOMAIN = "/camera"
 const CAMERA = {
-    GET_ALL_IMAGES_FROM_CAMERA: (cameraId: string) => `${CAMERA_HIGH_LEVEL_DOMAIN}/${cameraId}/images`,
-    GET_CAMERAS_LIST: `${CAMERA_HIGH_LEVEL_DOMAIN}/list`
+    GET_ALL_IMAGES_FROM_CAMERA: (cameraId: string) => `${CAMERA_HIGH_LEVEL_DOMAIN}/${cameraId}`,
+    GET_CAMERAS_LIST: `${CAMERA_HIGH_LEVEL_DOMAIN}/list`,
+    CAMERA: `${CAMERA_HIGH_LEVEL_DOMAIN}/`
 }
 
 
