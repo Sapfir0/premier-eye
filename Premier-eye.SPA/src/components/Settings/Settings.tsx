@@ -19,7 +19,7 @@ export class Settings extends React.Component<ISettings> {
     }
 
     addNewCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        this.props.sliderStore.addNewCamera(this.props.sliderStore.nameOfCamera)
+        this.props.sliderStore.addNewCamera({name: this.props.sliderStore.nameOfCamera})
     }
 
     changeNewCameraName = (event: React.ChangeEvent<HTMLInputElement>) => {
