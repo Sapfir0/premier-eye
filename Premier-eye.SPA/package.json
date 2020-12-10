@@ -10,7 +10,7 @@
     "build:dev": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=dev",
     "build:test": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=test",
     "lint": "eslint src/** -c ./.eslintrc.js",
-    "buildJsonSchemas": "npx openapi-typescript http://localhost:8050/swagger.json --output src/typings/Dto.ts"
+    "buildJsonSchemas": "curl http://localhost:8050/swagger.json > schema.json && npx openapi-typescript ./schema.json --output src/typings/Dto.ts"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.1",
