@@ -1,4 +1,4 @@
-from services.baseInteractionService import BaseInteractionService
+from services.apiWorkers.baseInteractionService import BaseInteractionService
 from sys import platform
 from config.apiRoutes import galleryRoutes
 import os

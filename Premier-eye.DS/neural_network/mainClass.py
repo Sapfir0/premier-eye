@@ -5,7 +5,7 @@ import services.others as others
 import services.directory as dirs
 from Models import Image
 from config.settings import config
-from services.apiInteractionService import ApiInteractionService
+from services.apiWorkers.apiInteractionService import ApiInteractionService
 from neural_network.maskCNN import Mask
 
 mask = Mask()
