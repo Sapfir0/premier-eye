@@ -8,7 +8,11 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install Cython \
  && pip3 install -r requirements.txt
-RUN git clone https://github.com/leekunhee/Mask_RCNN && cd Mask_RCNN && pip3 install -r requirements.txt && python3 setup.py install
+
+RUN git clone https://github.com/leekunhee/Mask_RCNN \ 
+ && cd Mask_RCNN  \ 
+ && pip3 install -r requirements.txt \ 
+ && python3 setup.py install
 
 COPY . /pyback
 WORKDIR /pyback
