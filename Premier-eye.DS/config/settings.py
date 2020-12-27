@@ -1,6 +1,6 @@
 import os
 from os.path import join
-import Mask_RCNN.mrcnn.utils
+import mrcnn.utils
 import colorama
 import services.others as others
 from dotenv import load_dotenv

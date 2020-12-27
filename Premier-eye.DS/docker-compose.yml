@@ -2,6 +2,7 @@ version: '3.3'
 
 services:
   detection:
+    tty: true
     container_name: detection
     image: sapfir0/premier-eye:cpu
     build:

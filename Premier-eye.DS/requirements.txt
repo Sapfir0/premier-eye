@@ -9,6 +9,3 @@ colorama
 IPython
 gitPython
 premier-eye-common
-
-keras==2.4
-tensorflow==2.2
