@@ -5,7 +5,6 @@ import { BaseInteractionError } from "services/Errors/BaseInteractionError";
 import {inject, injectable} from "inversify";
 import { TYPES } from "../../../typings/types";
 import { ICameraApiInteractionService, IGalleryApiInteractionService } from "services/typings/ApiTypes";
-import {act} from "react-dom/test-utils";
 import StepDataStructure from "../../../services/DataStructure/StepDataStructure";
 
 
