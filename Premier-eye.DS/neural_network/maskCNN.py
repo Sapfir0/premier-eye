@@ -10,7 +10,7 @@ from config.settings import config
 from Models.Image import Image
 # sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 from mrcnn.model import MaskRCNN
-
+from services.classNames import classes
 
 def _parseR(r):
     detections = []
@@ -52,9 +52,7 @@ class Mask(object):
     hasOldFrame = False
 
     def __init__(self):
-        with open(config.CLASSES_FILE, 'rt') as file:
-            self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
-
+        self.CLASS_NAMES = classes
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
         self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=getMaskConfig(float(config.detectionMinConfidence)))
         self.model.load_weights(config.DATASET_DIR, by_name=True)

@@ -27,7 +27,6 @@ class Settings:
     DATE_FILE = join(APP_PATH, "../last_data_processed.txt")
     # Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
-    CLASSES_FILE = join(DATA_PATH, "class_names.txt")  # если его нет, то скачать
     OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')
     # car detector
     NOMEROFF_NET_DIR = join(APP_PATH, '../nomeroff-net')
@@ -69,7 +68,6 @@ class Settings:
 
         if not os.path.exists(self.DATASET_DIR):
             mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-        net.downloadAndMove(classNamesLink, self.CLASSES_FILE)
 
         net.downloadSamples(self.IMAGE_DIR)
 
