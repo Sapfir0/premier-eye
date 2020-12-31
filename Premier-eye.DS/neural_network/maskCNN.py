@@ -27,7 +27,7 @@ def _parseR(r):
 
 # Mask cnn advanced
 # Configuration that will be used by the Mask-RCNN library
-def getMaskConfig(confidence: float):
+def getMaskConfig(classCount: int, confidence: float):
     class MaskRCNNConfig(mrcnn.config.Config):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
@@ -54,7 +54,8 @@ class Mask(object):
     def __init__(self):
         self.CLASS_NAMES = classes
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=getMaskConfig(float(config.detectionMinConfidence)))
+        model = getMaskConfig(len(classes), float(config.detectionMinConfidence))
+        self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=model)
         self.model.load_weights(config.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")

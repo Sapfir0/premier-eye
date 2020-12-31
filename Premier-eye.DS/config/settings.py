@@ -50,8 +50,6 @@ class Settings:
 
 
     def __init__(self):
-        classNamesLink = self.config.get('FixedParams', 'classNamesLink')
-
         load_dotenv(os.path.join(self.APP_PATH, '../.env'))
 
         must_exist_dirs = [self.OUTPUT_DIR, self.DATA_PATH, self.IMAGE_DIR, self.OUTPUT_DIR_MASKCNN]
