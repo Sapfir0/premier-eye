@@ -15,12 +15,19 @@ from database.dbAPI import getCamera, addNewCamera
 
 api = Namespace('camera')
 
-@api.route(routes['getAllImagesFromCamera'])
+@api.route(routes['getAllImagesFromCameras'])
 class CameraImageList(Resource):
+    def get(self):
+        pass
+        
+
+@api.route(routes['getCamera'])
+class Camera(Resource):
 
     cameraModel = getModel("Camera", api, directory="DTO")
     @api.expect(cameraModel)
     def post(self):
+        """ Добавить новую камеру """
         cameraDTO = request.json
         addNewCamera(cameraDTO)
         return make_response({'operation': 'success'})
@@ -29,6 +36,7 @@ class CameraImageList(Resource):
     model = getModel("Camera", api)
     @api.response(200, "Success", model)
     def get(self, cameraId):
+        """ Получить информацию о камере """
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
 
         if not os.path.exists(cameraPath):
@@ -41,12 +49,14 @@ class CameraImageList(Resource):
         return make_response({'images': indexedImgList, 'onlineDate': lastImageDate, 'id': cameraId}, 200)
 
 
+
 @api.route(routes['getCameraList'])
 class CamerasList(Resource):
     model = getModel("CameraList", api)
 
     @api.response(200, "Success", model)
     def get(self):
+        """ Получить список камер """
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
         cameraList = [{'id': camera} for camera in os.listdir(cameraPath)]
 

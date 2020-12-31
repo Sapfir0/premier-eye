@@ -5,7 +5,7 @@ from controllers.image import routes, namespace
 from flask_restplus import Namespace, Resource
 import os
 from config import Config as cfg
-from services.directory import getOutputDir
+from services.directory import getOutputDir, recursiveSearch
 from database.models.Images import Images, session
 from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename
@@ -24,7 +24,7 @@ class ImageList(Resource):
 
     @api.response(200, "Success", model)
     def get(self):
-        return make_response(recursiveSearch(cfg.UPLOAD_FOLDER), 200)
+        return make_response({'items': recursiveSearch(cfg.UPLOAD_FOLDER)}, 200)
 
 
 @api.route(routes['image'])
@@ -33,11 +33,16 @@ class Image(Resource):
     @api.response(404, "Image not found")
     @api.response(200, "Return image")
     def get(self, filename):
-        outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
-        if os.path.exists(outputPath):
-            return send_from_directory(os.path.split(outputPath)[0], filename)
-        else:
-            return make_response({"error": "Error while loading image"}, 404)
+        try:
+            outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
+            if os.path.exists(outputPath):
+                print("ыаы")
+                return send_from_directory(os.path.split(outputPath)[0], filename)
+            else:
+                return make_response({"error": "Error while loading image"}, 404)
+        except:
+            return make_response({"error": "Incorrect filename"}, 404)
+
 
     @api.expect(upload_parser)
     def post(self, filename):

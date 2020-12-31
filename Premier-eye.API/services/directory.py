@@ -21,8 +21,8 @@ def recursiveSearch(directory, listOfImages=None) -> List[str]:
 
 
 def getOutputDir(filename):
-    numberOfCam, dateTime = filename.split("_")
     try:
+        numberOfCam, dateTime = filename.split("_")
         dateTime = datetime.strptime(dateTime, datetimePattern)
     except ValueError:
         raise ValueError("Uncorrected filename")
