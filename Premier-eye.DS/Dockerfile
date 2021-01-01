@@ -32,12 +32,5 @@ RUN pip3 install numpy
 COPY . /pyback
 WORKDIR /pyback
 
-RUN git clone https://github.com/ria-com/nomeroff-net.git
-
-RUN cd nomeroff-net && git clone https://github.com/youngwanLEE/centermask2.git && pip3 install -r requirements.txt
-
-
-ENTRYPOINT ["/bin/sh"]
-
 # ENTRYPOINT ["python3"]
 # CMD ["mainImage.py" ]

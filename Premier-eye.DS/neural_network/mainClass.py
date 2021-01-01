@@ -1,5 +1,4 @@
 import os
-
 import services.file_controller as file_controller
 import services.others as others
 import services.directory as dirs
@@ -47,13 +46,13 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
 
 
 def carNumberDetector(filename, image: Image):
-    from neural_network.car_number import car_detect
+    from neural_network.vehiclePlateAdapter import detectPlate
     from Models.Car import Car
     carNumbers = []
     for i, item in enumerate(image.objects):
         if image.numberOfCam in ["1", "2"] and isinstance(image.objects[i], Car):
             imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
-            image.objects[i].licenceNumber = car_detect(imD)
+            image.objects[i].licenceNumber = car_detect(imD) # todo сейчас придет джсон сюда
     return carNumbers
 
 
