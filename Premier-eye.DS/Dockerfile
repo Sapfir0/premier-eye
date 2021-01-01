@@ -32,5 +32,5 @@ RUN pip3 install numpy
 COPY . /pyback
 WORKDIR /pyback
 
-# ENTRYPOINT ["python3"]
-# CMD ["mainImage.py" ]
+ENTRYPOINT ["python3"]
+CMD ["mainImage.py" ]
