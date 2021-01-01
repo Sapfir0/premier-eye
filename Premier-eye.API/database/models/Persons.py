@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, DateTime
-from database import Base
+from database import db
 from datetime import datetime
 
 
-class Persons(Base):
+class Persons(db.Base):
     __tablename__ = "persons"
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)

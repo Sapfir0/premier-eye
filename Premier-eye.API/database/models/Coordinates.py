@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from database import Base
+from database import db
 from datetime import datetime
 
 
-class Coordinates(Base):
+class Coordinates(db.Base):
     __tablename__ = "coordinates"
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)

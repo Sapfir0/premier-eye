@@ -6,10 +6,11 @@ from flask_restplus import Namespace, Resource
 import os
 from config import Config as cfg
 from services.directory import getOutputDir, recursiveSearch
-from database.models.Images import Images, session
+from database.models.Images import Images
 from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename
 from services.model import getModel
+from database import db
 
 
 api = Namespace('gallery')
@@ -36,13 +37,11 @@ class Image(Resource):
         try:
             outputPath = os.path.join(cfg.UPLOAD_FOLDER, getOutputDir(filename))
             if os.path.exists(outputPath):
-                print("ыаы")
                 return send_from_directory(os.path.split(outputPath)[0], filename)
             else:
                 return make_response({"error": "Error while loading image"}, 404)
         except:
-            return make_response({"error": "Incorrect filename"}, 404)
-
+            return make_response({"error": "Incorrect filename"}, 400)
 
     @api.expect(upload_parser)
     def post(self, filename):
@@ -70,14 +69,14 @@ class Image(Resource):
 
         image = Images(outputPath, filename, int(numberOfCam), date)
 
-        existingImage = session.query(Images).filter(Images.filename == filename).all()
+        existingImage = db.session.query(Images).filter(Images.filename == filename).all()
         if existingImage:
             return make_response({"error": "Image with this filename exists"}, 400)
 
-        session.add(image)  # TODO вынести работу с БД в другой поток, она долгая
+        db.session.add(image)  # TODO вынести работу с БД в другой поток, она долгая
 
-        session.commit()
-        session.flush()
+        db.session.commit()
+        db.session.flush()
 
         return make_response({'success': 'Image created'}, 200)
 

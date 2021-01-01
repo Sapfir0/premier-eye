@@ -6,12 +6,13 @@ from flask_restplus import Namespace, Resource
 import os
 from config import Config as cfg
 from services.directory import getOutputDir
-from database.models.Images import Images, session
+from database.models.Images import Images
 from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
 from services.directory import recursiveSearch
 from database.dbAPI import getCamera, addNewCamera
+from database import db
 
 api = Namespace('camera')
 
