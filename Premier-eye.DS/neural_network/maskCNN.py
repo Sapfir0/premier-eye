@@ -33,7 +33,7 @@ def getMaskConfig(classCount: int, confidence: float):
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
         DETECTION_MIN_CONFIDENCE = confidence  # минимальный процент отображения прямоугольника
-        NUM_CLASSES = 81
+        NUM_CLASSES = classCount
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
@@ -56,7 +56,7 @@ class Mask(object):
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
         model = getMaskConfig(len(classes), float(config.detectionMinConfidence))
         self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=model)
-        self.model.load_weights(config.DATASET_DIR, by_name=True)
+        self.model.load_weights(config.DATASET_DIR, by_name=True, exclude=[ "mrcnn_class_logits", "mrcnn_bbox_fc", "mrcnn_bbox", "mrcnn_mask"])
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
