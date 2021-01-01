@@ -56,10 +56,6 @@ class Settings:
         dirs.createDirsFromList(must_exist_dirs)
         others.checkVersion(self.config.get('FixedParams', 'packages').split())
 
-        # а ниже мы сможем увидеть 3 разлчиных способа указзания большого трафика
-        if self.carNumberDetector:
-            net.downloadNomeroffNet(self.NOMEROFF_NET_DIR)
-
         if not os.path.isfile(self.DATE_FILE):  # это создание файла
             with open(self.DATE_FILE, "w") as f:
                 f.close()
@@ -67,7 +63,7 @@ class Settings:
         if not os.path.exists(self.DATASET_DIR):
             mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
 
-        net.downloadSamples(self.IMAGE_DIR)
+        # net.downloadSamples(self.IMAGE_DIR)
 
 
 config = Settings()

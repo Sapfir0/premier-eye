@@ -6,6 +6,8 @@ from Models import Image
 from config.settings import config
 from services.apiWorkers.apiInteractionService import ApiInteractionService
 from neural_network.maskCNN import Mask
+from neural_network.vehiclePlateAdapter import detectPlate
+from Models.Car import Car
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
@@ -46,14 +48,10 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
 
 
 def carNumberDetector(filename, image: Image):
-    from neural_network.vehiclePlateAdapter import detectPlate
-    from Models.Car import Car
-    carNumbers = []
     for i, item in enumerate(image.objects):
-        if image.numberOfCam in ["1", "2"] and isinstance(image.objects[i], Car):
+        if image.cameraId in [1, 2] and isinstance(item, Car):
             imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
-            image.objects[i].licenceNumber = car_detect(imD) # todo сейчас придет джсон сюда
-    return carNumbers
+            image.objects[i].licenceNumber = detectPlate(imD) # todo сейчас придет джсон сюда
 
 
 def detectObjects(filename):

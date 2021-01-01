@@ -11,6 +11,7 @@ from Models.Image import Image
 # sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
 from mrcnn.model import MaskRCNN
 from services.classNames import classes
+from colorama import Fore
 
 def _parseR(r):
     detections = []
@@ -69,7 +70,8 @@ class Mask(object):
         else:
             filename = os.path.split(inputPath)[1]
 
-        img = Image(inputPath, outputPath=outputPath)
+        cameraId = filename.split('_')[0]
+        img = Image(inputPath, int(cameraId), outputPath=outputPath)
         binaryImage = img.read()
 
         detections = _parseR(self._humanizeTypes(self._detectByMaskCNN(img)))
