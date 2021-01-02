@@ -1,6 +1,22 @@
 import os
 from premier_eye_common.filename import parseFilename, getDate, getHours
 from colorama import Fore
+import colorsys
+import random
+
+
+def getRandomColors(CLASS_NAMES, seed=42):
+    """
+    generate random (but visually distinct) colors for each class label
+    :param CLASS_NAMES: list of names
+    """
+    hsv = [(i / len(CLASS_NAMES), 1, 1.0) for i in range(len(CLASS_NAMES))]
+
+    COLORS = list(map(lambda c: colorsys.hsv_to_rgb(*c), hsv))
+    random.seed(seed)
+    random.shuffle(COLORS)
+    return COLORS
+
 
 
 def checkVersion(package):
@@ -29,49 +45,9 @@ def checkVersion(package):
     return version
 
 
-def checkNewFile(currentImageDir: str, IMAGE_PATH_WHITELIST) -> dict:
-    """
-        input: Directory in which we search for files
-        output: A dictionary where the camera number will be associated with an array of images from this camera
-        files in whitelist will be ignored
-    """
-    numbersOfCamers: dict[int, list] = {}  # numberOfCam:files #уточнение: номер камеры обычно идет строкой
-
-    for filename in os.listdir(currentImageDir):
-        if filename in IMAGE_PATH_WHITELIST:
-            continue
-        else:
-            numberOfCam = parseFilename(filename, getNumberOfCamera=True, getDate=False)
-
-        if numberOfCam in numbersOfCamers.keys():
-            numbersOfCamers[numberOfCam].append(filename)
-        else:
-            numbersOfCamers.update({numberOfCam: [filename]})
-
-    for i in numbersOfCamers.keys():
-        numbersOfCamers.update({i: sorted(numbersOfCamers[i])})
-
-    return numbersOfCamers
-
-
-def parseImageAiData(rectCoordinates: list) -> list:
-    boxes = [diction['box_points'] for diction in rectCoordinates]
-    return boxes
-
-
 def isImage(filepath):
     allowed_extension = [".jpg", ".png", ".jpeg"]
     for ext in allowed_extension:
         if filepath.endswith(ext):
             return True
     return False
-
-
-def getIOdirs(filename, IMAGE_DIR, OUTPUT_DIR_MASKCNN):
-    dateTime, numberOfCam = parseFilename(filename, getNumberOfCamera=True)
-    date = getDate(filename)
-    hours = getHours(filename)
-    inputFile = os.path.join(IMAGE_DIR, filename)
-    outputFile = os.path.join(OUTPUT_DIR_MASKCNN, numberOfCam, str(date), str(hours), filename)
-    print(f"Analyzing {inputFile}")
-    return inputFile, outputFile, dateTime

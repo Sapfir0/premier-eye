@@ -42,12 +42,12 @@ class Settings:
     config.read(pathToConfig)
 
     detectionMinConfidence: float = config.getfloat('UserParams', 'detectionMinConfidence')
-    checkOldProcessedFrames = config.getboolean('UserParams', 'checkOldProcessedFrames')
+    skipOldImages = config.getboolean('UserParams', 'skipOldImages')
     imagePathWhitelist = config.get('FixedParams', 'imagePathWhitelist')
     availableObjects = config.get('UserParams', 'availableObjects').split()
     sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
     carNumberDetector = config.getboolean('UserParams', 'carNumberDetector')
-
+    strongRequestChecking = config.getboolean('UserParams', 'strongRequestChecking')
 
     def __init__(self):
         load_dotenv(os.path.join(self.APP_PATH, '../.env'))
@@ -62,8 +62,6 @@ class Settings:
 
         if not os.path.exists(self.DATASET_DIR):
             mrcnn.utils.download_trained_weights(self.DATASET_DIR)  # стоит это дополнительно скачивать в докере
-
-        # net.downloadSamples(self.IMAGE_DIR)
 
 
 config = Settings()

@@ -3,7 +3,7 @@ import sys
 import cv2
 import numpy as np
 import services.timeChecker as timeChecker
-import services.extra as extra
+import services.others as extra
 import services.directory as dirs
 import mrcnn.config
 from config.settings import config

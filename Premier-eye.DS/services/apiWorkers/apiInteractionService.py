@@ -5,15 +5,15 @@ import os
 from config.settings import config
 from Models import Image
 import json
-
+from pymonad import either
 
 class ApiInteractionService(BaseInteractionService):
 
-    def postImageInfo(self, imagePath: str, imageInfo):
+    def postImageInfo(self, imagePath: str, imageInfo) -> either:
         jsonInfo = {"objects": imageInfo.json()}
-        self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
+        return self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
 
-    def uploadImage(self, imagePath: str):
+    def uploadImage(self, imagePath: str) -> either:
         if platform == "linux" or platform == "linux2":
             filename = os.path.split(imagePath)[1]  # TODO Only for linux!!
         else:
@@ -21,5 +21,5 @@ class ApiInteractionService(BaseInteractionService):
 
         files = [('file', (filename, open(imagePath, 'rb'), 'image/jpg'))]
 
-        self.post(galleryRoutes['upload'](os.path.basename(filename)), files=files)
+        return self.post(galleryRoutes['upload'](os.path.basename(filename)), files=files)
 

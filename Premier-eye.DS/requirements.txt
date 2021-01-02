@@ -9,3 +9,4 @@ colorama
 IPython
 gitPython
 premier-eye-common
+PyMonad
