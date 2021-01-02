@@ -1,24 +1,24 @@
 version: '3.3'
 
 services:
-  detection:
-    depends_on: 
-      - nomeroff-net 
-    tty: true
-    container_name: detection
-    image: sapfir0/premier-eye:cpu
-    build:
-      dockerfile: Dockerfile
-      context: .
-    volumes:
-      - ./data:/data
-      - ./output:/output
-    networks:
-      - premier-eye_some-net
-    environment:
-      - API_URL=http://172.18.0.2:8050
-    env_file:
-      - .env
+  # detection:
+  #   depends_on: 
+  #     - nomeroff-net 
+  #   tty: true
+  #   container_name: detection
+  #   image: sapfir0/premier-eye:cpu
+  #   build:
+  #     dockerfile: Dockerfile
+  #     context: .
+  #   volumes:
+  #     - ./data:/data
+  #     - ./output:/output
+  #   networks:
+  #     - premier-eye_some-net
+  #   environment:
+  #     - API_URL=http://172.18.0.2:8050
+  #   env_file:
+  #     - .env
 
   nomeroff-net:
     build: vehiclePlate
