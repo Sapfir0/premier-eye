@@ -1,4 +1,4 @@
-name: DS
+name: vehiclePlate
 
 on: [push]
 
@@ -23,5 +23,5 @@ jobs:
         pip install flake8 pytest requests
     - name: Build docker
       run: |
-        cd ./Premier-eye.DS
-        docker-compose up --build
+        cd ./Premier-eye.DS/vehiclePlate
+        docker build -t test .
