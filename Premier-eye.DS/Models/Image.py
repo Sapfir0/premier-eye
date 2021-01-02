@@ -11,18 +11,19 @@ class Image(object):
     filename: str = None
     outputPath: str = None
     objects: list = []
+    cameraId: int = None
 
     def __new__(cls, inputPath, *args, **kwargs):
         if not others.isImage(inputPath):
-            print("This is incorrectly image format. Skipping " + inputPath)
-            raise Exception
+            raise Exception("This is incorrectly image format. Skipping " + inputPath)
         return object.__new__(cls)
 
-    def __init__(self, inputPath: str, objectsOnFrame=None, outputPath=None):
+    def __init__(self, inputPath: str, camerasId: int, objectsOnFrame=None, outputPath=None):
         import services.dateHelper as dh
         import os
         filename = os.path.split(inputPath)[1]
         self.filename = filename
+        self.cameraId = camerasId
         self.inputPath = inputPath
         if outputPath:
             self.outputPath = outputPath

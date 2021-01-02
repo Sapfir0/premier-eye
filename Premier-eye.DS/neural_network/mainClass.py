@@ -1,12 +1,13 @@
 import os
-
-import services.file_controller as file_controller
+import services.fileController as fileController
 import services.others as others
 import services.directory as dirs
 from Models import Image
 from config.settings import config
 from services.apiWorkers.apiInteractionService import ApiInteractionService
 from neural_network.maskCNN import Mask
+from neural_network.vehiclePlateAdapter import detectPlate
+from Models.Car import Car
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
@@ -25,7 +26,7 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
             После успешного завершения алогритма мы добавляем название изображения в словарь processedFrames с такой же структурой, как и предыдущий.
             Если в processedFrames уже находится имя файла, которое мы взяли из словаря из прошлой главы,
             то изображение уже обработано, и мы пропускаем его. После успешной обработки, мы записываем словарь в файл.
-            Если стоит опция в настройках checkOldProcessedFrames, то при запуске программы, мы читаем из файла наш словарь,
+            Если стоит опция в настройках skipOldImages, то при запуске программы, мы читаем из файла наш словарь,
             соответственно, мы не обработаем файл, который был уже обработан при предыдущих запусках.
             Если у двух словарей идентичны массивы, ассоцирующуюся с одной камерой, то мы спим(спит поток:( )
     """
@@ -42,24 +43,21 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
 
         detectObjects(filename)
         processedFrames[numberOfCam].append(filename)
-        file_controller.writeInFile(config.DATE_FILE, str(processedFrames))
+        fileController.writeInFile(config.DATE_FILE, str(processedFrames))
         # будет стирать содержимое файла каждый кадр
 
 
 def carNumberDetector(filename, image: Image):
-    from neural_network.car_number import car_detect
-    from Models.Car import Car
-    carNumbers = []
     for i, item in enumerate(image.objects):
-        if image.numberOfCam in ["1", "2"] and isinstance(image.objects[i], Car):
+        if image.cameraId in [1, 2] and isinstance(item, Car):
             imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
-            image.objects[i].licenceNumber = car_detect(imD)
-    return carNumbers
+            numberPlatesInfo = detectPlate(imD) 
+            image.objects[i].licenceNumber = numberPlatesInfo['number_plates']
 
 
 def detectObjects(filename):
     api = ApiInteractionService(config)
-    inputFile, outputFile, dateTime = others.getIOdirs(filename, config.IMAGE_DIR, config.OUTPUT_DIR_MASKCNN)
+    inputFile, outputFile, dateTime = dirs.getIOdirs(filename, config.IMAGE_DIR, config.OUTPUT_DIR_MASKCNN)
 
     image = mask.pipeline(inputFile, outputFile)
 

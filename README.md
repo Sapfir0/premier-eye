@@ -44,4 +44,4 @@ Run main docker-compose file:
 ### Information for dev-ops
 
 If the connection cannot be established, check with `docker network inspect @ netName @` ip address to which it is connected
-server, and if necessary, change the parameter `DOCKER_LOCAL_ADDRESS`.
+server, and if necessary, change the parameter `API_URL`.

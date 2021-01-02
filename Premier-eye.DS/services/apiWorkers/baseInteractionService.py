@@ -1,16 +1,16 @@
 import requests
 from config.settings import config
 from config.settings import Settings
+from services.apiWorkers.apiHelper import ApiHelper
 
-
-class BaseInteractionService:
+class BaseInteractionService(ApiHelper):
     cfg: Settings
 
     def __init__(self, config: Settings):
         self.cfg = config
 
-    def get(self, url, host=None):
-        return self.query('GET', url, host=host)
+    def get(self, url, data=None, host=None):
+        return self.query('GET', url, data=data, host=host)
 
     def post(self, url, data=None, json=None, host=None, files=None):
         return self.query('POST', url, data=data, host=host, json=json, files=files,)
@@ -20,4 +20,4 @@ class BaseInteractionService:
             host = self.cfg.apiLink
         reqUrl = host + url
 
-        return requests.request(method, reqUrl, data=data, json=json, files=files)
+        return self.request(method, reqUrl, data=data, json=json, files=files)

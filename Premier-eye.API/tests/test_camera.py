@@ -5,14 +5,8 @@ import requests
 
 namespace = '/camera'
 
-routes = {
-    'getAllImagesFromCamera': '/<string:cameraId>/images',
-    'getCameraList': '/list',
-    'getCamera': '/<string:cameraId>',
-}
-
 class Camera(unittest.TestCase):
-    routeUrl = cfg.serverUrl + "camera"
+    routeUrl = cfg.serverUrl + "/camera"
 
     camerasList = [1, 2, 3]
 

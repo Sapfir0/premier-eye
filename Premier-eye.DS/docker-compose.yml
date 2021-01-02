@@ -2,6 +2,8 @@ version: '3.3'
 
 services:
   detection:
+    depends_on: 
+      - nomeroff-net 
     tty: true
     container_name: detection
     image: sapfir0/premier-eye:cpu
@@ -13,12 +15,27 @@ services:
       - ./output:/output
     networks:
       - premier-eye_some-net
-
     environment:
-      - DOCKER_LOCAL_ADDRESS=http://172.18.0.2
+      - API_URL=http://172.18.0.2:8050
     env_file:
       - .env
 
+  nomeroff-net:
+    build: vehiclePlate
+    working_dir: /var/www/nn
+    image: sapfir0/vehicle_plate_detector
+    # restart: unless-stopped
+    ports:
+      - 5051:8080
+    volumes:
+      - ./data:/data
+    networks:
+      - premier-eye_some-net
+    logging:
+       driver: "json-file"
+       options:
+         max-size: "10m"
+         max-file: "5"
 
 networks:
   premier-eye_some-net:

@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from database import Base
+from database import db
 from datetime import datetime
 
 
-class Camera(Base):
+class Camera(db.Base):
     __tablename__ = "camera"
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
