@@ -1,4 +1,7 @@
 import requests as _
+from services.apiWorkers.apiInteractionService import ApiInteractionService
+from config.settings import Settings
 
 def detectPlate(fullImagePath):
-    return _.get('http://localhost:' + "8080" + "/read" + "?url=" + fullImagePath)
+    return ApiInteractionService.get('/read', data={'url': fullImagePath}, host=Settings.nomeroffNetLink)
+    

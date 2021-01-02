@@ -15,8 +15,8 @@ load_dotenv()
 class Settings:
     colorama.init(autoreset=True)
 
-    SERVER_PORT = os.getenv('SERVER_PORT')
-    apiLink = f"{os.getenv('DOCKER_LOCAL_ADDRESS')}:{SERVER_PORT}"
+    apiLink = os.getenv('API_URL')
+    nomeroffNetLink = os.getenv('NOMEROFF_NET_URL')
     # путевые настройки
     APP_PATH = os.path.abspath(os.path.dirname(__file__))
     DATA_PATH = join(APP_PATH, "../data")
@@ -28,10 +28,6 @@ class Settings:
     # Mask cnn
     DATASET_DIR = join(DATA_PATH, "mask_rcnn_coco.h5")  # относительный путь от этого файла
     OUTPUT_DIR_MASKCNN = join(OUTPUT_DIR, 'maskCNNout')
-    # car detector
-    NOMEROFF_NET_DIR = join(APP_PATH, '../nomeroff-net')
-    MASK_RCNN_DIR = join(NOMEROFF_NET_DIR, '../Mask_RCNN')
-    MASK_RCNN_LOG_DIR = join(NOMEROFF_NET_DIR, '../logs')
 
 
     pathToConfig = join(APP_PATH, "config.ini")

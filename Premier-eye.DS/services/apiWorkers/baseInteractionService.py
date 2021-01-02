@@ -9,8 +9,8 @@ class BaseInteractionService(ApiHelper):
     def __init__(self, config: Settings):
         self.cfg = config
 
-    def get(self, url, host=None):
-        return self.query('GET', url, host=host)
+    def get(self, url, data=None, host=None):
+        return self.query('GET', url, data=data, host=host)
 
     def post(self, url, data=None, json=None, host=None, files=None):
         return self.query('POST', url, data=data, host=host, json=json, files=files,)
