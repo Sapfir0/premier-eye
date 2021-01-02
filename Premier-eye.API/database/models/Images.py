@@ -7,7 +7,7 @@ class Images(db.Base):
     __tablename__ = "images"
 
     def init_db(self):
-        db.Base.metadata.create_all(bind=engine)
+        db.Base.metadata.create_all(bind=db.engine)
         db.session.commit()
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)

@@ -1,9 +1,9 @@
 import requests
 from config.settings import config
 from config.settings import Settings
+from services.apiWorkers.apiHelper import ApiHelper
 
-
-class BaseInteractionService:
+class BaseInteractionService(ApiHelper):
     cfg: Settings
 
     def __init__(self, config: Settings):
@@ -20,4 +20,4 @@ class BaseInteractionService:
             host = self.cfg.apiLink
         reqUrl = host + url
 
-        return requests.request(method, reqUrl, data=data, json=json, files=files)
+        return self.request(method, reqUrl, data=data, json=json, files=files)

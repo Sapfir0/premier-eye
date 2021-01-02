@@ -3,7 +3,7 @@ from importlib import import_module
 from flask import Flask, url_for
 from flask_cors import CORS
 from config import Config
-from database import db
+from database import db, Database
 from docs import api
 
 

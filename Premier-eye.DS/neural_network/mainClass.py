@@ -51,7 +51,8 @@ def carNumberDetector(filename, image: Image):
     for i, item in enumerate(image.objects):
         if image.cameraId in [1, 2] and isinstance(item, Car):
             imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
-            image.objects[i].licenceNumber = detectPlate(imD) # todo сейчас придет джсон сюда
+            numberPlatesInfo = detectPlate(imD) 
+            image.objects[i].licenceNumber = numberPlatesInfo['number_plates']
 
 
 def detectObjects(filename):

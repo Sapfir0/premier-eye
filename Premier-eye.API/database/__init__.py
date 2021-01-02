@@ -13,8 +13,15 @@ engine_parameters = {
     "echo": False,
 }
 
+class MetaSingleton(type):
+    _instances = {}
+    def __call__(cls, *args, **kwargs):
+        if cls not in cls._instances:
+            cls._instances[cls] = super(MetaSingleton, cls).__call__(*args, **kwargs)
+        return cls._instances[cls]
 
-class Database:
+
+class Database(metaclass=MetaSingleton):
     Base = None
     session = None
     engine = None
@@ -32,7 +39,6 @@ class Database:
         self.Base = declarative_base()
         self.Base.query = self.session.query_property()
         self.Base.metadata.create_all(bind=self.engine)
-        print("inited")
 
 
 db = Database()
