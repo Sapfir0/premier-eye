@@ -3,14 +3,15 @@ import sys
 import cv2
 import numpy as np
 import services.timeChecker as timeChecker
-import services.extra as extra
+import services.others as extra
 import services.directory as dirs
-import Mask_RCNN.mrcnn.config
+import mrcnn.config
 from config.settings import config
 from Models.Image import Image
 # sys.path.append(cfg.MASK_RCNN_DIR)  # To find local version of the library
-from Mask_RCNN.mrcnn.model import MaskRCNN
-
+from mrcnn.model import MaskRCNN
+from services.classNames import classes
+from colorama import Fore
 
 def _parseR(r):
     detections = []
@@ -27,13 +28,13 @@ def _parseR(r):
 
 # Mask cnn advanced
 # Configuration that will be used by the Mask-RCNN library
-def getMaskConfig(confidence: float):
-    class MaskRCNNConfig(Mask_RCNN.mrcnn.config.Config):
+def getMaskConfig(classCount: int, confidence: float):
+    class MaskRCNNConfig(mrcnn.config.Config):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
         DETECTION_MIN_CONFIDENCE = confidence  # минимальный процент отображения прямоугольника
-        NUM_CLASSES = 81
+        NUM_CLASSES = classCount
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
@@ -52,12 +53,11 @@ class Mask(object):
     hasOldFrame = False
 
     def __init__(self):
-        with open(config.CLASSES_FILE, 'rt') as file:
-            self.CLASS_NAMES = file.read().rstrip('\n').split('\n')
-
+        self.CLASS_NAMES = classes
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=getMaskConfig(float(config.detectionMinConfidence)))
-        self.model.load_weights(config.DATASET_DIR, by_name=True)
+        model = getMaskConfig(len(classes), float(config.detectionMinConfidence))
+        self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=model)
+        self.model.load_weights(config.DATASET_DIR, by_name=True, exclude=[ "mrcnn_class_logits", "mrcnn_bbox_fc", "mrcnn_bbox", "mrcnn_mask"])
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
@@ -70,7 +70,8 @@ class Mask(object):
         else:
             filename = os.path.split(inputPath)[1]
 
-        img = Image(inputPath, outputPath=outputPath)
+        cameraId = filename.split('_')[0]
+        img = Image(inputPath, int(cameraId), outputPath=outputPath)
         binaryImage = img.read()
 
         detections = _parseR(self._humanizeTypes(self._detectByMaskCNN(img)))

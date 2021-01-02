@@ -44,8 +44,3 @@ def gitClone(link, directory):
 
     git.Repo.clone_from(link, directory, progress=Progress())
 
-
-def downloadNomeroffNet(NOMEROFF_NET_DIR: str) -> None:
-    if not os.path.exists(NOMEROFF_NET_DIR):
-        gitClone("https://github.com/ria-com/nomeroff-net.git", NOMEROFF_NET_DIR)
-

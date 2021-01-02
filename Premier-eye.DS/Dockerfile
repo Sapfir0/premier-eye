@@ -1,4 +1,4 @@
-FROM tensorflow/tensorflow:latest-py3
+FROM tensorflow/tensorflow:latest-gpu
 
 RUN apt-get update
 
@@ -8,7 +8,13 @@ COPY requirements.txt requirements.txt
 
 RUN pip3 install Cython \
  && pip3 install -r requirements.txt
-RUN git clone https://github.com/leekunhee/Mask_RCNN && cd Mask_RCNN && pip3 install -r requirements.txt && python3 setup.py install
+
+RUN git clone https://github.com/leekunhee/Mask_RCNN \ 
+ && cd Mask_RCNN  \ 
+ && pip3 install -r requirements.txt \ 
+ && python3 setup.py install
+
+RUN pip3 install keras==2.4 tensorflow==2.4
 
 COPY . /pyback
 WORKDIR /pyback

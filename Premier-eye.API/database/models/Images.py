@@ -1,16 +1,14 @@
 from sqlalchemy import Table, Column, Integer, String, MetaData, ForeignKey, Float, DateTime, Boolean, or_, DATETIME, TIMESTAMP
-from database import Base
-from database import session
-from database import engine
+from database import db
 from datetime import datetime
 
 
-class Images(Base):
+class Images(db.Base):
     __tablename__ = "images"
 
     def init_db(self):
-        Base.metadata.create_all(bind=engine)
-        session.commit()
+        db.Base.metadata.create_all(bind=db.engine)
+        db.session.commit()
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
     path = Column(String(250), unique=True)

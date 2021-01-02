@@ -11,7 +11,7 @@ class ApiInteractionService(BaseInteractionService):
 
     def postImageInfo(self, imagePath: str, imageInfo):
         jsonInfo = {"objects": imageInfo.json()}
-        self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
+        return self.post(galleryRoutes['postInfo'](os.path.basename(imagePath)), json=jsonInfo)
 
     def uploadImage(self, imagePath: str):
         if platform == "linux" or platform == "linux2":
@@ -21,5 +21,5 @@ class ApiInteractionService(BaseInteractionService):
 
         files = [('file', (filename, open(imagePath, 'rb'), 'image/jpg'))]
 
-        self.post(galleryRoutes['upload'](os.path.basename(filename)), files=files)
+        return self.post(galleryRoutes['upload'](os.path.basename(filename)), files=files)
 

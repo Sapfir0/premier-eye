@@ -9,8 +9,4 @@ colorama
 IPython
 gitPython
 premier-eye-common
-
-tensorflow
-scikit-image
-keras
-mrcnn
+PyMonad

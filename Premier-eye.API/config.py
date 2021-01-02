@@ -9,7 +9,7 @@ class Config(object):
     ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
     PORT = int(os.environ.get('FLASK_RUN_PORT', 8050))
     APP_PATH = Path(__file__).parents[0]
-    serverUrl = f"http://{FLASK_RUN_HOST}:{PORT}/"
+    serverUrl = f"http://{FLASK_RUN_HOST}:{PORT}"
     DATABASE_NAME = 'data.db'
 
     dtoDirectory = os.path.join(APP_PATH, 'typings')

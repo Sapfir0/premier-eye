@@ -5,7 +5,7 @@ from flask_restplus import Namespace, Resource, fields
 from database.models.Cars import Cars
 from database.models.Persons import Persons
 from database.models.Objects_ import Objects_
-from database.models.Images import Images, session
+from database.models.Images import Images
 from database.models.Coordinates import Coordinates
 from services.model import getModel
 import os

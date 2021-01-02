@@ -1,9 +1,9 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
-from database import Base
+from database import db
 from datetime import datetime
 
 
-class Cars(Base):
+class Cars(db.Base):
     __tablename__ = "cars"
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)
