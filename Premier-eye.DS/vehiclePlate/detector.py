@@ -6,6 +6,7 @@ import matplotlib.image as mpimg
 import tensorflow as tf
 from tensorflow.compat.v1 import ConfigProto
 from tensorflow.compat.v1 import InteractiveSession
+import os.path
 
 warnings.filterwarnings('ignore')
 
@@ -25,10 +26,12 @@ from NomeroffNet import  OptionsDetector
 from NomeroffNet import  TextDetector
 from NomeroffNet import  textPostprocessing
 
+
 # load models
 rectDetector = RectDetector()
 
 optionsDetector = OptionsDetector()
+
 optionsDetector.load("latest")
 
 textDetector = TextDetector.get_static_module("eu")()
@@ -38,6 +41,9 @@ nnet = Detector()
 nnet.loadModel(NOMEROFF_NET_DIR)
 
 def read_number_plates(imagepath):
+    if not os.path.exists(imagepath):
+        return None
+        
     img = mpimg.imread(imagepath)
     cv_imgs_masks = nnet.detect_mask([img])
 

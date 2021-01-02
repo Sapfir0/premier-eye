@@ -18,19 +18,22 @@ def read():
     print(form)
     url = form['url']
 
-    number_plates, region_names = read_number_plates(url)
+    res = read_number_plates(url)
+    if not res:
+        return jsonify({
+            'success': False,
+            'errors': "Image path not correct, image not found"
+        })
+    else:
+        number_plates, region_names = res
+        return jsonify({
+            'success': True,
+            'url': url,
+            'number_plates': number_plates,
+            'region_names': region_names,
+        })
 
-    return jsonify({
-        'success': True,
-        'url': url,
-        'number_plates': number_plates,
-        'region_names': region_names,
-    })
 
-    # return jsonify({
-    #     'success': False,
-    #     'errors': form.errors
-    # })
 
 
 def create_app():

@@ -17,6 +17,6 @@ RUN git clone https://github.com/ria-com/nomeroff-net.git \
 COPY . /var/www/nn
 WORKDIR /var/www/nn
 
-ENTRYPOINT [ "/bin/bash" ]
-# CMD ["waitress-serve", "--call", "main:create_app"]
+# ENTRYPOINT [ "/bin/bash" ]
+CMD ["waitress-serve", "--call", "main:create_app"]
 
