@@ -21,7 +21,6 @@ function App() {
             <Switch>
                 <Route path={ClientRoutes.Settings} component={SettingsPage} />
                 <Route path={ClientRoutes.AreaMap} component={AreaMapPage} />
-
                 <Route path={ClientRoutes.Index} component={HomePage}/>
 
                 <Redirect to={ClientRoutes.Index} />

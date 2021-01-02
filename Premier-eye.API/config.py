@@ -11,12 +11,11 @@ class Config(object):
     APP_PATH = Path(__file__).parents[0]
     serverUrl = f"http://{FLASK_RUN_HOST}:{PORT}/"
     DATABASE_NAME = 'data.db'
-    detectionProgramUrl = "http://localhost:8010"
 
     dtoDirectory = os.path.join(APP_PATH, 'typings')
 
     UPLOAD_FOLDER = os.path.join(APP_PATH, "static", "uploads")
-    print(UPLOAD_FOLDER)
+
     if not os.path.exists(UPLOAD_FOLDER):
         os.makedirs(UPLOAD_FOLDER)
 
