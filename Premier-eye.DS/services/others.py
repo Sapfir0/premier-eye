@@ -3,9 +3,9 @@ from premier_eye_common.filename import parseFilename, getDate, getHours
 from colorama import Fore
 import colorsys
 import random
+from typing import Tuple, List
 
-
-def getRandomColors(CLASS_NAMES, seed=42):
+def getRandomColors(CLASS_NAMES, seed=42) -> List[Tuple[float, float, float]]:
     """
     generate random (but visually distinct) colors for each class label
     :param CLASS_NAMES: list of names
