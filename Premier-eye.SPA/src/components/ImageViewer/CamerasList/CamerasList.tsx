@@ -24,7 +24,7 @@ class CamerasList extends React.Component<IProps> {
         return (
             <div className="camerasList">
                 <List component="nav" aria-label="main mailbox folders">
-                    <BaseCamerasList cameras={this.props.cameras.items} />
+                    <BaseCamerasList onClick={this.handleListItemClick} cameras={this.props.cameras.items} />
                 </List>
             </div>
         );
