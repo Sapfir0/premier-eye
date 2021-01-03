@@ -1,12 +1,13 @@
 from abc import ABC, abstractmethod
+from typing import Dict, List
 
 
 class Object_(ABC):
     type: str = "object"
-    id: int = None
+    id: int = 0
     scores = None
-    coordinates = []  # LDx, LDy, RUx, RUy
-    centerDownCoordinates = []  # CDx, CDy
+    coordinates: List[int] = []  # LDx, LDy, RUx, RUy
+    centerDownCoordinates: List[int] = []  # CDx, CDy
 
     def __init__(self, detections):
         self.coordinates = detections['coordinates']
@@ -17,6 +18,8 @@ class Object_(ABC):
                f"centerDownCoordinates: {self.centerDownCoordinates} }}"
 
     def json(self) -> dict:
+        print(self.scores.item())
+        print(self.coordinates.tolist())
         diction = {  # маски передавать не будем
             'id': self.id,
             'type': self.type,

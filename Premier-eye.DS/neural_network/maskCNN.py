@@ -50,9 +50,8 @@ class Mask(object):
     """
     SAVE_COLORMAP = False
     CLASS_NAMES: List[str] = []
-    COLORS = None
+    COLORS: List[str] = []
     model = None
-    hasOldFrame = False
 
     def __init__(self):
         self.CLASS_NAMES = classes

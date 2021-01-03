@@ -1,7 +1,7 @@
 import os
 import shutil
 from premier_eye_common.filename import parseFilename, getDate, getHours
-
+from typing import Dict
 
 def createDir(path: str):
     if not os.path.exists(path):
@@ -43,7 +43,7 @@ def checkNewFile(currentImageDir: str, IMAGE_PATH_WHITELIST) -> dict:
         output: A dictionary where the camera number will be associated with an array of images from this camera
         files in whitelist will be ignored
     """
-    numbersOfCamers: dict[int, list] = {}  # numberOfCam:files #уточнение: номер камеры обычно идет строкой
+    numbersOfCamers: Dict[int, list] = {}  # numberOfCam:files #уточнение: номер камеры обычно идет строкой
 
     for filename in os.listdir(currentImageDir):
         if filename in IMAGE_PATH_WHITELIST:

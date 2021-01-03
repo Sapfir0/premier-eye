@@ -45,7 +45,7 @@ def checkVersion(package):
     return version
 
 
-def isImage(filepath):
+def isImage(filepath) -> bool:
     allowed_extension = [".jpg", ".png", ".jpeg"]
     for ext in allowed_extension:
         if filepath.endswith(ext):
