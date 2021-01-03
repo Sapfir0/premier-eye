@@ -18,8 +18,6 @@ class Object_(ABC):
                f"centerDownCoordinates: {self.centerDownCoordinates} }}"
 
     def json(self) -> dict:
-        print(self.scores.item())
-        print(self.coordinates.tolist())
         diction = {  # маски передавать не будем
             'id': self.id,
             'type': self.type,

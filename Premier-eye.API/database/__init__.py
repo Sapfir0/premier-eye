@@ -11,6 +11,9 @@ engine_parameters = {
     "pool_pre_ping": True,
     "pool_recycle": 3600,
     "echo": False,
+    "connect_args": {
+    'check_same_thread': False 
+    }
 }
 
 # мета класс тут для того, чтобы 

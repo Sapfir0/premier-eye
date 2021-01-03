@@ -58,7 +58,8 @@ class ImageInformation(Resource):
             db.session.add(Object)
 
             db.session.commit()
-            db.session.flush()
+        db.session.flush()
+        make_response({"success": "Info updated"}, 200)
 
 imageInfoIndex = api.parser()
 imageInfoIndex.add_argument('cameraId', location='args', type=str, required=True)

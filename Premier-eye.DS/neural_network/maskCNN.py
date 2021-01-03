@@ -48,7 +48,6 @@ class Mask(object):
     """
         Mask R-CNN
     """
-    SAVE_COLORMAP = False
     CLASS_NAMES: List[str] = []
     COLORS: List[str] = []
     model = None
@@ -91,9 +90,6 @@ class Mask(object):
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
         for i, currentObject in enumerate(image.objects):
-            if currentObject.type not in config.availableObjects:
-                continue
-
             y1, x1, y2, x2 = currentObject.coordinates
 
             lineInClassName = self.CLASS_NAMES.index(currentObject.type)
