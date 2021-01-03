@@ -11,8 +11,8 @@ services:
       dockerfile: Dockerfile
       context: .
     volumes:
-      - ./data:/data
-      - ./output:/output
+      - .:/ds
+      # потому что у меня может быть много файлов(например, файл со списком обработанных изобржаений), пусть синхронизруется все
     networks:
       - premier-eye_some-net
     environment:
@@ -28,7 +28,8 @@ services:
     ports:
       - 5051:8080
     volumes:
-      - ./data:/data
+      - ./data:/ds/data
+      # пока волюм не используется, я передаю файл не по ссылке, а по значению
     networks:
       - premier-eye_some-net
     logging:

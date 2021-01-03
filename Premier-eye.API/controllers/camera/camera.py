@@ -18,8 +18,18 @@ api = Namespace('camera')
 
 @api.route(routes['getAllImagesFromCameras'])
 class CameraImageList(Resource):
-    def get(self):
-        pass
+    def get(self, cameraId):
+        """ Получить только изображения с камеры """
+        cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
+
+        if not os.path.exists(cameraPath):
+            return make_response({"error": "Error while loading camera on filesystem"}, 400)
+
+        lastImageDate = os.listdir(cameraPath)[-1]
+
+        imgList = recursiveSearch(cameraPath)
+        indexedImgList = [{'id': i, 'src': src} for i, src in enumerate(imgList)]
+        return make_response({'images': indexedImgList}, 200)
         
 
 @api.route(routes['getCamera'])

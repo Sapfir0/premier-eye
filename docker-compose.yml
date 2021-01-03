@@ -10,8 +10,7 @@ services:
     ports:
       - "8050:8050"
     volumes:
-      - "./Premier-eye.API/static/uploads:/pyfront/application/static/uploads"
-      - "./data.db:/pyfront/application/data.db"
+      - "./Premier-eye.API:/api"
     networks:
       - some-net
 

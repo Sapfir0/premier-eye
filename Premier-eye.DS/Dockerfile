@@ -16,8 +16,8 @@ RUN git clone https://github.com/leekunhee/Mask_RCNN \
 
 RUN pip3 install keras==2.4 tensorflow==2.4
 
-COPY . /pyback
-WORKDIR /pyback
+COPY . /ds
+WORKDIR /ds
 
 ENTRYPOINT ["python3"]
 CMD ["mainImage.py" ]
