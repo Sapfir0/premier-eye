@@ -3,8 +3,8 @@ import logging
 class CameraLogger:
     logger = None
     def __init__(self, cameraId):
-        customFormat = '%(asctime)-15s %(cameraId)s %(date)s %(objectType)s %(message)s'
-        logging.basicConfig(level=logging.INFO, filename='app.log', )
+        customFormat = '%(asctime)-15s %(cameraId)s %(date)s %(message)s'
+        logging.basicConfig(level=logging.INFO, filename='app.log', format=customFormat)
         self.logger = logging.getLogger(f'camera {cameraId}')
 
     def log(self, message, cameraId, datetime):

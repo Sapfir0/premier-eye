@@ -54,7 +54,7 @@ def carNumberDetector(filename, image: Image):
     for i, item in enumerate(image.objects):
         if image.cameraId in [1, 2] and isinstance(item, Car):
             numberPlatesInfo = detectPlate(image.outputPath, api) 
-            image.objects[i].licenceNumber = numberPlatesInfo['number_plates']
+            image.objects[i].vehiclePlate = "".join(numberPlatesInfo['number_plates'])
 
 
 def detectObjects(filename):
@@ -63,7 +63,7 @@ def detectObjects(filename):
     image = mask.pipeline(inputFile, outputFile)
     
     for obj in image.objects:
-        cameraLogger.log(f"{obj.type} на камере", image.cameraId, image.date)
+        cameraLogger.log(f"{obj.type} on camera", image.cameraId, image.date)
 
     print(image.objects)
     if config.carNumberDetector:

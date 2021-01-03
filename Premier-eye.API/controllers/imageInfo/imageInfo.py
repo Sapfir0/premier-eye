@@ -46,7 +46,7 @@ class ImageInformation(Resource):
                                 imageId=imageId, coordinatesId=countOfObjectsIndbAPI)
 
             if detected['type'] == 'car':  # TODO кал
-                car = Cars(carNumber=detected['licenseNumber'], objectId=countOfObjectsIndbAPI)
+                car = Cars(carNumber=detected['vehiclePlate'], objectId=countOfObjectsIndbAPI)
                 db.session.add(car)
             elif detected['type'] == 'person':
                 person = Persons(objectId=countOfObjectsIndbAPI)

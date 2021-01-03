@@ -3,11 +3,11 @@ from Models.Object_ import Object_
 
 class Car(Object_):
     type = "car"
-    licenseNumber: str = None
+    vehiclePlate: str = ""
 
     def json(self) -> dict:
         objectJson = super().json()
-        objectJson.update({'licenseNumber': self.licenseNumber })
+        objectJson.update({'vehiclePlate': self.vehiclePlate })
         objectJson.update({'type': self.type})
         return objectJson
 
