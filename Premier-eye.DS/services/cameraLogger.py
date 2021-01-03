@@ -12,14 +12,14 @@ class CameraLogger:
         self.logger.info(message, extra=d)
 
     def enterPerson(self, cameraId, datetime):
-        self.log('человек вошел в кадр', cameraId, date)
+        self.log('human entered', cameraId, date)
     
     def leftPerson(self, cameraId, datetime):
-        self.log('человек пропал', cameraId, date)
+        self.log('human lost', cameraId, date)
 
     def enterCar(self, cameraId, datetime):
-        self.log('автомобиль вошел в кадр', cameraId, date)
+        self.log('auto entered', cameraId, date)
 
     def leftCar(self, cameraId, datetime):
-        self.log('автомобиль пропал', cameraId, date)
+        self.log('auto lost', cameraId, date)
 
