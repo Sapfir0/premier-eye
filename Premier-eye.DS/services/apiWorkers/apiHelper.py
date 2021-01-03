@@ -6,14 +6,18 @@ from config.settings import Settings as config
 
 class ApiHelper:
     def request(self, method, url, **reqKArgs):
-        req: Response = requests.request(method, url, **reqKArgs)
-        if req.status_code != 200:
-            print(req.text())
-            if config.strongRequestChecking:
-                raise Exception(f"[strongRequestChecking] Завершаю работу, запрос вернулся с кодом {req.status_code}.")
+        res: Response = requests.request(method, url, **reqKArgs)
+        if res.status_code != 200:
+            if (res.status_code == None):
+                raise Exception("API not found")
             
-            return req.json()
-        print(req.json())
-        return req.json()
+            print(res.text)
+            if config.strongRequestChecking:
+                raise Exception(f"[strongRequestChecking] Завершаю работу, запрос вернулся с кодом {res.status_code}.")
+            
+            return res.json()
+
+        print(res.json())
+        return res.json()
 
 

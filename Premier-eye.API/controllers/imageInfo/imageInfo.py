@@ -1,6 +1,6 @@
 from flask import jsonify, make_response, request
 from controllers.imageInfo import routes
-import database.dbAPI
+import database.dbAPI as dbAPI
 from flask_restplus import Namespace, Resource, fields
 from database.models.Cars import Cars
 from database.models.Persons import Persons

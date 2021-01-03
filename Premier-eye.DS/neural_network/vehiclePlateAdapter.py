@@ -3,5 +3,6 @@ from services.apiWorkers.apiInteractionService import ApiInteractionService
 from config.settings import Settings
 
 def detectPlate(fullImagePath):
-    return ApiInteractionService.get('/read', data={'url': fullImagePath}, host=Settings.nomeroffNetLink)
+    files = [('file', (filename, open(imagePath, 'rb'), 'image/jpg'))]
+    return ApiInteractionService.post('/read', files=files, host=Settings.nomeroffNetLink)
     
