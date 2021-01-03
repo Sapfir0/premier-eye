@@ -40,6 +40,7 @@ class Settings:
     detectionMinConfidence: float = config.getfloat('UserParams', 'detectionMinConfidence')
     skipOldImages = config.getboolean('UserParams', 'skipOldImages')
     imagePathWhitelist = config.get('FixedParams', 'imagePathWhitelist')
+    availableObjects = config.get('UserParams', 'availableObjects').split()
     sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
     carNumberDetector = config.getboolean('UserParams', 'carNumberDetector')
     strongRequestChecking = config.getboolean('UserParams', 'strongRequestChecking')

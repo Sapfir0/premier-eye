@@ -36,7 +36,7 @@ def getMaskConfig(classCount: int, confidence: float):
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
         DETECTION_MIN_CONFIDENCE = confidence  # минимальный процент отображения прямоугольника
-        NUM_CLASSES = classCount
+        NUM_CLASSES = 81
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
@@ -57,7 +57,7 @@ class Mask(object):
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
         model = getMaskConfig(len(classes), float(config.detectionMinConfidence))
         self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=model)
-        self.model.load_weights(config.DATASET_DIR, by_name=True, exclude=[ "mrcnn_class_logits", "mrcnn_bbox_fc", "mrcnn_bbox", "mrcnn_mask"])
+        self.model.load_weights(config.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
@@ -90,6 +90,8 @@ class Mask(object):
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
         for i, currentObject in enumerate(image.objects):
+            if currentObject.type not in config.availableObjects:
+                continue
             y1, x1, y2, x2 = currentObject.coordinates
 
             lineInClassName = self.CLASS_NAMES.index(currentObject.type)
