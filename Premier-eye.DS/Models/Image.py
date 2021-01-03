@@ -1,17 +1,21 @@
 import services.others as others
 import datetime
 import cv2
-
+import services.dateHelper as dh
+import os
 from Models.Car import Car
 from Models.Person import Person
+from premier_eye_common.filename import getDateFromFilename
+import matplotlib.pyplot as plt
 
 
 class Image(object):
-    inputPath: str = None
-    filename: str = None
-    outputPath: str = None
+    inputPath: str = ""
+    filename: str = ""
+    date = None
+    outputPath: str = ""
     objects: list = []
-    cameraId: int = None
+    cameraId: int = 0
 
     def __new__(cls, inputPath, *args, **kwargs):
         if not others.isImage(inputPath):
@@ -19,10 +23,8 @@ class Image(object):
         return object.__new__(cls)
 
     def __init__(self, inputPath: str, camerasId: int, objectsOnFrame=None, outputPath=None):
-        import services.dateHelper as dh
-        import os
-        filename = os.path.split(inputPath)[1]
-        self.filename = filename
+        self.filename = os.path.split(inputPath)[1]
+        self.date = getDateFromFilename(self.filename)
         self.cameraId = camerasId
         self.inputPath = inputPath
         if outputPath:
@@ -32,23 +34,17 @@ class Image(object):
             self.addDetections(objectsOnFrame)
 
     def __repr__(self):
-        return "{}  with objects: {}".format(self.inputPath, self.objects)
+        return f"{self.inputPath}  with objects: {self.objects}"
 
     def json(self):
-        jsonObjects = []
-        for obj in self.objects:
-            jsonable = obj.json()
-            jsonObjects.append(jsonable)
-        return jsonObjects
+        return [obj.json() for obj in self.objects]
 
     def read(self):
-        binaryImage = cv2.imread(self.inputPath)
-        return binaryImage
+        return cv2.imread(self.inputPath)
 
     def getRGBImage(self):
         binaryImage = self.read()
-        rgbImage = binaryImage[:, :, ::-1]
-        return rgbImage
+        return binaryImage[:, :, ::-1]
 
     def write(self, outputPath, image):
         if outputPath:
@@ -64,37 +60,10 @@ class Image(object):
             elif obj['type'] == "person":
                 self.objects.append(Person(obj))
 
-    def extractObjects(self, binaryImage, outputImageDirectory=None, filename=None):
-        """
-            input:
-                image - source image \n
-                boxes - an array of objects found in the image \n
-                in addition: whether to save the received images
-            output: an array of images of objects
-        """
-        import os
-        objs = []
-        for item in self.objects:
-            y1, x1, y2, x2 = item.coordinates
-            # вырежет все объекты в отдельные изображения
-            cropped = binaryImage[y1:y2, x1:x2]
-            objs.append(cropped)
-            if outputImageDirectory:
-                beforePoint, afterPoint = filename.split(".")
-                outputDirPath = os.path.join(os.path.split(outputImageDirectory)[0], "objectsOn" + beforePoint)
-                if not os.path.exists(outputDirPath):
-                    os.mkdir(outputDirPath)
-                coordinates = str(item).replace(" ", ",")
-                pathToObjectImage = "{}{}.jpg".format(item.type, coordinates)
-
-                cv2.imwrite(os.path.join(outputDirPath, str(pathToObjectImage)), cropped)
-        return objs
-
     def saveImageByPlot(self, outputPath, image):
         """
         plot image saving
         """
-        import matplotlib.pyplot as plt
         fig = plt.figure(frameon=False)
         ax = plt.Axes(fig, [0., 0., 1., 1.])
         ax.set_axis_off()

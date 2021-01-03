@@ -7,8 +7,7 @@
 [![Build Status](https://travis-ci.org/Sapfir0/web-premier-eye.svg?branch=master)](https://travis-ci.org/Sapfir0/web-premier-eye)
 [![Maintainability](https://api.codeclimate.com/v1/badges/ef55c9ea14c7f84c57ef/maintainability)](https://codeclimate.com/github/Sapfir0/premier-eye/maintainability)
 
-It is required to create the data and output folder on the device before starting work, and place the images there for detective work.
-By default, 3 standard ones are downloaded, on which you can test the system.
+Premier-eye required to create the data and output folder on the device before starting work, and place the images there for recognition work.
 
 
 ## Module for detecting objects
@@ -16,13 +15,15 @@ By default, 3 standard ones are downloaded, on which you can test the system.
 Requirements for local use:
 - Python >= 3.6
 
-For run module you need run API & SPA for send data or set 
-variable `sendRequestToServer` in config/config.ini to `false`
+For run module you need run API & SPA for send data or set variable `sendRequestToServer` in Premier-eye.DS/config/config.ini to `false`
 
 Docker use:
 
     cd Premier-eye.DS
     docker-compose up --build
+
+On windows, gpu in docker not implemented now
+On linux, use `nvidia-docker`
 
 ## API & SPA
 

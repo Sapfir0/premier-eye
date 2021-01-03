@@ -11,12 +11,13 @@ services:
       dockerfile: Dockerfile
       context: .
     volumes:
-      - ./data:/data
-      - ./output:/output
+      - .:/ds
+      # потому что у меня может быть много файлов(например, файл со списком обработанных изобржаений), пусть синхронизруется все
     networks:
       - premier-eye_some-net
     environment:
       - API_URL=http://172.18.0.2:8050
+      - NOMEROFF_NET_URL=http://172.18.0.3:5051
     env_file:
       - .env
 
@@ -26,9 +27,10 @@ services:
     image: sapfir0/vehicle_plate_detector
     # restart: unless-stopped
     ports:
-      - 5051:8080
+      - 5051:5051
     volumes:
-      - ./data:/data
+      - ./data:/ds/data
+      # пока волюм не используется, я передаю файл не по ссылке, а по значению
     networks:
       - premier-eye_some-net
     logging:

@@ -19,7 +19,7 @@ def status():
 
 
 # POST multipart
-@app.route('/read')
+@app.route('/read', methods=['POST'])
 def read():
     # можно еще передевать путем, но есть проблема, что контейнеры должны иметь общее volume
     arguments: Dict = request.files.to_dict()

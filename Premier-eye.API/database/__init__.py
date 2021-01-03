@@ -11,8 +11,12 @@ engine_parameters = {
     "pool_pre_ping": True,
     "pool_recycle": 3600,
     "echo": False,
+    "connect_args": {
+    'check_same_thread': False 
+    }
 }
 
+# мета класс тут для того, чтобы 
 class MetaSingleton(type):
     _instances = {}
     def __call__(cls, *args, **kwargs):
@@ -33,7 +37,7 @@ class Database(metaclass=MetaSingleton):
             print("Database founded")
         dbconfig = DatabaseConfig(cfg.APP_PATH, cfg.DATABASE_NAME)
         self.engine = create_engine(dbconfig.DATABASE_PATH, **engine_parameters)
-
+        
         self.session = scoped_session(sessionmaker(autocommit=False, autoflush=False, bind=self.engine))
 
         self.Base = declarative_base()

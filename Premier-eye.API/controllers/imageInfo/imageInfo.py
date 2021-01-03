@@ -46,7 +46,7 @@ class ImageInformation(Resource):
                                 imageId=imageId, coordinatesId=countOfObjectsIndbAPI)
 
             if detected['type'] == 'car':  # TODO кал
-                car = Cars(carNumber=detected['licenseNumber'], objectId=countOfObjectsIndbAPI)
+                car = Cars(carNumber=detected['vehiclePlate'], objectId=countOfObjectsIndbAPI)
                 db.session.add(car)
             elif detected['type'] == 'person':
                 person = Persons(objectId=countOfObjectsIndbAPI)
@@ -58,7 +58,8 @@ class ImageInformation(Resource):
             db.session.add(Object)
 
             db.session.commit()
-            db.session.flush()
+        db.session.flush()
+        make_response({"success": "Info updated"}, 200)
 
 imageInfoIndex = api.parser()
 imageInfoIndex.add_argument('cameraId', location='args', type=str, required=True)

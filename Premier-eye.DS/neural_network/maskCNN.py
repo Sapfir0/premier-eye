@@ -30,13 +30,13 @@ def _parseR(r):
 
 # Mask cnn advanced
 # Configuration that will be used by the Mask-RCNN library
-def getMaskConfig(classCount: int, confidence: float):
+def getMaskConfig(confidence: float):
     class MaskRCNNConfig(mrcnn.config.Config):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
         DETECTION_MIN_CONFIDENCE = confidence  # минимальный процент отображения прямоугольника
-        NUM_CLASSES = classCount
+        NUM_CLASSES = 81
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
@@ -48,20 +48,18 @@ class Mask(object):
     """
         Mask R-CNN
     """
-    SAVE_COLORMAP = False
     CLASS_NAMES: List[str] = []
-    COLORS = None
-    model = None
-    hasOldFrame = False
+    COLORS: List[str] = []
+    model: MaskRCNN = None
 
     def __init__(self):
         self.CLASS_NAMES = classes
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
-        model = getMaskConfig(len(classes), float(config.detectionMinConfidence))
+        model = getMaskConfig(float(config.detectionMinConfidence))
         self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=model)
-        self.model.load_weights(config.DATASET_DIR, by_name=True, exclude=[ "mrcnn_class_logits", "mrcnn_bbox_fc", "mrcnn_bbox", "mrcnn_mask"])
+        self.model.load_weights(config.DATASET_DIR, by_name=True)
 
-    @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
+    @timeChecker.checkElapsedTimeAndCompair(4, 2, 1, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
         """
             almost main
@@ -94,7 +92,6 @@ class Mask(object):
         for i, currentObject in enumerate(image.objects):
             if currentObject.type not in config.availableObjects:
                 continue
-
             y1, x1, y2, x2 = currentObject.coordinates
 
             lineInClassName = self.CLASS_NAMES.index(currentObject.type)

@@ -8,10 +8,15 @@ from services.apiWorkers.apiInteractionService import ApiInteractionService
 from neural_network.maskCNN import Mask
 from neural_network.vehiclePlateAdapter import detectPlate
 from Models.Car import Car
+from services.cameraLogger import CameraLogger
+import time
+import services.timeChecker as timeChecker
+
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
-
+cameraLogger = CameraLogger(0)
+api = ApiInteractionService(config)
 
 def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
     """
@@ -36,7 +41,6 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
 
         if filename in processedFrames[numberOfCam]:
             if processedFrames[numberOfCam] == filenames:
-                import time
                 print(f"Thread {numberOfCam} sleeping")
                 time.sleep(2.5)
             continue  # если файлы еще есть, то переходим к следующему
@@ -46,21 +50,22 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
         fileController.writeInFile(config.DATE_FILE, str(processedFrames))
         # будет стирать содержимое файла каждый кадр
 
-
 def carNumberDetector(filename, image: Image):
     for i, item in enumerate(image.objects):
         if image.cameraId in [1, 2] and isinstance(item, Car):
-            imD = os.path.join(os.path.split(image.outputPath)[0], "objectsOn" + filename.split(".")[0])
-            numberPlatesInfo = detectPlate(imD) 
-            image.objects[i].licenceNumber = numberPlatesInfo['number_plates']
+            numberPlatesInfo = detectPlate(image.outputPath, api) 
+            image.objects[i].vehiclePlate = "".join(numberPlatesInfo['number_plates'])
 
 
 def detectObjects(filename):
-    api = ApiInteractionService(config)
     inputFile, outputFile, dateTime = dirs.getIOdirs(filename, config.IMAGE_DIR, config.OUTPUT_DIR_MASKCNN)
 
     image = mask.pipeline(inputFile, outputFile)
+    
+    for obj in image.objects:
+        cameraLogger.log(f"{obj.type} on camera", image.cameraId, image.date)
 
+    print(image.objects)
     if config.carNumberDetector:
         carNumberDetector(filename, image)
 
@@ -68,6 +73,4 @@ def detectObjects(filename):
         api.uploadImage(outputFile)
         api.postImageInfo(outputFile, image)
 
-
-    dirs.removeDirectoriesFromPath(os.path.split(outputFile)[0])  # т.к. создаются директории с объектами, можно просто удалить их в конце
     return image

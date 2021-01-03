@@ -1,8 +1,10 @@
 import requests as _
 from services.apiWorkers.apiInteractionService import ApiInteractionService
 from config.settings import Settings
+import services.timeChecker as timeChecker
 
-def detectPlate(fullImagePath):
-    files = [('file', (filename, open(imagePath, 'rb'), 'image/jpg'))]
-    return ApiInteractionService.post('/read', files=files, host=Settings.nomeroffNetLink)
+@timeChecker.checkElapsedTimeAndCompair(7, 3, 2, "Car plate detecting")
+def detectPlate(fullImagePath, api: ApiInteractionService):
+    files = [('file', ('myimg', open(fullImagePath, 'rb'), 'image/jpg'))]
+    return api.post('/read', files=files, host=Settings.nomeroffNetLink)
     

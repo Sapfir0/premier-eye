@@ -12,8 +12,8 @@ class DatabaseConfig:
     APP_PATH = ''
 
     def __init__(self, APP_PATH, DATABASE_NAME):
-        self.DATABASE_PATH = self.getDatabasePath(databasesDialect.sqlite, DATABASE_NAME)
         self.APP_PATH = APP_PATH
+        self.DATABASE_PATH = self.getDatabasePath(databasesDialect.sqlite, DATABASE_NAME)
 
     def getDatabasePath(self, dialect: databasesDialect, dbName):
         if dialect.sqlite == dialect:
