@@ -13,7 +13,7 @@ class ApiHelper:
                 raise Exception(f"[strongRequestChecking] Завершаю работу, запрос вернулся с кодом {req.status_code}.")
             
             return req.json()
-        
+        print(req.json())
         return req.json()
 
 

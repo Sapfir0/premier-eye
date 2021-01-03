@@ -14,9 +14,12 @@ RUN git clone https://github.com/ria-com/nomeroff-net.git \
   && pip install --no-cache-dir -r requirements.txt \
   && git clone https://github.com/youngwanLEE/centermask2.git
 
+COPY predownload.py .
+RUN python3 predownload.py
+
 COPY . /var/www/nn
 WORKDIR /var/www/nn
 
 # ENTRYPOINT [ "/bin/bash" ]
-CMD ["waitress-serve", "--call", "main:create_app"]
+CMD ["python3", "main.py"]
 

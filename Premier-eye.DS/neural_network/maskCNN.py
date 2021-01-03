@@ -12,6 +12,8 @@ from Models.Image import Image
 from mrcnn.model import MaskRCNN
 from services.classNames import classes
 from colorama import Fore
+from typing import List
+
 
 def _parseR(r):
     detections = []
@@ -47,7 +49,7 @@ class Mask(object):
         Mask R-CNN
     """
     SAVE_COLORMAP = False
-    CLASS_NAMES = None
+    CLASS_NAMES: List[str] = []
     COLORS = None
     model = None
     hasOldFrame = False
