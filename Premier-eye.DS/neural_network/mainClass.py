@@ -10,6 +10,8 @@ from neural_network.vehiclePlateAdapter import detectPlate
 from Models.Car import Car
 from services.cameraLogger import CameraLogger
 import time
+import services.timeChecker as timeChecker
+
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
@@ -47,7 +49,6 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
         processedFrames[numberOfCam].append(filename)
         fileController.writeInFile(config.DATE_FILE, str(processedFrames))
         # будет стирать содержимое файла каждый кадр
-
 
 def carNumberDetector(filename, image: Image):
     for i, item in enumerate(image.objects):

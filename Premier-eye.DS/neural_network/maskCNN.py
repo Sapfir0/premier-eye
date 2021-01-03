@@ -59,7 +59,7 @@ class Mask(object):
         self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=model)
         self.model.load_weights(config.DATASET_DIR, by_name=True)
 
-    @timeChecker.checkElapsedTimeAndCompair(7, 5, 3, "Mask detecting")
+    @timeChecker.checkElapsedTimeAndCompair(4, 2, 1, "Mask detecting")
     def pipeline(self, inputPath: str, outputPath: str = None):
         """
             almost main
