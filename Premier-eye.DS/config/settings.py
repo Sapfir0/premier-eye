@@ -52,7 +52,7 @@ class Settings:
         dirs.createDirsFromList(must_exist_dirs)
         others.checkVersion(self.config.get('FixedParams', 'packages').split())
 
-        if not os.path.isfile(self.DATE_FILE):  # это создание файла
+        if not os.path.isfile(self.DATE_FILE):  
             with open(self.DATE_FILE, "w") as f:
                 f.close()
 

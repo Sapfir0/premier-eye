@@ -41,7 +41,7 @@ export default class Slider extends React.Component<ISlider> {
     }
 
     render() {
-        console.log("reslider")
+        // console.log("reslider")
         return (
             <div className="slider">
                 <CamerasList

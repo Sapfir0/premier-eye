@@ -13,7 +13,7 @@ export interface ISliderBlock extends IBaseSliderBlock {
     changeCurrentStep: (step: number) => void
 }
 
-export class MobileProgressBar extends React.Component<ISliderBlock> {
+export class MaterialStepeer extends React.Component<ISliderBlock> {
     render() {
         return <>
             <MobileStepper

@@ -1,7 +1,8 @@
 import React from 'react';
 import NotFoundImage from "../../Atomics/NotFoundImage";
 import "./ImageView.pcss"
-import { IBaseSliderBlock, ISliderBlock, MobileProgressBar } from "./ProgressBar/MobileProgressBar"
+import { IBaseSliderBlock, ISliderBlock, MaterialStepeer } from "./ProgressBar/MobileProgressBar"
+import {CustomStepper} from "./ProgressBar/CustomStepper"
 import {DesktopProgressBar} from "./ProgressBar/DesktopProgressBar"
 import SwipeableViews from "react-swipeable-views"
 import { ApiRoutes, API_URL } from '../../../config/apiRoutes';
@@ -44,7 +45,7 @@ export default class ImageView extends React.Component<IImageView> {
                     ))}
                 </SwipeableViews>
 
-                <DesktopProgressBar {...this.props} />
+                <CustomStepper {...this.props} />
             </div>
         );
     }

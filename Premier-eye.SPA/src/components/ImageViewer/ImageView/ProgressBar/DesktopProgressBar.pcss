@@ -2,11 +2,27 @@
     border: 1px solid black;
     height: 20px;
     background-color: silver;
+    width: inherit;
 }
 .inside {
-    height: 100%;
-    background-color: firebrick;
-    overflow: visible;
+    height: 20px;
+    background-color: transparent;
+    z-index: 9999;
+    float: left;
+    /* border-right: 1px solid black; */
+    /* overflow: visible;
     color: white;
-    white-space: nowrap;
+    white-space: nowrap; */
 }  
+
+.pointsContainer {
+    display: flex;
+    margin-top: -20px;
+}
+
+.progress {
+    z-index: 1;
+    /* position: absolute; */
+    background-color: tomato;
+    height: 20px;
+}
