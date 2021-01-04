@@ -7,10 +7,12 @@ class Object_(ABC):
     id: int = 0
     scores: List[float] = []
     coordinates: List[int] = []  # LDx, LDy, RUx, RUy
+    masks: List[bool] = []
 
     def __init__(self, detections):
         self.coordinates = detections['coordinates'].tolist()
         self.scores = detections['scores'].item()
+        self.masks = detections['masks']
 
     def __repr__(self):
         return f"type: {self.type}, scores: {self.scores}"

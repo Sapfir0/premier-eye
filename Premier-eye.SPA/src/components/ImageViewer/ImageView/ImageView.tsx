@@ -2,6 +2,7 @@ import React from 'react';
 import NotFoundImage from "../../Atomics/NotFoundImage";
 import "./ImageView.pcss"
 import { IBaseSliderBlock, ISliderBlock, MobileProgressBar } from "./ProgressBar/MobileProgressBar"
+import {DesktopProgressBar} from "./ProgressBar/DesktopProgressBar"
 import SwipeableViews from "react-swipeable-views"
 import { ApiRoutes, API_URL } from '../../../config/apiRoutes';
 import { observable } from 'mobx';
@@ -43,7 +44,7 @@ export default class ImageView extends React.Component<IImageView> {
                     ))}
                 </SwipeableViews>
 
-                <MobileProgressBar {...this.props} />
+                <DesktopProgressBar {...this.props} />
             </div>
         );
     }

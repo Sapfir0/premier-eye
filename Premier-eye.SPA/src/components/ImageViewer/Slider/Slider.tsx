@@ -66,7 +66,6 @@ export default class Slider extends React.Component<ISlider> {
                         info={this.props.store.imageInfo}
                     />
                 }
-                <ChangeDateButton />
                 {
                     this.props.store.errors &&
                     <ErrorMessageList errors={this.props.store.errors} />
