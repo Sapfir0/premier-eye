@@ -19,8 +19,7 @@ def _parseR(r):
     objectsCount = len(r['rois'])
     return [{'coordinates': r['rois'][i],
              'type': r['class_ids'][i],
-             'scores': r['scores'][i],
-             'masks': r['masks'][i]} for i in range(objectsCount)]
+             'scores': r['scores'][i]} for i in range(objectsCount)]
 
 
 # Mask cnn advanced
@@ -32,7 +31,7 @@ def getMaskConfig(confidence: float):
         IMAGES_PER_GPU = 1
         # минимальный процент отображения прямоугольника
         DETECTION_MIN_CONFIDENCE = confidence
-        NUM_CLASSES = 81
+        NUM_CLASSES = len(classes)
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
@@ -71,15 +70,17 @@ class Mask(object):
         img = Image(inputPath, int(cameraId), outputPath=outputPath)
         binaryImage = img.read()
 
-        detections = _parseR(self._humanizeTypes(self._detectByMaskCNN(img)))
+        rowDetections = self._detectByMaskCNN(img)
+        detections = _parseR(self._humanizeTypes(rowDetections))
+
         img.addDetections(detections) 
 
-        signedImg = self._visualize_detections(img)
+        signedImg = self._visualize_detections(img, rowDetections['masks'], drawMask=False)
 
         img.write(outputPath, signedImg)
         return img
 
-    def _visualize_detections(self, image: Image) -> np.ndarray:
+    def _visualize_detections(self, image: Image, masks, drawMask=False) -> np.ndarray:
         """
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
@@ -100,8 +101,9 @@ class Mask(object):
             text = "{}: {:.1f}".format(
                 currentObject.type, currentObject.scores * 100)
 
-            # mask = currentObject.masks  # берем срез
-            # bgr_image = mrcnn.visualize.apply_mask(bgr_image, mask, color, alpha=0.6) # рисование маски
+            if (drawMask):
+                mask = masks[:, :, i]   # берем срез
+                bgr_image = mrcnn.visualize.apply_mask(bgr_image, mask, color, alpha=0.6) # рисование маски
 
             cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, thickness)
             cv2.putText(bgr_image, text, (x1, y1 - 20), font, fontScale, color, thickness)
