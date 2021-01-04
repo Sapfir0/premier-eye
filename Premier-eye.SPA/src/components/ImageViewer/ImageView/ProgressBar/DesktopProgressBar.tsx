@@ -23,8 +23,6 @@ export const DesktopProgressBar = (props: ISliderBlock) => {
 
     const onMouseEnter = (frameIndex: number) => (e: React.MouseEvent<HTMLDivElement>) => {
     }
-
-    console.log(range(props.images.length));
     
     return <>
         <BackButton {...props} isDisabled={props.currentStep === 0} />
