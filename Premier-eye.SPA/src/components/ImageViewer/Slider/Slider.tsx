@@ -52,7 +52,7 @@ export default class Slider extends React.Component<ISlider> {
                 {
                     this.props.store.camera && this.props.store.camera.images &&
                     <ImageView
-                        currentStep={this.props.store.stepMap.get(this.props.store.camera.id)!}
+                        currentStep={this.props.store.stepMap.get(this.props.store.camera.id) ?? 0}
                         changeCurrentStep={this.handleCurrentStepChange}
                         images={this.props.store.camera.images}
                         updateStateByInfo={this.props.store.getInfoImage}

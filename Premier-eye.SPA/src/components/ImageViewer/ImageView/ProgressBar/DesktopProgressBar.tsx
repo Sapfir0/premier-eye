@@ -1,47 +1,44 @@
 import React, { useRef, useState, useEffect } from "react";
 import { ISliderBlock } from "./MobileProgressBar";
 import "./DesktopProgressBar.pcss"
+import { BackButton, NextButton } from "../Buttons";
+import {range} from "../../../../services/utils"
+
+
+const toPixels = (num: number) => `${num}px`
 
 
 export const DesktopProgressBar = (props: ISliderBlock) => {
-    const [progress, setProgress] = useState(props.currentStep + 'px')
-    const [playerWidth, setPlayerWidth] = useState(0)
+    const [playerWidth, setPlayerWidth] = useState(600)
+    const frameLength = playerWidth / props.images.length
 
-    length = playerWidth / props.images.length
-
-    const marginLeft: number[] = []
-    for (let i = 0; i < props.images.length; i++) {
-        marginLeft.push(length * (i))
-    }
-
+    const ref = useRef(null);
+    useEffect(() => {
+        setPlayerWidth( ref !== null && ref.current !== null ? ref.current.offsetWidth : 0)
+    }, [ref.current]);
 
     const moving = (frameIndex: number) => (e: React.MouseEvent<HTMLDivElement>) => {
-        const rawOffset = frameIndex * length + e.nativeEvent.offsetX
-        const leftOffset = Math.max(...marginLeft.filter((val) => val < rawOffset))
-
         props.changeCurrentStep(frameIndex)
-        setProgress(leftOffset + 'px')
     }
 
     const onMouseEnter = (frameIndex: number) => (e: React.MouseEvent<HTMLDivElement>) => {
     }
 
-    const ref = useRef(null);
-    useEffect(() => {
-        setPlayerWidth(ref.current ? ref.current.offsetWidth : 0)
-    }, [ref.current]);
-
-
+    console.log(range(props.images.length));
+    
     return <>
+        <BackButton {...props} isDisabled={props.currentStep === 0} />
         <div ref={ref} className="outside" >
-            <div className="progress" style={{ width: progress }}></div>
+            <div className="progress" style={{ width: toPixels(props.currentStep*frameLength) }}></div>
             <div className='pointsContainer'>
-                {marginLeft.map((margin, i) => {
-                    return <div className="inside" onMouseEnter={onMouseEnter(i)} style={{ width: length }} onClick={moving(i)}>
+                {range(props.images.length).map((empty, i) => 
+                     <div className="inside" onMouseEnter={onMouseEnter(i)} style={{ width: frameLength }} onClick={moving(i)}>
                        
                     </div>
-                })}
+                )}
             </div>
+        <NextButton {...props} isDisabled={props.currentStep === props.images.length - 1} />
+
         </div>
     </>
 }
