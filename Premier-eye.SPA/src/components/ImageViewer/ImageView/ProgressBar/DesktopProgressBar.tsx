@@ -25,7 +25,6 @@ export const DesktopProgressBar = (props: ISliderBlock) => {
     }
     
     return <>
-        <BackButton {...props} isDisabled={props.currentStep === 0} />
         <div ref={ref} className="outside" >
             <div className="progress" style={{ width: toPixels(props.currentStep*frameLength) }}></div>
             <div className='pointsContainer'>
@@ -35,7 +34,6 @@ export const DesktopProgressBar = (props: ISliderBlock) => {
                     </div>
                 )}
             </div>
-        <NextButton {...props} isDisabled={props.currentStep === props.images.length - 1} />
 
         </div>
     </>

@@ -18,6 +18,7 @@
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@sweet-monads/either": "^2.1.4",
     "axios": "^0.20.0",
+    "fp-ts": "^2.9.3",
     "immutable": "^4.0.0-rc.12",
     "inversify": "^5.0.1",
     "mobx": "^6.0.4",

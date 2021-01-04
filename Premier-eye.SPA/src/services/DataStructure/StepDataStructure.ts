@@ -15,7 +15,8 @@ export default class StepDataStructure {
     }
 
     public getCurrentStep = (cameraId: CameraId) => {
-        return this.steps.get(cameraId)
+        const step = this.steps.get(cameraId) 
+        return step === undefined ? 0 : step
     }
 
     public changeStepOnCurrentCamera = (cameraId: CameraId, currentStep: CurrentStep) => {
