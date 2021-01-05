@@ -6,7 +6,7 @@
 export interface definitions {
   ImageList: { items: definitions["Image"][] };
   Image: { id: string; src: string };
-  "DTOCamera": { name: string };
+  "DTO/Camera": { name: string };
   Camera: {
     id: string;
     name?: string;

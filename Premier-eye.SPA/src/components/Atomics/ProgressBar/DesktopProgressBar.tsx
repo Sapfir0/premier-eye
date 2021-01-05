@@ -45,7 +45,7 @@ export const DesktopProgressBar = (props: IStepper) => {
         <>
             <div ref={ref} className="outside" style={{borderWidth: borderWidth}}>
                 <div className="progress" style={{width: toPixels(getProgress())}}/>
-                {/*<div className="tip" style={{}}>{frameTime}</div>*/}
+                {/*<div className="tip" >{frameTime}</div>*/}
                 <div className="pointsContainer">
                     {props.images.map((empty, i) => (
                         <div

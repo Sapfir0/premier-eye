@@ -26,9 +26,10 @@ export class SliderStore {
         this.galleryFetcher = galleryFetcher;
         this.cameraFetcher = cameraFetcher;
         makeObservable(this);
-    }
 
-    // зациклить вызов камера лист каждые 2.9 сек
+        setInterval(() => this.changeCurrentCamera(this.camera!.id), 2900);
+        // нужно подписаться на обновление списка камер и на обновление списка изображений
+    }
 
     @action
     public async getCameraList() {
@@ -42,7 +43,7 @@ export class SliderStore {
                 this.errors.push(either.left);
             } else {
                 this.camerasList = either.right;
-                console.log(this.camerasList);
+                // console.log(this.camerasList);
             }
         });
     }

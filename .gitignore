@@ -11,6 +11,8 @@ dist
 npm-debug.log*
 *.log
 
+nomeroff-net
+
 schema.json
 # Editor directories and files
 .idea
