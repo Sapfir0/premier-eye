@@ -1,7 +1,7 @@
 import {API_URL, ApiRoutes} from "../config/apiRoutes";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../typings/types";
-import {Either} from "@sweet-monads/either";
+import {Either} from "fp-ts/Either";
 import {IApiInteractionService, IBaseInteractionService} from "./typings/ApiTypes";
 import BaseInteractionService from "./BaseInteractionService";
 import {AxiosRequestConfig} from "axios";
