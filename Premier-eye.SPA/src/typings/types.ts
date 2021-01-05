@@ -1,5 +1,3 @@
-import {IApiInteractionService} from "../services/typings/ApiTypes";
-
 
 const TYPES = {
     ApiHelper: Symbol.for('ApiHelper'),
@@ -11,7 +9,7 @@ const TYPES = {
     SliderStore: Symbol.for('SliderStore'),
     ImageInfoStore: Symbol.for('ImageInfoStore'),
     AreaMapStore: Symbol.for('AreaMapStore'),
+};
 
-}
+export { TYPES };
 
-export { TYPES }

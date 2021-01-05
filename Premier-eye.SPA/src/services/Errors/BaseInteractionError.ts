@@ -1,12 +1,10 @@
-import {ClientRouteType} from "../../config/clientRoutes";
 
 export class BaseInteractionError extends Error {
-    message: string
+    message: string;
 
     constructor(message: string) {
         super();
-        this.name = "BaseInteractionError"
-        this.message = message
-
-
-    }}
+        this.name = 'BaseInteractionError';
+        this.message = message;
+    }
+}

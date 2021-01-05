@@ -1,15 +1,13 @@
-
 const ClientRoutes = {
-    NotFound: "/notFound",
-    Forbidden: "/forbidden",
-    BadGateway: "/badGateway",
-    Index: "/home",
+    NotFound: '/notFound',
+    Forbidden: '/forbidden',
+    BadGateway: '/badGateway',
+    Index: '/home',
     Settings: '/settings',
-    AreaMap: '/map'
+    AreaMap: '/map',
+} as const;
 
-} as const
+export type ClientRouteType = typeof ClientRoutes[keyof typeof ClientRoutes];
 
-export type ClientRouteType = typeof ClientRoutes[keyof typeof ClientRoutes]
+export { ClientRoutes };
 
-
-export {ClientRoutes}

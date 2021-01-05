@@ -1,56 +1,60 @@
-import React from "react";
-import { Divider, List, ListItem, ListItemText } from "@material-ui/core";
-import { withStyles } from '@material-ui/core/styles';
-import TitledCameraNumber from "../Atomics/TitledCameraNumber";
-import { definitions } from "../../typings/Dto";
-import { ICollapse, ImageInfoStore } from "./ImageInfoStore"
-import { WarningIfBigDiffBetweenDates } from "../Atomics/Warning/Warning"
-import { observer } from "mobx-react";
-import { CollapsableData, ObjectInfo } from "./Widgets/ObjectInfo";
-import "./ImageInfo.pcss"
-import Alert from "@material-ui/lab/Alert";
-import { getDiffDay } from "../../services/Time";
-
+import { List, ListItem } from '@material-ui/core';
+import Alert from '@material-ui/lab/Alert';
+import { observer } from 'mobx-react';
+import React from 'react';
+import { getDiffDay } from '../../services/Time';
+import { definitions } from '../../typings/Dto';
+import TitledCameraNumber from '../Atomics/TitledCameraNumber';
+import { WarningIfBigDiffBetweenDates } from '../Atomics/Warning/Warning';
+import './ImageInfo.pcss';
+import { ImageInfoStore } from './ImageInfoStore';
+import { CollapsableData, ObjectInfo } from './Widgets/ObjectInfo';
 
 interface IImageInfo {
-    info: definitions['ImageInfo'],
-    store: ImageInfoStore<definitions['ObjectInfo']>
-    cameraOnlineDate: Date
+    info: definitions['ImageInfo'];
+    store: ImageInfoStore<definitions['ObjectInfo']>;
+    cameraOnlineDate: Date;
 }
-
 
 @observer
 export default class ImageInfo extends React.Component<IImageInfo> {
     constructor(props: IImageInfo) {
-        super(props)
+        super(props);
     }
 
-    getObjectsUIRepresentation = (data: Array<CollapsableData>) =>
+    getObjectsUIRepresentation = (data: Array<CollapsableData>) => (
         <List component="nav">
-            {data.map((el: CollapsableData) =>
+            {data.map((el: CollapsableData) => (
                 <ObjectInfo store={this.props.store} key={el.id} element={el} />
-            )}
+            ))}
         </List>
+    );
 
     getOldImageWarning = (imageDate: Date) => {
-        const diff = getDiffDay(imageDate, new Date())
-        
-        return <ListItem><Alert severity="error" >{ diff > 1 && <span>Изображений не было уже {diff} дней</span> }</Alert> </ListItem>
-    }
+        const diff = getDiffDay(imageDate, new Date());
+
+        return (
+            <ListItem>
+                <Alert severity="error">{diff > 1 && <span>Изображений не было уже {diff} дней</span>}</Alert>{' '}
+            </ListItem>
+        );
+    };
 
     render() {
-        const myData = this.props.info
+        const myData = this.props.info;
 
         let objects: JSX.Element | undefined;
         if (myData.objects && myData.objects.length !== 0) {
             if (this.props.store.collapses.length === 0) {
-                this.props.store.setCollapses(myData.objects)
+                this.props.store.setCollapses(myData.objects);
             }
-            objects = this.getObjectsUIRepresentation(this.props.store.collapses)
+            objects = this.getObjectsUIRepresentation(this.props.store.collapses);
         }
 
-        const warningDateDiff = WarningIfBigDiffBetweenDates(new Date(myData.createdAt), new Date(myData.fixationDatetime));
-
+        const warningDateDiff = WarningIfBigDiffBetweenDates(
+            new Date(myData.createdAt),
+            new Date(myData.fixationDatetime),
+        );
 
         return (
             <div className="imageInfo">
@@ -59,8 +63,11 @@ export default class ImageInfo extends React.Component<IImageInfo> {
                         <TitledCameraNumber cameraId={myData.numberOfCam} />
                     </ListItem>
                     <ListItem> {myData.filename} </ListItem>
-                    <ListItem> {myData.fixationDatetime.toString()} {warningDateDiff}</ListItem>
-                    
+                    <ListItem>
+                        {' '}
+                        {myData.fixationDatetime.toString()} {warningDateDiff}
+                    </ListItem>
+
                     {objects}
                     {this.getOldImageWarning(this.props.cameraOnlineDate)}
                 </List>
@@ -68,4 +75,3 @@ export default class ImageInfo extends React.Component<IImageInfo> {
         );
     }
 }
-

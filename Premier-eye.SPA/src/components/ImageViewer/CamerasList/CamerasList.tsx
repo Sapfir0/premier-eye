@@ -1,13 +1,12 @@
-import React from 'react';
 import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
+import React from 'react';
 import { definitions } from '../../../typings/Dto';
-import "./CamerasList.pcss"
-import {BaseCamerasList} from "./BaseCamerasMenu"
+import { BaseCamerasList } from './BaseCamerasMenu';
+import './CamerasList.pcss';
 
 interface IProps {
-    cameras: definitions['CameraList']
-    onCameraChange: (cameraId: string) => void
+    cameras: definitions['CameraList'];
+    onCameraChange: (cameraId: string) => void;
 }
 
 class CamerasList extends React.Component<IProps> {
@@ -18,7 +17,7 @@ class CamerasList extends React.Component<IProps> {
     handleListItemClick = (cameraId: string) => () => {
         this.props.onCameraChange(cameraId);
         // console.log("Кликнули на камеру ", cameraId);
-    }
+    };
 
     render() {
         return (
@@ -29,8 +28,6 @@ class CamerasList extends React.Component<IProps> {
             </div>
         );
     }
-
-
 }
 
-export default CamerasList
+export default CamerasList;
