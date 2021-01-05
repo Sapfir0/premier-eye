@@ -1,4 +1,4 @@
-name: vehiclePlate
+name: fullSystem
 
 on: [push]
 
