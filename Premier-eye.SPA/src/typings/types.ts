@@ -7,6 +7,7 @@ const TYPES = {
     CameraApiInteractionService: Symbol.for('CameraApiInteractionService'),
 
     SliderStore: Symbol.for('SliderStore'),
+    SettingsStore: Symbol.for('SettingsStore'),
     ImageInfoStore: Symbol.for('ImageInfoStore'),
     AreaMapStore: Symbol.for('AreaMapStore'),
 };

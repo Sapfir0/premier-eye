@@ -9,11 +9,16 @@ $progress-height: 20px;
     width: inherit;
 }
 .inside {
-    height: 100%;
+    height: $progress-height;
     background-color: transparent;
     z-index: 9999;
     float: left;
-}  
+}
+.tip {
+    //margin-top: -40px;
+    width: auto;
+    z-index: 9999;
+}
 
 .controls {
     display: flex;
@@ -28,5 +33,5 @@ $progress-height: 20px;
 .progress {
     z-index: 1;
     background-color: tomato;
-    height: 100%;
+    height: $progress-height;
 }

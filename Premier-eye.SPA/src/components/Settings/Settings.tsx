@@ -4,15 +4,16 @@ import React from 'react';
 import { HeaderName, HeadersBaseSettings } from '../../typings/common';
 import { BaseTableLayout } from '../Base/BaseTableLayout';
 import { SliderStore } from '../ImageViewer/Slider/SliderStore';
+import {SettingsStore} from "./SettingsStore";
 
 export interface ISettings {
-    sliderStore: SliderStore;
+    sliderStore: SettingsStore;
 }
 
 @observer
 export class Settings extends React.Component<ISettings> {
     componentDidMount() {
-        this.props.sliderStore.getCameraList();
+        // this.props.sliderStore.getCameraList();
     }
 
     addNewCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
