@@ -2,13 +2,12 @@ import { Either, isLeft } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { BaseInteractionError } from 'services/Errors/BaseInteractionError';
-import { ICameraApiInteractionService, IGalleryApiInteractionService } from 'services/typings/ApiTypes';
-import {TYPES} from "../../typings/types";
-import {definitions} from "../../typings/Dto";
+import { ICameraApiInteractionService } from 'services/typings/ApiTypes';
+import { definitions } from '../../typings/Dto';
+import { TYPES } from '../../typings/types';
 
 @injectable()
 export class SettingsStore {
-
     @observable errors: BaseInteractionError[] = [];
     @observable camerasList: definitions['CameraList'] = { items: [] };
 
@@ -17,9 +16,7 @@ export class SettingsStore {
 
     private readonly cameraFetcher: ICameraApiInteractionService;
 
-    constructor(
-        @inject(TYPES.CameraApiInteractionService) cameraFetcher: ICameraApiInteractionService,
-    ) {
+    constructor(@inject(TYPES.CameraApiInteractionService) cameraFetcher: ICameraApiInteractionService) {
         this.cameraFetcher = cameraFetcher;
         makeObservable(this);
     }
@@ -35,8 +32,8 @@ export class SettingsStore {
     };
 
     @action
-    public async addNewCamera(cameraDto: definitions['DTOCamera']) {
-        const either: Either<BaseInteractionError, definitions['DTOCamera']> = await this.cameraFetcher.addNewCamera(
+    public async addNewCamera(cameraDto: definitions['DTO/Camera']) {
+        const either: Either<BaseInteractionError, definitions['DTO/Camera']> = await this.cameraFetcher.addNewCamera(
             cameraDto,
         );
 
@@ -48,5 +45,4 @@ export class SettingsStore {
             }
         });
     }
-
 }
