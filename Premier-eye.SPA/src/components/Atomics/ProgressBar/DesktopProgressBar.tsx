@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { range } from '../../../services/utils';
+import { getDatetimeFromFilename } from '../../../services/DateFormatter';
 import { IStepper } from '../../ImageViewer/ImageView/Steppers/IStepper';
 import './DesktopProgressBar.pcss';
-import {getDatetimeFromFilename} from "../../../services/DateFormatter";
 
 const toPixels = (num: number) => `${num}px`;
 
@@ -11,7 +10,7 @@ export const DesktopProgressBar = (props: IStepper) => {
     const frameLength = playerWidth / props.images.length;
 
     const [frameTime, setFrameTime] = useState('');
-
+    const borderWidth = 1;
     const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
         setPlayerWidth(ref.current !== null ? ref.current!.offsetWidth : 0);
@@ -22,21 +21,27 @@ export const DesktopProgressBar = (props: IStepper) => {
     };
 
     const onMouseEnter = (frameIndex: number) => (e: React.MouseEvent<HTMLDivElement>) => {
-
-        const src = props.images[frameIndex].src
+        const src = props.images[frameIndex].src;
         const datetime = getDatetimeFromFilename(src);
         if (datetime !== null) {
             const time = `${datetime.getHours()}:${datetime.getMinutes()}:${datetime?.getSeconds()}`;
             setFrameTime(time);
         }
+    };
 
+    const getProgress = () => {
+        // если шаг последний, то указатеь в конец
+        // если первый, то указатель в начало
+        // если нет, то в серидину длины текущего отрезка, а не в его начало
+        if (props.currentStep == 0) return 0;
+        if (props.currentStep === props.images.length - 1) return playerWidth - borderWidth * 2;
+        return props.currentStep * frameLength + frameLength / 2;
     };
 
     return (
         <>
-            <div ref={ref} className="outside">
-
-                <div className="progress" style={{ width: toPixels(props.currentStep * frameLength) }} />
+            <div ref={ref} className="outside" style={{ borderWidth: borderWidth }}>
+                <div className="progress" style={{ width: toPixels(getProgress()) }} />
                 <div className="pointsContainer">
                     {props.images.map((empty, i) => (
                         <div

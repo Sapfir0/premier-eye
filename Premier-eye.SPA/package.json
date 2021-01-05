@@ -23,6 +23,8 @@
     "inversify": "^5.0.1",
     "mobx": "^6.0.4",
     "mobx-react": "^7.0.5",
+    "postcss": "^8.2.2",
+    "postcss-simple-vars": "^6.0.2",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-router-dom": "^5.1.2",
