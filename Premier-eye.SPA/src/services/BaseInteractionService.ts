@@ -1,10 +1,9 @@
 import axios, {AxiosRequestConfig, AxiosResponse} from "axios";
-import ApiHelper from "./ApiHelper";
 import {inject, injectable} from "inversify";
 import {TYPES} from "../typings/types";
 import {NetworkError} from "./Errors/NetworkError";
 import * as qs from "querystring"
-import {Either, mapLeft, map, getOrElse, filterOrElse, filterOrElseW, fold, fromPredicate, chain} from "fp-ts/Either";
+import {bimap, Either} from "fp-ts/Either";
 import {IApiHelper, IBaseInteractionService} from "./typings/ApiTypes";
 import {BaseInteractionError} from "./Errors/BaseInteractionError";
 
@@ -44,19 +43,11 @@ class BaseInteractionService implements IBaseInteractionService {
         }
         const req = axios.request<T>({...newConfig})
         const response = await this._api.request<T>(req)
-        console.log(response)
-        const either = chain(
+
+        return bimap(
             (e: NetworkError) => new BaseInteractionError(e.message),
             (res: AxiosResponse<T>) => res.data
         )(response)
-
-        console.log(either)
-        return either
-        // const either = response
-        //     .mapLeft((e: NetworkError) => new BaseInteractionError(e.message))
-        //     .mapRight((res: AxiosResponse<T>) => res.data)
-        //
-        // return either
     }
 
 

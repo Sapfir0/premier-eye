@@ -12,9 +12,9 @@ export const DesktopProgressBar = (props: IStepper) => {
     const [playerWidth, setPlayerWidth] = useState(600)
     const frameLength = playerWidth / props.images.length
 
-    const ref = useRef(null);
+    const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
-        setPlayerWidth( ref.current !== null ? ref.current.offsetWidth  : 0)
+        setPlayerWidth( ref.current !== null ? ref.current!.offsetWidth  : 0)
     }, [ref.current]);
 
     const moving = (frameIndex: number) => (e: React.MouseEvent<HTMLDivElement>) => {
