@@ -1,25 +1,21 @@
-import { makeStyles } from "@material-ui/core/styles";
-import AppBar from "@material-ui/core/AppBar";
-import Toolbar from "@material-ui/core/Toolbar";
-import { Link, NavLink, Route, Switch } from "react-router-dom";
-import SettingsIcon from "@material-ui/icons/Settings";
-import React from "react";
-import Button from "@material-ui/core/Button"
-import { ClientRoutes } from "../../config/clientRoutes";
-import "./Header.pcss"
-import { useLocation } from 'react-router-dom'
+import Button from '@material-ui/core/Button';
+import React from 'react';
+import { NavLink } from 'react-router-dom';
+import { ClientRoutes } from '../../config/clientRoutes';
+import './Header.pcss';
 
-
-export const NavButton = (props: {route: string, name: string}) =>
-    <Button component={NavLink} to={props.route} activeClassName="selected" >{props.name}</Button>
-
+export const NavButton = (props: { route: string; name: string }) => (
+    <Button component={NavLink} to={props.route} activeClassName="selected">
+        {props.name}
+    </Button>
+);
 
 export default function ButtonAppBar() {
     return (
         <div className="header">
-                <NavButton route={ClientRoutes.Index} name="Home"  />
-                <NavButton route={ClientRoutes.AreaMap} name="Map"  />
-                <NavButton route={ClientRoutes.Settings} name="Settings" />
+            <NavButton route={ClientRoutes.Index} name="Home" />
+            <NavButton route={ClientRoutes.AreaMap} name="Map" />
+            <NavButton route={ClientRoutes.Settings} name="Settings" />
         </div>
     );
 }

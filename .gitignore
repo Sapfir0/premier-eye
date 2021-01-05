@@ -7,7 +7,6 @@ node_modules
 *.egg-info
 build
 dist
-yarn.lock
 # Log files
 npm-debug.log*
 *.log
