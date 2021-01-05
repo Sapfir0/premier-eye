@@ -1,6 +1,6 @@
 import {AxiosRequestConfig, AxiosResponse} from "axios";
 import {NetworkError} from "../Errors/NetworkError";
-import {Either} from "@sweet-monads/either";
+import {Either} from "fp-ts/Either";
 import {AsyncEither} from "../../typings/common";
 import {BaseInteractionError} from "../Errors/BaseInteractionError";
 import { definitions } from "typings/Dto";

@@ -1,7 +1,7 @@
 import {AxiosError, AxiosResponse} from "axios";
 import {injectable} from "inversify";
 import {ClientRoutes} from "../config/clientRoutes";
-import {Either, left, right} from "@sweet-monads/either";
+import {Either, left, right} from "fp-ts/Either";
 import {IApiHelper} from "./typings/ApiTypes";
 import {NetworkError} from "./Errors/NetworkError";
 

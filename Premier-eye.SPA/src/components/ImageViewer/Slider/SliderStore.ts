@@ -1,6 +1,6 @@
 import {action, makeObservable, observable, runInAction, toJS} from "mobx";
 import { definitions } from "../../../typings/Dto";
-import { Either } from "@sweet-monads/either";
+import {Either, isLeft, Left, Right,} from "fp-ts/lib/Either";
 import { BaseInteractionError } from "services/Errors/BaseInteractionError";
 import {inject, injectable} from "inversify";
 import { TYPES } from "../../../typings/types";
@@ -47,10 +47,10 @@ export class SliderStore {
         const either: Either<BaseInteractionError, definitions['CameraList']> = await this.cameraFetcher.getCamerasList()
         
         runInAction(() => {
-            if (either.isLeft()) {
-                this.errors.push(either.value)
+            if (isLeft(either)) {
+                this.errors.push(either.left)
             } else {
-                this.camerasList = either.value
+                this.camerasList = either.right
                 console.log(this.camerasList);
             }    
         })
@@ -61,8 +61,8 @@ export class SliderStore {
         const either: Either<BaseInteractionError, definitions['DTOCamera']> = await this.cameraFetcher.addNewCamera(cameraDto)
         
         runInAction(() => {
-            if (either.isLeft()) {
-                this.errors.push(either.value)
+            if (isLeft(either)) {
+                this.errors.push(either.left)
             } else {
                 this.getCameraList()
             }    
@@ -76,10 +76,10 @@ export class SliderStore {
         runInAction(() => {
             this.stepMap = this.stepsStore.changeStepOnCurrentCamera(cameraId, currentStep)
 
-            if (either.isLeft()) {
-                this.errors.push(either.value)
+            if (isLeft(either)) {
+                this.errors.push(either.left)
             } else {
-                this.imageInfo = either.value
+                this.imageInfo = either.right
             }    
         })
     }
@@ -89,11 +89,11 @@ export class SliderStore {
         const either: Either<BaseInteractionError, definitions['Camera']> = await this.cameraFetcher.getImageFromCamera(cameraId)
 
         runInAction(() => {
-            if (either.isLeft()) {
-                this.errors.push(either.value)
+            if (isLeft(either)) {
+                this.errors.push(either.left)
             } else {
-                this.camera = either.value
-                console.log(this.camera.images)
+                this.camera = either.right
+                // console.log(this.camera.images)
             }
         })
 
@@ -104,16 +104,12 @@ export class SliderStore {
         const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImage(src)
 
         runInAction(() => {
-            if (either.isLeft()) {
-                this.errors.push(either.value)
+            if (isLeft(either)) {
+                this.errors.push(either.left)
             } else {
-                this.imageInfo = either.value
+                this.imageInfo = either.right
             }
         })
 
     }
-
-
-
-
 }

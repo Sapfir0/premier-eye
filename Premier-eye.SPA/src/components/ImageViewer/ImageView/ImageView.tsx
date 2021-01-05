@@ -1,15 +1,17 @@
 import React from 'react';
 import NotFoundImage from "../../Atomics/NotFoundImage";
 import "./ImageView.pcss"
-import { IBaseSliderBlock, ISliderBlock, MobileProgressBar } from "./ProgressBar/MobileProgressBar"
+import {CustomStepper} from "./Steppers/CustomStepper"
+import {DesktopProgressBar} from "../../Atomics/ProgressBar/DesktopProgressBar"
 import SwipeableViews from "react-swipeable-views"
 import { ApiRoutes, API_URL } from '../../../config/apiRoutes';
 import { observable } from 'mobx';
 import { observer } from 'mobx-react';
 import { definitions } from 'typings/Dto';
+import {IStepper} from "./Steppers/IStepper";
 
 
-interface IImageView extends ISliderBlock {
+interface IImageView extends IStepper {
     updateStateByInfo: (src: string) => void
 }
 
@@ -43,7 +45,7 @@ export default class ImageView extends React.Component<IImageView> {
                     ))}
                 </SwipeableViews>
 
-                <MobileProgressBar {...this.props} />
+                <CustomStepper {...this.props} />
             </div>
         );
     }

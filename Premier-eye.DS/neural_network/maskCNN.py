@@ -13,19 +13,13 @@ from mrcnn.model import MaskRCNN
 from services.classNames import classes
 from colorama import Fore
 from typing import List
-
+import mrcnn.visualize
 
 def _parseR(r):
-    detections = []
-    for i in range(0, len(r['rois'])):  # ужасно, поправить
-        obj = {
-            'coordinates': r['rois'][i],
-            'type': r['class_ids'][i],
-            'scores': r['scores'][i],
-            'masks': r['masks'][i]
-        }
-        detections.append(obj)
-    return detections
+    objectsCount = len(r['rois'])
+    return [{'coordinates': r['rois'][i],
+             'type': r['class_ids'][i],
+             'scores': r['scores'][i]} for i in range(objectsCount)]
 
 
 # Mask cnn advanced
@@ -35,8 +29,9 @@ def getMaskConfig(confidence: float):
         NAME = "coco_pretrained_model_config"
         GPU_COUNT = 1
         IMAGES_PER_GPU = 1
-        DETECTION_MIN_CONFIDENCE = confidence  # минимальный процент отображения прямоугольника
-        NUM_CLASSES = 81
+        # минимальный процент отображения прямоугольника
+        DETECTION_MIN_CONFIDENCE = confidence
+        NUM_CLASSES = len(classes)
         IMAGE_MIN_DIM = 768  # все что ниже пока непонятно
         IMAGE_MAX_DIM = 768
         DETECTION_NMS_THRESHOLD = 0.0  # Не максимальный порог подавления для обнаружения
@@ -56,7 +51,8 @@ class Mask(object):
         self.CLASS_NAMES = classes
         self.COLORS = extra.getRandomColors(self.CLASS_NAMES)
         model = getMaskConfig(float(config.detectionMinConfidence))
-        self.model = MaskRCNN(mode="inference", model_dir=config.LOGS_DIR, config=model)
+        self.model = MaskRCNN(
+            mode="inference", model_dir=config.LOGS_DIR, config=model)
         self.model.load_weights(config.DATASET_DIR, by_name=True)
 
     @timeChecker.checkElapsedTimeAndCompair(4, 2, 1, "Mask detecting")
@@ -74,32 +70,43 @@ class Mask(object):
         img = Image(inputPath, int(cameraId), outputPath=outputPath)
         binaryImage = img.read()
 
-        detections = _parseR(self._humanizeTypes(self._detectByMaskCNN(img)))
-        img.addDetections(detections)  # detections тоже
+        rowDetections = self._detectByMaskCNN(img)
+        detections = _parseR(self._humanizeTypes(rowDetections))
 
-        signedImg = self._visualize_detections(img)
+        img.addDetections(detections) 
+
+        signedImg = self._visualize_detections(img, rowDetections['masks'], drawMask=False)
 
         img.write(outputPath, signedImg)
         return img
 
-    def _visualize_detections(self, image: Image) -> np.ndarray:
+    def _visualize_detections(self, image: Image, masks, drawMask=False) -> np.ndarray:
         """
             input: the original image, the full object from the mask cnn neural network, and the object ID, if it came out to get it
             output: an object indicating the objects found in the image, and the image itself, with selected objects and captions
         """
         bgr_image = image.read()
         font = cv2.FONT_HERSHEY_DUPLEX
+        fontScale = 0.8
+        thickness = 2
+
         for i, currentObject in enumerate(image.objects):
             if currentObject.type not in config.availableObjects:
                 continue
             y1, x1, y2, x2 = currentObject.coordinates
 
             lineInClassName = self.CLASS_NAMES.index(currentObject.type)
-            color = [int(c) for c in np.array(self.COLORS[lineInClassName]) * 255]  # ух круто
-            text = "{}: {:.1f} {}".format(currentObject.type, currentObject.scores * 100, i)
+            color = [int(c)
+                     for c in np.array(self.COLORS[lineInClassName]) * 255]
+            text = "{}: {:.1f}".format(
+                currentObject.type, currentObject.scores * 100)
 
-            cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, 2)
-            cv2.putText(bgr_image, text, (x1, y1 - 20), font, 0.8, color, 2)
+            if (drawMask):
+                mask = masks[:, :, i]   # берем срез
+                bgr_image = mrcnn.visualize.apply_mask(bgr_image, mask, color, alpha=0.6) # рисование маски
+
+            cv2.rectangle(bgr_image, (x1, y1), (x2, y2), color, thickness)
+            cv2.putText(bgr_image, text, (x1, y1 - 20), font, fontScale, color, thickness)
 
         return bgr_image.astype(np.uint8)
 
@@ -114,11 +121,7 @@ class Mask(object):
         return r
 
     def _humanizeTypes(self, r: dict) -> dict:
-        typesList = []
-        for i, obj in enumerate(r['class_ids']):
-            if r['class_ids'][i] > len(self.CLASS_NAMES):
-                raise Exception("Undefined classId - {}".format(r['class_ids'][i]))
-
-            typesList.append(self.CLASS_NAMES[r['class_ids'][i]])
+        typesList = [self.CLASS_NAMES[objectClass]
+                     for objectClass in r['class_ids']]
         r.update({'class_ids': typesList})
         return r

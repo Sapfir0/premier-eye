@@ -54,7 +54,7 @@ class Image(object):
 
     def addDetections(self, detections):
         self.objects = []
-        for obj in detections:  # {'coordinates': array([526, 341, 719, 440], dtype=int32), 'type': 'person', 'scores': 0.99883527}
+        for obj in detections:
             if obj['type'] == "car":
                 self.objects.append(Car(obj))
             elif obj['type'] == "person":

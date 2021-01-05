@@ -1,4 +1,4 @@
-import {Either} from "@sweet-monads/either";
+import {Either} from "fp-ts/Either";
 import {BaseInteractionError} from "../services/Errors/BaseInteractionError";
 
 export type IdPayload = {
