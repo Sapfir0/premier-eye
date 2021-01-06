@@ -12,7 +12,7 @@ export default class CameraApiInteractionService extends ApiInteractionService i
         return this.get(ApiRoutes.CAMERA.GET_CAMERAS_LIST);
     };
 
-    public addNewCamera = (cameraDto: definitions['DTOCamera']) => {
+    public addNewCamera = (cameraDto: definitions['DTO/Camera']) => {
         return this.put(ApiRoutes.CAMERA.CAMERA, cameraDto);
     };
 }

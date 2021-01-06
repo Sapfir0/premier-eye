@@ -16,6 +16,7 @@ import {
     IGalleryApiInteractionService
 } from '../services/typings/ApiTypes';
 import { TYPES } from '../typings/types';
+import {SettingsStore} from "../components/Settings/SettingsStore";
 
 const myContainer = new Container();
 
@@ -26,6 +27,7 @@ myContainer.bind<IApiInteractionService>(TYPES.ApiInteractionService).to(ApiInte
 
 myContainer.bind(TYPES.SliderStore).to(SliderStore);
 myContainer.bind(TYPES.ImageInfoStore).to(ImageInfoStore);
+myContainer.bind(TYPES.SettingsStore).to(SettingsStore);
 
 myContainer.bind<IGalleryApiInteractionService>(TYPES.GalleryApiInteractionService).to(GalleryApiInteractionService);
 myContainer.bind<ICameraApiInteractionService>(TYPES.CameraApiInteractionService).to(CameraApiInteractionService);

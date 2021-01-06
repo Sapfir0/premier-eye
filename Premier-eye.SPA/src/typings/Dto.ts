@@ -4,22 +4,22 @@
  */
 
 export interface definitions {
-    ImageList: { items: definitions['Image'][] };
-    Image: { id: string; src: string };
-    DTOCamera: { name: string };
-    Camera: {
-        id: string;
-        name?: string;
-        onlineDate: string;
-        images: definitions['Image'][];
-    };
-    CameraList: { items: definitions['Camera'][] };
-    ImageInfo: {
-        numberOfCam: number;
-        filename: string;
-        fixationDatetime: string;
-        createdAt: string;
-        objects: definitions['ObjectInfo'][];
-    };
-    ObjectInfo: { id: string; type: string; scores: number };
+  ImageList: { items: definitions["Image"][] };
+  Image: { id: string; src: string };
+  "DTO/Camera": { name: string };
+  Camera: {
+    id: string;
+    name?: string;
+    onlineDate: string;
+    images: definitions["Image"][];
+  };
+  CameraList: { items: definitions["Camera"][] };
+  ImageInfo: {
+    numberOfCam: number;
+    filename: string;
+    fixationDatetime: string;
+    createdAt: string;
+    objects: definitions["ObjectInfo"][];
+  };
+  ObjectInfo: { id: string; type: string; scores: number };
 }

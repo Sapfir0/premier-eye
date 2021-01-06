@@ -1,15 +1,24 @@
+$progress-height: 20px;
+
+
 .outside {
-    border: 1px solid black;
-    height: 20px;
+    border-style: solid;
+    border-color: black;
+    height: $progress-height;
     background-color: silver;
     width: inherit;
 }
 .inside {
-    height: 20px;
+    height: $progress-height;
     background-color: transparent;
     z-index: 9999;
     float: left;
-}  
+}
+.tip {
+    //margin-top: -40px;
+    width: auto;
+    z-index: 9999;
+}
 
 .controls {
     display: flex;
@@ -18,12 +27,11 @@
 
 .pointsContainer {
     display: flex;
-    margin-top: -20px;
+    margin-top: -$progress-height;
 }
 
 .progress {
     z-index: 1;
-    /* position: absolute; */
     background-color: tomato;
-    height: 20px;
+    height: $progress-height;
 }
