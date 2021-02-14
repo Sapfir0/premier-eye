@@ -8,10 +8,18 @@
         },
         "scores": {
             "type": "number"
+        },
+        "coordinates": {
+            "type": "array",
+            "items": {
+                "type": "string"
+            },
+            "minItems": 4,
+            "maxItems": 4
         }
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "type", "scores"]
+    "required": ["id", "type", "scores", "coordinates"]
 
 }

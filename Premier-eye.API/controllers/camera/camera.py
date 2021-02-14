@@ -11,7 +11,6 @@ from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
 from services.directory import recursiveSearch
-from database.dbAPI import getCamera, addNewCamera
 from database import db
 
 api = Namespace('camera')

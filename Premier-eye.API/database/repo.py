@@ -13,16 +13,20 @@ class Repo:
         stringRes = [dict(i) for i in res]
         return stringRes
     
+    def rowCount(self, table):
+        return db.session.query(table).count()
+
     def get(self, table, id):
         return self.getWhere(table, (table.id == id))
 
     def getWhere(self, table, whereStmt, multiple=False):
         selectStmt = select([table]).where(whereStmt)
-        res = self.conn.execute(selectStmt)
+        query = self.conn.execute(selectStmt)
         if not multiple:
-            return dict(res.fetchone())
+            row = query.fetchone()
+            return row if row == None else dict(row)
         else:
-            return [dict(i) for i in res.fetchall()]
+            return [dict(i) for i in query.fetchall()]
 
     def post(self, table, **entityFields):
         insertStmt = insert(table).values(**entityFields)

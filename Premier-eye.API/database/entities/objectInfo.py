@@ -13,5 +13,9 @@ class DatabaseObject(Repo):
     def getObjectOnImage(self, imageId):
         return self.getWhere(Objects, (Objects.imageId == imageId), multiple=True)
 
+
+    def getRowsCount(self):
+        return self.rowCount(Objects)
+
     def postObject(self, **entityFields):
         return self.post(Objects, **entityFields)

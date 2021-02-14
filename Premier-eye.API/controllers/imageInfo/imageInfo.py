@@ -1,6 +1,4 @@
 import os
-
-import database.dbAPI as dbAPI
 from config import Config
 from controllers.imageInfo import routes
 from database import db
@@ -43,19 +41,20 @@ class ImageInformation(Resource):
     model = getModel("ImageInfo", api)
     @api.expect(model)
     def post(self, filename):
-        currentImage = db.session.query(Images).filter(Images.filename == filename).all()
-        if len(currentImage) != 1:
+        currentImage = self.imageManager.getImageByFilename(filename)
+        if currentImage == None:
             return make_response({"error": f"Image with {filename} filename not found"}, 400)
-        imageId = currentImage[0].id
-        # +1 т.к. у нас возвращается текущее колво строк, а мы будем инсертить еще одну
+        imageId = currentImage['id']
+
         objects = request.json['objects']
-        countOfObjectsIndbAPI = db.session.query(Objects_).count() + 1  # objectId TODO
+        countOfObjectsIndbAPI = self.objectManager.getRowsCount() + 1  # т.к. мы только сейчас инсертим координаты
+
         for detected in objects:
             coordinates = Coordinates(detected['coordinates'])
             Object = Objects_(scores=detected['scores'], type=detected['type'],
                                 imageId=imageId, coordinatesId=countOfObjectsIndbAPI)
 
-            if detected['type'] == 'car':  # TODO кал
+            if detected['type'] == 'car': 
                 car = Cars(carNumber=detected['vehiclePlate'], objectId=countOfObjectsIndbAPI)
                 db.session.add(car)
             elif detected['type'] == 'person':
@@ -71,12 +70,16 @@ class ImageInformation(Resource):
         db.session.flush()
         make_response({"success": "Info updated"}, 200)
 
+
 imageInfoIndex = api.parser()
 imageInfoIndex.add_argument('cameraId', location='args', type=str, required=True)
 imageInfoIndex.add_argument('indexOfImage', location='args', type=str, required=True)
 
 @api.route(routes['getImageInfoByIndexOfImage'])
 class ImageInfoByIndexOfImage(Resource):
+    objectManager = DatabaseObject()
+    imageManager = DatabaseImage()
+
     @api.expect(imageInfoIndex)
     def get(self):
         query = request.args
@@ -88,8 +91,9 @@ class ImageInfoByIndexOfImage(Resource):
         imgList = recursiveSearch(cameraPath)
         filename = imgList[int(query['indexOfImage'])]
 
-        objectInfo = dbAPI.getObjects(filename)
-        imageInfo = dbAPI.getImageByFilename(filename)
+        imageInfo = self.imageManager.getImageByFilename(filename)
+        objectInfo = self.objectManager.getObjectOnImage(imageInfo['id'])
+        
         imageInfo.update({"objects": objectInfo})
         print(objectInfo)
 
