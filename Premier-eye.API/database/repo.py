@@ -14,9 +14,15 @@ class Repo:
         return stringRes
     
     def get(self, table, id):
-        selectStmt = select([table]).where(table.id == id)
-        res = self.conn.execute(selectStmt).fetchone()
-        return res
+        return self.getWhere(table, (table.id == id))
+
+    def getWhere(self, table, whereStmt, multiple=False):
+        selectStmt = select([table]).where(whereStmt)
+        res = self.conn.execute(selectStmt)
+        if not multiple:
+            return dict(res.fetchone())
+        else:
+            return [dict(i) for i in res.fetchall()]
 
     def post(self, table, **entityFields):
         insertStmt = insert(table).values(**entityFields)

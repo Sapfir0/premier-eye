@@ -1,19 +1,19 @@
-from flask import jsonify, make_response, request
-from controllers.imageInfo import routes
-import database.dbAPI as dbAPI
-from flask_restplus import Namespace, Resource, fields
-from database.models.Cars import Cars
-from database.models.Persons import Persons
-from database.models.Objects_ import Objects_
-from database.models.Images import Images
-from database.models.Coordinates import Coordinates
-from services.model import getModel
 import os
-from config import Config
-from services.directory import recursiveSearch, getOutputDir
-from services.model import getModel
-from database import db
 
+import database.dbAPI as dbAPI
+from config import Config
+from controllers.imageInfo import routes
+from database import db
+from database.entities.image import DatabaseImage
+from database.entities.objectInfo import DatabaseObject
+from database.models.Cars import Cars
+from database.models.Coordinates import Coordinates
+from database.models.Objects_ import Objects_
+from database.models.Persons import Persons
+from flask import jsonify, make_response, request
+from flask_restplus import Namespace, Resource, fields
+from services.directory import getOutputDir, recursiveSearch
+from services.model import getModel
 
 api = Namespace('imageInfo')
 
@@ -26,26 +26,29 @@ def getDatabaseModel(modelName, **args):
 
 @api.route(routes['getImageInfo'])
 class ImageInformation(Resource):
+    objectManager = DatabaseObject()
+    imageManager = DatabaseImage()
+
     def get(self, filename):
-        imageInfo = dbAPI.getImageByFilename(filename)
+        imageInfo = dict(self.imageManager.getImageByFilename(filename))
 
         if imageInfo is None:
             return make_response({"error": "Image not found"}, 400)
 
-        objectInfo = dbAPI.getObjects(filename)
+        objectInfo = self.objectManager.getObjectOnImage(imageInfo['id'])
         imageInfo.update({"objects": objectInfo})
-        return jsonify(dict(imageInfo))
+        return jsonify(imageInfo)
 
 
     model = getModel("ImageInfo", api)
     @api.expect(model)
     def post(self, filename):
-        objects = request.json['objects']
         currentImage = db.session.query(Images).filter(Images.filename == filename).all()
         if len(currentImage) != 1:
             return make_response({"error": f"Image with {filename} filename not found"}, 400)
         imageId = currentImage[0].id
         # +1 т.к. у нас возвращается текущее колво строк, а мы будем инсертить еще одну
+        objects = request.json['objects']
         countOfObjectsIndbAPI = db.session.query(Objects_).count() + 1  # objectId TODO
         for detected in objects:
             coordinates = Coordinates(detected['coordinates'])
