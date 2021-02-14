@@ -11,14 +11,14 @@ from Models.Car import Car
 from services.cameraLogger import CameraLogger
 import time
 import services.timeChecker as timeChecker
-
+import asyncio
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
 cameraLogger = CameraLogger(0)
 api = ApiInteractionService(config)
 
-def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
+async def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
     """
         Сакральный алгоритм:
 
@@ -45,19 +45,22 @@ def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
                 time.sleep(2.5)
             continue  # если файлы еще есть, то переходим к следующему
 
-        detectObjects(filename)
+        await detectObjects(filename)
         processedFrames[numberOfCam].append(filename)
-        fileController.writeInFile(config.DATE_FILE, str(processedFrames))
-        # будет стирать содержимое файла каждый кадр
+        fileController.writeInFile(config.DATE_FILE, str(processedFrames)) # будет стирать содержимое файла каждый кадр
+        print("______________________________________________________________________________________")
+        
 
 def carNumberDetector(filename, image: Image):
     for i, item in enumerate(image.objects):
-        if image.cameraId in [1, 2] and isinstance(item, Car):
+        if image.cameraId in config.carNumberDetectorCamers and isinstance(item, Car):
             numberPlatesInfo = detectPlate(image.outputPath, api) 
             image.objects[i].vehiclePlate = "".join(numberPlatesInfo['number_plates'])
 
 
-def detectObjects(filename):
+
+@timeChecker.checkElapsedTimeAsync(4, 2.5, 1.5, "Full image work")
+async def detectObjects(filename):
     inputFile, outputFile, dateTime = dirs.getIOdirs(filename, config.IMAGE_DIR, config.OUTPUT_DIR_MASKCNN)
 
     image = mask.pipeline(inputFile, outputFile)
@@ -69,10 +72,12 @@ def detectObjects(filename):
     if config.carNumberDetector:
         carNumberDetector(filename, image)
 
+    
     if config.sendRequestToServer:
-        api.uploadImage(outputFile)
-        api.postImageInfo(outputFile, image)
+        await asyncio.gather(
+            api.uploadImage(outputFile), 
+            api.postImageInfo(outputFile, image)
+        )   
         # api.postLog(f"{obj.type} visible on camera", image.date, image.cameraId)
-        
 
     return image

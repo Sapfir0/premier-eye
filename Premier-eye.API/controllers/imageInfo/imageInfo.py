@@ -93,8 +93,7 @@ class ImageInfoByIndexOfImage(Resource):
 
         imageInfo = self.imageManager.getImageByFilename(filename)
         objectInfo = self.objectManager.getObjectOnImage(imageInfo['id'])
-        
+
         imageInfo.update({"objects": objectInfo})
-        print(objectInfo)
 
         return make_response(dict(imageInfo), 200)
