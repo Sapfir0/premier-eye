@@ -17,6 +17,13 @@ from database import db
 
 api = Namespace('imageInfo')
 
+def getDatabaseModel(modelName, **args):
+    models = {
+        'car': Cars(**args),
+        'person': Persons(**args)
+    }
+    return models[modelName]
+
 @api.route(routes['getImageInfo'])
 class ImageInformation(Resource):
     def get(self, filename):

@@ -14,6 +14,5 @@ def getModel(modelName: str, api, directory=None):
     if directory:
         modelName = os.path.join(directory, modelName)
     schema = getSchema(modelName + ".json")
-    print(modelName)
     model = api.schema_model(modelName, schema)
     return model
