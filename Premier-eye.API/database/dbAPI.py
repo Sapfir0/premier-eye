@@ -7,6 +7,8 @@ from database.models.Coordinates import Coordinates
 from database.models.Camera import Camera
 from datetime import datetime
 
+
+
 def addNewCamera(cameraDto):
     conn = db.engine.connect()
     

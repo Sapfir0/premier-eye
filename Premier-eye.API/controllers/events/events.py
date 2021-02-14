@@ -13,28 +13,23 @@ from services.model import getModel
 from database import db
 import datetime
 from sqlalchemy import select, insert
+from database.entities.events import DatabaseEvents
 
 api = Namespace('events')
 
 @api.route(routes['log'])
 class EventsLogger(Resource):
+    eventsManager = DatabaseEvents()
 
     cameraModel = getModel("Log", api, directory="DTO")
     @api.expect(cameraModel)
     def post(self):
         req = request.get_json()
-        entity = Events(req['timestamp'], req['title'], req['cameraId'])
-        db.session.add(entity)
-    
-        db.session.commit()
-
+        self.eventsManager.postEvent(timestamp=req['timestamp'], title=req['title'], cameraId=req['cameraId'])
         return make_response({"success": "Log created"}, 200)
 
-    # @api.response(200, cameraModel)
+    @api.response(200, "Success", cameraModel)
     def get(self):
-        conn = db.engine.connect()
-        selectStmt = select([Events])
-        res = conn.execute(selectStmt).fetchall()
-        stringRes = [dict(i) for i in res]
+        stringRes = self.eventsManager.listEvents()
         return make_response({"data": stringRes}, 200)
 
