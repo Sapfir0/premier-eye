@@ -12,6 +12,9 @@ from services.cameraLogger import CameraLogger
 import time
 import services.timeChecker as timeChecker
 import asyncio
+import tracemalloc
+from services.memory import getUsedRAM
+
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
@@ -48,6 +51,8 @@ async def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
         await detectObjects(filename)
         processedFrames[numberOfCam].append(filename)
         fileController.writeInFile(config.DATE_FILE, str(processedFrames)) # будет стирать содержимое файла каждый кадр
+        snapshot = tracemalloc.take_snapshot()
+        getUsedRAM(snapshot)
         print("______________________________________________________________________________________")
         
 

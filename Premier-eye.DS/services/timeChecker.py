@@ -12,17 +12,15 @@ def checkElapsedTimeAsync(criticalTime,  permissibleTime, greatTime, helperStr):
         """
         async def process(func, *args, **params):
             if asyncio.iscoroutinefunction(func):
-                print('this function is a coroutine: {}'.format(func.__name__))
                 return await func(*args, **params)
             else:
-                print('this is not a coroutine')
                 return func(*args, **params)
 
         async def helper(*args, **params):
             start = time.time()
             result = await process(func, *args, **params)
 
-            end = time.time
+            end = time.time()
             color, state = getColorForTime(
                 end - start, criticalTime, permissibleTime, greatTime)
             print(color + '[*{}] {} elapsed time: {} second'.format(state, helperStr, end - start))
