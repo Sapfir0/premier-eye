@@ -72,5 +72,7 @@ def detectObjects(filename):
     if config.sendRequestToServer:
         api.uploadImage(outputFile)
         api.postImageInfo(outputFile, image)
+        # api.postLog(f"{obj.type} visible on camera", image.date, image.cameraId)
+        
 
     return image

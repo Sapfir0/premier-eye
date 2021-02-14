@@ -21,5 +21,15 @@ export interface definitions {
     createdAt: string;
     objects: definitions["ObjectInfo"][];
   };
-  ObjectInfo: { id: string; type: string; scores: number };
+  ObjectInfo: {
+    id: string;
+    type: string;
+    scores: number;
+    coordinates: string[];
+  };
+  "DTOLog": {
+    title: string;
+    timestamp: { [key: string]: any };
+    cameraId?: number;
+  };
 }

@@ -8,6 +8,8 @@ import json
 
 
 class ApiInteractionService(BaseInteractionService):
+    def postLog(self, title, timestamp, cameraId):
+        return self.post(galleryRoutes['log'], json={'title': title, 'timestamp': timestamp.timestamp(), 'cameraId': cameraId})
 
     def postImageInfo(self, imagePath: str, imageInfo):
         jsonInfo = {"objects": imageInfo.json()}
