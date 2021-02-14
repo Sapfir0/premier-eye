@@ -8,6 +8,9 @@ from colorama import Fore, Back, Style
 
 
 def createLogger(app):
+    gunicorn_error_logger = logging.getLogger('gunicorn.error')
+    app.logger.handlers.extend(gunicorn_error_logger.handlers)
+    app.logger.setLevel(logging.DEBUG)
     log = logging.getLogger('werkzeug')
     log.disabled = True
     init()

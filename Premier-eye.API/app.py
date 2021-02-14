@@ -20,6 +20,7 @@ def createApp(configClass=Config):
 
 app = createApp(cfg)
 api.init_app(app)
+
 createLogger(app)
 
 if __name__ == '__main__':
