@@ -14,6 +14,8 @@ from services.directory import getOutputDir, recursiveSearch
 from services.model import getModel
 
 api = Namespace('imageInfo')
+objectManager = DatabaseObject()
+imageManager = DatabaseImage()
 
 def getDatabaseModel(modelName, **args):
     models = {
@@ -24,11 +26,8 @@ def getDatabaseModel(modelName, **args):
 
 @api.route(routes['getImageInfo'])
 class ImageInformation(Resource):
-    objectManager = DatabaseObject()
-    imageManager = DatabaseImage()
-
     def get(self, filename):
-        imageInfo = dict(self.imageManager.getImageByFilename(filename))
+        imageInfo = dict(imageManager.getImageByFilename(filename))
 
         if imageInfo is None:
             return make_response({"error": "Image not found"}, 400)
@@ -41,13 +40,13 @@ class ImageInformation(Resource):
     model = getModel("ImageInfo", api)
     @api.expect(model)
     def post(self, filename):
-        currentImage = self.imageManager.getImageByFilename(filename)
+        currentImage = imageManager.getImageByFilename(filename)
         if currentImage == None:
             return make_response({"error": f"Image with {filename} filename not found"}, 400)
         imageId = currentImage['id']
 
         objects = request.json['objects']
-        countOfObjectsIndbAPI = self.objectManager.getRowsCount() + 1  # т.к. мы только сейчас инсертим координаты
+        countOfObjectsIndbAPI = objectManager.getRowsCount() + 1  # т.к. мы только сейчас инсертим координаты
 
         for detected in objects:
             coordinates = Coordinates(detected['coordinates'])
@@ -77,8 +76,7 @@ imageInfoIndex.add_argument('indexOfImage', location='args', type=str, required=
 
 @api.route(routes['getImageInfoByIndexOfImage'])
 class ImageInfoByIndexOfImage(Resource):
-    objectManager = DatabaseObject()
-    imageManager = DatabaseImage()
+
 
     @api.expect(imageInfoIndex)
     def get(self):
@@ -91,8 +89,8 @@ class ImageInfoByIndexOfImage(Resource):
         imgList = recursiveSearch(cameraPath)
         filename = imgList[int(query['indexOfImage'])]
 
-        imageInfo = self.imageManager.getImageByFilename(filename)
-        objectInfo = self.objectManager.getObjectOnImage(imageInfo['id'])
+        imageInfo = imageManager.getImageByFilename(filename)
+        objectInfo = objectManager.getObjectOnImage(imageInfo['id'])
 
         imageInfo.update({"objects": objectInfo})
 
