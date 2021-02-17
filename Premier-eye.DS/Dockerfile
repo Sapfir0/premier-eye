@@ -30,5 +30,5 @@ RUN apt install -y libglib2.0-0
 COPY . /ds
 WORKDIR /ds
 
-# ENTRYPOINT ["python3"]
-# CMD ["mainImage.py" ]
+ENTRYPOINT ["python3"]
+CMD ["mainImage.py" ]
