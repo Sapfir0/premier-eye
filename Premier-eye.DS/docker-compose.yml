@@ -2,8 +2,8 @@ version: '3.3'
 
 services:
   detection:
-    depends_on: 
-      - nomeroff-net 
+    # depends_on: 
+    #   - nomeroff-net 
     tty: true
     container_name: detection
     image: sapfir0/premier-eye:cpu
@@ -14,32 +14,32 @@ services:
       - .:/ds
       # потому что у меня может быть много файлов(например, файл со списком обработанных изобржаений), пусть синхронизруется все
     networks:
-      - premier-eye_some-net
+      - premiereye_some-net
     environment:
       - API_URL=http://172.18.0.2:8050
       - NOMEROFF_NET_URL=http://172.18.0.3:5051
     env_file:
       - .env
 
-  nomeroff-net:
-    build: vehiclePlate
-    working_dir: /var/www/nn
-    image: sapfir0/vehicle_plate_detector
-    # restart: unless-stopped
-    ports:
-      - 5051:5051
-    volumes:
-      - ./data:/ds/data
-      # пока волюм не используется, я передаю файл не по ссылке, а по значению
-    networks:
-      - premier-eye_some-net
-    logging:
-       driver: "json-file"
-       options:
-         max-size: "10m"
-         max-file: "5"
+  # nomeroff-net:
+  #   build: vehiclePlate
+  #   working_dir: /var/www/nn
+  #   image: sapfir0/vehicle_plate_detector
+  #   # restart: unless-stopped
+  #   ports:
+  #     - 5051:5051
+  #   volumes:
+  #     - ./data:/ds/data
+  #     # пока волюм не используется, я передаю файл не по ссылке, а по значению
+  #   networks:
+  #     - premiereye_some-net
+  #   logging:
+  #      driver: "json-file"
+  #      options:
+  #        max-size: "10m"
+  #        max-file: "5"
 
 networks:
-  premier-eye_some-net:
+  premiereye_some-net:
     external:
       true

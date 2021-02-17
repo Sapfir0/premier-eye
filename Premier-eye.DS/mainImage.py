@@ -5,7 +5,6 @@ import services.dateHelper as dh
 import services.directory as dirs
 from config.settings import config
 
-
 async def mainPipeline():
     processedFrames = {}
     if config.skipOldImages:
@@ -21,6 +20,7 @@ async def mainPipeline():
 
 tracemalloc.start()
 
-asyncio.run(mainPipeline())
-
-
+loop = asyncio.get_event_loop()
+asyncio.ensure_future(mainPipeline())
+loop.run_forever()
+loop.close()
