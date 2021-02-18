@@ -10,9 +10,11 @@ def getSchema(schemaPath):
         return schema
 
 
-def getModel(modelName: str, api, directory=None):
+def getModel(modelName: str, api, directory=None, fullOutputName=None):
     if directory:
         modelName = os.path.join(directory, modelName)
     schema = getSchema(modelName + ".json")
-    model = api.schema_model(modelName, schema)
+    if (fullOutputName == None):
+        fullOutputName = modelName
+    model = api.schema_model(fullOutputName, schema)
     return model

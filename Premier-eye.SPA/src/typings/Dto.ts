@@ -6,7 +6,7 @@
 export interface definitions {
   ImageList: { items: definitions["Image"][] };
   Image: { id: string; src: string };
-  "DTO/Camera": { name: string };
+  CameraDto: { name: string };
   Camera: {
     id: string;
     name?: string;
@@ -27,7 +27,7 @@ export interface definitions {
     scores: number;
     coordinates: string[];
   };
-  "DTO/Log": {
+  "DTOLog": {
     title: string;
     timestamp: { [key: string]: any };
     cameraId?: number;

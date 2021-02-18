@@ -34,7 +34,7 @@ class CameraImageList(Resource):
 @api.route(routes['getCamera'])
 class Camera(Resource):
 
-    cameraModel = getModel("Camera", api, directory="DTO")
+    cameraModel = getModel("Camera", api, directory="DTO", fullOutputName="CameraDto")
     @api.expect(cameraModel)
     def post(self):
         """ Добавить новую камеру """
