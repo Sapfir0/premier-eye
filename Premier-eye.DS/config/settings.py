@@ -1,13 +1,13 @@
 import os
+from configparser import ConfigParser
 from os.path import join
-import mrcnn.utils
+
 import colorama
-import services.others as others
-from dotenv import load_dotenv
+import mrcnn.utils
 import services.directory as dirs
 import services.net as net
+import services.others as others
 from dotenv import load_dotenv
-from configparser import ConfigParser
 
 load_dotenv()
 
@@ -44,6 +44,7 @@ class Settings:
     sendRequestToServer = config.getboolean('UserParams', 'sendRequestToServer')
     carNumberDetector = config.getboolean('UserParams', 'carNumberDetector')
     strongRequestChecking = config.getboolean('UserParams', 'strongRequestChecking')
+    carNumberDetectorCamers = list(map(int, config.get('UserParams', 'carNumberDetectorCamers').split())) 
 
     def __init__(self):
         load_dotenv(os.path.join(self.APP_PATH, '../.env'))

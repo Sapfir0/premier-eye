@@ -34,9 +34,6 @@ class DetectionsTest(unittest.TestCase):
         for i, filename in enumerate(os.listdir(os.path.join(self.TEST_IMAGE_DIR, self.dirName))):
             filepath = os.path.join(self.TEST_IMAGE_DIR, self.dirName, filename)
             arg = mask.pipeline(filepath, os.path.join(self.TEST_IMAGE_DIR, 'detectionsOutput', filename))
-            print(arg)
-            print(data[filename])
-            print(filename)
             self.assertEqual(arg, data[filename])
 
     def tearDown(self):

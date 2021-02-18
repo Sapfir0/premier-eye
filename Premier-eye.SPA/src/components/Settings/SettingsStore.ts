@@ -32,8 +32,8 @@ export class SettingsStore {
     };
 
     @action
-    public async addNewCamera(cameraDto: definitions['DTO/Camera']) {
-        const either: Either<BaseInteractionError, definitions['DTO/Camera']> = await this.cameraFetcher.addNewCamera(
+    public async addNewCamera(cameraDto: definitions['CameraDto']) {
+        const either: Either<BaseInteractionError, definitions['CameraDto']> = await this.cameraFetcher.addNewCamera(
             cameraDto,
         );
 

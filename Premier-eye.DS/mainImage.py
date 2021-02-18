@@ -1,12 +1,12 @@
+import asyncio
 import tracemalloc
-import services.directory as dirs
-import services.dateHelper as dh
-from services.memory import getUsedRAM
 import neural_network.mainClass as detector
+import services.dateHelper as dh
+import services.directory as dirs
 from config.settings import config
 
 
-def mainPipeline():
+async def mainPipeline():
     processedFrames = {}
     if config.skipOldImages:
         processedFrames = dh.checkDateFile(config.DATE_FILE)
@@ -15,12 +15,14 @@ def mainPipeline():
         imagesForEachCamer = dirs.checkNewFile(config.IMAGE_DIR, config.imagePathWhitelist)
         for items in imagesForEachCamer.items():
             (numberOfCam, filenames) = items
-            detector.predicated(numberOfCam, filenames, processedFrames)
-            snapshot = tracemalloc.take_snapshot()
-            getUsedRAM(snapshot)
+            await detector.predicated(numberOfCam, filenames, processedFrames)
+
 
 
 tracemalloc.start()
-mainPipeline()
 
+loop = asyncio.get_event_loop()
+asyncio.ensure_future(mainPipeline())
+loop.run_forever()
+loop.close() 
 

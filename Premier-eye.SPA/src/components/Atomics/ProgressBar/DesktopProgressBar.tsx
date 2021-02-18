@@ -1,6 +1,6 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {getDatetimeFromFilename} from '../../../services/DateFormatter';
-import {IStepper} from '../../ImageViewer/ImageView/Steppers/IStepper';
+import React, { useEffect, useRef, useState } from 'react';
+import { getDatetimeFromFilename } from '../../../services/DateFormatter';
+import { IStepper } from '../../ImageViewer/ImageView/Steppers/IStepper';
 import './DesktopProgressBar.pcss';
 
 const toPixels = (num: number) => `${num}px`;
@@ -27,8 +27,6 @@ export const DesktopProgressBar = (props: IStepper) => {
         if (datetime !== null) {
             const time = `${datetime.getHours()}:${datetime.getMinutes()}:${datetime?.getSeconds()}`;
             setFrameTime(time);
-            console.log(time)
-
         }
     };
 
@@ -43,8 +41,8 @@ export const DesktopProgressBar = (props: IStepper) => {
 
     return (
         <>
-            <div ref={ref} className="outside" style={{borderWidth: borderWidth}}>
-                <div className="progress" style={{width: toPixels(getProgress())}}/>
+            <div ref={ref} className="outside" style={{ borderWidth: borderWidth }}>
+                <div className="progress" style={{ width: toPixels(getProgress()) }} />
                 {/*<div className="tip" >{frameTime}</div>*/}
                 <div className="pointsContainer">
                     {props.images.map((empty, i) => (
@@ -52,10 +50,9 @@ export const DesktopProgressBar = (props: IStepper) => {
                             key={empty.id}
                             className="inside"
                             onMouseEnter={onMouseEnter(i)}
-                            style={{width: frameLength}}
+                            style={{ width: frameLength }}
                             onClick={moving(parseInt(empty.id))}
                         />
-
                     ))}
                 </div>
             </div>

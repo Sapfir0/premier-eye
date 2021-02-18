@@ -15,11 +15,7 @@ def hasOnePointInside(bigRect, minRect):  # хотя бы одна точка л
 
 
 def isCompletelyInside(bigRect, minRect):  # объект полностью внутри прямоугольника
-    y1, x1, y2, x2 = bigRect
-    minX = x1
-    minY = y1  # вроде верно
-    maxX = x2
-    maxY = y2
+    minY, minX, maxY, maxX = bigRect
 
     y1, x1, y2, x2 = minRect
 

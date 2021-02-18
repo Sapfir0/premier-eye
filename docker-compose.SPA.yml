@@ -1,19 +1,20 @@
 version: '3'
 services:
-  server:
+  web:
     restart: always
-    env_file: Premier-eye.API/.env
+    env_file: Premier-eye.API/.env.prod
     image: sapfir0/web-premier-eye:server
     build:
       context: Premier-eye.API
       dockerfile: Dockerfile
-    ports:
-      - "8050:8050"
+    command: gunicorn --bind 0.0.0.0:8050 app:app 
     volumes:
-      - "./Premier-eye.API/static/uploads:/pyfront/application/static/uploads"
-      - "./data.db:/pyfront/application/data.db"
+      - "./Premier-eye.API:/api"
     networks:
       - some-net
+    ports:
+      - 8050:8050
+
 
 networks:
   some-net:

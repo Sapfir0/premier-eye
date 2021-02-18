@@ -1,51 +1,59 @@
-from flask import jsonify, make_response, request
-from controllers.imageInfo import routes
-import database.dbAPI as dbAPI
-from flask_restplus import Namespace, Resource, fields
-from database.models.Cars import Cars
-from database.models.Persons import Persons
-from database.models.Objects_ import Objects_
-from database.models.Images import Images
-from database.models.Coordinates import Coordinates
-from services.model import getModel
 import os
 from config import Config
-from services.directory import recursiveSearch, getOutputDir
-from services.model import getModel
+from controllers.imageInfo import routes
 from database import db
-
+from database.entities.image import DatabaseImage
+from database.entities.objectInfo import DatabaseObject
+from database.models.Cars import Cars
+from database.models.Coordinates import Coordinates
+from database.models.Objects_ import Objects_
+from database.models.Persons import Persons
+from flask import jsonify, make_response, request
+from flask_restplus import Namespace, Resource, fields
+from services.directory import getOutputDir, recursiveSearch
+from services.model import getModel
 
 api = Namespace('imageInfo')
+objectManager = DatabaseObject()
+imageManager = DatabaseImage()
+
+def getDatabaseModel(modelName, **args):
+    models = {
+        'car': Cars(**args),
+        'person': Persons(**args)
+    }
+    return models[modelName]
 
 @api.route(routes['getImageInfo'])
 class ImageInformation(Resource):
     def get(self, filename):
-        imageInfo = dbAPI.getImageByFilename(filename)
+        imageInfo = dict(imageManager.getImageByFilename(filename))
 
         if imageInfo is None:
             return make_response({"error": "Image not found"}, 400)
 
-        objectInfo = dbAPI.getObjects(filename)
+        objectInfo = self.objectManager.getObjectOnImage(imageInfo['id'])
         imageInfo.update({"objects": objectInfo})
-        return jsonify(dict(imageInfo))
+        return jsonify(imageInfo)
 
 
     model = getModel("ImageInfo", api)
     @api.expect(model)
     def post(self, filename):
-        objects = request.json['objects']
-        currentImage = db.session.query(Images).filter(Images.filename == filename).all()
-        if len(currentImage) != 1:
+        currentImage = imageManager.getImageByFilename(filename)
+        if currentImage == None:
             return make_response({"error": f"Image with {filename} filename not found"}, 400)
-        imageId = currentImage[0].id
-        # +1 т.к. у нас возвращается текущее колво строк, а мы будем инсертить еще одну
-        countOfObjectsIndbAPI = db.session.query(Objects_).count() + 1  # objectId TODO
+        imageId = currentImage['id']
+
+        objects = request.json['objects']
+        countOfObjectsIndbAPI = objectManager.getRowsCount() + 1  # т.к. мы только сейчас инсертим координаты
+
         for detected in objects:
             coordinates = Coordinates(detected['coordinates'])
             Object = Objects_(scores=detected['scores'], type=detected['type'],
                                 imageId=imageId, coordinatesId=countOfObjectsIndbAPI)
 
-            if detected['type'] == 'car':  # TODO кал
+            if detected['type'] == 'car': 
                 car = Cars(carNumber=detected['vehiclePlate'], objectId=countOfObjectsIndbAPI)
                 db.session.add(car)
             elif detected['type'] == 'person':
@@ -61,12 +69,15 @@ class ImageInformation(Resource):
         db.session.flush()
         make_response({"success": "Info updated"}, 200)
 
+
 imageInfoIndex = api.parser()
 imageInfoIndex.add_argument('cameraId', location='args', type=str, required=True)
 imageInfoIndex.add_argument('indexOfImage', location='args', type=str, required=True)
 
 @api.route(routes['getImageInfoByIndexOfImage'])
 class ImageInfoByIndexOfImage(Resource):
+
+
     @api.expect(imageInfoIndex)
     def get(self):
         query = request.args
@@ -78,9 +89,9 @@ class ImageInfoByIndexOfImage(Resource):
         imgList = recursiveSearch(cameraPath)
         filename = imgList[int(query['indexOfImage'])]
 
-        objectInfo = dbAPI.getObjects(filename)
-        imageInfo = dbAPI.getImageByFilename(filename)
+        imageInfo = imageManager.getImageByFilename(filename)
+        objectInfo = objectManager.getObjectOnImage(imageInfo['id'])
+
         imageInfo.update({"objects": objectInfo})
-        print(objectInfo)
 
         return make_response(dict(imageInfo), 200)

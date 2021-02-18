@@ -11,12 +11,15 @@ from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename
 from services.model import getModel
 from database import db
+from database.entities.image import DatabaseImage
 
 
 api = Namespace('gallery')
 
 upload_parser = api.parser()
 upload_parser.add_argument('file', location='files', help='Image from camera', type=FileStorage, required=True)
+
+imageManager = DatabaseImage()
 
 
 @api.route(routes['getAllImages'])
@@ -29,7 +32,7 @@ class ImageList(Resource):
 
 
 @api.route(routes['image'])
-class Image(Resource):
+class Image(Resource):  
     @api.response(400, "Incorrect filename")
     @api.response(404, "Image not found")
     @api.response(200, "Return image")
@@ -69,7 +72,7 @@ class Image(Resource):
 
         image = Images(outputPath, filename, int(numberOfCam), date)
 
-        existingImage = db.session.query(Images).filter(Images.filename == filename).all()
+        existingImage = imageManager.getImageByFilename(filename)
         if existingImage:
             return make_response({"error": "Image with this filename exists"}, 400)
 

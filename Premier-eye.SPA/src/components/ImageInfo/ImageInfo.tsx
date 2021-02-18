@@ -33,11 +33,15 @@ export default class ImageInfo extends React.Component<IImageInfo> {
     getOldImageWarning = (imageDate: Date) => {
         const diff = getDiffDay(imageDate, new Date());
 
-        return (
-            <ListItem>
-                <Alert severity="error">{diff > 1 && <span>Изображений не было уже {diff} дней</span>}</Alert>{' '}
-            </ListItem>
-        );
+        if (diff > 1) {
+            return (
+                <ListItem>
+                    <Alert severity="error">
+                        <span>Изображений не было уже {diff} дней</span>
+                    </Alert>
+                </ListItem>
+            );
+        }
     };
 
     render() {

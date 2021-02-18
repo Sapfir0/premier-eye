@@ -1,3 +1,4 @@
+import { refreshSliderTimeout } from '../../../config/constants';
 import { Either, isLeft } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable, runInAction } from 'mobx';
@@ -27,12 +28,16 @@ export class SliderStore {
         this.cameraFetcher = cameraFetcher;
         makeObservable(this);
 
-        setInterval(() => this.changeCurrentCamera(this.camera!.id), 2900);
+        setInterval(() => {
+            if (this.camera !== null) {
+                this.changeCurrentCamera(this.camera.id);
+            }
+        }, refreshSliderTimeout);
         // нужно подписаться на обновление списка камер и на обновление списка изображений
     }
 
     @action
-    public async getCameraList() {
+    public async getCameraList(): Promise<void> {
         const either: Either<
             BaseInteractionError,
             definitions['CameraList']

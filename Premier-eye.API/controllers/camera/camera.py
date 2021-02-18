@@ -11,7 +11,6 @@ from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
 from services.directory import recursiveSearch
-from database.dbAPI import getCamera, addNewCamera
 from database import db
 
 api = Namespace('camera')
@@ -35,7 +34,7 @@ class CameraImageList(Resource):
 @api.route(routes['getCamera'])
 class Camera(Resource):
 
-    cameraModel = getModel("Camera", api, directory="DTO")
+    cameraModel = getModel("Camera", api, directory="DTO", fullOutputName="CameraDto")
     @api.expect(cameraModel)
     def post(self):
         """ Добавить новую камеру """

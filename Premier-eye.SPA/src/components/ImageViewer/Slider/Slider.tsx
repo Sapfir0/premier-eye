@@ -1,3 +1,5 @@
+import { Warning } from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert';
 import { decrement, flow, increment } from 'fp-ts/function';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -22,8 +24,10 @@ export default class Slider extends React.Component<ISlider> {
 
     async componentDidMount() {
         await this.props.store.getCameraList();
-        this.props.store.changeCurrentCamera(this.props.store.camerasList.items[0].id);
-        this.props.store.changeCurrentStep(this.props.store.camerasList.items[0].id, 0);
+        if (this.props.store.camerasList.items.length > 0) {
+            this.props.store.changeCurrentCamera(this.props.store.camerasList.items[0].id);
+            this.props.store.changeCurrentStep(this.props.store.camerasList.items[0].id, 0);
+        }
     }
 
     handleCameraChange = (cameraId: string) => {
@@ -65,6 +69,7 @@ export default class Slider extends React.Component<ISlider> {
         return (
             <div className="slider">
                 <CamerasList cameras={this.props.store.camerasList} onCameraChange={this.handleCameraChange} />
+                {!this.props.store.camera && <Alert severity="warning">No camera found</Alert>}
                 {this.props.store.camera && this.props.store.camera.images && (
                     <ImageView
                         currentStep={this.getCurrentStep(this.props.store.camera.id)}
