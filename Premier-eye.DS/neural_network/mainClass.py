@@ -59,7 +59,7 @@ async def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
 def carNumberDetector(filename, image: Image):
     for i, item in enumerate(image.objects):
         if image.cameraId in config.carNumberDetectorCamers and isinstance(item, Car):
-            numberPlatesInfo = detectPlate(image.outputPath, api) 
+            numberPlatesInfo = detectPlate(image.outputPath, api)   # TODO все-таки нужно подавать не все изображение, т.к. тут будет столько лишних срабатываний, которые помешают вернуть корректный результат
             image.objects[i].vehiclePlate = "".join(numberPlatesInfo['number_plates'])
 
 
