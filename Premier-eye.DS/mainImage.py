@@ -21,6 +21,8 @@ async def mainPipeline():
 
 tracemalloc.start()
 
-asyncio.run(mainPipeline())
-
+loop = asyncio.get_event_loop()
+asyncio.ensure_future(mainPipeline())
+loop.run_forever()
+loop.close() 
 
