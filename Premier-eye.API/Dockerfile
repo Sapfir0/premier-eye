@@ -16,15 +16,12 @@ ENV PYTHONUNBUFFERED 1
 RUN apt-get update && \
     apt-get install -y --no-install-recommends gcc
 
-# lint
-RUN pip install --upgrade pip
-# RUN pip install flake8
-COPY . /usr/src/app/
-# RUN flake8 --ignore=E501,F401 .
-
 # install python dependencies
 COPY ./requirements.txt .
 RUN pip wheel --no-cache-dir --no-deps --wheel-dir /usr/src/app/wheels -r requirements.txt
+
+COPY . /usr/src/app/
+
 
 
 #########
@@ -43,7 +40,7 @@ RUN addgroup --system app && adduser --system --group app
 
 # create the appropriate directories
 ENV HOME=/home/app
-ENV APP_HOME=/home/app/web
+ENV APP_HOME=/home/app/api
 RUN mkdir $APP_HOME
 WORKDIR $APP_HOME
 
@@ -54,9 +51,6 @@ COPY --from=builder /usr/src/app/requirements.txt .
 RUN pip install --upgrade pip
 RUN pip install --no-cache /wheels/*
 
-# copy entrypoint-prod.sh
-# COPY ./entrypoint.prod.sh $APP_HOME
-
 # copy project
 COPY . $APP_HOME
 
@@ -65,6 +59,4 @@ RUN chown -R app:app $APP_HOME
 
 # change to the app user
 USER app
-
-# CMD [ "flask", "run" ]
 
