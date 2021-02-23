@@ -1,12 +1,18 @@
-from flask_socketio import send, emit
-from flask_restplus import Namespace, Resource
+from flask_socketio import Namespace, emit
 
 
-def createConnectSocket(socketio):
-    
-    @socketio.event('connect')
-    def test_connect(self):
+class OnImageUpdateSocket(Namespace):
+    def on_connect(self):
         emit('my response', {'data': 'Connected'})
+
+    def on_disconnect(self):
+        emit('my response', {'data': 'Disconnected'})
+
+    def on_my_event(self, data):
+        emit('my_response', data)
+
+
+
 
 
 

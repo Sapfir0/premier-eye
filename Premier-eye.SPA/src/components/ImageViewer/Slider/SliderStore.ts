@@ -29,7 +29,11 @@ export class SliderStore {
         this.galleryFetcher = galleryFetcher;
         this.cameraFetcher = cameraFetcher;
         this.socket = socket;
-        this.socket.createChannel();
+        this.socket.createChannel(() => {
+            if (this.camera !== null) {
+                this.changeCurrentCamera(this.camera.id);
+            }
+        });
 
         makeObservable(this);
 

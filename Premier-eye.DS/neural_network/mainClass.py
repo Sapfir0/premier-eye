@@ -8,7 +8,6 @@ from services.apiWorkers.apiInteractionService import ApiInteractionService
 from neural_network.maskCNN import Mask
 from neural_network.vehiclePlateAdapter import detectPlate
 from Models.Car import Car
-from services.cameraLogger import CameraLogger
 import time
 import services.timeChecker as timeChecker
 import asyncio
@@ -18,7 +17,6 @@ from services.memory import getUsedRAM
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
-cameraLogger = CameraLogger(0)
 api = ApiInteractionService(config)
 
 async def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
@@ -69,9 +67,6 @@ async def detectObjects(filename):
     inputFile, outputFile, dateTime = dirs.getIOdirs(filename, config.IMAGE_DIR, config.OUTPUT_DIR_MASKCNN)
 
     image = mask.pipeline(inputFile, outputFile)
-    
-    for obj in image.objects:
-        cameraLogger.log(f"{obj.type} on camera", image.cameraId, image.date)
 
     print(image.objects)
     if config.carNumberDetector:

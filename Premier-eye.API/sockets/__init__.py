@@ -1,7 +1,6 @@
 from flask_socketio import SocketIO
-from sockets.onImageUpdateSocket import createConnectSocket
+from sockets.onImageUpdateSocket import OnImageUpdateSocket
 
-def getSocketIO(app):
-    socketio = SocketIO(app, cors_allowed_origins="*")
-    createConnectSocket(socketio)
-    return socketio
+socketio = SocketIO(cors_allowed_origins="*")
+
+socketio.on_namespace(OnImageUpdateSocket('/image'))
