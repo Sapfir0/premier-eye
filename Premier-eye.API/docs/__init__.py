@@ -18,3 +18,4 @@ api.add_namespace(cameraApi)
 api.add_namespace(imageInfoApi)
 api.add_namespace(objectInfoApi)
 api.add_namespace(eventsApi)
+

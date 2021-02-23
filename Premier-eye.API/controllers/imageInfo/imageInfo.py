@@ -12,6 +12,7 @@ from flask import jsonify, make_response, request
 from flask_restplus import Namespace, Resource, fields
 from services.directory import getOutputDir, recursiveSearch
 from services.model import getModel
+from flask_socketio import send, emit
 
 api = Namespace('imageInfo')
 objectManager = DatabaseObject()

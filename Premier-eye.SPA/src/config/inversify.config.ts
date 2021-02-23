@@ -1,8 +1,10 @@
 import { Container } from 'inversify';
 import 'reflect-metadata';
+import { ImageUpdateWS } from '../services/Socket';
 import { AreaMapStore } from '../components/AreaMap/AreaMapStore';
 import { ImageInfoStore } from '../components/ImageInfo/ImageInfoStore';
 import { SliderStore } from '../components/ImageViewer/Slider/SliderStore';
+import { SettingsStore } from '../components/Settings/SettingsStore';
 import ApiHelper from '../services/ApiHelper';
 import ApiInteractionService from '../services/ApiInteractionService';
 import CameraApiInteractionService from '../services/ApiInteractionService/CameraApiInteractionService';
@@ -16,7 +18,6 @@ import {
     IGalleryApiInteractionService
 } from '../services/typings/ApiTypes';
 import { TYPES } from '../typings/types';
-import {SettingsStore} from "../components/Settings/SettingsStore";
 
 const myContainer = new Container();
 
@@ -33,6 +34,7 @@ myContainer.bind<IGalleryApiInteractionService>(TYPES.GalleryApiInteractionServi
 myContainer.bind<ICameraApiInteractionService>(TYPES.CameraApiInteractionService).to(CameraApiInteractionService);
 
 myContainer.bind(TYPES.AreaMapStore).to(AreaMapStore);
+myContainer.bind(TYPES.ImageUpdateWS).to(ImageUpdateWS);
 
 export { myContainer };
 

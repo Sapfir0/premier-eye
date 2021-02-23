@@ -10,6 +10,9 @@ const TYPES = {
     SettingsStore: Symbol.for('SettingsStore'),
     ImageInfoStore: Symbol.for('ImageInfoStore'),
     AreaMapStore: Symbol.for('AreaMapStore'),
+
+    ImageUpdateWS: Symbol.for('ImageUpdateWS'),
+
 };
 
 export { TYPES };
