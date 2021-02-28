@@ -15,8 +15,8 @@ export class ImageUpdateWS {
             console.log(this._socket, this._socket.connected);
         });
 
-        this._socket.on('imageUpdated', (...args) => {
-            console.log(args);
+        this._socket.on('imageUpdated', () => {
+            console.log("image updated");
             onImageUploaded();
         });
     };
