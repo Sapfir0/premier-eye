@@ -35,7 +35,7 @@ jobs:
     - name: View Docker containers
       run: |
         docker ps
-    - name: Test with pytest
-      run: |
-        cd Premier-eye.API
-        pytest
+    # - name: Test with pytest
+    #   run: |
+    #     cd Premier-eye.API
+    #     pytest
