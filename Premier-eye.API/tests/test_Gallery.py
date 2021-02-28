@@ -6,14 +6,14 @@ import requests
 class Gallery(unittest.TestCase):
     routeUrl = cfg.serverUrl + "/gallery/images"
 
-    def test_GetAllImagesNotEmpty(self):
-        r = requests.get(self.routeUrl)
-        self.assertTrue(r.content)
+    # def test_GetAllImagesNotEmpty(self):
+    #     r = requests.get(self.routeUrl)
+    #     self.assertTrue(r.content)
 
-    def test_GetAllImagesHaveSameElements(self):
-        print(self.routeUrl)
-        r = requests.get(self.routeUrl)
-        self.assertTrue(r.content)
+    # def test_GetAllImagesHaveSameElements(self):
+    #     print(self.routeUrl)
+    #     r = requests.get(self.routeUrl)
+    #     self.assertTrue(r.content)
 
 
 if __name__ == '__main__':
