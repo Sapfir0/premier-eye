@@ -1,10 +1,10 @@
-import { refreshSliderTimeout } from '../../../config/constants';
 import { Either, isLeft } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { BaseInteractionError } from 'services/Errors/BaseInteractionError';
-import { ICameraApiInteractionService, IGalleryApiInteractionService } from 'services/typings/ApiTypes';
 import StepDataStructure from '../../../services/DataStructure/StepDataStructure';
+import { ImageUpdateWS } from '../../../services/Socket';
+import { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../../services/typings/ApiTypes';
 import { definitions } from '../../../typings/Dto';
 import { TYPES } from '../../../typings/types';
 
@@ -19,20 +19,24 @@ export class SliderStore {
 
     private readonly galleryFetcher: IGalleryApiInteractionService;
     private readonly cameraFetcher: ICameraApiInteractionService;
+    private readonly socket: ImageUpdateWS;
 
     constructor(
         @inject(TYPES.GalleryApiInteractionService) galleryFetcher: IGalleryApiInteractionService,
         @inject(TYPES.CameraApiInteractionService) cameraFetcher: ICameraApiInteractionService,
+        @inject(TYPES.ImageUpdateWS) socket: ImageUpdateWS,
     ) {
         this.galleryFetcher = galleryFetcher;
         this.cameraFetcher = cameraFetcher;
-        makeObservable(this);
-
-        setInterval(() => {
+        this.socket = socket;
+        this.socket.createChannel(() => {
             if (this.camera !== null) {
                 this.changeCurrentCamera(this.camera.id);
             }
-        }, refreshSliderTimeout);
+        });
+
+        makeObservable(this);
+
         // нужно подписаться на обновление списка камер и на обновление списка изображений
     }
 

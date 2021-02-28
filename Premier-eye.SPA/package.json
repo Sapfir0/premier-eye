@@ -32,6 +32,7 @@
     "react-swipeable-views": "^0.13.9",
     "react-swipeable-views-utils": "^0.13.9",
     "reflect-metadata": "^0.1.13",
+    "socket.io-client": "^3.1.1",
     "typeface-roboto": "0.0.75",
     "typescript": "^4.1.2",
     "webpack": "^4.42.0"
@@ -49,6 +50,7 @@
     "@types/react-dom": "^17.0.0",
     "@types/react-router-dom": "^5.1.6",
     "@types/react-swipeable-views": "^0.13.0",
+    "@types/socket.io": "^2.1.13",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "autoprefixer": "^9.8.6",

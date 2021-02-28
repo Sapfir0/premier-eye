@@ -5,7 +5,7 @@ import os
 
 
 class UploadImage(unittest.TestCase):
-    routeUrl = cfg.serverUrl + "/gallery/image/" + "1_20190718144434.jpg"
+    routeUrl = "http://localhost:8050" + "/gallery/image/" + "1_20190718144434.jpg"
     imageName = "1_20190718144434.jpg" # учитывай, что этого изображения быть в базе не должно
     testsPath = os.path.join(cfg.APP_PATH, "tests", "res")
     imagePath = os.path.join(testsPath, imageName)
