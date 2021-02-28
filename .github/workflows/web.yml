@@ -32,6 +32,9 @@ jobs:
     - name: Build docker-compose
       run: |
         docker-compose up --build -d
+    - name: View Docker containers
+      run: |
+        docker ps
     - name: Test with pytest
       run: |
         cd Premier-eye.API
