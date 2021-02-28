@@ -10,16 +10,16 @@ class Camera(unittest.TestCase):
 
     camerasList = [1, 2, 3]
 
-    def getAllImagesFromCamera(self):
-        for camera in self.camerasList:
-            r = requests.get(f'{camera}/images')
+    # def getAllImagesFromCamera(self):
+    #     for camera in self.camerasList:
+    #         r = requests.get(f'{camera}/images')
 
-    def getCameraList(self):
-        r = requests.get(f'/list')
+    # def getCameraList(self):
+    #     r = requests.get(f'/list')
 
-    def getCamera(self):
-        for camera in self.camerasList:
-            r = requests.get(f'{camera}/')
+    # def getCamera(self):
+    #     for camera in self.camerasList:
+    #         r = requests.get(f'{camera}/')
     # def test_IsAllCamerasAvailable(self):
     #     for camera in self.camerasList:
     #         r = requests.get(f"{self.routeUrl}/{camera}")

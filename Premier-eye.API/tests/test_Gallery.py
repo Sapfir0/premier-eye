@@ -11,6 +11,7 @@ class Gallery(unittest.TestCase):
         self.assertTrue(r.content)
 
     def test_GetAllImagesHaveSameElements(self):
+        print(self.routeUrl)
         r = requests.get(self.routeUrl)
         self.assertTrue(r.content)
 
