@@ -19,5 +19,7 @@ RUN pip3 install keras==2.4 tensorflow==2.4
 COPY . /ds
 WORKDIR /ds
 
+ENV NOMEROFF_NET_URL="http://localhost:5051"
+
 ENTRYPOINT ["python3"]
 CMD ["mainImage.py" ]
