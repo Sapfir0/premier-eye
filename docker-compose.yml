@@ -7,7 +7,7 @@ services:
     build:
       context: Premier-eye.API
       dockerfile: Dockerfile
-    command: gunicorn --bind 0.0.0.0:8050 --workers 5 app:app
+    command: gunicorn --bind 0.0.0.0:8050 app:app
     volumes:
       - "./Premier-eye.API:/home/app/api"
     networks:

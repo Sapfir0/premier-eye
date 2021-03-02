@@ -8,7 +8,6 @@ from docs import api
 import time
 import datetime
 from services.queryLogger import createLogger
-from sockets import socketio
 
 def createApp(configClass=Config):
     staticFolder = 'static'
@@ -23,7 +22,6 @@ app = createApp(cfg)
 api.init_app(app)
 
 createLogger(app)
-socketio.init_app(app)
 
 if __name__ == '__main__':
-    socketio.run(app, port=cfg.FLASK_RUN_HOST, host=cfg.HOST, threaded=True)   
+    app.run(port=cfg.FLASK_RUN_HOST, host=cfg.HOST, threaded=True)

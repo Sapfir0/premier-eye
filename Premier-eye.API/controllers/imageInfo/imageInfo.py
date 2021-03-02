@@ -12,7 +12,6 @@ from flask import jsonify, make_response, request
 from flask_restplus import Namespace, Resource, fields
 from services.directory import getOutputDir, recursiveSearch
 from services.model import getModel
-from sockets import socketio
 
 api = Namespace('imageInfo')
 objectManager = DatabaseObject()
@@ -68,7 +67,6 @@ class ImageInformation(Resource):
 
             db.session.commit()
         db.session.flush()
-        socketio.emit("imageUpdated", broadcast=True)
         make_response({"success": "Info updated"}, 200)
 
 

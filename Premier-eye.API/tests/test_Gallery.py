@@ -4,14 +4,13 @@ import requests
 
 
 class Gallery(unittest.TestCase):
-    routeUrl = cfg.serverUrl + "/gallery/images"
+    routeUrl = cfg.serverUrl + "/image"
 
     def test_GetAllImagesNotEmpty(self):
         r = requests.get(self.routeUrl)
         self.assertTrue(r.content)
 
     def test_GetAllImagesHaveSameElements(self):
-        print(self.routeUrl)
         r = requests.get(self.routeUrl)
         self.assertTrue(r.content)
 
