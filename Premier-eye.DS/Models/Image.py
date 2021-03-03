@@ -60,6 +60,13 @@ class Image(object):
             elif obj['type'] == "person":
                 self.objects.append(Person(obj))
 
+    def countObjectByType(self, selectedType):
+        counter = 0
+        for obj in self.objects:
+            if obj.type == selectedType:
+                counter+=1
+        return counter
+
     def saveImageByPlot(self, outputPath, image):
         """
         plot image saving

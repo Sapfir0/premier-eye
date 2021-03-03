@@ -14,11 +14,12 @@ import services.timeChecker as timeChecker
 import asyncio
 import tracemalloc
 from services.memory import getUsedRAM
+from typing import Optional
 
 
 mask = Mask()
 currentImageDir = os.path.join(os.getcwd(), config.IMAGE_DIR)
-cameraLogger = CameraLogger(0)
+# cameraLogger = CameraLogger(0)
 api = ApiInteractionService(config)
 
 async def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
@@ -38,6 +39,7 @@ async def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
             соответственно, мы не обработаем файл, который был уже обработан при предыдущих запусках.
             Если у двух словарей идентичны массивы, ассоцирующуюся с одной камерой, то мы спим(спит поток:( )
     """
+    previousImage = None
     for filename in filenames:
         if numberOfCam not in processedFrames.keys():
             processedFrames.update({numberOfCam: []})
@@ -48,7 +50,7 @@ async def predicated(numberOfCam: int, filenames: list, processedFrames: dict):
                 time.sleep(2.5)
             continue  # если файлы еще есть, то переходим к следующему
 
-        await detectObjects(filename)
+        previousImage = await detectObjects(filename, previousImage)
         processedFrames[numberOfCam].append(filename)
         fileController.writeInFile(config.DATE_FILE, str(processedFrames)) # будет стирать содержимое файла каждый кадр
         snapshot = tracemalloc.take_snapshot()
@@ -63,26 +65,45 @@ def carNumberDetector(filename, image: Image):
             image.objects[i].vehiclePlate = "".join(numberPlatesInfo['number_plates'])
 
 
+def getLogString(image, previousImage, selectedType):
+    if image.countObjectByType(selectedType) < previousImage.countObjectByType(selectedType):
+        return f"{selectedType} leaved"
+    elif image.countObjectByType(selectedType) > previousImage.countObjectByType(selectedType):
+        return f"{selectedType} entered"
+    else:
+        return None
+
 
 @timeChecker.checkElapsedTimeAsync(4, 2.5, 1.5, "Full image work")
-async def detectObjects(filename):
+async def detectObjects(filename, previousImage):
     inputFile, outputFile, dateTime = dirs.getIOdirs(filename, config.IMAGE_DIR, config.OUTPUT_DIR_MASKCNN)
 
     image = mask.pipeline(inputFile, outputFile)
     
-    for obj in image.objects:
-        cameraLogger.log(f"{obj.type} on camera", image.cameraId, image.date)
+    # for obj in image.objects:
+    #     cameraLogger.log(f"{obj.type} on camera", image.cameraId, image.date)
 
     print(image.objects)
     if config.carNumberDetector:
         carNumberDetector(filename, image)
 
-    
+    logStrings = []
+    if previousImage != None:
+        for objectType in config.availableObjects:
+            logStrings.append(getLogString(image, previousImage, objectType))
+
+
     if config.sendRequestToServer:
         await asyncio.gather(
             api.uploadImage(outputFile), 
             api.postImageInfo(outputFile, image)
         )   
-        # api.postLog(f"{obj.type} visible on camera", image.date, image.cameraId)
+        for log in logStrings:
+            if log != None:
+                await api.postLog(log, image.date, image.cameraId) # хаха вот это мусор
+
+        # если на текущем кадре больше объектов этого типа, чем на предыдущем, то логгиурем, что появился новый объект
+        # если на текущем кадре меньше объектов этого типа, чем на предыдущем, то логгиурем, что  объект ушел
+        # если равно, ничего не пишем
 
     return image
