@@ -5,6 +5,7 @@ const ClientRoutes = {
     Index: '/home',
     Settings: '/settings',
     AreaMap: '/map',
+    Logger: '/logger',
 } as const;
 
 export type ClientRouteType = typeof ClientRoutes[keyof typeof ClientRoutes];

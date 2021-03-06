@@ -13,10 +13,12 @@ import {
     IApiInteractionService,
     IBaseInteractionService,
     ICameraApiInteractionService,
-    IGalleryApiInteractionService
+    IGalleryApiInteractionService,
 } from '../services/typings/ApiTypes';
 import { TYPES } from '../typings/types';
-import {SettingsStore} from "../components/Settings/SettingsStore";
+import { SettingsStore } from '../components/Settings/SettingsStore';
+import { CameraLoggerStore } from '../components/CameraLogger/CameraLoggerStore';
+import EventApiInteractionService from '../services/ApiInteractionService/EventApiInteractionService';
 
 const myContainer = new Container();
 
@@ -28,11 +30,11 @@ myContainer.bind<IApiInteractionService>(TYPES.ApiInteractionService).to(ApiInte
 myContainer.bind(TYPES.SliderStore).to(SliderStore);
 myContainer.bind(TYPES.ImageInfoStore).to(ImageInfoStore);
 myContainer.bind(TYPES.SettingsStore).to(SettingsStore);
+myContainer.bind(TYPES.AreaMapStore).to(AreaMapStore);
+myContainer.bind(TYPES.CameraLoggerStore).to(CameraLoggerStore);
 
 myContainer.bind<IGalleryApiInteractionService>(TYPES.GalleryApiInteractionService).to(GalleryApiInteractionService);
 myContainer.bind<ICameraApiInteractionService>(TYPES.CameraApiInteractionService).to(CameraApiInteractionService);
-
-myContainer.bind(TYPES.AreaMapStore).to(AreaMapStore);
+myContainer.bind<EventApiInteractionService>(TYPES.EventApiInteractionService).to(EventApiInteractionService);
 
 export { myContainer };
-

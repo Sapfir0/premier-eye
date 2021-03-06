@@ -26,4 +26,9 @@ const CAMERA = {
     CAMERA: `${CAMERA_HIGH_LEVEL_DOMAIN}/`,
 };
 
-export const ApiRoutes = { GALLERY, CAMERA, IMAGE_INFO, MATH } as const;
+const EVENTS_HIGH_LEVEL_DOMAIN = '/events';
+const EVENT = {
+    LOG: `${EVENTS_HIGH_LEVEL_DOMAIN}/log`,
+};
+
+export const ApiRoutes = { GALLERY, CAMERA, IMAGE_INFO, MATH, EVENT } as const;

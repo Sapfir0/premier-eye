@@ -9,7 +9,8 @@ import json
 
 class ApiInteractionService(BaseInteractionService):
     async def postLog(self, title, timestamp, cameraId):
-        return self.post(galleryRoutes['log'], json={'title': title, 'timestamp': timestamp.timestamp(), 'cameraId': cameraId})
+        date = str(timestamp.utcnow())
+        return self.post(galleryRoutes['log'], json={'title': title, 'timestamp': date, 'cameraId': cameraId})
 
     async def postImageInfo(self, imagePath: str, imageInfo):
         jsonInfo = {"objects": imageInfo.json()}
