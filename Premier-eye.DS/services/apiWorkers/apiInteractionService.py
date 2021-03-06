@@ -5,9 +5,17 @@ import os
 from config.settings import config
 from Models import Image
 import json
+import asyncio
 
 
 class ApiInteractionService(BaseInteractionService):
+
+    async def postEvents(self, logStrings, timestamp, cameraId):
+        if len(logStrings) == 0: 
+            return
+        date = timestamp.strftime('%Y-%m-%d %H:%M:%SZ') # default iso format
+        return self.post(galleryRoutes['logs'], json={'titles': logStrings, 'timestamp': date, 'cameraId': cameraId})
+
     async def postLog(self, title, timestamp, cameraId):
         date = str(timestamp.utcnow())
         return self.post(galleryRoutes['log'], json={'title': title, 'timestamp': date, 'cameraId': cameraId})

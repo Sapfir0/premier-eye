@@ -1,0 +1,19 @@
+{
+    "properties": {
+        "titles": {
+            "type": "array",
+            "items": {
+                "type": "string"  
+            }
+        },
+        "timestamp": {
+            "type": "datetime"  
+        },
+        "cameraId": {
+            "type": "number"  
+        }
+    },
+    "type": "object",
+    "additionalProperties": false,
+    "required": ["titles", "timestamp", "cameraId"]
+}

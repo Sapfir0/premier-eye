@@ -32,4 +32,9 @@ export interface definitions {
     timestamp: { [key: string]: any };
     cameraId?: number;
   };
+  "DTOLogs": {
+    titles: string[];
+    timestamp: { [key: string]: any };
+    cameraId: number;
+  };
 }

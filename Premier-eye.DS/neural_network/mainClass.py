@@ -66,9 +66,12 @@ def carNumberDetector(filename, image: Image):
 
 
 def getLogString(image, previousImage, selectedType):
-    if image.countObjectByType(selectedType) < previousImage.countObjectByType(selectedType):
+    objectsOnCurrentFrame = image.countObjectByType(selectedType)
+    objectsOnPreviousFrame = previousImage.countObjectByType(selectedType)
+
+    if objectsOnCurrentFrame < objectsOnPreviousFrame:
         return f"{selectedType} leaved"
-    elif image.countObjectByType(selectedType) > previousImage.countObjectByType(selectedType):
+    elif objectsOnCurrentFrame > objectsOnPreviousFrame:
         return f"{selectedType} entered"
     else:
         return None
@@ -89,18 +92,19 @@ async def detectObjects(filename, previousImage):
 
     logStrings = []
     if previousImage != None:
-        for objectType in config.availableObjects:
-            logStrings.append(getLogString(image, previousImage, objectType))
+        for obj in image.objects:
+            log = getLogString(image, previousImage, obj.type)
+            if (log != None):
+                logStrings.append(log) # вот это вложенность
 
 
     if config.sendRequestToServer:
         await asyncio.gather(
             api.uploadImage(outputFile), 
-            api.postImageInfo(outputFile, image)
+            api.postImageInfo(outputFile, image),
+            api.postEvents(logStrings, image.date, image.cameraId) 
         )   
-        for log in logStrings:
-            if log != None:
-                await api.postLog(log, image.date, image.cameraId) # хаха вот это мусор
+
 
         # если на текущем кадре больше объектов этого типа, чем на предыдущем, то логгиурем, что появился новый объект
         # если на текущем кадре меньше объектов этого типа, чем на предыдущем, то логгиурем, что  объект ушел

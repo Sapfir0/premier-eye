@@ -18,7 +18,7 @@ from database.entities.events import DatabaseEvents
 api = Namespace('events')
 
 @api.route(routes['log'])
-class EventsLogger(Resource):
+class EventLogger(Resource):
     eventsManager = DatabaseEvents()
 
     cameraModel = getModel("Log", api, directory="DTO")
@@ -32,4 +32,18 @@ class EventsLogger(Resource):
     def get(self):
         stringRes = self.eventsManager.listEvents()
         return make_response({"data": stringRes}, 200)
+
+
+@api.route(routes['logs'])
+class EventsLogger(Resource):
+    eventsManager = DatabaseEvents()
+
+    cameraModel = getModel("Logs", api, directory="DTO")
+    @api.expect(cameraModel)
+    def post(self):
+        req = request.get_json()
+        for title in req['titles']:
+            self.eventsManager.postEvent(timestamp=req['timestamp'], title=title, cameraId=req['cameraId'])
+        return make_response({"success": "Log created"}, 200)
+
 
