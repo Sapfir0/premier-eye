@@ -68,8 +68,7 @@ export default class ImageInfo extends React.Component<IImageInfo> {
                     </ListItem>
                     <ListItem> {myData.filename} </ListItem>
                     <ListItem>
-                        {' '}
-                        {myData.fixationDatetime.toString()} {warningDateDiff}
+                        {new Date(myData.fixationDatetime).toLocaleDateString()} {warningDateDiff}
                     </ListItem>
 
                     {objects}

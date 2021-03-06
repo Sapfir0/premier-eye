@@ -1,6 +1,6 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import React, { ReactNode } from 'react';
-import { HeadersBaseSettings } from '../../typings/common';
+import { HeadersBaseSettings } from 'typings/table';
 import { convert, getMappingForCell } from './BaseTableUtils';
 
 export interface IBaseTableLayout<T> {
@@ -24,7 +24,35 @@ export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Com
         const headerElements: Array<JSX.Element> = [];
 
         headerNames.forEach((header, name) => {
-            headerElements.push(<TableCell key={name.toString()}>{header.text}</TableCell>);
+            const filterButton = header.buttons?.filterButton;
+            const sortButton = header.buttons?.sortButton;
+
+            const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+                sortButton?.callback(name, sortButton?.sortDirection);
+            };
+            const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+                filterButton?.callback(name);
+            };
+
+            const sortElement = sortButton?.element(handleSortClick, sortButton?.active, sortButton?.sortDirection);
+            const filterElement = header.buttons?.filterButton?.element(
+                handleFilterClick,
+                filterButton?.active as boolean,
+            );
+
+            let widthParam = null;
+            if (header.width) {
+                widthParam = { width: header.width };
+            }
+
+            headerElements.push(
+                <TableCell {...widthParam} key={name.toString()}>
+                    {header.text}
+
+                    {filterElement}
+                    {sortElement}
+                </TableCell>,
+            );
         });
         return headerElements;
     };

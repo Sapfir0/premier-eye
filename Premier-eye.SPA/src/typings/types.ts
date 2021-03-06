@@ -1,4 +1,3 @@
-
 const TYPES = {
     ApiHelper: Symbol.for('ApiHelper'),
     BaseInteractionService: Symbol.for('BaseInteractionService'),

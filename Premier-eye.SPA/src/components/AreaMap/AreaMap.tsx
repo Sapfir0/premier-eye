@@ -13,7 +13,7 @@ export class AreaMap extends React.Component<IAreaMap> {
         return (
             <>
                 Карта
-                <UploadButton onClick={this.props.areaStore.addNewCard}>Добавить карту объекта</UploadButton>
+                <UploadButton>Добавить карту объекта</UploadButton>
             </>
         );
     }

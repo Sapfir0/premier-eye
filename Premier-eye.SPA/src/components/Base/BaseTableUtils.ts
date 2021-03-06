@@ -1,4 +1,4 @@
-import { HeadersBaseSettings } from '../../typings/common';
+import { HeadersBaseSettings } from '../../typings/table';
 
 export function getMappingForCell<T>(headers: HeadersBaseSettings<T>): Array<keyof T | ''> {
     return [...headers.keys()];

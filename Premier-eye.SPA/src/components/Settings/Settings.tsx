@@ -1,10 +1,9 @@
 import { Button, Input } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React from 'react';
-import { HeaderName, HeadersBaseSettings } from '../../typings/common';
+import { HeaderName, HeadersBaseSettings } from '../../typings/table';
 import { BaseTableLayout } from '../Base/BaseTableLayout';
-import { SliderStore } from '../ImageViewer/Slider/SliderStore';
-import {SettingsStore} from "./SettingsStore";
+import { SettingsStore } from './SettingsStore';
 
 export interface ISettings {
     sliderStore: SettingsStore;

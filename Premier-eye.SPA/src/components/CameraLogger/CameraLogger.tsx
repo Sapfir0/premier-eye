@@ -2,9 +2,10 @@ import { Paper } from '@material-ui/core';
 // import { Map } from 'immutable';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
-import { HeadersBaseSettings } from 'typings/common';
 import { definitions } from 'typings/Dto';
-import { BaseTableLayout } from '../../components/Base/BaseTableLayout';
+import { HeadersBaseSettings, OnClick } from 'typings/table';
+import { BaseTable } from '../../components/Base/BaseTable';
+import { SortButton } from '../Atomics/SortButton';
 import { CameraLoggerStore } from './CameraLoggerStore';
 
 export interface CameraLoggerProps {
@@ -18,12 +19,30 @@ export const CameraLogger = observer((props: CameraLoggerProps) => {
 
     const headers: HeadersBaseSettings<definitions['DTOLog']> = new Map();
     headers.set('cameraId', { text: 'Камера' });
-    headers.set('timestamp', { text: 'Дата' });
+
+    headers.set('timestamp', {
+        text: 'Дата',
+        convertFunction: (date: string) => {
+            return new Date(date).toLocaleString();
+        },
+        buttons: {
+            sortButton: {
+                element: (onClick: OnClick, selected: boolean, direction: SortDirection) => (
+                    <SortButton onClick={onClick} selected={selected} />
+                ),
+                active: false,
+                callback: (name, direction) => {
+                    console.log(name, direction);
+                },
+                sortDirection: 'asc',
+            },
+        },
+    });
     headers.set('title', { text: 'Описание' });
 
     return (
         <Paper>
-            <BaseTableLayout<definitions['DTOLog'], any> headers={headers} list={props.cameraLoggerStore.events} />
+            <BaseTable<definitions['DTOLog'], any> headers={headers} list={props.cameraLoggerStore.events} />
         </Paper>
     );
 });

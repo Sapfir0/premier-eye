@@ -33,6 +33,6 @@ jobs:
       run: |
         docker-compose up --build -d
     - name: Test with pytest
-      run: |
-        cd Premier-eye.API
-        pytest
+      # run: |
+      #   cd Premier-eye.API
+      #   pytest
