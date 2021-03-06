@@ -1,9 +1,9 @@
 import { Paper } from '@material-ui/core';
 // import { Map } from 'immutable';
 import { observer } from 'mobx-react';
-import React, { useEffect } from 'react';
+import React, { MouseEventHandler, useEffect } from 'react';
 import { definitions } from 'typings/Dto';
-import { HeadersBaseSettings, OnClick } from 'typings/table';
+import { HeadersBaseSettings, SortDirection } from 'typings/table';
 import { BaseTable } from '../../components/Base/BaseTable';
 import { SortButton } from '../Atomics/SortButton';
 import { CameraLoggerStore } from './CameraLoggerStore';
@@ -23,12 +23,12 @@ export const CameraLogger = observer((props: CameraLoggerProps) => {
     headers.set('timestamp', {
         text: 'Дата',
         convertFunction: (date: string) => {
-            return new Date(date).toLocaleString("ru", {timeZone: 'UTC'});
+            return new Date(date).toLocaleString('ru', { timeZone: 'UTC' });
         },
         buttons: {
             sortButton: {
-                element: (onClick: OnClick, selected: boolean, direction: SortDirection) => (
-                    <SortButton onClick={onClick} selected={selected} />
+                element: (onClick: MouseEventHandler, selected: boolean, direction: SortDirection) => (
+                    <SortButton onClick={onClick} selected={selected} direction={direction} />
                 ),
                 active: false,
                 callback: (name, direction) => {

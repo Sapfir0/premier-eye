@@ -1,3 +1,5 @@
+import { MouseEventHandler } from "react";
+
 export type Key<T> = keyof T;
 export type HeadersBaseSettings<T> = Map<Key<T> | '', HeaderName<T>>;
 
@@ -12,11 +14,11 @@ export type Button = {
 
 export interface SortButton extends Button {
     sortDirection: SortDirection;
-    element: (onClick: OnClick, selected: boolean, direction: SortDirection) => React.ReactElement;
+    element: (onClick: MouseEventHandler, selected: boolean, direction: SortDirection) => React.ReactElement;
 }
 
 export interface FilterButton extends Button {
-    element: (onClick: OnClick, selected: boolean) => React.ReactElement;
+    element: (onClick: MouseEventHandler, selected: boolean) => React.ReactElement;
 }
 
 export type Buttons = {

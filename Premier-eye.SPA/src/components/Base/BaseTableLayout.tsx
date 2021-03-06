@@ -6,6 +6,7 @@ import { convert, getMappingForCell } from './BaseTableUtils';
 export interface IBaseTableLayout<T> {
     list?: Array<T>;
     headers: HeadersBaseSettings<T>;
+    children?: ReactNode;
 }
 
 export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Component<U> {

@@ -66,6 +66,10 @@ def carNumberDetector(filename, image: Image):
 
 
 def getLogString(image, previousImage, selectedType):
+    # если на текущем кадре больше объектов этого типа, чем на предыдущем, то логгиурем, что появился новый объект
+    # если на текущем кадре меньше объектов этого типа, чем на предыдущем, то логгиурем, что  объект ушел
+    # если равно, ничего не пишем
+
     objectsOnCurrentFrame = image.countObjectByType(selectedType)
     objectsOnPreviousFrame = previousImage.countObjectByType(selectedType)
 
@@ -91,11 +95,18 @@ async def detectObjects(filename, previousImage):
         carNumberDetector(filename, image)
 
     logStrings = []
-    if previousImage != None:
-        for obj in image.objects:
+
+    def appendToLogString(objects):
+        for obj in objects: # сначала проверим предыдущие, для того чтобы точно учесть исчезновение  объекта
             log = getLogString(image, previousImage, obj.type)
             if (log != None):
-                logStrings.append(log) # вот это вложенность
+                logStrings.append(log)
+
+
+    if previousImage != None:
+        if len(image.objects) == 0:
+            appendToLogString(previousImage.objects)  # сначала проверим предыдущие, для того чтобы точно учесть исчезновение  объекта
+        appendToLogString(image.objects)
 
 
     if config.sendRequestToServer:
@@ -104,10 +115,5 @@ async def detectObjects(filename, previousImage):
             api.postImageInfo(outputFile, image),
             api.postEvents(logStrings, image.date, image.cameraId) 
         )   
-
-
-        # если на текущем кадре больше объектов этого типа, чем на предыдущем, то логгиурем, что появился новый объект
-        # если на текущем кадре меньше объектов этого типа, чем на предыдущем, то логгиурем, что  объект ушел
-        # если равно, ничего не пишем
 
     return image

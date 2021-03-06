@@ -9,7 +9,7 @@ export interface IBaseTable<T> extends IBaseTableLayout<T> {
     filterValue: string;
 }
 
-export class BaseTable<TDto, TProps extends IBaseTable<TDto>> extends React.Component {
+export class BaseTable<TDto, TProps extends IBaseTable<TDto>> extends React.Component<TProps> {
     constructor(props: TProps) {
         super(props);
     }
