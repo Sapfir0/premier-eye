@@ -1,7 +1,7 @@
 import { injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';
 import { switchDirection } from '../../services/utils';
-import { SortDirection } from 'typings/table';
+import { ColumnDefinition, SortDirection } from 'typings/table';
 
 @injectable()
 export class BaseTableStore {
@@ -19,9 +19,8 @@ export class BaseTableStore {
 
     public filterValueChanged(filterName: string, filterValue: string) {}
 
-    public sortDirectionChanged(sortName: string, sortValue: SortDirection) {
-        console.log('called base sort');
-        this.sortBy = sortName;
+    public sortDirectionChanged<T>(sortName: ColumnDefinition<T>, sortValue: SortDirection) {
+        this.sortBy = sortName as string;
         this.sortDir = switchDirection(sortValue);
     }
 }

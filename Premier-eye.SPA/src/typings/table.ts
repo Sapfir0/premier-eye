@@ -1,11 +1,12 @@
-import { MouseEventHandler } from "react";
+import { MouseEventHandler } from 'react';
 
 export type Key<T> = keyof T;
-export type HeadersBaseSettings<T> = Map<Key<T> | '', HeaderName<T>>;
+export type ColumnDefinition<T> = Key<T> | '';
+export type HeadersBaseSettings<T> = Map<ColumnDefinition<T>, HeaderName<T>>;
 
 export type SortDirection = 'asc' | 'desc';
 
-export type OnClick = (event: React.MouseEvent<HTMLButtonElement>, data: any ) => void; //TODO тип указать
+export type OnClick = (event: React.MouseEvent<HTMLButtonElement>, data: any) => void; //TODO тип указать
 
 export type Button = {
     callback: (...args: any) => any;
@@ -22,7 +23,7 @@ export interface FilterButton extends Button {
 }
 
 export type Buttons = {
-    sortButton?: SortButton;
+    sortButton?: SortButton | false;
     filterButton?: FilterButton;
 };
 

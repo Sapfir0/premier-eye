@@ -1,6 +1,7 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import React, { ReactNode } from 'react';
 import { HeadersBaseSettings } from 'typings/table';
+import { SortButton } from '../Atomics/SortButton';
 import { BaseTableStore } from './BaseTableStore';
 import { convert, getMappingForCell } from './BaseTableUtils';
 
@@ -38,7 +39,20 @@ export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Com
                 filterButton?.callback(name);
             };
 
-            const sortElement = sortButton?.element(handleSortClick, sortButton?.active, this.props.store.sortDir);
+            let sortElement = null;
+            if (sortButton !== false) {
+                sortElement =
+                    sortButton !== undefined ? (
+                        sortButton.element(handleSortClick, name == this.props.store.sortBy, this.props.store.sortDir)
+                    ) : (
+                        <SortButton
+                            onClick={handleSortClick}
+                            selected={name == this.props.store.sortBy}
+                            direction={name == this.props.store.sortBy ? this.props.store.sortDir : 'desc'}
+                        />
+                    );
+            }
+
             const filterElement = header.buttons?.filterButton?.element(
                 handleFilterClick,
                 filterButton?.active as boolean,
