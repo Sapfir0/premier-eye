@@ -11,6 +11,7 @@ from predownload import predownload
 NOMEROFF_NET_DIR = os.path.abspath('../nomeroff-net')
 sys.path.append(NOMEROFF_NET_DIR)
 from NomeroffNet import textPostprocessing
+from NomeroffNet.BBoxNpPoints import getCvZoneRGB, convertCvZonesRGBtoBGR, reshapePoints
 
 
 warnings.filterwarnings('ignore')
@@ -19,29 +20,21 @@ config = ConfigProto()
 config.gpu_options.allow_growth = True
 session = InteractiveSession(config=config)
 
-rectDetector, optionsDetector, textDetector, nnet = predownload('../nomeroff-net')
+npPointsCraft, optionsDetector, textDetector, detector = predownload('../nomeroff-net')
  
 def read_number_plates(img):      
-    cv_imgs_masks = nnet.detect_mask([img])
+    targetBoxes = detector.detect_bbox(img)
+    all_points = npPointsCraft.detect(img, targetBoxes,[5,2,0])
 
-    number_plates = []
-    region_names = []
+    # cut zones
+    zones = convertCvZonesRGBtoBGR([getCvZoneRGB(img, reshapePoints(rect, 1)) for rect in all_points])
 
-    for cv_img_masks in cv_imgs_masks:
-        # Detect points.
-        arrPoints = rectDetector.detect(cv_img_masks)
+    # predict zones attributes 
+    regionIds, stateIds, countLines = optionsDetector.predict(zones)
+    regionNames = optionsDetector.getRegionLabels(regionIds)
 
-        # cut zones
-        zones = rectDetector.get_cv_zonesBGR(img, arrPoints, 64, 295)
+    # find text with postprocessing by standart
+    textArr = textDetector.predict(zones)
+    textArr = textPostprocessing(textArr, regionNames)
 
-        # find standart
-        regionIds, stateIds, countLines = optionsDetector.predict(zones)
-        regionNames = optionsDetector.getRegionLabels(regionIds)
-
-        # find text with postprocessing by standart
-        textArr = textDetector.predict(zones)
-        textArr = textPostprocessing(textArr, regionNames)
-        number_plates += textArr
-        region_names += regionNames
-
-    return number_plates, region_names
+    return textArr, regionNames

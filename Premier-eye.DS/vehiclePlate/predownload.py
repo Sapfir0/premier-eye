@@ -6,27 +6,28 @@ def predownload(nnDir):
     NOMEROFF_NET_DIR = os.path.abspath(nnDir)
     sys.path.append(NOMEROFF_NET_DIR)
 
-    # Import license plate recognition tools.
-    from NomeroffNet import  Detector
-    from NomeroffNet import  filters
-    from NomeroffNet import  RectDetector
-    from NomeroffNet import  OptionsDetector
-    from NomeroffNet import  TextDetector
+    from NomeroffNet.YoloV5Detector import Detector
 
+    detector = Detector()
+    detector.load()
+
+    
+    from NomeroffNet.BBoxNpPoints import NpPointsCraft, getCvZoneRGB, convertCvZonesRGBtoBGR, reshapePoints
+    npPointsCraft = NpPointsCraft()
+    npPointsCraft.load()
+
+    from NomeroffNet.OptionsDetector import OptionsDetector
+    from NomeroffNet.TextDetector import TextDetector
+    from NomeroffNet.TextPostprocessing import textPostprocessing
 
     # load models
-    rectDetector = RectDetector()
-
     optionsDetector = OptionsDetector()
-
     optionsDetector.load("latest")
 
     textDetector = TextDetector.get_static_module("eu")()
     textDetector.load("latest")
 
-    nnet = Detector()
-    nnet.loadModel(NOMEROFF_NET_DIR)
-    return rectDetector, optionsDetector, textDetector, nnet
+    return npPointsCraft, optionsDetector, textDetector, detector
  
 if __name__ == "__main__":
     predownload('./nomeroff-net')
