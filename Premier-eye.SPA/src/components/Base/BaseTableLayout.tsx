@@ -1,12 +1,14 @@
 import { Table, TableBody, TableCell, TableHead, TableRow } from '@material-ui/core';
 import React, { ReactNode } from 'react';
 import { HeadersBaseSettings } from 'typings/table';
+import { BaseTableStore } from './BaseTableStore';
 import { convert, getMappingForCell } from './BaseTableUtils';
 
 export interface IBaseTableLayout<T> {
     list?: Array<T>;
     headers: HeadersBaseSettings<T>;
     children?: ReactNode;
+    store: BaseTableStore;
 }
 
 export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Component<U> {
@@ -29,22 +31,20 @@ export class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Com
             const sortButton = header.buttons?.sortButton;
 
             const handleSortClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-                sortButton?.callback(name, sortButton?.sortDirection);
+                this.props.store.sortDirectionChanged(name, this.props.store.sortDir);
             };
+
             const handleFilterClick = (event: React.MouseEvent<HTMLButtonElement>) => {
                 filterButton?.callback(name);
             };
 
-            const sortElement = sortButton?.element(handleSortClick, sortButton?.active, sortButton?.sortDirection);
+            const sortElement = sortButton?.element(handleSortClick, sortButton?.active, this.props.store.sortDir);
             const filterElement = header.buttons?.filterButton?.element(
                 handleFilterClick,
                 filterButton?.active as boolean,
             );
 
-            let widthParam = null;
-            if (header.width) {
-                widthParam = { width: header.width };
-            }
+            const widthParam = header.width ? { width: header.width } : null;
 
             headerElements.push(
                 <TableCell {...widthParam} key={name.toString()}>

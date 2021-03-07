@@ -7,7 +7,7 @@ import { CameraLoggerStore } from '../CameraLogger/CameraLoggerStore';
 export default function LoggerPage() {
     return (
         <>
-            <CameraLogger cameraLoggerStore={myContainer.get<CameraLoggerStore>(TYPES.CameraLoggerStore)} />
+            <CameraLogger />
         </>
     );
 }
