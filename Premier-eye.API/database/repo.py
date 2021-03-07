@@ -1,5 +1,6 @@
 from database import db
 from sqlalchemy import select, insert
+from sqlalchemy import func, desc, asc
 
 class Repo:
     conn = None
@@ -7,8 +8,15 @@ class Repo:
     def __init__(self):
         self.conn = db.engine.connect()
 
-    def all(self, table):
-        selectStmt = select([table])
+    def all(self, table, reqArgs):
+        sortingField = desc('id')
+
+        if reqArgs.get('sortDir') == 'asc':
+            sortingField = asc(reqArgs.get('sortBy')) # TODO вызовет ошибку если поля нет
+        else:
+            sortingField = desc(reqArgs.get('sortBy'))
+
+        selectStmt = select([table]).order_by(sortingField)
         res = self.conn.execute(selectStmt).fetchall()
         stringRes = [dict(i) for i in res]
         return stringRes

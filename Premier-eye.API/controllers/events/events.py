@@ -30,7 +30,7 @@ class EventLogger(Resource):
 
     @api.response(200, "Success", cameraModel)
     def get(self):
-        stringRes = self.eventsManager.listEvents()
+        stringRes = self.eventsManager.listEvents(request.args)
         return make_response({"data": stringRes}, 200)
 
 
