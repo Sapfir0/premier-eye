@@ -10,13 +10,22 @@ class Repo:
 
     def all(self, table, reqArgs):
         sortingField = desc('id')
+        filterValue = None
+        filterBy = reqArgs.get('filterBy')
+        if (filterBy is not None):
+            filterValue = reqArgs.get('filterValue')  
+        
 
         if reqArgs.get('sortDir') == 'asc':
             sortingField = asc(reqArgs.get('sortBy')) # TODO вызовет ошибку если поля нет
         else:
             sortingField = desc(reqArgs.get('sortBy'))
 
-        selectStmt = select([table]).order_by(sortingField)
+        if filterBy is not None and filterValue is not None:
+            selectStmt = select([table]).where(getattr(table, filterBy).like(filterValue)).order_by(sortingField)
+        else:
+            selectStmt = select([table]).order_by(sortingField)
+
         res = self.conn.execute(selectStmt).fetchall()
         stringRes = [dict(i) for i in res]
         return stringRes

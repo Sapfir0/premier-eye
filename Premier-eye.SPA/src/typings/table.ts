@@ -19,12 +19,13 @@ export interface SortButton extends Button {
 }
 
 export interface FilterButton extends Button {
-    element: (onClick: MouseEventHandler, selected: boolean) => React.ReactElement;
+    element: (onClick: MouseEventHandler) => React.ReactElement;
+    input: (onChange: (event: React.ChangeEvent<HTMLInputElement>) => void, onClose: () => void) => React.ReactElement;
 }
 
 export type Buttons = {
     sortButton?: SortButton | false;
-    filterButton?: FilterButton;
+    filterButton?: FilterButton | false;
 };
 
 export interface HeaderName<DTO = any> {

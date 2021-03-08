@@ -23,8 +23,13 @@ export class CameraLoggerStore extends BaseTableStore {
         this.getLogs(sortBy as string, sortDir);
     }
 
-    public getLogs = async (sortBy?: string, sortDir?: string) => {
-        const either = await this.eventFetcher.getEventsList(sortBy, sortDir);
+    public filterValueChanged(filterValue: string) {
+        super.filterValueChanged(filterValue);
+        this.getLogs(this.sortBy, this.sortDir, this.filterName, this.filterValue);
+    }
+
+    public getLogs = async (sortBy?: string, sortDir?: string, filterName?: string, filterValue?: string) => {
+        const either = await this.eventFetcher.getEventsList(sortBy, sortDir, filterName, filterValue);
         if (isRight(either)) {
             this.events = either.right.data;
         }
