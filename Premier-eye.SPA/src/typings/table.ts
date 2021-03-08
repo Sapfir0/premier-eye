@@ -8,10 +8,7 @@ export type SortDirection = 'asc' | 'desc';
 
 export type OnClick = (event: React.MouseEvent<HTMLButtonElement>, data: any) => void; //TODO тип указать
 
-export type Button = {
-    callback: (...args: any) => any;
-    active: boolean;
-};
+export type Button = {};
 
 export interface SortButton extends Button {
     sortDirection: SortDirection;
@@ -19,8 +16,8 @@ export interface SortButton extends Button {
 }
 
 export interface FilterButton extends Button {
-    element: (onClick: MouseEventHandler) => React.ReactElement;
-    input: (onChange: (event: React.ChangeEvent<HTMLInputElement>) => void, onClose: () => void) => React.ReactElement;
+    element?: (onClick: MouseEventHandler) => React.ReactElement;
+    input?: (onChange: (event: React.ChangeEvent<HTMLInputElement>) => void, onClose: () => void) => React.ReactElement;
 }
 
 export type Buttons = {

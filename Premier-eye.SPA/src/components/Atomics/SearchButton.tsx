@@ -4,10 +4,9 @@ import React, { MouseEventHandler } from 'react';
 
 export interface SearchButtonProps {
     onClick: MouseEventHandler;
-
 }
 
-export const SearchButton = (props: SearchButtonProps): React.ReactElement => {    
+export const SearchButton = (props: SearchButtonProps): React.ReactElement => {
     return (
         <IconButton onClick={props.onClick}>
             <SearchIcon />

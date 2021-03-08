@@ -5,6 +5,7 @@ import { ColumnDefinition, FilterButton, HeadersBaseSettings, SortButton as Sort
 import { InputField } from '../Atomics/InputField';
 import { SearchButton } from '../Atomics/SearchButton';
 import { SortButton } from '../Atomics/SortButton';
+import './BaseTable.pcss';
 import { BaseTableStore } from './BaseTableStore';
 import { convert, getMappingForCell } from './BaseTableUtils';
 
@@ -33,25 +34,23 @@ export const BaseTableLayout = observer(
             name: ColumnDefinition<T>,
             handleSortClick: () => void,
         ) {
-            let sortElement = null;
-            if (sortButton !== false) {
-                if (sortButton !== undefined) {
-                    sortElement = sortButton.element(
-                        handleSortClick,
-                        name == this.props.store.sortBy,
-                        this.props.store.sortDir,
-                    );
-                } else {
-                    sortElement = (
-                        <SortButton
-                            onClick={handleSortClick}
-                            selected={name == this.props.store.sortBy}
-                            direction={name == this.props.store.sortBy ? this.props.store.sortDir : 'desc'}
-                        />
-                    );
-                }
+            const activeButton = name == this.props.store.sortBy;
+
+            if (sortButton === false) {
+                return null;
             }
-            return sortElement;
+
+            if (sortButton === undefined) {
+                return (
+                    <SortButton
+                        onClick={handleSortClick}
+                        selected={activeButton}
+                        direction={activeButton ? this.props.store.sortDir : 'desc'}
+                    />
+                );
+            }
+
+            return sortButton.element(handleSortClick, activeButton, this.props.store.sortDir);
         }
 
         private getFilterButton<T>(
@@ -60,23 +59,26 @@ export const BaseTableLayout = observer(
             onChange: (event: React.ChangeEvent<HTMLInputElement>) => void,
             onClose: () => void,
         ) {
-            let filterElement = null;
-            if (filterButton !== false) {
-                if (filterButton !== undefined) {
-                    filterElement =
-                        name == this.props.store.filterName
-                            ? filterButton.input(onChange, onClose)
-                            : filterButton.element(() => this.props.store.filterNameChanged(name as string));
-                } else {
-                    filterElement =
-                        name == this.props.store.filterName ? (
-                            <InputField onClose={onClose} onChange={onChange} />
-                        ) : (
-                            <SearchButton onClick={() => this.props.store.filterNameChanged(name as string)} />
-                        );
-                }
+            const defaultInput = <InputField onClose={onClose} onChange={onChange} />;
+            const defaultButton = <SearchButton onClick={() => this.props.store.filterNameChanged(name as string)} />;
+            const isActiveButton = name == this.props.store.filterName;
+            if (filterButton === false) {
+                // если сказано, что false, то не рендерим компонент
+                return null;
             }
-            return filterElement;
+            if (filterButton === undefined) {
+                // если undefined(просто не инициализировано поле), то рендерим компонент по умолчанию
+                return isActiveButton ? defaultInput : defaultButton;
+            }
+
+            if (isActiveButton) {
+                // если любое из полей не передано, рендерим как дефолтное
+                return filterButton.input !== undefined ? filterButton.input(onChange, onClose) : defaultInput;
+            } else {
+                return filterButton.element !== undefined
+                    ? filterButton.element(() => this.props.store.filterNameChanged(name as string))
+                    : defaultButton;
+            }
         }
 
         protected renderHeaders = (headerNames: HeadersBaseSettings<T>): ReactNode => {
@@ -107,7 +109,6 @@ export const BaseTableLayout = observer(
                 headerElements.push(
                     <TableCell {...widthParam} key={name.toString()}>
                         {header.text}
-
                         {filterElement}
                         {sortElement}
                     </TableCell>,

@@ -1,4 +1,5 @@
-import { Paper } from '@material-ui/core';
+import { IconButton, Paper } from '@material-ui/core';
+import CloseIcon from '@material-ui/icons/Close';
 // import { Map } from 'immutable';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
@@ -25,6 +26,20 @@ export const CameraLogger = observer((props: CameraLoggerProps) => {
         text: 'Дата',
         convertFunction: (date: string) => {
             return new Date(date).toLocaleString('ru', { timeZone: 'UTC' });
+        },
+        buttons: {
+            filterButton: {
+                input: (onChange: (event: React.ChangeEvent<HTMLInputElement>) => void, onClose: () => void) => {
+                    return (
+                        <>
+                            <input className="table-action" onChange={onChange} type="date"></input>{' '}
+                            <IconButton onClick={onClose}>
+                                <CloseIcon />
+                            </IconButton>
+                        </>
+                    );
+                },
+            },
         },
     });
     headers.set('title', { text: 'Описание' });

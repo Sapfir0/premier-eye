@@ -22,7 +22,7 @@ class Repo:
             sortingField = desc(reqArgs.get('sortBy'))
 
         if filterBy is not None and filterValue is not None:
-            selectStmt = select([table]).where(getattr(table, filterBy).like(filterValue)).order_by(sortingField)
+            selectStmt = select([table]).where(getattr(table, filterBy).like(f"%{filterValue}%")).order_by(sortingField)
         else:
             selectStmt = select([table]).order_by(sortingField)
 

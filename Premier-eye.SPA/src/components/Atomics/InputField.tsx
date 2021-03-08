@@ -10,7 +10,7 @@ export interface InputFieldProps {
 export const InputField = (props: InputFieldProps) => {
     return (
         <>
-            <Input onChange={props.onChange} />
+            <Input className="table-action" onChange={props.onChange} />
             <IconButton onClick={props.onClose}>
                 <CloseIcon />
             </IconButton>
