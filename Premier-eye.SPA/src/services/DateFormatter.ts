@@ -1,6 +1,5 @@
-import {timeParse} from "d3-time-format";
-import {dateFileFormat} from "../config/constants";
-
+import { timeParse } from 'd3-time-format';
+import { dateFileFormat } from '../config/constants';
 
 export const getDatetimeFromFilename = (filename: string) => {
     // js implementation of some functions in Premier-eye.Common

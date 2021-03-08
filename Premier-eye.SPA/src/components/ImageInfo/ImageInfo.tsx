@@ -36,7 +36,7 @@ export default class ImageInfo extends React.Component<IImageInfo> {
         if (diff > 1) {
             return (
                 <ListItem>
-                    <Alert severity="error">
+                    <Alert severity="warning">
                         <span>Изображений не было уже {diff} дней</span>
                     </Alert>
                 </ListItem>
