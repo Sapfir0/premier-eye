@@ -21,7 +21,7 @@ api = Namespace('events')
 class EventLogger(Resource):
     eventsManager = DatabaseEvents()
 
-    cameraModel = getModel("Log", api, directory="DTO")
+    cameraModel = getModel("Log", api, directory="DTO", fullOutputName='DTOLog')
     @api.expect(cameraModel)
     def post(self):
         req = request.get_json()
@@ -38,7 +38,7 @@ class EventLogger(Resource):
 class EventsLogger(Resource):
     eventsManager = DatabaseEvents()
 
-    cameraModel = getModel("Logs", api, directory="DTO")
+    cameraModel = getModel("Logs", api, directory="DTO", fullOutputName='DTOLogs')
     @api.expect(cameraModel)
     def post(self):
         req = request.get_json()

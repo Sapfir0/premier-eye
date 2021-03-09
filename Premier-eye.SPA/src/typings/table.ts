@@ -29,5 +29,5 @@ export interface HeaderName<DTO = any> {
     text: string;
     cellProps?: (cellValue: DTO | DTO[keyof DTO]) => any; //TODO тип
     emptyDataColumn?: boolean; // если подано это значение, то в convert function будет передено не текущее значение столбца, а вся строка
-    convertFunction?: (cellValue: DTO | DTO[keyof DTO], columnName: keyof DTO) => React.ReactElement | string;
+    convertFunction?: (cellValue: any, columnName: keyof DTO) => React.ReactElement | string;
 }

@@ -27,14 +27,6 @@ export interface definitions {
     scores: number;
     coordinates: string[];
   };
-  "DTOLog": {
-    title: string;
-    timestamp: { [key: string]: any };
-    cameraId?: number;
-  };
-  "DTOLogs": {
-    titles: string[];
-    timestamp: { [key: string]: any };
-    cameraId: number;
-  };
+  DTOLog: { title: string; timestamp: string; cameraId?: number };
+  DTOLogs: { titles: string[]; timestamp: string; cameraId: number };
 }

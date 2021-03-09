@@ -14,7 +14,7 @@ class Images(db.Base):
     path = Column(String(250), unique=True)
     filename = Column(String(30), unique=True)
     numberOfCam = Column(Integer)
-    fixationDatetime = Column(DateTime, unique=True)
+    fixationDatetime = Column(DateTime)
     createdAt = Column(DateTime, default=datetime.now())
     updatedAt = Column(DateTime, default=datetime.now())
 

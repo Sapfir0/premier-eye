@@ -4,7 +4,8 @@
             "type": "string"  
         },
         "timestamp": {
-            "type": "datetime"  
+            "type": "string",
+            "format": "date-time"
         },
         "cameraId": {
             "type": "number"  

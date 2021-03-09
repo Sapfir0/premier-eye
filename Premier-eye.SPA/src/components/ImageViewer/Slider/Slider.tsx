@@ -75,7 +75,6 @@ export default class Slider extends React.Component<ISlider> {
                         currentStep={this.getCurrentStep(this.props.store.camera.id)}
                         changeCurrentStep={this.handleCurrentStepChange}
                         images={this.props.store.camera.images}
-                        updateStateByInfo={this.props.store.getInfoImage}
                     />
                 )}
                 {this.props.store.camera && this.props.store.imageInfo && (
