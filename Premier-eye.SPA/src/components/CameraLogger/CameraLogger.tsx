@@ -24,7 +24,7 @@ export const CameraLogger = observer((props: CameraLoggerProps) => {
 
     headers.set('timestamp', {
         text: 'Дата',
-        convertFunction: (date: string) => {
+        convertFunction: (date: number) => {
             return new Date(date).toLocaleString('ru', { timeZone: 'UTC' });
         },
         buttons: {

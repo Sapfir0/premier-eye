@@ -1,21 +1,21 @@
-import { refreshSliderTimeout } from '../../../config/constants';
-import { Either, isLeft } from 'fp-ts/lib/Either';
+import { isRight } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
-import { action, makeObservable, observable, runInAction } from 'mobx';
+import { action, makeObservable, observable } from 'mobx';
 import { BaseInteractionError } from 'services/Errors/BaseInteractionError';
 import { ICameraApiInteractionService, IGalleryApiInteractionService } from 'services/typings/ApiTypes';
+import { ResolvedEither } from 'typings/common';
 import StepDataStructure from '../../../services/DataStructure/StepDataStructure';
 import { definitions } from '../../../typings/Dto';
 import { TYPES } from '../../../typings/types';
 
 @injectable()
 export class SliderStore {
-    @observable camera: definitions['Camera'] | null = null;
-    @observable imageInfo: definitions['ImageInfo'] | null = null;
+    camera: definitions['Camera'] | null = null;
+    imageInfo: definitions['ImageInfo'] | null = null;
     stepMap: Map<string, number> = new StepDataStructure().steps;
-    @observable errors: BaseInteractionError[] = [];
+    errors: BaseInteractionError[] = [];
     stepsStore: StepDataStructure = new StepDataStructure();
-    @observable camerasList: definitions['CameraList'] = { items: [] };
+    camerasList: definitions['CameraList'] = { items: [] };
 
     private readonly galleryFetcher: IGalleryApiInteractionService;
     private readonly cameraFetcher: ICameraApiInteractionService;
@@ -26,80 +26,55 @@ export class SliderStore {
     ) {
         this.galleryFetcher = galleryFetcher;
         this.cameraFetcher = cameraFetcher;
-        makeObservable(this);
+        makeObservable(this, {
+            changeCurrentStep: action,
+            getCameraList: action,
+            changeCurrentCamera: action,
+            camerasList: observable,
+            camera: observable,
+            imageInfo: observable,
+            errors: observable,
+        });
 
-        setInterval(() => {
-            if (this.camera !== null) {
-                this.changeCurrentCamera(this.camera.id);
-            }
-        }, refreshSliderTimeout);
+        // setInterval(() => {
+        //     if (this.camera !== null) {
+        //         this.changeCurrentCamera(this.camera.id);
+        //     }
+        // }, refreshSliderTimeout);
         // нужно подписаться на обновление списка камер и на обновление списка изображений
     }
 
-    @action
     public async getCameraList(): Promise<void> {
-        const either: Either<
-            BaseInteractionError,
-            definitions['CameraList']
-        > = await this.cameraFetcher.getCamerasList();
+        const either: ResolvedEither<definitions['CameraList']> = await this.cameraFetcher.getCamerasList();
 
-        runInAction(() => {
-            if (isLeft(either)) {
-                this.errors.push(either.left);
-            } else {
-                this.camerasList = either.right;
-                // console.log(this.camerasList);
-            }
-        });
+        if (isRight(either)) {
+            this.camerasList = either.right;
+        }
     }
 
-    @action
-    public async changeCurrentStep(cameraId: string, currentStep: number) {
-        const either: Either<
-            BaseInteractionError,
-            definitions['ImageInfo']
-        > = await this.galleryFetcher.getInfoImageByIndex(cameraId, currentStep);
+    public async changeCurrentStep(cameraId: string, currentStep: number): Promise<void> {
+        const filename = this.camera?.images[currentStep].src;
+        let either: ResolvedEither<definitions['ImageInfo']>;
+        if (filename === undefined) {
+            // сделаем такую странную вещь, если такого файлнейма не находим, то запросим первое
+            either = await this.galleryFetcher.getInfoImageByIndex(cameraId, currentStep);
+        } else {
+            either = await this.galleryFetcher.getInfoImage(filename);
+        }
 
-        runInAction(() => {
-            this.stepMap = this.stepsStore.changeStepOnCurrentCamera(cameraId, currentStep);
+        this.stepMap = this.stepsStore.changeStepOnCurrentCamera(cameraId, currentStep);
 
-            if (isLeft(either)) {
-                this.errors.push(either.left);
-            } else {
-                this.imageInfo = either.right;
-            }
-        });
+        if (isRight(either)) {
+            this.imageInfo = either.right;
+            console.log(either.right);
+        }
     }
 
-    @action
-    public async changeCurrentCamera(cameraId: string) {
-        const either: Either<BaseInteractionError, definitions['Camera']> = await this.cameraFetcher.getImageFromCamera(
-            cameraId,
-        );
+    public async changeCurrentCamera(cameraId: string): Promise<void> {
+        const either: ResolvedEither<definitions['Camera']> = await this.cameraFetcher.getImageFromCamera(cameraId);
 
-        runInAction(() => {
-            if (isLeft(either)) {
-                this.errors.push(either.left);
-            } else {
-                this.camera = either.right;
-                // console.log(this.camera.images)
-            }
-        });
-    }
-
-    @action // deprecated
-    public async getInfoImage(src: string) {
-        // пока не используем
-        const either: Either<BaseInteractionError, definitions['ImageInfo']> = await this.galleryFetcher.getInfoImage(
-            src,
-        );
-
-        runInAction(() => {
-            if (isLeft(either)) {
-                this.errors.push(either.left);
-            } else {
-                this.imageInfo = either.right;
-            }
-        });
+        if (isRight(either)) {
+            this.camera = either.right;
+        }
     }
 }

@@ -8,7 +8,6 @@ import { CustomStepper } from './Steppers/CustomStepper';
 import { IStepper } from './Steppers/IStepper';
 
 interface IImageView extends IStepper {
-    updateStateByInfo: (src: string) => void;
 }
 
 @observer

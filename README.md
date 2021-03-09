@@ -31,6 +31,11 @@ Run main docker-compose file:
 
     docker-compose up --build
 
+## Nomeroff-net
+
+For separately use:
+    
+    docker build -t nn . && docker run -p 5051:5051 nn
 
 
 ## Algorithms

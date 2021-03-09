@@ -30,12 +30,12 @@ export default class Slider extends React.Component<ISlider> {
         }
     }
 
-    handleCameraChange = (cameraId: string) => {
+    handleCameraChange = async (cameraId: string) => {
         const isCameraExists = this.props.store.camerasList.items.find((camera) => camera.id == cameraId);
         if (isCameraExists !== undefined) {
-            this.props.store.changeCurrentCamera(cameraId);
+            await this.props.store.changeCurrentCamera(cameraId);
             const currentStep = this.getCurrentStep(cameraId);
-            this.props.store.changeCurrentStep(cameraId, currentStep);
+            await this.props.store.changeCurrentStep(cameraId, currentStep);
         }
     };
 
@@ -75,7 +75,6 @@ export default class Slider extends React.Component<ISlider> {
                         currentStep={this.getCurrentStep(this.props.store.camera.id)}
                         changeCurrentStep={this.handleCurrentStepChange}
                         images={this.props.store.camera.images}
-                        updateStateByInfo={this.props.store.getInfoImage}
                     />
                 )}
                 {this.props.store.camera && this.props.store.imageInfo && (

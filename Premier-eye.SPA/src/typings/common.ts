@@ -6,6 +6,7 @@ export type IdPayload = {
 };
 
 export type AsyncEither<T> = Promise<Either<BaseInteractionError, T>>;
+export type ResolvedEither<T> = Either<BaseInteractionError, T>;
 
 export interface BaseSettings {
     stringify?: boolean;

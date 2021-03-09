@@ -27,12 +27,11 @@ def getDatabaseModel(modelName, **args):
 @api.route(routes['getImageInfo'])
 class ImageInformation(Resource):
     def get(self, filename):
-        imageInfo = dict(imageManager.getImageByFilename(filename))
-
+        imageInfo = imageManager.getImageByFilename(filename)
         if imageInfo is None:
             return make_response({"error": "Image not found"}, 400)
 
-        objectInfo = self.objectManager.getObjectOnImage(imageInfo['id'])
+        objectInfo = objectManager.getObjectOnImage(imageInfo['id'])
         imageInfo.update({"objects": objectInfo})
         return jsonify(imageInfo)
 
@@ -44,6 +43,9 @@ class ImageInformation(Resource):
         if currentImage == None:
             return make_response({"error": f"Image with {filename} filename not found"}, 400)
         imageId = currentImage['id']
+
+        if objectManager.getObjectOnImage(imageId) != []:
+            return make_response({"error": "Information about this image exists already"}, 400)
 
         objects = request.json['objects']
         countOfObjectsIndbAPI = objectManager.getRowsCount() + 1  # т.к. мы только сейчас инсертим координаты
@@ -85,11 +87,14 @@ class ImageInfoByIndexOfImage(Resource):
         cameraPath = os.path.join(Config.UPLOAD_FOLDER, query['cameraId'])
 
         if not os.path.exists(cameraPath):
-            return make_response({"error": "Error while loading camera"}, 400)
+            return make_response({"error": "Error while loading image"}, 400)
         imgList = recursiveSearch(cameraPath)
         filename = imgList[int(query['indexOfImage'])]
 
         imageInfo = imageManager.getImageByFilename(filename)
+        if imageInfo is None:
+            return make_response({"error": "Image not found in db"}, 400)
+
         objectInfo = objectManager.getObjectOnImage(imageInfo['id'])
 
         imageInfo.update({"objects": objectInfo})
