@@ -206,6 +206,11 @@
   dependencies:
     mkdirp "^1.0.4"
 
+"@react-leaflet/core@^1.0.2":
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/@react-leaflet/core/-/core-1.0.2.tgz#39c6a73f61c666d5dcf673741cea2672fa4bbae1"
+  integrity sha512-QbleYZTMcgujAEyWGki8Lx6cXQqWkNtQlqf5c7NImlIp8bKW66bFpez/6EVatW7+p9WKBOEOVci/9W7WW70EZg==
+
 "@sheerun/mutationobserver-shim@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@sheerun/mutationobserver-shim/-/mutationobserver-shim-0.3.3.tgz#5405ee8e444ed212db44e79351f0c70a582aae25"
@@ -282,6 +287,11 @@
   resolved "https://registry.yarnpkg.com/@types/d3-time-format/-/d3-time-format-3.0.0.tgz#913e984362a59792dc8d8b122dd17625991eade2"
   integrity sha512-UpLg1mn/8PLyjr+J/JwdQJM/GzysMvv2CS8y+WYAL5K0+wbvXv/pPSLEfdNaprCZsGcXTxPsFMy8QtkYv9ueew==
 
+"@types/geojson@*":
+  version "7946.0.7"
+  resolved "https://registry.yarnpkg.com/@types/geojson/-/geojson-7946.0.7.tgz#c8fa532b60a0042219cdf173ca21a975ef0666ad"
+  integrity sha512-wE2v81i4C4Ol09RtsWFAqg3BUitWbHSpSlIo+bNdsCJijO9sjme+zm+73ZMCa/qMC8UEERxzGbvmr1cffo2SiQ==
+
 "@types/glob@^7.1.1":
   version "7.1.3"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.3.tgz#e6ba80f36b7daad2c685acd9266382e68985c183"
@@ -339,6 +349,13 @@
   version "7.0.6"
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.6.tgz#f4c7ec43e81b319a9815115031709f26987891f0"
   integrity sha512-3c+yGKvVP5Y9TYBEibGNR+kLtijnj7mYrXRg+WpFb2X9xm04g/DXYkfg4hmzJQosc9snFNUPkbYIhu+KAm6jJw==
+
+"@types/leaflet@^1.7.0":
+  version "1.7.0"
+  resolved "https://registry.yarnpkg.com/@types/leaflet/-/leaflet-1.7.0.tgz#3700fb5d29a8214fbd496565b08ec28e40cee808"
+  integrity sha512-ltv5jR+VjKSMtoDkxH61Rsbo0zLU7iqyOXpVPkAX4F+79fg2eymC7t0msWsfNaEZO1FGTIQATCCCQe+ijWoicg==
+  dependencies:
+    "@types/geojson" "*"
 
 "@types/minimatch@*":
   version "3.0.3"
@@ -715,13 +732,6 @@
     "@webassemblyjs/ast" "1.9.0"
     "@webassemblyjs/wast-parser" "1.9.0"
     "@xtuc/long" "4.2.2"
-
-"@welldone-software/why-did-you-render@^6.0.5":
-  version "6.0.5"
-  resolved "https://registry.yarnpkg.com/@welldone-software/why-did-you-render/-/why-did-you-render-6.0.5.tgz#a8df3509ed612770bb21b5fa0ad61634acc61f38"
-  integrity sha512-8fWib+bKoAmnJHZPU8/qpEXKG8piB3oaoKj78fXNAdYd3x8ryde1pC7D5tKff5Mart2iOJUvYNxxcYlbtT9tow==
-  dependencies:
-    lodash "^4"
 
 "@xtuc/ieee754@^1.2.0":
   version "1.2.0"
@@ -2650,6 +2660,14 @@ file-entry-cache@^6.0.0:
   dependencies:
     flat-cache "^3.0.4"
 
+file-loader@^6.2.0:
+  version "6.2.0"
+  resolved "https://registry.yarnpkg.com/file-loader/-/file-loader-6.2.0.tgz#baef7cf8e1840df325e4390b4484879480eebe4d"
+  integrity sha512-qo3glqyTa61Ytg4u73GultjHGjdRyig3tG6lPtyX/jOEJvHif9uB0/OCI2Kif6ctF3caQTW2G5gym21oAsI4pw==
+  dependencies:
+    loader-utils "^2.0.0"
+    schema-utils "^3.0.0"
+
 file-uri-to-path@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/file-uri-to-path/-/file-uri-to-path-1.0.0.tgz#553a7b8446ff6f684359c445f1e37a05dacc33dd"
@@ -3832,6 +3850,11 @@ klona@^2.0.4:
   resolved "https://registry.yarnpkg.com/klona/-/klona-2.0.4.tgz#7bb1e3affb0cb8624547ef7e8f6708ea2e39dfc0"
   integrity sha512-ZRbnvdg/NxqzC7L9Uyqzf4psi1OM4Cuc+sJAkQPjO6XkQIJTNbfK2Rsmbw8fx1p2mkZdp2FZYo2+LwXYY/uwIA==
 
+leaflet@^1.7.1:
+  version "1.7.1"
+  resolved "https://registry.yarnpkg.com/leaflet/-/leaflet-1.7.1.tgz#10d684916edfe1bf41d688a3b97127c0322a2a19"
+  integrity sha512-/xwPEBidtg69Q3HlqPdU3DnrXQOvQU/CCHA1tcDQVzOwm91YMYaILjNp7L4Eaw5Z4sOYdbBz6koWyibppd8Zqw==
+
 levn@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/levn/-/levn-0.4.1.tgz#ae4562c007473b932a6200d403268dd2fffc6ade"
@@ -3883,7 +3906,7 @@ locate-path@^5.0.0:
   dependencies:
     p-locate "^4.1.0"
 
-lodash@^4, lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.5:
+lodash@^4.17.11, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.20, lodash@^4.17.5:
   version "4.17.20"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
   integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
@@ -5205,6 +5228,13 @@ react-is@^16.12.0, react-is@^16.6.0, react-is@^16.7.0, react-is@^16.8.1, react-i
   version "17.0.1"
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-17.0.1.tgz#5b3531bd76a645a4c9fb6e693ed36419e3301339"
   integrity sha512-NAnt2iGDXohE5LI7uBnLnqvLQMtzhkiAOLXTmv+qnF9Ky7xAPcX8Up/xWIhxvLVGJvuLiNc4xQLtuqDRzb4fSA==
+
+react-leaflet@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/react-leaflet/-/react-leaflet-3.1.0.tgz#42deb5e454518016eff8bc85511ae58812f910f5"
+  integrity sha512-kdZS8NYbYFPmkQr7zSDR2gkKGFeWvkxqoqcmZEckzHL4d5c85dJ2gbbqhaPDpmWWgaRw9O29uA/77qpKmK4mTQ==
+  dependencies:
+    "@react-leaflet/core" "^1.0.2"
 
 react-router-dom@^5.1.2:
   version "5.2.0"
