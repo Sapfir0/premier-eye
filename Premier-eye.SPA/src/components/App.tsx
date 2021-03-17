@@ -5,7 +5,6 @@ import './App.pcss';
 import ButtonAppBar from './Header/Header';
 import HomePage from './pages/HomePage';
 import SettingsPage from './pages/Settings';
-import CameraPage from './pages/LoggerPage';
 import { AreaMap } from './AreaMap/AreaMap';
 import { CameraLogger } from './CameraLogger/CameraLogger';
 

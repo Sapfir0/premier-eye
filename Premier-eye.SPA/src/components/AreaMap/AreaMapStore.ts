@@ -9,10 +9,10 @@ import { TYPES } from '../../typings/types';
 
 @injectable()
 export class AreaMapStore {
-    objects = [];
+    public objects: definitions['LatLon'][] = [];
     private readonly areaMapFetcher: AreaMapApiInteractionService;
     private readonly cameraFetcher: ICameraApiInteractionService;
-    camerasList: definitions['CameraList'] = { items: [] };
+    public camerasList: definitions['CameraList'] = { items: [] };
 
     constructor(
         @inject(TYPES.AreaMapApiInteractionService) areaFetcher: AreaMapApiInteractionService,

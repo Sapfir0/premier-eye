@@ -43,6 +43,10 @@ export const AreaMap = observer(() => {
                     </React.Fragment>
                 ))}
 
+                {store.objects.map((obj) => (
+                    <Circle key={`${obj.lat}${obj.lng}`} pathOptions={{ color: 'orange' }} center={obj} radius={3} />
+                ))}
+
                 <LocationMarker />
             </MapContainer>
         </>

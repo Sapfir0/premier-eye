@@ -1,5 +1,20 @@
 import math
 
+imageWidth = 1920
+imageHeight = 1080
+
+def calibrateRect(A, B, C, D):
+    calibratedImage = []
+    latOffset = (A['lat'] - B['lat']) / imageWidth
+    lonOffset = (A['lng'] - B['lng']) / imageWidth
+    for w in range(1, imageWidth):
+        row = []
+        for h in range(1, imageHeight):
+            row.append({'lat': A['lat'] + (latOffset * h ), 'lng': A['lng'] + (lonOffset * w)})
+        calibratedImage.append(row)   
+    return calibratedImage
+
+
 def getLatLongDistance(lat1: int, lon1: int, lat2: int, lon2: int):
     R = 6371e3; # metres
     φ1 = (lat1 * math.pi) / 180; # φ, λ in radians
