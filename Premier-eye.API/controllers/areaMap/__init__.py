@@ -1,0 +1,6 @@
+
+namespace = '/map'
+
+routes = {
+    'getAllObjectDest': '/',
+}

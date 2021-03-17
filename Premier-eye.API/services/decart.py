@@ -2,6 +2,7 @@ import os
 import tempfile
 
 
+
 def hasOnePointInside(bigRect, minRect):  # хотя бы одна точка лежит внутри
     minY, minX, maxY, maxX = bigRect
     y1, x1, y2, x2 = minRect
