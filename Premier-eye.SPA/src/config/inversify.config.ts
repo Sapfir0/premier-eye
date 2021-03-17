@@ -19,6 +19,7 @@ import { TYPES } from '../typings/types';
 import { SettingsStore } from '../components/Settings/SettingsStore';
 import { CameraLoggerStore } from '../components/CameraLogger/CameraLoggerStore';
 import EventApiInteractionService from '../services/ApiInteractionService/EventApiInteractionService';
+import { AreaMapApiInteractionService } from '../services/ApiInteractionService/AreaMapInteractionService';
 
 const myContainer = new Container();
 
@@ -36,5 +37,6 @@ myContainer.bind(TYPES.CameraLoggerStore).to(CameraLoggerStore);
 myContainer.bind<IGalleryApiInteractionService>(TYPES.GalleryApiInteractionService).to(GalleryApiInteractionService);
 myContainer.bind<ICameraApiInteractionService>(TYPES.CameraApiInteractionService).to(CameraApiInteractionService);
 myContainer.bind<EventApiInteractionService>(TYPES.EventApiInteractionService).to(EventApiInteractionService);
+myContainer.bind<AreaMapApiInteractionService>(TYPES.AreaMapApiInteractionService).to(AreaMapApiInteractionService);
 
 export { myContainer };

@@ -12,8 +12,8 @@ from services.decart import Rectangle
 from database.entities.coordinates import DatabaseCoordinates
 from database.entities.image import DatabaseImage
 from database.entities.objectInfo import DatabaseObject
-from controllers.areaMap.cameraFixedDest import cameras
 from services.geo import getLatLongDistance, getTrapeziumHeight
+from cameraFixedDest import cameras
 
 api = Namespace('areaMap')
 
@@ -49,3 +49,12 @@ class AreaMap(Resource):
             latlongCoordinates.append(currentCamera['coordinates'])
 
         return jsonify(latlongCoordinates)
+
+
+# затычка для типов 
+@api.route("/latlon")
+class LatLon(Resource):
+    model = getModel("LatLon", api)
+    @api.response(200, "Success", model)
+    def get(self):
+        pass

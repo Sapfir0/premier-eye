@@ -11,6 +11,8 @@ export interface definitions {
     id: string;
     name?: string;
     onlineDate: string;
+    view: definitions["LatLon"][];
+    coordinates: definitions["LatLon"];
     images: definitions["Image"][];
   };
   CameraList: { items: definitions["Camera"][] };
@@ -29,4 +31,5 @@ export interface definitions {
   };
   DTOLog: { title: string; timestamp: string; cameraId?: number };
   DTOLogs: { titles: string[]; timestamp: string; cameraId: number };
+  LatLon: { lat: number; lng: number };
 }

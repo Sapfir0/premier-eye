@@ -10,6 +10,15 @@
             "type": "string",
             "format": "date-time"
         },
+        "view": {
+            "type": "array",
+            "items": {
+                "$ref": "#/definitions/LatLon"
+            }
+        },
+        "coordinates": {
+            "$ref": "#/definitions/LatLon"
+        },
         "images": {
             "type": "array",
             "items": {
@@ -19,5 +28,5 @@
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "onlineDate", "images"]
+    "required": ["id", "onlineDate", "images", "view", "coordinates"]
 }
