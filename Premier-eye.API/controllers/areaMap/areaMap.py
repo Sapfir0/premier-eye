@@ -43,10 +43,10 @@ class AreaMap(Resource):
             rect = Rectangle([coordinate['LDx'], coordinate['LDy'], coordinate['RUx'], coordinate['RUy']])
             currentObject = objects[i] # количество объектов == количество координат
             currentCamera = cameras[currentObject['cameraId']]
-            imageWithLatLon = calibrateRect(*currentCamera['view'])
             CDx, CDy = rect.getCenterOfDown()
             print(CDx, CDy)
-            ll = imageWithLatLon[int(CDx)][int(CDy)]
+            ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))
+            print(ll)
             latlongCoordinates.append({'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'lat': ll['lat'], 'lng': ll['lng'] })
 
         return jsonify(latlongCoordinates)

@@ -1,18 +1,29 @@
 import math
+from functionalTools import compose
 
 imageWidth = 1920
 imageHeight = 1080
 
-def calibrateRect(A, B, C, D):
-    calibratedImage = []
-    latOffset = (A['lat'] - B['lat']) / imageWidth
-    lonOffset = (A['lng'] - B['lng']) / imageWidth
-    for w in range(1, imageWidth):
-        row = []
-        for h in range(1, imageHeight):
-            row.append({'lat': A['lat'] + (latOffset * h ), 'lng': A['lng'] + (lonOffset * w)})
-        calibratedImage.append(row)   
-    return calibratedImage
+def addLatLon(A, B):
+    return {'lat': (A['lat'] + B['lat']), 'lng': (A['lng'] + B['lng']) }
+
+def subLatLon(A, B):
+    return {'lat': (A['lat'] - B['lat']), 'lng': (A['lng'] - B['lng']) }
+
+def divLatLonToNumber(A, divider):
+    return {'lat': A['lat'] / divider, 'lng': A['lng'] / divider }
+
+def mulLatLonToNumber(A, multiplier):
+    return {'lat': A['lat'] * multiplier, 'lng': A['lng'] * multiplier }
+
+def calibrateRect(A, B, C, D, X, Y):
+    vBC = divLatLonToNumber(subLatLon(B, C), imageHeight)
+    vAD = divLatLonToNumber(subLatLon(A, D), imageHeight)
+    latlonPixel1 = addLatLon(mulLatLonToNumber(vBC, Y), B)
+    latlonPixel2 = addLatLon(mulLatLonToNumber(vAD, Y), B)
+    vG = divLatLonToNumber(subLatLon(latlonPixel1, latlonPixel2), imageWidth)
+    G = addLatLon(mulLatLonToNumber(vG, X), latlonPixel1)
+    return G
 
 
 def getLatLongDistance(lat1: int, lon1: int, lat2: int, lon2: int):
