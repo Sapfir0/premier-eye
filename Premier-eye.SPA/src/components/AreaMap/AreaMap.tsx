@@ -44,7 +44,11 @@ export const AreaMap = observer(() => {
                 ))}
 
                 {store.objects.map((obj) => (
-                    <Circle key={`${obj.lat}${obj.lng}`} pathOptions={{ color: 'orange' }} center={obj} radius={3} />
+                    <Circle key={`${obj.lat}${obj.lng}`} pathOptions={{ color: 'orange' }} center={obj} radius={3}>
+                        <Tooltip>
+                            {obj.type} found on {obj.cameraId}{' '}
+                        </Tooltip>
+                    </Circle>
                 ))}
 
                 <LocationMarker />

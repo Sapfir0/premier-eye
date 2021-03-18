@@ -31,8 +31,9 @@ class AreaMap(Resource):
             objOnImage = objectManager.getObjectOnImage(image['id']) 
             for i, obj in enumerate(objOnImage):
                 objOnImage[i] = {**obj, 'cameraId': image['numberOfCam'] }
-            if (objOnImage != []):
-                objects.append(*objOnImage)
+                
+                if (objOnImage != []):
+                    objects.append(objOnImage[i])
 
         coordinates = []
         for obj in objects:
@@ -40,13 +41,14 @@ class AreaMap(Resource):
 
         latlongCoordinates = []
         for i, coordinate in enumerate(coordinates):
-            rect = Rectangle([coordinate['LDx'], coordinate['LDy'], coordinate['RUx'], coordinate['RUy']])
+            print([coordinate['LUx'], coordinate['LUy'], coordinate['RDx'], coordinate['RDy']])
+            rect = Rectangle([coordinate['LUy'], coordinate['LUx'], coordinate['RDy'], coordinate['RDx']])
             currentObject = objects[i] # количество объектов == количество координат
             currentCamera = cameras[currentObject['cameraId']]
             CDx, CDy = rect.getCenterOfDown()
             print(CDx, CDy)
             ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))
-            print(ll)
+
             latlongCoordinates.append({'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'lat': ll['lat'], 'lng': ll['lng'] })
 
         return jsonify(latlongCoordinates)

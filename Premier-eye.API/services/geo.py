@@ -1,5 +1,5 @@
 import math
-from functionalTools import compose
+from services.functionalTools import compose
 
 imageWidth = 1920
 imageHeight = 1080
@@ -20,7 +20,7 @@ def calibrateRect(A, B, C, D, X, Y):
     vBC = divLatLonToNumber(subLatLon(B, C), imageHeight)
     vAD = divLatLonToNumber(subLatLon(A, D), imageHeight)
     latlonPixel1 = addLatLon(mulLatLonToNumber(vBC, Y), B)
-    latlonPixel2 = addLatLon(mulLatLonToNumber(vAD, Y), B)
+    latlonPixel2 = addLatLon(mulLatLonToNumber(vAD, Y), A)
     vG = divLatLonToNumber(subLatLon(latlonPixel1, latlonPixel2), imageWidth)
     G = addLatLon(mulLatLonToNumber(vG, X), latlonPixel1)
     return G

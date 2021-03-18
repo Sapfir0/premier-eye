@@ -73,10 +73,10 @@ def createGraphic(imagePath: str, searchRect: list, objectsListRect: list):
 
 
 class Rectangle:
-    LDx = 0
-    LDy = 0
-    RUx = 0
-    RUy = 0
+    LUx = 0
+    LUy = 0
+    RDx = 0
+    RDy = 0
 
     def __init__(self, coordinates: list):
         if len(coordinates) != 4:
@@ -84,24 +84,8 @@ class Rectangle:
         if coordinates[0] >= coordinates[2] or coordinates[1] >= coordinates[3]:
             raise ValueError(
                 "Неверно заданы вершины, сначала подаются 2 координаты нижнего левого угла, потом верхнего правого")
-        self.LDx, self.LDy, self.RUx, self.RUy = coordinates
-
-    def getWidth(self):
-        return self.RUx - self.LDx
-
-    def getHeight(self):
-        return self.RUy - self.LDy
-
-    def getLUx(self):
-        return self.LDx
-
-    def getLUy(self):
-        return self.RUy
-
-    def getMTparam(self):
-        return ((self.getLUy(), self.getLUx()),  # почему -? я не знаю
-                -self.getHeight(), self.getWidth())  # все абсолютно в другом порядке, чем должно быть? что ха дринся
+        self.LUy, self.LUx, self.RDy, self.RDx = coordinates
 
     def getCenterOfDown(self):
-        return [(self.LDx + self.RUx) / 2, self.LDy]
+        return [(self.LUx + self.RDx) / 2, self.RDy]
 
