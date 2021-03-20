@@ -22,7 +22,7 @@ class Settings:
     DATA_PATH = join(APP_PATH, "../data")
     DATABASE = "sqlite:///" + join(DATA_PATH, 'data.db')
     OUTPUT_DIR = join(APP_PATH, "../output")
-    IMAGE_DIR = join(DATA_PATH, "1_2")  # важная настройка
+    IMAGE_DIR = join(DATA_PATH, "1")  # важная настройка
     LOGS_DIR = join(APP_PATH, "../logs")
     DATE_FILE = join(APP_PATH, "../last_data_processed.txt")
     # Mask cnn

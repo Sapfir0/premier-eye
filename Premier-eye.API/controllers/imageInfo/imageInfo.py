@@ -50,16 +50,16 @@ class ImageInformation(Resource):
         objects = request.json['objects']
         countOfObjectsIndbAPI = objectManager.getRowsCount() + 1  # т.к. мы только сейчас инсертим координаты
 
-        for detected in objects:
+        for i, detected in enumerate(objects):
             coordinates = Coordinates(detected['coordinates'])
             Object = Objects_(scores=detected['scores'], type=detected['type'],
-                                imageId=imageId, coordinatesId=countOfObjectsIndbAPI)
+                                imageId=imageId, coordinatesId= i + countOfObjectsIndbAPI)
 
             if detected['type'] == 'car': 
-                car = Cars(carNumber=detected['vehiclePlate'], objectId=countOfObjectsIndbAPI)
+                car = Cars(carNumber=detected['vehiclePlate'], objectId=i + countOfObjectsIndbAPI)
                 db.session.add(car)
             elif detected['type'] == 'person':
-                person = Persons(objectId=countOfObjectsIndbAPI)
+                person = Persons(objectId=i + countOfObjectsIndbAPI)
                 db.session.add(person)
             else:
                 make_response({"error": "Undefined object"}, 400)

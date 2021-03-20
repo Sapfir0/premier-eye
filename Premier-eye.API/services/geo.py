@@ -17,11 +17,11 @@ def mulLatLonToNumber(A, multiplier):
     return {'lat': A['lat'] * multiplier, 'lng': A['lng'] * multiplier }
 
 def calibrateRect(A, B, C, D, X, Y):
-    vBC = divLatLonToNumber(subLatLon(B, C), imageHeight)
-    vAD = divLatLonToNumber(subLatLon(A, D), imageHeight)
-    latlonPixel1 = addLatLon(mulLatLonToNumber(vBC, Y), B)
-    latlonPixel2 = addLatLon(mulLatLonToNumber(vAD, Y), A)
-    vG = divLatLonToNumber(subLatLon(latlonPixel1, latlonPixel2), imageWidth)
+    vBC = divLatLonToNumber(subLatLon(C, B), imageHeight)
+    vAD = divLatLonToNumber(subLatLon(D, A), imageHeight)
+    latlonPixel1 = addLatLon(mulLatLonToNumber(vBC, imageHeight- Y), B)
+    latlonPixel2 = addLatLon(mulLatLonToNumber(vAD, imageHeight - Y), A)
+    vG = divLatLonToNumber(subLatLon(latlonPixel2, latlonPixel1), imageWidth)
     G = addLatLon(mulLatLonToNumber(vG, X), latlonPixel1)
     return G
 
