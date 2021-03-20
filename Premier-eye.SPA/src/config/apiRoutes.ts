@@ -31,4 +31,9 @@ const EVENT = {
     LOG: `${EVENTS_HIGH_LEVEL_DOMAIN}/log`,
 };
 
-export const ApiRoutes = { GALLERY, CAMERA, IMAGE_INFO, MATH, EVENT } as const;
+const AREA_MAP_HIGH_LEVEL_DOMAIN = '/areaMap';
+const AREA_MAP = {
+    OBJECTS: `${AREA_MAP_HIGH_LEVEL_DOMAIN}/`,
+};
+
+export const ApiRoutes = { GALLERY, CAMERA, IMAGE_INFO, MATH, EVENT, AREA_MAP } as const;

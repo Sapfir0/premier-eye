@@ -6,7 +6,7 @@ class Object_(ABC):
     type: str = "object"
     id: int = 0
     scores: List[float] = []
-    coordinates: List[int] = []  # LDx, LDy, RUx, RUy
+    coordinates: List[int] = []  # LUy, LUx, RDy, RDx
 
     def __init__(self, detections):
         self.coordinates = detections['coordinates'].tolist()

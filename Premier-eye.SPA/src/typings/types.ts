@@ -5,6 +5,7 @@ const TYPES = {
     GalleryApiInteractionService: Symbol.for('GalleryApiInteractionService'),
     CameraApiInteractionService: Symbol.for('CameraApiInteractionService'),
     EventApiInteractionService: Symbol.for('EventApiInteractionService'),
+    AreaMapApiInteractionService: Symbol.for('AreaMapApiInteractionService'),
 
     SliderStore: Symbol.for('SliderStore'),
     SettingsStore: Symbol.for('SettingsStore'),

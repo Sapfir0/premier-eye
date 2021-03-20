@@ -3,10 +3,10 @@ import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-d
 import { ClientRoutes } from '../config/clientRoutes';
 import './App.pcss';
 import ButtonAppBar from './Header/Header';
-import AreaMapPage from './pages/AreaMapPage';
 import HomePage from './pages/HomePage';
 import SettingsPage from './pages/Settings';
-import CameraPage from './pages/LoggerPage';
+import { AreaMap } from './AreaMap/AreaMap';
+import { CameraLogger } from './CameraLogger/CameraLogger';
 
 function App() {
     return (
@@ -14,8 +14,8 @@ function App() {
             <ButtonAppBar />
             <Switch>
                 <Route path={ClientRoutes.Settings} component={SettingsPage} />
-                <Route path={ClientRoutes.AreaMap} component={AreaMapPage} />
-                <Route path={ClientRoutes.Logger} component={CameraPage} />
+                <Route path={ClientRoutes.AreaMap} component={AreaMap} />
+                <Route path={ClientRoutes.Logger} component={CameraLogger} />
                 <Route path={ClientRoutes.Index} component={HomePage} />
 
                 <Redirect to={ClientRoutes.Index} />

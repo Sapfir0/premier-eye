@@ -12,6 +12,7 @@ from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
 from services.directory import recursiveSearch
 from database import db
+from cameraFixedDest import cameras
 
 api = Namespace('camera')
 
@@ -68,8 +69,9 @@ class CamerasList(Resource):
     def get(self):
         """ Получить список камер """
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
-        cameraList = [{'id': camera} for camera in os.listdir(cameraPath)]
-
+        cameraList = []
+        for i in cameras:
+            cameraList.append({'id': i, 'latlon': cameras[i]['coordinates'], 'view': cameras[i]['view']})
         return make_response({'items': cameraList}, 200)
 
 

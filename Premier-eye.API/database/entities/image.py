@@ -16,6 +16,10 @@ class DatabaseImage(Repo):
     def postImage(self, **entityFields):
         return self.post(Images, **entityFields)
 
+    def getNewestImageFromAllCamera(self):
+        raw = "SELECT * FROM (SELECT * from images ORDER BY fixationDatetime DESC) GROUP BY numberOfCam ;"
+        return self.runRaw(raw)
+
     def getImagesBetweenDatesFromCamera(self, cameraId, startDate: datetime, endDate: datetime):
         condition = and_(Images.numberOfCam == cameraId,
                                                 Images.fixationDatetime >= startDate,

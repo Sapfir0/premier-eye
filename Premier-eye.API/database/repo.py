@@ -15,7 +15,6 @@ class Repo:
         if (filterBy is not None):
             filterValue = reqArgs.get('filterValue')  
         
-
         if reqArgs.get('sortDir') == 'asc':
             sortingField = asc(reqArgs.get('sortBy')) # TODO вызовет ошибку если поля нет
         else:
@@ -35,6 +34,11 @@ class Repo:
 
     def get(self, table, id):
         return self.getWhere(table, (table.id == id))
+
+    def runRaw(self, raw):
+        res = self.conn.execute(raw)
+        return [dict(i) for i in res.fetchall()]
+
 
     def getWhere(self, table, whereStmt, multiple=False):
         selectStmt = select([table]).where(whereStmt)
