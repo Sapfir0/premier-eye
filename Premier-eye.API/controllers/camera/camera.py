@@ -71,7 +71,7 @@ class CamerasList(Resource):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
         cameraList = []
         for i in cameras:
-            cameraList.append({'id': i, 'coordinates': cameras[i]['coordinates'], 'view': cameras[i]['view']})
+            cameraList.append({'id': i, 'latlon': cameras[i]['coordinates'], 'view': cameras[i]['view']})
         return make_response({'items': cameraList}, 200)
 
 

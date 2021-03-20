@@ -9,7 +9,7 @@ import { TYPES } from '../../typings/types';
 
 @injectable()
 export class AreaMapStore {
-    public objects: definitions['LatLon'][] = [];
+    public objects: definitions['ObjectInfo'][] = [];
     private readonly areaMapFetcher: AreaMapApiInteractionService;
     private readonly cameraFetcher: ICameraApiInteractionService;
     public camerasList: definitions['CameraList'] = { items: [] };
@@ -29,7 +29,7 @@ export class AreaMapStore {
     }
 
     public async getObjectList(): Promise<void> {
-        const either: ResolvedEither<any> = await this.areaMapFetcher.getObjects();
+        const either: ResolvedEither<definitions['ObjectInfo'][]> = await this.areaMapFetcher.getObjects();
 
         if (isRight(either)) {
             this.objects = either.right;

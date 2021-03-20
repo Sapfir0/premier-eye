@@ -28,6 +28,8 @@ export const AreaMap = observer(() => {
         store.getObjectList();
     }, []);
 
+    console.log(store.camerasList);
+    
     return (
         <>
             Карта
@@ -36,7 +38,7 @@ export const AreaMap = observer(() => {
 
                 {store.camerasList.items.map((camera) => (
                     <React.Fragment key={camera.id}>
-                        <Circle pathOptions={{ color: 'red' }} center={camera.coordinates} radius={1} />
+                        <Circle pathOptions={{ color: 'red' }} center={camera.latlon} radius={1} />
                         <Polygon pathOptions={{ color: 'green' }} positions={camera.view}>
                             <Tooltip>Камера {camera.id}</Tooltip>
                         </Polygon>
@@ -44,7 +46,12 @@ export const AreaMap = observer(() => {
                 ))}
 
                 {store.objects.map((obj) => (
-                    <Circle key={`${obj.lat}${obj.lng}`} pathOptions={{ color: 'orange' }} center={obj} radius={3}>
+                    <Circle
+                        key={`${obj.latlon.lat}${obj.latlon.lng}`}
+                        pathOptions={{ color: 'orange' }}
+                        center={obj.latlon}
+                        radius={3}
+                    >
                         <Tooltip>
                             {obj.type} found on {obj.cameraId}{' '}
                         </Tooltip>

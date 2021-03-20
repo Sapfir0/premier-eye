@@ -48,8 +48,7 @@ class AreaMap(Resource):
             CDx, CDy = rect.getCenterOfDown()
             print(CDx, CDy)
             ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))
-
-            latlongCoordinates.append({'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'lat': ll['lat'], 'lng': ll['lng'] })
+            latlongCoordinates.append({**objects[i], 'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'latlon': ll })
 
         return jsonify(latlongCoordinates)
 

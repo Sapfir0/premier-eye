@@ -12,7 +12,7 @@ export interface definitions {
     name?: string;
     onlineDate: string;
     view: definitions["LatLon"][];
-    coordinates: definitions["LatLon"];
+    latlon: definitions["LatLon"];
     images: definitions["Image"][];
   };
   CameraList: { items: definitions["Camera"][] };
@@ -28,6 +28,8 @@ export interface definitions {
     type: string;
     scores: number;
     coordinates: string[];
+    latlon: definitions["LatLon"];
+    cameraId?: number;
   };
   DTOLog: { title: string; timestamp: string; cameraId?: number };
   DTOLogs: { titles: string[]; timestamp: string; cameraId: number };

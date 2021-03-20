@@ -16,7 +16,7 @@
                 "$ref": "#/definitions/LatLon"
             }
         },
-        "coordinates": {
+        "latlon": {
             "$ref": "#/definitions/LatLon"
         },
         "images": {
@@ -28,5 +28,5 @@
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "onlineDate", "images", "view", "coordinates"]
+    "required": ["id", "onlineDate", "images", "view", "latlon"]
 }
