@@ -12,7 +12,7 @@ from services.decart import Rectangle
 from database.entities.coordinates import DatabaseCoordinates
 from database.entities.image import DatabaseImage
 from database.entities.objectInfo import DatabaseObject
-from services.geo import getLatLongDistance, getTrapeziumHeight, calibrateRect
+from services.geo import calibrateRect
 from cameraFixedDest import cameras
 
 api = Namespace('areaMap')
@@ -41,14 +41,12 @@ class AreaMap(Resource):
 
         latlongCoordinates = []
         for i, coordinate in enumerate(coordinates):
-            print([coordinate['LUx'], coordinate['LUy'], coordinate['RDx'], coordinate['RDy']])
             rect = Rectangle([coordinate['LUy'], coordinate['LUx'], coordinate['RDy'], coordinate['RDx']])
             currentObject = objects[i] # количество объектов == количество координат
             currentCamera = cameras[currentObject['cameraId']]
             CDx, CDy = rect.getCenterOfDown()
-            print(CDx, CDy)
             ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))
-            latlongCoordinates.append({**objects[i], 'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'latlon': ll })
+            latlongCoordinates.append({**currentObject, 'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'latlon': ll })
 
         return jsonify(latlongCoordinates)
 
