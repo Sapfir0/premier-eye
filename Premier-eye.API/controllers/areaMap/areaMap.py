@@ -45,6 +45,7 @@ class AreaMap(Resource):
             currentObject = objects[i] # количество объектов == количество координат
             currentCamera = cameras[currentObject['cameraId']]
             CDx, CDy = rect.getCenterOfDown()
+            print(CDx, CDy)
             ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))
             latlongCoordinates.append({**currentObject, 'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'latlon': ll })
 
