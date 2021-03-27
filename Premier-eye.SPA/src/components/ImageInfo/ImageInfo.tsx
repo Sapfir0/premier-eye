@@ -9,6 +9,7 @@ import { WarningIfBigDiffBetweenDates } from '../Atomics/Warning/Warning';
 import './ImageInfo.pcss';
 import { ImageInfoStore } from './ImageInfoStore';
 import { CollapsableData, ObjectInfo } from './Widgets/ObjectInfo';
+import VideocamIcon from '@material-ui/icons/Videocam';
 
 interface IImageInfo {
     info: definitions['ImageInfo'];
@@ -64,6 +65,7 @@ export default class ImageInfo extends React.Component<IImageInfo> {
             <div className="imageInfo">
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItem>
+                        <VideocamIcon />
                         <TitledCameraNumber cameraId={myData.numberOfCam} />
                     </ListItem>
                     <ListItem> {myData.filename} </ListItem>

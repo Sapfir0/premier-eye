@@ -1,4 +1,4 @@
-import { Warning } from '@material-ui/icons';
+import { Card, Grid } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 import { decrement, flow, increment } from 'fp-ts/function';
 import { observer } from 'mobx-react';
@@ -67,25 +67,46 @@ export default class Slider extends React.Component<ISlider> {
         // console.log("reslider")
         document.addEventListener('keydown', this.keyPressed, false);
         return (
-            <div className="slider">
-                <CamerasList cameras={this.props.store.camerasList} onCameraChange={this.handleCameraChange} />
-                {!this.props.store.camera && <Alert severity="warning">No camera found</Alert>}
-                {this.props.store.camera && this.props.store.camera.images && (
-                    <ImageView
-                        currentStep={this.getCurrentStep(this.props.store.camera.id)}
-                        changeCurrentStep={this.handleCurrentStepChange}
-                        images={this.props.store.camera.images}
-                    />
-                )}
-                {this.props.store.camera && this.props.store.imageInfo && (
-                    <ImageInfo
-                        cameraOnlineDate={new Date(this.props.store.camera.onlineDate)}
-                        store={myContainer.get(TYPES.ImageInfoStore)}
-                        info={this.props.store.imageInfo}
-                    />
-                )}
-                {this.props.store.errors && <ErrorMessageList errors={this.props.store.errors} />}
-            </div>
+            <Card
+                style={{
+                    minHeight: 500,
+                    // marginTop: 15,
+                    // marginLeft: 20,
+                    // marginRight: 20,
+                }}
+            >
+                <Grid style={{ marginTop: 5 }} spacing={3} justify="center" container={true}>
+                    <Grid item={true}>
+                        <CamerasList
+                            selectedCameraId={this.props.store.camera?.id ?? '1'}
+                            cameras={this.props.store.camerasList}
+                            onCameraChange={this.handleCameraChange}
+                        />
+                    </Grid>
+                    <Grid item={true}>
+                        {!this.props.store.camera && <Alert severity="warning">No camera found</Alert>}
+                        {this.props.store.camera && this.props.store.camera.images && (
+                            <ImageView
+                                currentStep={this.getCurrentStep(this.props.store.camera.id)}
+                                changeCurrentStep={this.handleCurrentStepChange}
+                                images={this.props.store.camera.images}
+                            />
+                        )}
+                    </Grid>
+                    <Grid item={true}>
+                        {this.props.store.camera && this.props.store.imageInfo && (
+                            <ImageInfo
+                                cameraOnlineDate={new Date(this.props.store.camera.onlineDate)}
+                                store={myContainer.get(TYPES.ImageInfoStore)}
+                                info={this.props.store.imageInfo}
+                            />
+                        )}
+                    </Grid>
+                    <Grid item={true}>
+                        {this.props.store.errors && <ErrorMessageList errors={this.props.store.errors} />}
+                    </Grid>
+                </Grid>
+            </Card>
         );
     }
 }
