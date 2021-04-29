@@ -13,7 +13,7 @@ from flask_restplus import Namespace, Resource, fields
 from services.directory import getOutputDir, recursiveSearch
 from services.model import getModel
 
-api = Namespace('imageInfo')
+api = Namespace('image')
 objectManager = DatabaseObject()
 imageManager = DatabaseImage()
 

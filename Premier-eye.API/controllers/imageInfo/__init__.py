@@ -1,4 +1,4 @@
-namespace = '/imageInfo'
+namespace = '/image'
 
 routes = {
     'getImageInfo': '/<filename>/info',

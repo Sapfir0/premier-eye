@@ -13,7 +13,7 @@ from services.model import getModel
 from database import db
 
 
-api = Namespace('computeImage')
+api = Namespace('compute')
 
 @api.route(routes['getImageBetweenDatesFromCamera'])
 class ImageByDateIntervalFromCamera(Resource):

@@ -6,7 +6,7 @@ const GALLERY = {
     GET_ALL_IMAGES: `${GALLERY_HIGH_LEVEL_DOMAIN}/images`,
 };
 
-const IMAGE_INFO_HIGH_LEVEL_DOMAIN = '/imageInfo';
+const IMAGE_INFO_HIGH_LEVEL_DOMAIN = '/image';
 const IMAGE_INFO = {
     GET_INFO_IMAGE: (imageName: string) => `${IMAGE_INFO_HIGH_LEVEL_DOMAIN}/${imageName}/info`,
     GET_IMAGE_INFO_BY_INDEX: `${IMAGE_INFO_HIGH_LEVEL_DOMAIN}/info`,
