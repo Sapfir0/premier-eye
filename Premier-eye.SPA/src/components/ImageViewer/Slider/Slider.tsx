@@ -25,8 +25,8 @@ export default class Slider extends React.Component<ISlider> {
     async componentDidMount() {
         await this.props.store.getCameraList();
         if (this.props.store.camerasList.items.length > 0) {
-            this.props.store.changeCurrentCamera(this.props.store.camerasList.items[0].name!);
-            this.props.store.changeCurrentStep(this.props.store.camerasList.items[0].name!, 0);
+            this.props.store.changeCurrentCamera(this.props.store.camerasList.items[0].name);
+            this.props.store.changeCurrentStep(this.props.store.camerasList.items[0].name, 0);
         }
     }
 
