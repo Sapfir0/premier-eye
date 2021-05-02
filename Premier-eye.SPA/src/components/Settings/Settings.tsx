@@ -19,6 +19,7 @@ export const Settings = observer(() => {
 
     const addNewCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         settingsStore.addNewCamera({ name: settingsStore.nameOfCamera });
+        sliderStore.getCameraList();
     };
 
     const changeNewCameraName = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,7 +32,14 @@ export const Settings = observer(() => {
         text: 'Идентификатор камеры',
         convertFunction: (cameraId: string) => `Camera ${cameraId}`,
     });
-    
+
+    headers.set('latlon', {
+        text: 'Координаты камеры',
+        convertFunction: (latlon: definitions['Camera']['latlon']) => {
+            console.log(latlon);
+            return `${latlon.lat.toFixed(5)}; ${latlon.lng.toFixed(5)}`;
+        },
+    });
 
     return (
         <>

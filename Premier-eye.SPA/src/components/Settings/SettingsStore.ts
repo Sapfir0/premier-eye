@@ -46,8 +46,6 @@ export class SettingsStore extends BaseTableStore {
         runInAction(() => {
             if (isLeft(either)) {
                 this.errors.push(either.left);
-            } else {
-                // this.getCameraList();
             }
         });
     }
