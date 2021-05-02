@@ -28,5 +28,5 @@
     },
     "type": "object",
     "additionalProperties": false,
-    "required": ["id", "onlineDate", "images", "view", "latlon"]
+    "required": ["id", "onlineDate", "images", "view", "name", "latlon"]
 }

@@ -2,7 +2,7 @@ import os
 from config import Config
 from controllers.imageInfo import routes
 from database import db
-from database.entities.image import DatabaseImage
+from database.entities.images import DatabaseImage
 from database.entities.objectInfo import DatabaseObject
 from database.models.Cars import Cars
 from database.models.Coordinates import Coordinates

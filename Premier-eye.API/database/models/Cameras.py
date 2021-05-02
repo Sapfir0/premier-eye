@@ -3,7 +3,7 @@ from database import db
 from datetime import datetime
 
 
-class Camera(db.Base):
+class Cameras(db.Base):
     __tablename__ = "camera"
 
     id = Column(Integer, primary_key=True, unique=True, autoincrement=True)

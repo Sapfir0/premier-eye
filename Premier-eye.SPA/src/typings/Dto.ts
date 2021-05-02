@@ -9,7 +9,7 @@ export interface definitions {
   CameraDto: { name: string };
   Camera: {
     id: string;
-    name?: string;
+    name: string;
     onlineDate: string;
     view: definitions["LatLon"][];
     latlon: definitions["LatLon"];

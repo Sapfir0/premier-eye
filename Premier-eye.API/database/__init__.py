@@ -16,7 +16,7 @@ engine_parameters = {
     }
 }
 
-# мета класс тут для того, чтобы 
+
 class MetaSingleton(type):
     _instances = {}
     def __call__(cls, *args, **kwargs):

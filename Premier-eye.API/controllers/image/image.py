@@ -11,7 +11,7 @@ from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename
 from services.model import getModel
 from database import db
-from database.entities.image import DatabaseImage
+from database.entities.images import DatabaseImage
 
 
 api = Namespace('gallery')

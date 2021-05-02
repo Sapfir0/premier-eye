@@ -5,7 +5,7 @@ import { observer } from 'mobx-react';
 import React from 'react';
 import { myContainer } from '../../../config/inversify.config';
 import { TYPES } from '../../../typings/types';
-import { ErrorMessageList } from '../../Atomics/ErrorMessage/ErrorMessageList';
+import { ErrorSnackbar } from '../../Atomics/ErrorSnackbar';
 import ImageInfo from '../../ImageInfo/ImageInfo';
 import CamerasList from '../CamerasList/CamerasList';
 import ImageView from '../ImageView/ImageView';
@@ -24,14 +24,14 @@ export default class Slider extends React.Component<ISlider> {
 
     async componentDidMount() {
         await this.props.store.getCameraList();
-        if (this.props.store.camerasList.items.length > 0) {
-            this.props.store.changeCurrentCamera(this.props.store.camerasList.items[0].id);
-            this.props.store.changeCurrentStep(this.props.store.camerasList.items[0].id, 0);
+        if (this.props.store.camerasList.length > 0) {
+            this.props.store.changeCurrentCamera(this.props.store.camerasList[0].name);
+            this.props.store.changeCurrentStep(this.props.store.camerasList[0].name, 0);
         }
     }
 
     handleCameraChange = async (cameraId: string) => {
-        const isCameraExists = this.props.store.camerasList.items.find((camera) => camera.id == cameraId);
+        const isCameraExists = this.props.store.camerasList.find((camera) => camera.name == cameraId);
         if (isCameraExists !== undefined) {
             await this.props.store.changeCurrentCamera(cameraId);
             const currentStep = this.getCurrentStep(cameraId);
@@ -64,15 +64,11 @@ export default class Slider extends React.Component<ISlider> {
     };
 
     render() {
-        // console.log("reslider")
         document.addEventListener('keydown', this.keyPressed, false);
         return (
             <Card
                 style={{
                     minHeight: 500,
-                    // marginTop: 15,
-                    // marginLeft: 20,
-                    // marginRight: 20,
                 }}
             >
                 <Grid style={{ marginTop: 5 }} spacing={3} justify="center" container={true}>
@@ -102,9 +98,7 @@ export default class Slider extends React.Component<ISlider> {
                             />
                         )}
                     </Grid>
-                    <Grid item={true}>
-                        {this.props.store.errors && <ErrorMessageList errors={this.props.store.errors} />}
-                    </Grid>
+                    {this.props.store.error && <ErrorSnackbar message={this.props.store.error.message} />}
                 </Grid>
             </Card>
         );

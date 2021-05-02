@@ -1,20 +1,23 @@
-from flask import jsonify, send_from_directory, request, make_response
-from flask import redirect, request
-from typing import Dict
-from controllers.camera import routes, namespace
-from flask_restplus import Namespace, Resource
 import os
-from config import Config as cfg
-from services.directory import getOutputDir
-from database.models.Images import Images
-from werkzeug.datastructures import FileStorage
-from premier_eye_common.filename import parseFilename, getDateFromFilename
-from services.model import getModel
-from services.directory import recursiveSearch
-from database import db
+from typing import Dict
+
 from cameraFixedDest import cameras
+from config import Config as cfg
+from controllers.camera import namespace, routes
+from database import db
+from database.entities.cameras import DatabaseCameras
+from database.models.Images import Images
+from flask import (jsonify, make_response, redirect, request,
+                   send_from_directory)
+from flask_restplus import Namespace, Resource
+from premier_eye_common.filename import getDateFromFilename, parseFilename
+from services.directory import getOutputDir, recursiveSearch
+from services.model import getModel
+from werkzeug.datastructures import FileStorage
 
 api = Namespace('camera')
+cameraManager = DatabaseCameras()
+
 
 @api.route(routes['getAllImagesFromCameras'])
 class CameraImageList(Resource):
@@ -32,16 +35,17 @@ class CameraImageList(Resource):
         return make_response({'images': indexedImgList}, 200)
         
 
+
 @api.route(routes['getCamera'])
 class Camera(Resource):
 
     cameraModel = getModel("Camera", api, directory="DTO", fullOutputName="CameraDto")
     @api.expect(cameraModel)
-    def post(self):
+    def post(self, cameraId):
         """ Добавить новую камеру """
         cameraDTO = request.json
-        addNewCamera(cameraDTO)
-        return make_response({'operation': 'success'})
+        cameraManager.postCamera(**cameraDTO)
+        return make_response({'operation': 'success'}, 200)
 
 
     model = getModel("Camera", api)
@@ -69,9 +73,14 @@ class CamerasList(Resource):
     def get(self):
         """ Получить список камер """
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
-        cameraList = []
-        for i in cameras:
-            cameraList.append({'id': i, 'latlon': cameras[i]['coordinates'], 'view': cameras[i]['view']})
+        cameraList = cameraManager.listCameras(request.args)
+
+        for cameraName in cameras: 
+            index = next( (i for i,camera in enumerate(cameraList) if camera['name'] == str(cameraName)), None) # будет ошибка, если в бд нет такой камеры, которая есть в моих данных
+            if index is not None:
+                cameraList[index]['latlon'] = cameras[cameraName]['coordinates']
+                cameraList[index]['view'] = cameras[cameraName]['view']
+        
         return make_response({'items': cameraList}, 200)
 
 

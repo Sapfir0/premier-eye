@@ -10,7 +10,7 @@ from services.model import getModel
 from database import db
 from services.decart import Rectangle
 from database.entities.coordinates import DatabaseCoordinates
-from database.entities.image import DatabaseImage
+from database.entities.images import DatabaseImage
 from database.entities.objectInfo import DatabaseObject
 from services.geo import calibrateRect
 from cameraFixedDest import cameras

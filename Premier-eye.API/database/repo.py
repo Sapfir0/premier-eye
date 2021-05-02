@@ -25,6 +25,7 @@ class Repo:
         else:
             selectStmt = select([table]).order_by(sortingField)
 
+        print(filterBy, filterValue, sortingField)
         res = self.conn.execute(selectStmt).fetchall()
         stringRes = [dict(i) for i in res]
         return stringRes

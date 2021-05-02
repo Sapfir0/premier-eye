@@ -5,7 +5,7 @@ import { BaseCamerasList } from './BaseCamerasMenu';
 import './CamerasList.pcss';
 
 interface IProps {
-    cameras: definitions['CameraList'];
+    cameras: definitions['CameraList']['items'];
     onCameraChange: (cameraId: string) => void;
     selectedCameraId: string;
 }
@@ -27,7 +27,7 @@ class CamerasList extends React.Component<IProps> {
                     <BaseCamerasList
                         selectedId={this.props.selectedCameraId}
                         onClick={this.handleListItemClick}
-                        cameras={this.props.cameras.items}
+                        cameras={this.props.cameras}
                     />
                 </List>
             </div>

@@ -13,9 +13,9 @@ export class SliderStore {
     camera: definitions['Camera'] | null = null;
     imageInfo: definitions['ImageInfo'] | null = null;
     stepMap: Map<string, number> = new StepDataStructure().steps;
-    errors: BaseInteractionError[] = [];
+    error: BaseInteractionError | null = null;
     stepsStore: StepDataStructure = new StepDataStructure();
-    camerasList: definitions['CameraList'] = { items: [] };
+    camerasList: definitions['CameraList']['items'] = [];
 
     private readonly galleryFetcher: IGalleryApiInteractionService;
     private readonly cameraFetcher: ICameraApiInteractionService;
@@ -33,7 +33,7 @@ export class SliderStore {
             camerasList: observable,
             camera: observable,
             imageInfo: observable,
-            errors: observable,
+            error: observable,
         });
 
         // setInterval(() => {
@@ -48,7 +48,9 @@ export class SliderStore {
         const either: ResolvedEither<definitions['CameraList']> = await this.cameraFetcher.getCamerasList();
 
         if (isRight(either)) {
-            this.camerasList = either.right;
+            this.camerasList = either.right.items;
+        } else {
+            this.error = either.left;
         }
     }
 
@@ -66,7 +68,8 @@ export class SliderStore {
 
         if (isRight(either)) {
             this.imageInfo = either.right;
-            console.log(either.right);
+        } else {
+            this.error = either.left;
         }
     }
 
@@ -75,6 +78,8 @@ export class SliderStore {
 
         if (isRight(either)) {
             this.camera = either.right;
+        } else {
+            this.error = either.left;
         }
     }
 }

@@ -4,13 +4,13 @@ import { Circle, Polygon, Tooltip } from 'react-leaflet';
 import { definitions } from '../../typings/Dto';
 import './AreaMap.pcss';
 
-export const CameraListRenderer = ({ cameraList }: { cameraList: definitions['CameraList'] }) => {
+export const CameraListRenderer = ({ cameraList }: { cameraList: definitions['CameraList']['items'] }) => {
     const cameraPointColor = 'red';
     const cameraViewColor = 'green';
 
     return (
         <>
-            {cameraList.items.map((camera) => (
+            {cameraList.map((camera) => (
                 <React.Fragment key={camera.id}>
                     <Circle pathOptions={{ color: cameraPointColor }} center={camera.latlon} radius={1} />
                     <Polygon

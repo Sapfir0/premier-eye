@@ -12,7 +12,7 @@ export class AreaMapStore {
     public objects: definitions['ObjectInfo'][] = [];
     private readonly areaMapFetcher: AreaMapApiInteractionService;
     private readonly cameraFetcher: ICameraApiInteractionService;
-    public camerasList: definitions['CameraList'] = { items: [] };
+    public camerasList: definitions['CameraList']['items'] = [];
 
     constructor(
         @inject(TYPES.AreaMapApiInteractionService) areaFetcher: AreaMapApiInteractionService,
@@ -40,7 +40,7 @@ export class AreaMapStore {
         const either: ResolvedEither<definitions['CameraList']> = await this.cameraFetcher.getCamerasList();
 
         if (isRight(either)) {
-            this.camerasList = either.right;
+            this.camerasList = either.right.items;
         }
     }
 }
