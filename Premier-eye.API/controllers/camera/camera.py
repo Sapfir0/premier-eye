@@ -1,19 +1,19 @@
-from flask import jsonify, send_from_directory, request, make_response
-from flask import redirect, request
-from typing import Dict
-from controllers.camera import routes, namespace
-from flask_restplus import Namespace, Resource
 import os
-from config import Config as cfg
-from services.directory import getOutputDir
-from database.models.Images import Images
-from database.entities.cameras import DatabaseCameras
-from werkzeug.datastructures import FileStorage
-from premier_eye_common.filename import parseFilename, getDateFromFilename
-from services.model import getModel
-from services.directory import recursiveSearch
-from database import db
+from typing import Dict
+
 from cameraFixedDest import cameras
+from config import Config as cfg
+from controllers.camera import namespace, routes
+from database import db
+from database.entities.cameras import DatabaseCameras
+from database.models.Images import Images
+from flask import (jsonify, make_response, redirect, request,
+                   send_from_directory)
+from flask_restplus import Namespace, Resource
+from premier_eye_common.filename import getDateFromFilename, parseFilename
+from services.directory import getOutputDir, recursiveSearch
+from services.model import getModel
+from werkzeug.datastructures import FileStorage
 
 api = Namespace('camera')
 cameraManager = DatabaseCameras()
@@ -74,8 +74,11 @@ class CamerasList(Resource):
         """ Получить список камер """
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
         cameraList = cameraManager.listCameras(request.args)
-        # for i in cameras:
-        #     cameraList.append({'id': i, 'latlon': cameras[i]['coordinates'], 'view': cameras[i]['view']})
+
+        for cameraName in cameras: 
+            index = next(i for i,camera in enumerate(cameraList) if camera['name'] == str(cameraName)) # будет ошибка, если в бд нет такой камеры, которая есть в моих данных
+            cameraList[index]['latlon'] = cameras[cameraName]['coordinates']
+            cameraList[index]['view'] = cameras[cameraName]['view']
         
         return make_response({'items': cameraList}, 200)
 
