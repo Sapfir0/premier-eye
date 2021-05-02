@@ -1,5 +1,6 @@
 import { Button, Input } from '@material-ui/core';
-import { SliderStore } from 'components/ImageViewer/Slider/SliderStore';
+import { BaseTable } from '../../components/Base/BaseTable';
+import { SliderStore } from '../../components/ImageViewer/Slider/SliderStore';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { definitions } from 'typings/Dto';
@@ -35,10 +36,8 @@ export const Settings = observer(() => {
 
     headers.set('latlon', {
         text: 'Координаты камеры',
-        convertFunction: (latlon: definitions['Camera']['latlon']) => {
-            console.log(latlon);
-            return `${latlon.lat.toFixed(5)}; ${latlon.lng.toFixed(5)}`;
-        },
+        convertFunction: (latlon: definitions['Camera']['latlon']) =>
+            `${latlon.lat.toFixed(5)}; ${latlon.lng.toFixed(5)}`,
     });
 
     return (
@@ -53,7 +52,11 @@ export const Settings = observer(() => {
                 </>
             )}
 
-            <BaseTableLayout<any, any> headers={headers} store={settingsStore} list={sliderStore.camerasList.items} />
+            <BaseTable<definitions['Camera'], any>
+                headers={headers}
+                store={settingsStore}
+                list={sliderStore.camerasList}
+            />
         </>
     );
 });

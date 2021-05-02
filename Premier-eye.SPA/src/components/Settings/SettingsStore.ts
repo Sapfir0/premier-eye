@@ -5,6 +5,7 @@ import { BaseInteractionError } from 'services/Errors/BaseInteractionError';
 import { ICameraApiInteractionService } from 'services/typings/ApiTypes';
 import { BaseTableStore } from '../../components/Base/BaseTableStore';
 import { definitions } from '../../typings/Dto';
+import { ColumnDefinition, SortDirection } from '../../typings/table';
 import { TYPES } from '../../typings/types';
 
 @injectable()
@@ -27,6 +28,8 @@ export class SettingsStore extends BaseTableStore {
             startCreatingNewCamera: action,
             stopCreatingNewCamera: action,
             addNewCamera: action,
+            sortDirectionChanged: action,
+            filterValueChanged: action,
         });
     }
 
@@ -48,5 +51,15 @@ export class SettingsStore extends BaseTableStore {
                 this.errors.push(either.left);
             }
         });
+    }
+
+    public sortDirectionChanged<T>(sortBy: ColumnDefinition<T>, sortDir: SortDirection): void {
+        super.sortDirectionChanged(sortBy, sortDir);
+        this.cameraFetcher.getCamerasList(sortBy as string, sortDir);
+    }
+
+    public filterValueChanged(filterValue: string): void {
+        super.filterValueChanged(filterValue);
+        this.cameraFetcher.getCamerasList(this.sortBy, this.sortDir, this.filterName, this.filterValue);
     }
 }

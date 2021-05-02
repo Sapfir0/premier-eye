@@ -76,9 +76,10 @@ class CamerasList(Resource):
         cameraList = cameraManager.listCameras(request.args)
 
         for cameraName in cameras: 
-            index = next(i for i,camera in enumerate(cameraList) if camera['name'] == str(cameraName)) # будет ошибка, если в бд нет такой камеры, которая есть в моих данных
-            cameraList[index]['latlon'] = cameras[cameraName]['coordinates']
-            cameraList[index]['view'] = cameras[cameraName]['view']
+            index = next( (i for i,camera in enumerate(cameraList) if camera['name'] == str(cameraName)), None) # будет ошибка, если в бд нет такой камеры, которая есть в моих данных
+            if index is not None:
+                cameraList[index]['latlon'] = cameras[cameraName]['coordinates']
+                cameraList[index]['view'] = cameras[cameraName]['view']
         
         return make_response({'items': cameraList}, 200)
 

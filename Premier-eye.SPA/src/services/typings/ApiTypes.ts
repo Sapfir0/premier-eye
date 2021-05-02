@@ -58,6 +58,6 @@ export interface IGalleryApiInteractionService {
 
 export interface ICameraApiInteractionService {
     getImageFromCamera: (cameraId: string) => AsyncEither<any>;
-    getCamerasList: () => AsyncEither<any>;
+    getCamerasList: (sortBy?: string, sortDir?: string, filterBy?: string, filterValue?: string) => AsyncEither<any>;
     addNewCamera: (cameraDto: definitions['CameraDto']) => AsyncEither<any>;
 }

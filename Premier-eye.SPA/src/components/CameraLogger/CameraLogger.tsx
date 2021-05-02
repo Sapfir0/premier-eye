@@ -1,6 +1,5 @@
 import { IconButton, Paper } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
-// import { Map } from 'immutable';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { HeadersBaseSettings } from 'typings/table';
