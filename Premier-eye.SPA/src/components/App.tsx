@@ -4,16 +4,16 @@ import { ClientRoutes } from '../config/clientRoutes';
 import './App.pcss';
 import ButtonAppBar from './Header/Header';
 import HomePage from './pages/HomePage';
-import SettingsPage from './pages/Settings';
 import { AreaMap } from './AreaMap/AreaMap';
 import { CameraLogger } from './CameraLogger/CameraLogger';
+import { Settings } from './Settings/Settings';
 
 function App() {
     return (
         <Router>
             <ButtonAppBar />
             <Switch>
-                <Route path={ClientRoutes.Settings} component={SettingsPage} />
+                <Route path={ClientRoutes.Settings} component={Settings} />
                 <Route path={ClientRoutes.AreaMap} component={AreaMap} />
                 <Route path={ClientRoutes.Logger} component={CameraLogger} />
                 <Route path={ClientRoutes.Index} component={HomePage} />

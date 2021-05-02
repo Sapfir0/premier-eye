@@ -1,50 +1,51 @@
 import { Button, Input } from '@material-ui/core';
+import { SliderStore } from 'components/ImageViewer/Slider/SliderStore';
 import { observer } from 'mobx-react';
-import React from 'react';
-import { HeaderName, HeadersBaseSettings } from '../../typings/table';
+import React, { useEffect } from 'react';
+import { definitions } from 'typings/Dto';
+import { useInject } from '../../services/hooks';
+import { HeadersBaseSettings } from '../../typings/table';
+import { TYPES } from '../../typings/types';
 import { BaseTableLayout } from '../Base/BaseTableLayout';
 import { SettingsStore } from './SettingsStore';
 
-export interface ISettings {
-    sliderStore: SettingsStore;
-}
+export const Settings = observer(() => {
+    const sliderStore = useInject<SliderStore>(TYPES.SliderStore);
+    const settingsStore = useInject<SettingsStore>(TYPES.SettingsStore);
 
-@observer
-export class Settings extends React.Component<ISettings> {
-    componentDidMount() {
-        // this.props.sliderStore.getCameraList();
-    }
+    useEffect(() => {
+        sliderStore.getCameraList();
+    }, []);
 
-    addNewCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
-        this.props.sliderStore.addNewCamera({ name: this.props.sliderStore.nameOfCamera });
+    const addNewCamera = (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        settingsStore.addNewCamera({ name: settingsStore.nameOfCamera });
     };
 
-    changeNewCameraName = (event: React.ChangeEvent<HTMLInputElement>) => {
-        this.props.sliderStore.nameOfCamera = event.target.value;
+    const changeNewCameraName = (event: React.ChangeEvent<HTMLInputElement>) => {
+        settingsStore.nameOfCamera = event.target.value;
     };
 
-    render() {
-        const headers: HeadersBaseSettings<any> = new Map<string | '', HeaderName<any>>();
+    const headers: HeadersBaseSettings<definitions['Camera']> = new Map();
 
-        headers.set('id', {
-            text: 'Идентификатор камеры',
-            convertFunction: (cameraId: string) => `Camera ${cameraId}`,
-        });
+    headers.set('name', {
+        text: 'Идентификатор камеры',
+        convertFunction: (cameraId: string) => `Camera ${cameraId}`,
+    });
+    
 
-        return (
-            <>
-                <h1>Настройки</h1>
-                <Button onClick={this.props.sliderStore.startCreatingNewCamera}>Добавить камеру</Button>
-                {this.props.sliderStore.isCreating && (
-                    <>
-                        <Input onChange={this.changeNewCameraName} />
-                        <Button onClick={this.addNewCamera}>Добавить</Button>
-                        <Button onClick={this.props.sliderStore.stopCreatingNewCamera}>Отмена</Button>
-                    </>
-                )}
+    return (
+        <>
+            <h1>Настройки</h1>
+            <Button onClick={settingsStore.startCreatingNewCamera}>Добавить камеру</Button>
+            {settingsStore.isCreating && (
+                <>
+                    <Input onChange={changeNewCameraName} />
+                    <Button onClick={addNewCamera}>Добавить</Button>
+                    <Button onClick={settingsStore.stopCreatingNewCamera}>Отмена</Button>
+                </>
+            )}
 
-                <BaseTableLayout<any, any> headers={headers} list={this.props.sliderStore.camerasList.items} />
-            </>
-        );
-    }
-}
+            <BaseTableLayout<any, any> headers={headers} store={settingsStore} list={sliderStore.camerasList.items} />
+        </>
+    );
+});

@@ -5,7 +5,7 @@ import { ICameraApiInteractionService } from '../typings/ApiTypes';
 
 export default class CameraApiInteractionService extends ApiInteractionService implements ICameraApiInteractionService {
     public getImageFromCamera = (cameraId: string) => {
-        return this.get(ApiRoutes.CAMERA.GET_ALL_IMAGES_FROM_CAMERA(cameraId));
+        return this.get(ApiRoutes.CAMERA.CURRENT(cameraId));
     };
 
     public getCamerasList = () => {
@@ -13,6 +13,6 @@ export default class CameraApiInteractionService extends ApiInteractionService i
     };
 
     public addNewCamera = (cameraDto: definitions['CameraDto']) => {
-        return this.put(ApiRoutes.CAMERA.CAMERA, cameraDto);
+        return this.post(ApiRoutes.CAMERA.CURRENT(cameraDto.name), cameraDto);
     };
 }

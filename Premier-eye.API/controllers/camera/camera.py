@@ -7,6 +7,7 @@ import os
 from config import Config as cfg
 from services.directory import getOutputDir
 from database.models.Images import Images
+from database.entities.cameras import DatabaseCameras
 from werkzeug.datastructures import FileStorage
 from premier_eye_common.filename import parseFilename, getDateFromFilename
 from services.model import getModel
@@ -15,6 +16,8 @@ from database import db
 from cameraFixedDest import cameras
 
 api = Namespace('camera')
+cameraManager = DatabaseCameras()
+
 
 @api.route(routes['getAllImagesFromCameras'])
 class CameraImageList(Resource):
@@ -32,16 +35,17 @@ class CameraImageList(Resource):
         return make_response({'images': indexedImgList}, 200)
         
 
+
 @api.route(routes['getCamera'])
 class Camera(Resource):
 
     cameraModel = getModel("Camera", api, directory="DTO", fullOutputName="CameraDto")
     @api.expect(cameraModel)
-    def post(self):
+    def post(self, cameraId):
         """ Добавить новую камеру """
         cameraDTO = request.json
-        addNewCamera(cameraDTO)
-        return make_response({'operation': 'success'})
+        cameraManager.postCamera(**cameraDTO)
+        return make_response({'operation': 'success'}, 200)
 
 
     model = getModel("Camera", api)
@@ -69,9 +73,10 @@ class CamerasList(Resource):
     def get(self):
         """ Получить список камер """
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
-        cameraList = []
-        for i in cameras:
-            cameraList.append({'id': i, 'latlon': cameras[i]['coordinates'], 'view': cameras[i]['view']})
+        cameraList = cameraManager.listCameras(request.args)
+        # for i in cameras:
+        #     cameraList.append({'id': i, 'latlon': cameras[i]['coordinates'], 'view': cameras[i]['view']})
+        
         return make_response({'items': cameraList}, 200)
 
 
