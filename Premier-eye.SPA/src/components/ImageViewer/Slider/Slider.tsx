@@ -30,7 +30,7 @@ export default class Slider extends React.Component<ISlider> {
         }
     }
 
-    handleCameraChange = async (cameraId: string) => {
+    handleCameraChange = async (cameraId: string): Promise<void> => {
         const isCameraExists = this.props.store.camerasList.find((camera) => camera.name == cameraId);
         if (isCameraExists !== undefined) {
             await this.props.store.changeCurrentCamera(cameraId);
@@ -39,17 +39,17 @@ export default class Slider extends React.Component<ISlider> {
         }
     };
 
-    handleCurrentStepChange = (step: number) => {
+    handleCurrentStepChange = (step: number): void => {
         if (this.props.store.camera !== null && step >= 0 && step < this.props.store.camera?.images.length) {
             this.props.store.changeCurrentStep(this.props.store.camera.id, step);
         }
     };
 
-    getCurrentStep = (cameraId: string) => {
+    getCurrentStep = (cameraId: string): number => {
         return this.props.store.stepsStore.getCurrentStep(cameraId);
     };
 
-    keyPressed = (e: KeyboardEvent) => {
+    keyPressed = (e: KeyboardEvent): void => {
         const data = new Map();
 
         data.set('ArrowRight', flow(this.getCurrentStep, increment, this.handleCurrentStepChange));
@@ -67,6 +67,7 @@ export default class Slider extends React.Component<ISlider> {
         document.addEventListener('keydown', this.keyPressed, false);
         return (
             <Card
+
                 style={{
                     minHeight: 500,
                 }}

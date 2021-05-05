@@ -12,7 +12,7 @@ export interface definitions {
     name: string;
     onlineDate: string;
     view: definitions["LatLon"][];
-    latlon: definitions["LatLon"];
+    coordinates: definitions["LatLon"];
     images: definitions["Image"][];
   };
   CameraList: { items: definitions["Camera"][] };

@@ -110,8 +110,8 @@ async def detectObjects(filename, previousImage):
 
 
     if config.sendRequestToServer:
+        await api.uploadImage(outputFile)
         await asyncio.gather(
-            api.uploadImage(outputFile), 
             api.postImageInfo(outputFile, image),
             api.postEvents(logStrings, image.date, image.cameraId) 
         )   

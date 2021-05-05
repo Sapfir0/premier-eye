@@ -12,11 +12,11 @@ export const CameraListRenderer = ({ cameraList }: { cameraList: definitions['Ca
         <>
             {cameraList.map((camera) => (
                 <React.Fragment key={camera.id}>
-                    <Circle pathOptions={{ color: cameraPointColor }} center={camera.latlon} radius={1} />
+                    <Circle pathOptions={{ color: cameraPointColor }} center={camera.coordinates} radius={1} />
                     <Polygon
                         pathOptions={{ color: cameraViewColor }}
                         opacity={0.5}
-                        positions={[camera.latlon, camera.view[0], camera.view[1]]}
+                        positions={[camera.coordinates, camera.view[0], camera.view[1]]}
                     >
                         <Tooltip>Камера {camera.id}</Tooltip>
                     </Polygon>

@@ -1,6 +1,6 @@
 import unittest
 from services.geo import calibrateRect, divLatLonToNumber, subLatLon, addLatLon, mulLatLonToNumber, imageHeight, imageWidth
-from cameraFixedDest import cameras
+from cameraLocations import cameras
 
 def getLatLonCoordinates(A, B, C, D, X, Y):
     vBC = divLatLonToNumber(subLatLon(C, B), imageHeight)

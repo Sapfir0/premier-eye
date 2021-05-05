@@ -1,19 +1,20 @@
-from flask import jsonify, send_from_directory, request, make_response
-from flask import redirect, request
-from typing import Dict
-from controllers.areaMap import routes, namespace
-from flask_restplus import Namespace, Resource
 import os
+from typing import Dict
+
+from cameraLocations import cameras
 from config import Config as cfg
-from premier_eye_common.filename import parseFilename
-from services.model import getModel
+from controllers.areaMap import namespace, routes
 from database import db
-from services.decart import Rectangle
 from database.entities.coordinates import DatabaseCoordinates
 from database.entities.images import DatabaseImage
 from database.entities.objectInfo import DatabaseObject
+from flask import (jsonify, make_response, redirect, request,
+                   send_from_directory)
+from flask_restplus import Namespace, Resource
+from premier_eye_common.filename import parseFilename
+from services.decart import Rectangle
 from services.geo import calibrateRect
-from cameraFixedDest import cameras
+from services.model import getModel
 
 api = Namespace('areaMap')
 
@@ -26,15 +27,18 @@ class AreaMap(Resource):
     def get(self):
         reqArgs = request.form 
         images = imageManager.getNewestImageFromAllCamera()
+        print(images)
         objects = []
         for image in images:
+            print(image['id'])
             objOnImage = objectManager.getObjectOnImage(image['id']) 
+            print(objOnImage)
             for i, obj in enumerate(objOnImage):
                 objOnImage[i] = {**obj, 'cameraId': image['numberOfCam'] }
                 
                 if (objOnImage != []):
                     objects.append(objOnImage[i])
-
+        # print(objects)
         coordinates = []
         for obj in objects:
             coordinates.append({**coordinatesManager.getCoordinate(obj['coordinatesId'])})
@@ -44,6 +48,7 @@ class AreaMap(Resource):
             rect = Rectangle([coordinate['LUy'], coordinate['LUx'], coordinate['RDy'], coordinate['RDx']])
             currentObject = objects[i] # количество объектов == количество координат
             currentCamera = cameras[currentObject['cameraId']]
+            print(currentCamera)
             CDx, CDy = rect.getCenterOfDown()
             print(CDx, CDy)
             ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))

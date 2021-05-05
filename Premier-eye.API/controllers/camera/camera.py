@@ -1,7 +1,7 @@
 import os
 from typing import Dict
 
-from cameraFixedDest import cameras
+from cameraLocations import cameras
 from config import Config as cfg
 from controllers.camera import namespace, routes
 from database import db
@@ -75,12 +75,20 @@ class CamerasList(Resource):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER)
         cameraList = cameraManager.listCameras(request.args)
 
-        for cameraName in cameras: 
-            index = next( (i for i,camera in enumerate(cameraList) if camera['name'] == str(cameraName)), None) # будет ошибка, если в бд нет такой камеры, которая есть в моих данных
+        def addLocationToCameras():
+            index = next( (i for i,camera in enumerate(cameraList) if camera['name'] == str(cameraPath)), None) 
             if index is not None:
-                cameraList[index]['latlon'] = cameras[cameraName]['coordinates']
+                cameraList[index]['coordinates'] = cameras[cameraName]['coordinates']
                 cameraList[index]['view'] = cameras[cameraName]['view']
+
+
+        for cameraName in cameras: 
+            addLocationToCameras()
         
+        for cameraPath in cameras:
+            cameraList.append({'id': cameraPath, 'name': cameraPath, **cameras[cameraPath]})
+        
+
         return make_response({'items': cameraList}, 200)
 
 

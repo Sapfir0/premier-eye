@@ -34,9 +34,9 @@ export const Settings = observer(() => {
         convertFunction: (cameraId: string) => `Camera ${cameraId}`,
     });
 
-    headers.set('latlon', {
+    headers.set('coordinates', {
         text: 'Координаты камеры',
-        convertFunction: (latlon: definitions['Camera']['latlon']) =>
+        convertFunction: (latlon: definitions['Camera']['coordinates']) =>
             `${latlon.lat.toFixed(5)}; ${latlon.lng.toFixed(5)}`,
     });
 

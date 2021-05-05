@@ -5,6 +5,8 @@ from config import Config as cfg
 from database.config import DatabaseConfig
 import os.path
 import os
+# import cameraLocations
+# from database.entities.cameras import DatabaseCameras
 
 engine_parameters = {
     "convert_unicode": True,
@@ -43,6 +45,12 @@ class Database(metaclass=MetaSingleton):
         self.Base = declarative_base()
         self.Base.query = self.session.query_property()
         self.Base.metadata.create_all(bind=self.engine)
+
+        # dbcameras = DatabaseCameras()
+        # cameraList = dbcameras.listCameras({})
+        # index = next( (i for i,camera in enumerate(cameraList) if camera['name'] == str(cameraPath)), None) 
+        # if index is None:
+        #     dbcameras.post()
 
 
 db = Database()
