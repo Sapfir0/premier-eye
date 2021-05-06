@@ -86,7 +86,8 @@ class CamerasList(Resource):
             addLocationToCameras()
         
         for cameraPath in cameras:
-            cameraList.append({'id': cameraPath, 'name': cameraPath, **cameras[cameraPath]})
+            cameraList.append({'id': str(cameraPath), 'name': str(cameraPath), **cameras[cameraPath]})
+        
         
 
         return make_response({'items': cameraList}, 200)

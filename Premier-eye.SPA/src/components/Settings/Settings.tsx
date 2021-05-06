@@ -1,13 +1,12 @@
 import { Button, Input } from '@material-ui/core';
-import { BaseTable } from '../../components/Base/BaseTable';
-import { SliderStore } from '../../components/ImageViewer/Slider/SliderStore';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { definitions } from 'typings/Dto';
+import { BaseTable } from '../../components/Base/BaseTable';
+import { SliderStore } from '../../components/ImageViewer/Slider/SliderStore';
 import { useInject } from '../../services/hooks';
 import { HeadersBaseSettings } from '../../typings/table';
 import { TYPES } from '../../typings/types';
-import { BaseTableLayout } from '../Base/BaseTableLayout';
 import { SettingsStore } from './SettingsStore';
 
 export const Settings = observer(() => {
@@ -31,11 +30,13 @@ export const Settings = observer(() => {
 
     headers.set('name', {
         text: 'Идентификатор камеры',
+        buttons: { sortButton: false, filterButton: false },
         convertFunction: (cameraId: string) => `Camera ${cameraId}`,
     });
 
     headers.set('coordinates', {
         text: 'Координаты камеры',
+        buttons: { sortButton: false, filterButton: false },
         convertFunction: (latlon: definitions['Camera']['coordinates']) =>
             `${latlon.lat.toFixed(5)}; ${latlon.lng.toFixed(5)}`,
     });
