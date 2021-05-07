@@ -42,24 +42,24 @@ export const Settings = observer(() => {
     });
 
     return (
-        <Card style={{minHeight: '500px'}}>
-            <div style={{marginLeft: '10px'}}>
-            <h1>Настройки</h1>
-            <Button onClick={settingsStore.startCreatingNewCamera}>Добавить камеру</Button>
-            {settingsStore.isCreating && (
-                <>
-                    <Input onChange={changeNewCameraName} />
-                    <Button onClick={addNewCamera}>Добавить</Button>
-                    <Button onClick={settingsStore.stopCreatingNewCamera}>Отмена</Button>
-                </>
-            )}
+        <Card style={{ minHeight: '500px' }}>
+            <div style={{ marginLeft: '10px' }}>
+                <h1>Настройки</h1>
+                <Button onClick={settingsStore.startCreatingNewCamera}>Добавить камеру</Button>
+                {settingsStore.isCreating && (
+                    <>
+                        <Input onChange={changeNewCameraName} />
+                        <Button onClick={addNewCamera}>Добавить</Button>
+                        <Button onClick={settingsStore.stopCreatingNewCamera}>Отмена</Button>
+                    </>
+                )}
 
-            <BaseTable<definitions['Camera'], any>
-                headers={headers}
-                store={settingsStore}
-                list={sliderStore.camerasList}
-            />
+                <BaseTable<definitions['Camera'], any>
+                    headers={headers}
+                    store={settingsStore}
+                    list={sliderStore.camerasList}
+                />
             </div>
-        </>
+        </Card>
     );
 });
