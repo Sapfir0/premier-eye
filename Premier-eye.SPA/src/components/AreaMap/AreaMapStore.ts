@@ -1,3 +1,4 @@
+import { refreshSliderTimeout } from '../../config/constants';
 import { isRight } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';
@@ -26,6 +27,9 @@ export class AreaMapStore {
             camerasList: observable,
             objects: observable,
         });
+        setInterval(() => {
+            this.getObjectList();
+        }, refreshSliderTimeout);
     }
 
     public async getObjectList(): Promise<void> {

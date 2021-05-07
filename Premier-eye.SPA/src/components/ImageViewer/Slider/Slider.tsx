@@ -65,9 +65,11 @@ export default class Slider extends React.Component<ISlider> {
 
     render() {
         document.addEventListener('keydown', this.keyPressed, false);
+        const { camera } = this.props.store;
+        const isCameraAvailable = camera && camera.images.length > 0;
+
         return (
             <Card
-
                 style={{
                     minHeight: 500,
                 }}
@@ -75,25 +77,25 @@ export default class Slider extends React.Component<ISlider> {
                 <Grid style={{ marginTop: 5 }} spacing={3} justify="center" container={true}>
                     <Grid item={true}>
                         <CamerasList
-                            selectedCameraId={this.props.store.camera?.id ?? '1'}
+                            selectedCameraId={camera?.id ?? '1'}
                             cameras={this.props.store.camerasList}
                             onCameraChange={this.handleCameraChange}
                         />
                     </Grid>
                     <Grid item={true}>
-                        {!this.props.store.camera && <Alert severity="warning">No camera found</Alert>}
-                        {this.props.store.camera && this.props.store.camera.images && (
+                        {!isCameraAvailable && <Alert severity="warning">No camera found</Alert>}
+                        {isCameraAvailable && camera && (
                             <ImageView
-                                currentStep={this.getCurrentStep(this.props.store.camera.id)}
+                                currentStep={this.getCurrentStep(camera.id)}
                                 changeCurrentStep={this.handleCurrentStepChange}
-                                images={this.props.store.camera.images}
+                                images={camera.images}
                             />
                         )}
                     </Grid>
                     <Grid item={true}>
-                        {this.props.store.camera && this.props.store.imageInfo && (
+                        {camera && isCameraAvailable && this.props.store.imageInfo && (
                             <ImageInfo
-                                cameraOnlineDate={new Date(this.props.store.camera.onlineDate)}
+                                cameraOnlineDate={new Date(camera.onlineDate)}
                                 store={myContainer.get(TYPES.ImageInfoStore)}
                                 info={this.props.store.imageInfo}
                             />

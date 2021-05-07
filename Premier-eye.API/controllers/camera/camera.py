@@ -55,7 +55,7 @@ class Camera(Resource):
         cameraPath = os.path.join(cfg.UPLOAD_FOLDER, cameraId)
 
         if not os.path.exists(cameraPath):
-            return make_response({"error": "Error while loading camera on filesystem"}, 400)
+            return make_response({"images": [], 'id': cameraId}, 200)
 
         lastImageDate = os.listdir(cameraPath)[-1]
 

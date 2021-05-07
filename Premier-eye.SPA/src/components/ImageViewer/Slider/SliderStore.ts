@@ -2,9 +2,10 @@ import { isRight } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';
 import { BaseInteractionError } from 'services/Errors/BaseInteractionError';
-import { ICameraApiInteractionService, IGalleryApiInteractionService } from 'services/typings/ApiTypes';
 import { ResolvedEither } from 'typings/common';
+import { refreshSliderTimeout } from '../../../config/constants';
 import StepDataStructure from '../../../services/DataStructure/StepDataStructure';
+import { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../../services/typings/ApiTypes';
 import { definitions } from '../../../typings/Dto';
 import { TYPES } from '../../../typings/types';
 
@@ -36,11 +37,11 @@ export class SliderStore {
             error: observable,
         });
 
-        // setInterval(() => {
-        //     if (this.camera !== null) {
-        //         this.changeCurrentCamera(this.camera.id);
-        //     }
-        // }, refreshSliderTimeout);
+        setInterval(() => {
+            if (this.camera !== null) {
+                this.changeCurrentCamera(this.camera.id);
+            }
+        }, refreshSliderTimeout);
         // нужно подписаться на обновление списка камер и на обновление списка изображений
     }
 

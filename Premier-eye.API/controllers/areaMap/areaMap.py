@@ -27,18 +27,16 @@ class AreaMap(Resource):
     def get(self):
         reqArgs = request.form 
         images = imageManager.getNewestImageFromAllCamera()
-        print(images)
+
         objects = []
         for image in images:
-            print(image['id'])
             objOnImage = objectManager.getObjectOnImage(image['id']) 
-            print(objOnImage)
             for i, obj in enumerate(objOnImage):
                 objOnImage[i] = {**obj, 'cameraId': image['numberOfCam'] }
                 
                 if (objOnImage != []):
                     objects.append(objOnImage[i])
-        # print(objects)
+
         coordinates = []
         for obj in objects:
             coordinates.append({**coordinatesManager.getCoordinate(obj['coordinatesId'])})
@@ -48,9 +46,7 @@ class AreaMap(Resource):
             rect = Rectangle([coordinate['LUy'], coordinate['LUx'], coordinate['RDy'], coordinate['RDx']])
             currentObject = objects[i] # количество объектов == количество координат
             currentCamera = cameras[currentObject['cameraId']]
-            print(currentCamera)
             CDx, CDy = rect.getCenterOfDown()
-            print(CDx, CDy)
             ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))
             latlongCoordinates.append({**currentObject, 'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'latlon': ll })
 
