@@ -1,4 +1,4 @@
-import { Button, Input } from '@material-ui/core';
+import { Button, Card, Input } from '@material-ui/core';
 import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { definitions } from 'typings/Dto';
@@ -42,7 +42,8 @@ export const Settings = observer(() => {
     });
 
     return (
-        <>
+        <Card style={{minHeight: '500px'}}>
+            <div style={{marginLeft: '10px'}}>
             <h1>Настройки</h1>
             <Button onClick={settingsStore.startCreatingNewCamera}>Добавить камеру</Button>
             {settingsStore.isCreating && (
@@ -58,6 +59,7 @@ export const Settings = observer(() => {
                 store={settingsStore}
                 list={sliderStore.camerasList}
             />
+            </div>
         </>
     );
 });
