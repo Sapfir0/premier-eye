@@ -1,7 +1,7 @@
-import { refreshSliderTimeout } from '../../config/constants';
 import { isRight } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';
+import { socket } from '../../services/Socket';
 import { ICameraApiInteractionService } from 'services/typings/ApiTypes';
 import { AreaMapApiInteractionService } from '../../services/ApiInteractionService/AreaMapInteractionService';
 import { ResolvedEither } from '../../typings/common';
@@ -21,15 +21,17 @@ export class AreaMapStore {
     ) {
         this.areaMapFetcher = areaFetcher;
         this.cameraFetcher = cameraFetcher;
+
         makeObservable(this, {
             getObjectList: action,
             getCameraList: action,
             camerasList: observable,
             objects: observable,
         });
-        setInterval(() => {
+
+        socket.on('infoUpdated', () => {
             this.getObjectList();
-        }, refreshSliderTimeout);
+        });
     }
 
     public async getObjectList(): Promise<void> {

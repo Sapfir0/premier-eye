@@ -71,8 +71,6 @@ class ImageInformation(Resource):
 
             db.session.commit()
         db.session.flush()
-
-        print("тут должен произойти эмит")
         socketio.emit('infoUpdated', {'data': 42})
         make_response({"success": "Info updated"}, 200)
 

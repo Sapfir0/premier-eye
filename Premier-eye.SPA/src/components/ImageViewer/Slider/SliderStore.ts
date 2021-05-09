@@ -8,6 +8,7 @@ import { socket } from '../../../services/Socket';
 import { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../../services/typings/ApiTypes';
 import { definitions } from '../../../typings/Dto';
 import { TYPES } from '../../../typings/types';
+import { Map } from 'immutable';
 @injectable()
 export class SliderStore {
     camera: definitions['Camera'] | null = null;
@@ -26,12 +27,6 @@ export class SliderStore {
     ) {
         this.galleryFetcher = galleryFetcher;
         this.cameraFetcher = cameraFetcher;
-        socket.on('connect', () => {
-            console.log('connected');
-        });
-        socket.on('infoUpdated', (data: any) => {
-            console.log('updated', data);
-        });
 
         makeObservable(this, {
             changeCurrentStep: action,
@@ -43,12 +38,11 @@ export class SliderStore {
             error: observable,
         });
 
-        // setInterval(() => {
-        //     if (this.camera !== null) {
-        //         this.changeCurrentCamera(this.camera.id);
-        //     }
-        // }, refreshSliderTimeout);
-        // нужно подписаться на обновление списка камер и на обновление списка изображений
+        socket.on('infoUpdated', () => {
+            if (this.camera !== null) {
+                this.changeCurrentCamera(this.camera.id);
+            }
+        });
     }
 
     public async getCameraList(): Promise<void> {
@@ -65,7 +59,6 @@ export class SliderStore {
         const filename = this.camera?.images[currentStep].src;
         let either: ResolvedEither<definitions['ImageInfo']>;
         if (filename === undefined) {
-            // сделаем такую странную вещь, если такого файлнейма не находим, то запросим первое
             either = await this.galleryFetcher.getInfoImageByIndex(cameraId, currentStep);
         } else {
             either = await this.galleryFetcher.getInfoImage(filename);
