@@ -13,7 +13,7 @@ export interface IObjectInfo {
     store: ImageInfoStore<definitions['ObjectInfo']>;
 }
 
-export const ObjectInfo = ({ element, store }: IObjectInfo) => {
+export const ObjectInfo = ({ element, store }: IObjectInfo): React.ReactElement => {
     const toggleCollapse = (id: string) => () => {
         store.toggleCollapse(id);
     };

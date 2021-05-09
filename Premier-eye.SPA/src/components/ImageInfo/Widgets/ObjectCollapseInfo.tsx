@@ -13,7 +13,7 @@ export class ObjectCollapseInfo extends React.Component<IObjectCollapseInfo> {
         return (
             <Collapse in={this.props.isOpen} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
-                    <ListItem> Степень уверенности: {this.props.scores * 100}% </ListItem>
+                    <ListItem> Степень уверенности: {(this.props.scores * 100).toFixed(2)}% </ListItem>
                 </List>
             </Collapse>
         );

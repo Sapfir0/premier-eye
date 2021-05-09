@@ -1,4 +1,5 @@
 import { List, ListItem } from '@material-ui/core';
+import VideocamIcon from '@material-ui/icons/Videocam';
 import Alert from '@material-ui/lab/Alert';
 import { observer } from 'mobx-react';
 import React from 'react';
@@ -9,7 +10,6 @@ import { WarningIfBigDiffBetweenDates } from '../Atomics/Warning/Warning';
 import './ImageInfo.pcss';
 import { ImageInfoStore } from './ImageInfoStore';
 import { CollapsableData, ObjectInfo } from './Widgets/ObjectInfo';
-import VideocamIcon from '@material-ui/icons/Videocam';
 
 interface IImageInfo {
     info: definitions['ImageInfo'];
@@ -46,34 +46,30 @@ export default class ImageInfo extends React.Component<IImageInfo> {
     };
 
     render() {
-        const myData = this.props.info;
+        const { objects, createdAt, fixationDatetime, filename, numberOfCam } = this.props.info;
 
-        let objects: JSX.Element | undefined;
-        if (myData.objects && myData.objects.length !== 0) {
+        if (objects && objects.length !== 0) {
             if (this.props.store.collapses.length === 0) {
-                this.props.store.setCollapses(myData.objects);
+                this.props.store.setCollapses(objects);
             }
-            objects = this.getObjectsUIRepresentation(this.props.store.collapses);
         }
 
-        const warningDateDiff = WarningIfBigDiffBetweenDates(
-            new Date(myData.createdAt),
-            new Date(myData.fixationDatetime),
-        );
+        const warningDateDiff = WarningIfBigDiffBetweenDates(new Date(createdAt), new Date(fixationDatetime));
 
         return (
             <div className="imageInfo">
                 <List component="nav" aria-label="main mailbox folders">
                     <ListItem>
                         <VideocamIcon />
-                        <TitledCameraNumber cameraId={myData.numberOfCam} />
+                        <TitledCameraNumber cameraId={numberOfCam} />
                     </ListItem>
-                    <ListItem> {myData.filename} </ListItem>
+                    <ListItem> {filename} </ListItem>
                     <ListItem>
-                        {new Date(myData.fixationDatetime).toLocaleString('ru', { timeZone: 'UTC' })} {warningDateDiff}
+                        {new Date(fixationDatetime).toLocaleString('ru', { timeZone: 'UTC' })}
+                        {warningDateDiff}
                     </ListItem>
 
-                    {objects}
+                    {this.getObjectsUIRepresentation(this.props.store.collapses)}
                     {this.getOldImageWarning(this.props.cameraOnlineDate)}
                 </List>
             </div>
