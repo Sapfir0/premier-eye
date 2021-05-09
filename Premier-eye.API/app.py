@@ -9,6 +9,8 @@ import time
 import datetime
 from services.queryLogger import createLogger
 from flask_socketio import SocketIO
+from sockets.sockets import initSocket, socketio
+
 
 def createApp(configClass=Config):
     staticFolder = 'static'
@@ -21,8 +23,7 @@ def createApp(configClass=Config):
 
 
 app = createApp(cfg)
-
-socketio = SocketIO(app)
+initSocket(app)
 
 if __name__ == '__main__':
     socketio.run(app, host=cfg.HOST, port=cfg.PORT)

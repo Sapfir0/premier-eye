@@ -17,9 +17,6 @@
             "minItems": 4,
             "maxItems": 4
         },
-        "latlon": {
-            "$ref": "#/definitions/LatLon"
-        },
         "cameraId": {
             "type": "number"
         }

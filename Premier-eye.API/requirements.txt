@@ -9,4 +9,4 @@ premier-eye-common
 gunicorn==20.0.4
 colorama
 flask-socketio
-eventlet
+eventlet==0.30.2

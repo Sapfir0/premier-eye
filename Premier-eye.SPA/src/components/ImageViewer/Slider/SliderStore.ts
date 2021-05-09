@@ -26,8 +26,11 @@ export class SliderStore {
     ) {
         this.galleryFetcher = galleryFetcher;
         this.cameraFetcher = cameraFetcher;
-        socket.on('infoUpdated', () => {
-            console.log('infoUpdated');
+        socket.on('connect', () => {
+            console.log('connected');
+        });
+        socket.on('infoUpdated', (data: any) => {
+            console.log('updated', data);
         });
 
         makeObservable(this, {
