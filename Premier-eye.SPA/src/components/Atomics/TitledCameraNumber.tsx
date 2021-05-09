@@ -1,7 +1,7 @@
 import Tooltip from '@material-ui/core/Tooltip';
 import React from 'react';
 
-const colorForCameras = ['blue', 'red', 'orange', 'purple', 'green'];
+const colorForCameras = ['blue', 'tomato', 'orange', 'purple', 'green'];
 
 export default function TitledCameraNumber(props: { cameraId: number }) {
     return (

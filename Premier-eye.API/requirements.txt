@@ -8,3 +8,5 @@ Werkzeug==0.16.1
 premier-eye-common
 gunicorn==20.0.4
 colorama
+flask-socketio
+eventlet

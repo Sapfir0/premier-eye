@@ -3,12 +3,11 @@ import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';
 import { BaseInteractionError } from 'services/Errors/BaseInteractionError';
 import { ResolvedEither } from 'typings/common';
-import { refreshSliderTimeout } from '../../../config/constants';
 import StepDataStructure from '../../../services/DataStructure/StepDataStructure';
+import { socket } from '../../../services/Socket';
 import { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../../services/typings/ApiTypes';
 import { definitions } from '../../../typings/Dto';
 import { TYPES } from '../../../typings/types';
-
 @injectable()
 export class SliderStore {
     camera: definitions['Camera'] | null = null;
@@ -27,6 +26,10 @@ export class SliderStore {
     ) {
         this.galleryFetcher = galleryFetcher;
         this.cameraFetcher = cameraFetcher;
+        socket.on('infoUpdated', () => {
+            console.log('infoUpdated');
+        });
+
         makeObservable(this, {
             changeCurrentStep: action,
             getCameraList: action,
@@ -37,11 +40,11 @@ export class SliderStore {
             error: observable,
         });
 
-        setInterval(() => {
-            if (this.camera !== null) {
-                this.changeCurrentCamera(this.camera.id);
-            }
-        }, refreshSliderTimeout);
+        // setInterval(() => {
+        //     if (this.camera !== null) {
+        //         this.changeCurrentCamera(this.camera.id);
+        //     }
+        // }, refreshSliderTimeout);
         // нужно подписаться на обновление списка камер и на обновление списка изображений
     }
 
