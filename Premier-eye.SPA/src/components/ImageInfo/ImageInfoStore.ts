@@ -19,12 +19,11 @@ export class ImageInfoStore<TCollapsedData extends { id: string }> {
         });
     }
 
-    setCollapses(existingData: TCollapsedData[]) {
+    public setCollapses(existingData: TCollapsedData[]): void {
         this.collapses = existingData.map((el) => ({ ...el, open: false }));
-        return this.collapses;
     }
 
-    toggleCollapse(id: string) {
+    public toggleCollapse(id: string): void {
         this.collapses = this.collapses.map((item) => (item.id === id ? { ...item, open: !item.open } : item));
     }
 }

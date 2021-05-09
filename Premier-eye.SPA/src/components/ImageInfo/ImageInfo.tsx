@@ -48,10 +48,8 @@ export default class ImageInfo extends React.Component<IImageInfo> {
     render() {
         const { objects, createdAt, fixationDatetime, filename, numberOfCam } = this.props.info;
 
-        if (objects && objects.length !== 0) {
-            if (this.props.store.collapses.length === 0) {
-                this.props.store.setCollapses(objects);
-            }
+        if (this.props.store.collapses.length === 0 && objects) {
+            this.props.store.setCollapses(objects);
         }
 
         const warningDateDiff = WarningIfBigDiffBetweenDates(new Date(createdAt), new Date(fixationDatetime));
