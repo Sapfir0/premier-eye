@@ -1,6 +1,6 @@
 import ListItem from '@material-ui/core/ListItem';
 import React from 'react';
-import { definitions } from '../../../typings/Dto';
+import { definitions } from '../../typings/Dto';
 
 interface IBaseCamerasMenu {
     cameras: definitions['Camera'][];

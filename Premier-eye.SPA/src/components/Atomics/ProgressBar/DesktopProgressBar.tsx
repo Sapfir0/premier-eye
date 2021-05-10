@@ -1,6 +1,6 @@
+import { IStepper } from 'components/ImageView/Steppers/IStepper';
 import React, { useEffect, useRef, useState } from 'react';
 import { getDatetimeFromFilename } from '../../../services/DateFormatter';
-import { IStepper } from '../../ImageViewer/ImageView/Steppers/IStepper';
 import './DesktopProgressBar.pcss';
 
 const toPixels = (num: number) => `${num}px`;
