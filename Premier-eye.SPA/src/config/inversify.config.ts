@@ -2,7 +2,7 @@ import { Container } from 'inversify';
 import 'reflect-metadata';
 import { AreaMapStore } from '../components/AreaMap/AreaMapStore';
 import { ImageInfoStore } from '../components/ImageInfo/ImageInfoStore';
-import { SliderStore } from '../components/ImageViewer/Slider/SliderStore';
+import { SliderStore } from '../components/Slider/SliderStore';
 import ApiHelper from '../services/ApiHelper';
 import ApiInteractionService from '../services/ApiInteractionService';
 import CameraApiInteractionService from '../services/ApiInteractionService/CameraApiInteractionService';

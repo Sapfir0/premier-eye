@@ -5,7 +5,7 @@ import './App.pcss';
 import { AreaMap } from './AreaMap/AreaMap';
 import { CameraLogger } from './CameraLogger/CameraLogger';
 import ButtonAppBar from './Header/Header';
-import Slider from './ImageViewer/Slider/Slider';
+import Slider from './Slider/Slider';
 import { Settings } from './Settings/Settings';
 
 function App() {

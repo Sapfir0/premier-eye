@@ -3,10 +3,10 @@ import { observer } from 'mobx-react';
 import React, { useEffect } from 'react';
 import { definitions } from 'typings/Dto';
 import { BaseTable } from '../../components/Base/BaseTable';
-import { SliderStore } from '../../components/ImageViewer/Slider/SliderStore';
 import { useInject } from '../../services/hooks';
 import { HeadersBaseSettings } from '../../typings/table';
 import { TYPES } from '../../typings/types';
+import { SliderStore } from '../Slider/SliderStore';
 import { SettingsStore } from './SettingsStore';
 
 export const Settings = observer(() => {

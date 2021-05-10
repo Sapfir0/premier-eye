@@ -3,11 +3,11 @@ import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';
 import { BaseInteractionError } from 'services/Errors/BaseInteractionError';
 import { ResolvedEither } from 'typings/common';
-import StepDataStructure from '../../../services/DataStructure/StepDataStructure';
-import { socket } from '../../../services/Socket';
-import { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../../services/typings/ApiTypes';
-import { definitions } from '../../../typings/Dto';
-import { TYPES } from '../../../typings/types';
+import StepDataStructure from '../../services/DataStructure/StepDataStructure';
+import { socket } from '../../services/Socket';
+import { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../services/typings/ApiTypes';
+import { definitions } from '../../typings/Dto';
+import { TYPES } from '../../typings/types';
 import { Map } from 'immutable';
 @injectable()
 export class SliderStore {
