@@ -81,7 +81,6 @@ class CamerasList(Resource):
                 cameraList[index]['coordinates'] = cameras[cameraName]['coordinates']
                 cameraList[index]['view'] = cameras[cameraName]['view']
 
-
         for cameraName in cameras: 
             addLocationToCameras()
         
@@ -89,7 +88,6 @@ class CamerasList(Resource):
             cameraList.append({'id': str(cameraPath), 'name': str(cameraPath), **cameras[cameraPath]})
         
         
-
         return make_response({'items': cameraList}, 200)
 
 

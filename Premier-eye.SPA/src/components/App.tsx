@@ -2,10 +2,10 @@ import React from 'react';
 import { BrowserRouter as Router, Redirect, Route, Switch } from 'react-router-dom';
 import { ClientRoutes } from '../config/clientRoutes';
 import './App.pcss';
-import ButtonAppBar from './Header/Header';
-import HomePage from './pages/HomePage';
 import { AreaMap } from './AreaMap/AreaMap';
 import { CameraLogger } from './CameraLogger/CameraLogger';
+import ButtonAppBar from './Header/Header';
+import Slider from './ImageViewer/Slider/Slider';
 import { Settings } from './Settings/Settings';
 
 function App() {
@@ -16,7 +16,7 @@ function App() {
                 <Route path={ClientRoutes.Settings} component={Settings} />
                 <Route path={ClientRoutes.AreaMap} component={AreaMap} />
                 <Route path={ClientRoutes.Logger} component={CameraLogger} />
-                <Route path={ClientRoutes.Index} component={HomePage} />
+                <Route path={ClientRoutes.Index} component={Slider} />
 
                 <Redirect to={ClientRoutes.Index} />
             </Switch>

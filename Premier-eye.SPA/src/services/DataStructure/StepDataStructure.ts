@@ -1,10 +1,12 @@
+import { Map } from 'immutable';
+
 type CameraId = string;
 type CurrentStep = number;
 
 export default class StepDataStructure {
     steps: Map<CameraId, CurrentStep>;
     constructor(camerasCount?: number) {
-        this.steps = new Map<CameraId, CurrentStep>();
+        this.steps = Map<CameraId, CurrentStep>();
 
         if (camerasCount !== undefined) {
             for (let i = 0; i < camerasCount; i++) {
@@ -14,12 +16,11 @@ export default class StepDataStructure {
     }
 
     public getCurrentStep = (cameraId: CameraId) => {
-        const step = this.steps.get(cameraId);
-        return step === undefined ? 0 : step;
+        return this.steps.get(cameraId);
     };
 
     public changeStepOnCurrentCamera = (cameraId: CameraId, currentStep: CurrentStep) => {
-        this.steps.set(cameraId, currentStep);
-        return new Map(this.steps);
+        this.steps = this.steps.set(cameraId, currentStep);
+        return this.steps;
     };
 }

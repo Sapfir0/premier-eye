@@ -4,9 +4,16 @@
  */
 
 export interface definitions {
-  ImageList: { items: definitions["Image"][] };
-  Image: { id: string; src: string };
-  CameraDto: { name: string };
+  ImageList: {
+    items: definitions["Image"][];
+  };
+  Image: {
+    id: string;
+    src: string;
+  };
+  CameraDto: {
+    name: string;
+  };
   Camera: {
     id: string;
     name: string;
@@ -15,7 +22,9 @@ export interface definitions {
     coordinates: definitions["LatLon"];
     images: definitions["Image"][];
   };
-  CameraList: { items: definitions["Camera"][] };
+  CameraList: {
+    items: definitions["Camera"][];
+  };
   ImageInfo: {
     numberOfCam: number;
     filename: string;
@@ -31,7 +40,18 @@ export interface definitions {
     latlon: definitions["LatLon"];
     cameraId?: number;
   };
-  DTOLog: { title: string; timestamp: string; cameraId?: number };
-  DTOLogs: { titles: string[]; timestamp: string; cameraId: number };
-  LatLon: { lat: number; lng: number };
+  DTOLog: {
+    title: string;
+    timestamp: string;
+    cameraId?: number;
+  };
+  DTOLogs: {
+    titles: string[];
+    timestamp: string;
+    cameraId: number;
+  };
+  LatLon: {
+    lat: number;
+    lng: number;
+  };
 }

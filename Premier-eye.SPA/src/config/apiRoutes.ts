@@ -14,7 +14,7 @@ const IMAGE_INFO = {
 
 const MATH_HIGH_LEVEL_DOMAIN = '/math';
 const MATH = {
-    GET_IMAGE_BETWEEEN_DATES_FROM_CAMERA: (cameraId: number) => `${MATH_HIGH_LEVEL_DOMAIN}/cameraDelta${cameraId}`,
+    GET_IMAGE_BETWEEN_DATES_FROM_CAMERA: (cameraId: number) => `${MATH_HIGH_LEVEL_DOMAIN}/cameraDelta${cameraId}`,
     GET_OBJECTS_FROM_RECTANGLE_ON_IMAGE: (src: string) => `${MATH_HIGH_LEVEL_DOMAIN}/${src}/objects`,
     GET_OBJECTS_FROM_RECTANGLE_ON_IMAGE_VISUALIZE: (src: string) => `${MATH_HIGH_LEVEL_DOMAIN}/${src}/objectsVisualize`,
 };

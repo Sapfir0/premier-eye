@@ -12,41 +12,45 @@ import ImageView from '../ImageView/ImageView';
 import './Slider.pcss';
 import { SliderStore } from './SliderStore';
 
-export interface ISlider {
-    store: SliderStore;
-}
+export interface ISlider {}
 
 @observer
 export default class Slider extends React.Component<ISlider> {
+    sliderStore: SliderStore;
+
     constructor(props: ISlider) {
         super(props);
+        this.sliderStore = myContainer.get<SliderStore>(TYPES.SliderStore);
     }
 
     async componentDidMount() {
-        await this.props.store.getCameraList();
-        if (this.props.store.camerasList.length > 0) {
-            this.props.store.changeCurrentCamera(this.props.store.camerasList[0].name);
-            this.props.store.changeCurrentStep(this.props.store.camerasList[0].name, 0);
+        await this.sliderStore.getCameraList();
+
+        const defaultCameraId = this.sliderStore.camerasList[0].name;
+        if (this.sliderStore.camerasList.length > 0) {
+            await this.sliderStore.changeCurrentCamera(defaultCameraId);
+            await this.sliderStore.changeCurrentStep(defaultCameraId, this.getCurrentStep(defaultCameraId));
         }
     }
 
     handleCameraChange = async (cameraId: string): Promise<void> => {
-        const isCameraExists = this.props.store.camerasList.find((camera) => camera.name == cameraId);
+        const isCameraExists = this.sliderStore.camerasList.find((camera) => camera.name == cameraId);
         if (isCameraExists !== undefined) {
-            await this.props.store.changeCurrentCamera(cameraId);
+            await this.sliderStore.changeCurrentCamera(cameraId);
             const currentStep = this.getCurrentStep(cameraId);
-            await this.props.store.changeCurrentStep(cameraId, currentStep);
+            await this.sliderStore.changeCurrentStep(cameraId, currentStep);
         }
     };
 
     handleCurrentStepChange = (step: number): void => {
-        if (this.props.store.camera !== null && step >= 0 && step < this.props.store.camera?.images.length) {
-            this.props.store.changeCurrentStep(this.props.store.camera.id, step);
+        if (this.sliderStore.camera !== null && step >= 0 && step < this.sliderStore.camera?.images.length) {
+            this.sliderStore.changeCurrentStep(this.sliderStore.camera.id, step);
         }
     };
 
     getCurrentStep = (cameraId: string): number => {
-        return this.props.store.stepsStore.getCurrentStep(cameraId);
+        const currentStep = this.sliderStore.stepsStore.getCurrentStep(cameraId);
+        return currentStep !== undefined ? currentStep : this.sliderStore.camera!.images.length - 1;
     };
 
     keyPressed = (e: KeyboardEvent): void => {
@@ -59,13 +63,13 @@ export default class Slider extends React.Component<ISlider> {
 
         const action = data.get(e.key);
         if (action) {
-            action(this.props.store.camera!.id);
+            action(this.sliderStore.camera!.id);
         }
     };
 
     render() {
         document.addEventListener('keydown', this.keyPressed, false);
-        const { camera } = this.props.store;
+        const { camera } = this.sliderStore;
         const isCameraAvailable = camera && camera.images.length > 0;
 
         return (
@@ -78,7 +82,7 @@ export default class Slider extends React.Component<ISlider> {
                     <Grid item={true}>
                         <CamerasList
                             selectedCameraId={camera?.id ?? '1'}
-                            cameras={this.props.store.camerasList}
+                            cameras={this.sliderStore.camerasList}
                             onCameraChange={this.handleCameraChange}
                         />
                     </Grid>
@@ -93,15 +97,15 @@ export default class Slider extends React.Component<ISlider> {
                         )}
                     </Grid>
                     <Grid item={true}>
-                        {camera && isCameraAvailable && this.props.store.imageInfo && (
+                        {camera && isCameraAvailable && this.sliderStore.imageInfo && (
                             <ImageInfo
                                 cameraOnlineDate={new Date(camera.onlineDate)}
                                 store={myContainer.get(TYPES.ImageInfoStore)}
-                                info={this.props.store.imageInfo}
+                                info={this.sliderStore.imageInfo}
                             />
                         )}
                     </Grid>
-                    {this.props.store.error && <ErrorSnackbar message={this.props.store.error.message} />}
+                    {this.sliderStore.error && <ErrorSnackbar message={this.sliderStore.error.message} />}
                 </Grid>
             </Card>
         );

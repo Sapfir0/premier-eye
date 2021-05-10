@@ -35,6 +35,8 @@
     "react-swipeable-views": "^0.13.9",
     "react-swipeable-views-utils": "^0.13.9",
     "reflect-metadata": "^0.1.13",
+    "socket.io": "^4.0.2",
+    "socket.io-client": "^4.0.2",
     "typeface-roboto": "0.0.75",
     "typescript": "^4.1.2",
     "webpack": "^4.42.0"
