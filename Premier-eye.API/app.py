@@ -8,20 +8,22 @@ from docs import api
 import time
 import datetime
 from services.queryLogger import createLogger
+from flask_socketio import SocketIO
+from sockets.sockets import initSocket, socketio
+
 
 def createApp(configClass=Config):
     staticFolder = 'static'
     configApp = Flask(__name__, static_folder=staticFolder)
     configApp.config.from_object(configClass)
     CORS(configApp, resources={r'/*': {'origins': '*'}})
-    
+    createLogger(configApp)
+    api.init_app(configApp)
     return configApp
 
 
 app = createApp(cfg)
-api.init_app(app)
-
-createLogger(app)
+initSocket(app)
 
 if __name__ == '__main__':
-    app.run(port=cfg.FLASK_RUN_HOST, host=cfg.HOST, threaded=True)
+    socketio.run(app, host=cfg.HOST, port=cfg.PORT)

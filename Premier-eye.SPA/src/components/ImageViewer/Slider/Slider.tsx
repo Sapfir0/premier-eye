@@ -25,9 +25,11 @@ export default class Slider extends React.Component<ISlider> {
 
     async componentDidMount() {
         await this.sliderStore.getCameraList();
+
+        const defaultCameraId = this.sliderStore.camerasList[0].name;
         if (this.sliderStore.camerasList.length > 0) {
-            this.sliderStore.changeCurrentCamera(this.sliderStore.camerasList[0].name);
-            this.sliderStore.changeCurrentStep(this.sliderStore.camerasList[0].name, 0);
+            await this.sliderStore.changeCurrentCamera(defaultCameraId);
+            await this.sliderStore.changeCurrentStep(defaultCameraId, this.getCurrentStep(defaultCameraId));
         }
     }
 
@@ -47,7 +49,8 @@ export default class Slider extends React.Component<ISlider> {
     };
 
     getCurrentStep = (cameraId: string): number => {
-        return this.sliderStore.stepsStore.getCurrentStep(cameraId);
+        const currentStep = this.sliderStore.stepsStore.getCurrentStep(cameraId);
+        return currentStep !== undefined ? currentStep : this.sliderStore.camera!.images.length - 1;
     };
 
     keyPressed = (e: KeyboardEvent): void => {
