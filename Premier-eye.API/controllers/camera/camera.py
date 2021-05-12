@@ -64,6 +64,8 @@ class Camera(Resource):
         return make_response({'images': indexedImgList, 'onlineDate': lastImageDate, 'id': cameraId}, 200)
 
 
+from services.geo import getTrapeziumPoints, geoToList
+import numpy as np
 
 @api.route(routes['getCameraList'])
 class CamerasList(Resource):
@@ -85,7 +87,14 @@ class CamerasList(Resource):
             addLocationToCameras()
         
         for cameraPath in cameras:
-            cameraList.append({'id': str(cameraPath), 'name': str(cameraPath), **cameras[cameraPath]})
+            # actual = getTrapeziumPoints(cameraPath)
+            # exprected = cameras[cameraPath]['view']
+            # print(np.array(actual) - np.array(exprected))
+
+            cameraList.append({'id': str(cameraPath), 'name': str(cameraPath), 
+            'view': getTrapeziumPoints(cameraPath), 'coordinates': cameras[cameraPath]['coordinates']
+            # **cameras[cameraPath]
+            })
         
         
         return make_response({'items': cameraList}, 200)

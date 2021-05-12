@@ -13,7 +13,7 @@ from flask import (jsonify, make_response, redirect, request,
 from flask_restplus import Namespace, Resource
 from premier_eye_common.filename import parseFilename
 from services.decart import Rectangle
-from services.geo import calibrateRect
+from services.geo import getGeoCoordinates
 from services.model import getModel
 
 api = Namespace('areaMap')
@@ -47,7 +47,7 @@ class AreaMap(Resource):
             currentObject = objects[i] # количество объектов == количество координат
             currentCamera = cameras[currentObject['cameraId']]
             CDx, CDy = rect.getCenterOfDown()
-            ll = calibrateRect(*currentCamera['view'], int(CDx), int(CDy))
+            ll = getGeoCoordinates(*currentCamera['view'], int(CDx), int(CDy))
             latlongCoordinates.append({**currentObject, 'cameraId': currentObject['cameraId'], 'type': currentObject['type'], 'latlon': ll })
 
         return jsonify(latlongCoordinates)
