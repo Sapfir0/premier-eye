@@ -3,6 +3,101 @@
  * Do not make direct changes to the file.
  */
 
+export interface paths {
+  "/areaMap/": {
+    get: operations["get_area_map"];
+  };
+  "/areaMap/latlon": {
+    get: operations["get_lat_lon"];
+  };
+  "/camera/list": {
+    get: operations["get_cameras_list"];
+  };
+  "/camera/{cameraId}": {
+    get: operations["get_camera"];
+    post: operations["post_camera"];
+    parameters: {
+      path: {
+        cameraId: string;
+      };
+    };
+  };
+  "/camera/{cameraId}/images": {
+    get: operations["get_camera_image_list"];
+    parameters: {
+      path: {
+        cameraId: string;
+      };
+    };
+  };
+  "/compute/cameraDelta{cameraId}": {
+    get: operations["get_image_by_date_interval_from_camera"];
+    parameters: {
+      path: {
+        cameraId: string;
+      };
+    };
+  };
+  "/compute/{filename}/objects": {
+    get: operations["get_objects_in_rectangle"];
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+  };
+  "/compute/{filename}/objectsVisualize": {
+    get: operations["get_visualize_objects_from_rectangle"];
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+  };
+  "/events/log": {
+    get: operations["get_event_logger"];
+    post: operations["post_event_logger"];
+  };
+  "/events/logs": {
+    post: operations["post_events_logger"];
+  };
+  "/gallery/image/{filename}": {
+    get: operations["get_image"];
+    post: operations["post_image"];
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+  };
+  "/gallery/imageById/{id}": {
+    get: operations["get_object_information"];
+    parameters: {
+      path: {
+        id: string;
+      };
+    };
+  };
+  "/gallery/images": {
+    get: operations["get_image_list"];
+  };
+  "/image/info": {
+    get: operations["get_image_info_by_index_of_image"];
+  };
+  "/image/{filename}/info": {
+    get: operations["get_image_information"];
+    post: operations["post_image_information"];
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+  };
+  "/objectInfo/info": {
+    get: operations["get_object_information"];
+  };
+}
+
 export interface definitions {
   ImageList: {
     items: definitions["Image"][];
@@ -53,5 +148,221 @@ export interface definitions {
   LatLon: {
     lat: number;
     lng: number;
+  };
+}
+
+export interface responses {
+  /** When a mask can't be parsed */
+  ParseError: unknown;
+  /** When any error occurs on mask */
+  MaskError: unknown;
+}
+
+export interface operations {
+  get_area_map: {
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_lat_lon: {
+    responses: {
+      /** Success */
+      200: {
+        schema: definitions["LatLon"];
+      };
+    };
+  };
+  get_cameras_list: {
+    responses: {
+      /** Success */
+      200: {
+        schema: definitions["CameraList"];
+      };
+    };
+  };
+  get_camera: {
+    parameters: {
+      path: {
+        cameraId: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: {
+        schema: definitions["Camera"];
+      };
+    };
+  };
+  post_camera: {
+    parameters: {
+      path: {
+        cameraId: string;
+      };
+      body: {
+        payload: definitions["CameraDto"];
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_camera_image_list: {
+    parameters: {
+      path: {
+        cameraId: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_image_by_date_interval_from_camera: {
+    parameters: {
+      path: {
+        cameraId: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_objects_in_rectangle: {
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_visualize_objects_from_rectangle: {
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_event_logger: {
+    responses: {
+      /** Success */
+      200: {
+        schema: definitions["DTOLog"];
+      };
+    };
+  };
+  post_event_logger: {
+    parameters: {
+      body: {
+        payload: definitions["DTOLog"];
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  post_events_logger: {
+    parameters: {
+      body: {
+        payload: definitions["DTOLogs"];
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_image: {
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+    responses: {
+      /** Return image */
+      200: unknown;
+      /** Incorrect filename */
+      400: unknown;
+      /** Image not found */
+      404: unknown;
+    };
+  };
+  post_image: {
+    parameters: {
+      path: {
+        filename: string;
+      };
+      formData: {
+        /** Image from camera */
+        file: { [key: string]: any };
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_object_information: {
+    responses: {
+      /** Success */
+      200: {
+        schema: definitions["ObjectInfo"];
+      };
+    };
+  };
+  get_image_list: {
+    responses: {
+      /** Success */
+      200: {
+        schema: definitions["ImageList"];
+      };
+    };
+  };
+  get_image_info_by_index_of_image: {
+    parameters: {
+      query: {
+        cameraId: string;
+        indexOfImage: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  get_image_information: {
+    parameters: {
+      path: {
+        filename: string;
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
+  };
+  post_image_information: {
+    parameters: {
+      path: {
+        filename: string;
+      };
+      body: {
+        payload: definitions["ImageInfo"];
+      };
+    };
+    responses: {
+      /** Success */
+      200: unknown;
+    };
   };
 }

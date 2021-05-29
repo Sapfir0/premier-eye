@@ -30,11 +30,10 @@ def getGeoCoordinates(A, B, C, D, X, Y):
 
 def computeImagePoint(alpha, beta, x, y, h, O):
     O_x, O_y = O
-    len_M = h * tan(alpha + viewAngleVertical * ((imageHeight - y) / imageHeight - 0.5))
-    M_x = O_x + cos(beta - viewAngleHorizontal * ((imageWidth - x) / imageWidth - 0.5)) * len_M
-    M_y = O_y + sin(beta - viewAngleHorizontal * ((imageWidth - x) / imageWidth - 0.5)) * len_M
+    len_M = h * tan(alpha - viewAngleVertical * ((imageHeight - y) / imageHeight - 0.5))
+    M_x = O_x - cos(beta - viewAngleHorizontal * ((imageWidth - x) / imageWidth - 0.5)) * len_M
+    M_y = O_y - sin(beta - viewAngleHorizontal * ((imageWidth - x) / imageWidth - 0.5)) * len_M
     return np.array([M_x, M_y])
-
 
 
 def getTrapeziumPoints(cameraNumber):

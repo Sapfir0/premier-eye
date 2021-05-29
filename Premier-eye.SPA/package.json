@@ -10,7 +10,7 @@
     "build:dev": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=dev",
     "build:test": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=test",
     "lint": "eslint src/** -c ./.eslintrc.js",
-    "buildJsonSchemas": "curl http://localhost:8050/swagger.json > schema.json && npx openapi-typescript ./schema.json --output src/typings/Dto.ts"
+    "buildJsonSchemas": "curl http://localhost:8050/swagger.json > schema.json && openapi-typescript ./schema.json --output src/typings/Dto.ts"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.1",
@@ -69,7 +69,7 @@
     "eslint-plugin-react": "^7.22.0",
     "html-webpack-plugin": "^4.4.1",
     "mini-css-extract-plugin": "^0.9.0",
-    "openapi-typescript": "^2.4.2",
+    "openapi-typescript": "^3.3.1",
     "postcss-loader": "^4.1.0",
     "prettier": "^2.2.1",
     "style-loader": "^1.2.1",
