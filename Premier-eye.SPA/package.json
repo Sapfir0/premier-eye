@@ -17,6 +17,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@reduxjs/toolkit": "^1.5.1",
+    "api_interaction_services": "^0.2.5",
     "axios": "^0.21.1",
     "d3-time-format": "^3.0.0",
     "file-loader": "^6.2.0",

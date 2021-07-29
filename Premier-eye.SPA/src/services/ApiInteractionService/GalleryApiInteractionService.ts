@@ -1,10 +1,14 @@
+import { ApiInteractionService } from 'api_interaction_services';
 import { ApiRoutes, API_URL } from '../../config/apiRoutes';
-import ApiInteractionService from '../ApiInteractionService';
 import { IGalleryApiInteractionService } from '../typings/ApiTypes';
 
 export default class GalleryApiInteractionService
     extends ApiInteractionService
     implements IGalleryApiInteractionService {
+    constructor() {
+        super(API_URL);
+    }
+
     public getImage = (imageId: string) => {
         return this.get(ApiRoutes.GALLERY.GET_IMAGE(imageId));
     };
