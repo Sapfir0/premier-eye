@@ -10,13 +10,14 @@
     "build:dev": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=dev",
     "build:test": "./node_modules/.bin/webpack -p --profile ---env.NODE_ENV=test",
     "lint": "eslint src/** -c ./.eslintrc.js",
-    "buildJsonSchemas": "curl http://localhost:8050/swagger.json > schema.json && npx openapi-typescript ./schema.json --output src/typings/Dto.ts"
+    "buildJsonSchemas": "curl http://localhost:8050/swagger.json > schema.json && openapi-typescript ./schema.json --output src/typings/Dto.ts"
   },
   "dependencies": {
     "@material-ui/core": "^4.11.1",
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@reduxjs/toolkit": "^1.5.1",
+    "api_interaction_services": "^0.2.7",
     "axios": "^0.21.1",
     "d3-time-format": "^3.0.0",
     "file-loader": "^6.2.0",
@@ -28,6 +29,7 @@
     "mobx-react": "^7.0.5",
     "postcss": "^8.2.2",
     "postcss-simple-vars": "^6.0.2",
+    "process": "^0.11.10",
     "react": "^16.14.0",
     "react-dom": "^16.14.0",
     "react-leaflet": "^3.1.0",
@@ -39,7 +41,7 @@
     "socket.io-client": "^4.0.2",
     "typeface-roboto": "0.0.75",
     "typescript": "^4.1.2",
-    "webpack": "^4.42.0"
+    "webpack": "^5.47.0"
   },
   "devDependencies": {
     "@material-ui/types": "^5.1.0",
@@ -58,7 +60,6 @@
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "autoprefixer": "^9.8.6",
-    "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.3.2",
     "css-loader": "^4.2.2",
@@ -69,10 +70,11 @@
     "eslint-plugin-react": "^7.22.0",
     "html-webpack-plugin": "^4.4.1",
     "mini-css-extract-plugin": "^0.9.0",
-    "openapi-typescript": "^2.4.2",
+    "openapi-typescript": "^3.3.1",
     "postcss-loader": "^4.1.0",
     "prettier": "^2.2.1",
     "style-loader": "^1.2.1",
+    "ts-loader": "^9.2.4",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },

@@ -1,6 +1,6 @@
 import List from '@material-ui/core/List';
 import React from 'react';
-import { definitions } from '../../../typings/Dto';
+import { definitions } from '../../typings/Dto';
 import { BaseCamerasList } from './BaseCamerasMenu';
 import './CamerasList.pcss';
 

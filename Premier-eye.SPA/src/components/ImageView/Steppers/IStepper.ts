@@ -1,4 +1,4 @@
-import { definitions } from '../../../../typings/Dto';
+import { definitions } from '../../../typings/Dto';
 
 export interface IStepper {
     images: Array<definitions['Image']>;

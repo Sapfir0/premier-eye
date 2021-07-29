@@ -1,5 +1,5 @@
 import React from 'react';
-import { DesktopProgressBar } from '../../../Atomics/ProgressBar/DesktopProgressBar';
+import { DesktopProgressBar } from '../../Atomics/ProgressBar/DesktopProgressBar';
 import { BackButton, NextButton } from '../Buttons';
 import { IStepper } from './IStepper';
 
