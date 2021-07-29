@@ -28,7 +28,6 @@ module.exports = (env) => {
         return prev;
     }, {});
     const devtool = isProduction ? '' : 'eval-cheap-module-source-map';
-    console.log(isProduction);
     console.log(envKeys);
 
     return {
@@ -42,6 +41,9 @@ module.exports = (env) => {
         devtool,
         resolve: {
             extensions: ['.tsx', '.ts', '.js'],
+            alias: {
+                process: 'process/browser',
+            }
         },
         optimization: {
             runtimeChunk: 'single',
@@ -70,7 +72,7 @@ module.exports = (env) => {
                 {
                     test: /\.tsx?$/,
                     exclude: /(node_modules)/,
-                    loader: 'ts-loader'
+                    loader: 'ts-loader',
                 },
                 {
                     test: /\.css$/,
@@ -132,7 +134,6 @@ module.exports = (env) => {
             historyApiFallback: true,
         },
         plugins: [
-            new CleanWebpackPlugin(),
             new webpack.DefinePlugin(envKeys),
             new CopyPlugin({
                 patterns: [{ from: 'public', to: '.' }],

@@ -1,12 +1,12 @@
 import { ApiInteractionService } from 'api_interaction_services';
-import { ApiRoutes, API_URL } from '../../config/apiRoutes';
+import { inject } from 'inversify';
+import { TYPES } from '../../typings/types';
+import { ApiRoutes } from '../../config/apiRoutes';
 
-export class AreaMapApiInteractionService extends ApiInteractionService {
-    constructor() {
-        super(API_URL);
-    }
+export class AreaMapApiInteractionService  {
+    constructor(@inject(TYPES.ApiInteractionService) protected _apiService: ApiInteractionService) {}
 
     public getObjects = () => {
-        return this.get(ApiRoutes.AREA_MAP.OBJECTS);
+        return this._apiService.get(ApiRoutes.AREA_MAP.OBJECTS);
     };
 }
