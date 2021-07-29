@@ -1,5 +1,5 @@
+import { BaseInteractionError } from 'api_interaction_services';
 import { Either } from 'fp-ts/Either';
-import { BaseInteractionError } from '../services/Errors/BaseInteractionError';
 
 export type IdPayload = {
     id: number;

@@ -3,7 +3,6 @@ const CopyPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 const path = require('path');
-const { CheckerPlugin } = require('awesome-typescript-loader');
 const fs = require('fs');
 const dotenv = require('dotenv');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
@@ -40,9 +39,6 @@ module.exports = (env) => {
             filename: 'js/[name].[hash].bundle.js',
             chunkFilename: 'js/[name].[hash].bundle.js',
         },
-        node: {
-            fs: 'empty',
-        },
         devtool,
         resolve: {
             extensions: ['.tsx', '.ts', '.js'],
@@ -74,12 +70,7 @@ module.exports = (env) => {
                 {
                     test: /\.tsx?$/,
                     exclude: /(node_modules)/,
-                    loader: 'awesome-typescript-loader',
-                    options: {
-                        compilerOptions: {
-                            sourceMap: !isProduction,
-                        },
-                    },
+                    loader: 'ts-loader'
                 },
                 {
                     test: /\.css$/,
@@ -96,7 +87,7 @@ module.exports = (env) => {
                 {
                     test: /\.(scss|module.(scss))$/,
                     exclude: /\.$/,
-                    loader: [
+                    use: [
                         !isProduction ? 'style-loader' : MiniCssExtractPlugin.loader,
                         'css-loader',
                         {
@@ -110,7 +101,7 @@ module.exports = (env) => {
                 {
                     test: /\.(pcss)$/,
                     exclude: /node_modules/,
-                    loader: [
+                    use: [
                         'style-loader',
                         'css-loader',
                         {
@@ -123,11 +114,11 @@ module.exports = (env) => {
                 },
                 {
                     test: /\.(jpg|jpeg|gif|png|svg)$/,
-                    loader: ['file-loader?context=src/images&name=images/[path][name].[ext]'],
+                    loader: 'file-loader',
                 },
                 {
                     test: /\.(woff|woff2|eot|ttf)$/,
-                    loader: 'file-loader?name=fonts/[name].[hash].[ext]',
+                    loader: 'file-loader',
                 },
             ],
         },
@@ -147,7 +138,6 @@ module.exports = (env) => {
                 patterns: [{ from: 'public', to: '.' }],
             }),
             new HtmlWebpackPlugin({ template: './public/index.html' }),
-            new CheckerPlugin(),
         ],
     };
 };

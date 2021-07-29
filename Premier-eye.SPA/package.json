@@ -17,7 +17,7 @@
     "@material-ui/icons": "^4.9.1",
     "@material-ui/lab": "^4.0.0-alpha.51",
     "@reduxjs/toolkit": "^1.5.1",
-    "api_interaction_services": "^0.2.5",
+    "api_interaction_services": "^0.2.7",
     "axios": "^0.21.1",
     "d3-time-format": "^3.0.0",
     "file-loader": "^6.2.0",
@@ -40,7 +40,7 @@
     "socket.io-client": "^4.0.2",
     "typeface-roboto": "0.0.75",
     "typescript": "^4.1.2",
-    "webpack": "^4.42.0"
+    "webpack": "^5.47.0"
   },
   "devDependencies": {
     "@material-ui/types": "^5.1.0",
@@ -59,7 +59,6 @@
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "autoprefixer": "^9.8.6",
-    "awesome-typescript-loader": "^5.2.1",
     "clean-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^6.3.2",
     "css-loader": "^4.2.2",
@@ -74,6 +73,7 @@
     "postcss-loader": "^4.1.0",
     "prettier": "^2.2.1",
     "style-loader": "^1.2.1",
+    "ts-loader": "^9.2.4",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
