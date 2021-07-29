@@ -4,7 +4,7 @@ Flask-Cors
 python-dotenv
 sqlalchemy
 flask_restplus
-Werkzeug==0.16.1
+Werkzeug
 premier-eye-common
 gunicorn==20.0.4
 colorama

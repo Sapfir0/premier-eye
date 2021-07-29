@@ -1,5 +1,5 @@
+import { BaseInteractionError } from 'api_interaction_services';
 import React, { Component } from 'react';
-import { BaseInteractionError } from '../../../services/Errors/BaseInteractionError';
 import { ErrorMessage } from './ErrorMessage';
 
 export interface IErrorMessageList {
