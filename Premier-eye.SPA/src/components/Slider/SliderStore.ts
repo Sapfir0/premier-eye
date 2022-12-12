@@ -5,7 +5,7 @@ import { BaseInteractionError } from 'api_interaction_services';
 import { ResolvedEither } from 'typings/common';
 import StepDataStructure from '../../services/DataStructure/StepDataStructure';
 import { socket } from '../../services/Socket';
-import { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../services/typings/ApiTypes';
+import type { ICameraApiInteractionService, IGalleryApiInteractionService } from '../../services/typings/ApiTypes';
 import { definitions } from '../../typings/Dto';
 import { TYPES } from '../../typings/types';
 import { Map } from 'immutable';

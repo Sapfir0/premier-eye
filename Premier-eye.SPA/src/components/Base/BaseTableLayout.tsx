@@ -18,7 +18,7 @@ export interface IBaseTableLayout<T> {
 
 export const BaseTableLayout = observer(
     class BaseTableLayout<T, U extends IBaseTableLayout<T>> extends React.Component<U> {
-        public render(): React.ReactElement {
+        public render(): JSX.Element {
             return (
                 <Table>
                     <TableHead>
@@ -135,7 +135,7 @@ export const BaseTableLayout = observer(
 
             const convertedValue = convert(this.props.headers, column, cellValue, item); // работает не так уж долго, как я думал
 
-            return <TableCell key={`${rowId}.${column}`}>{convertedValue}</TableCell>;
+            return <TableCell key={`${rowId}.${String(column)}`}>{convertedValue}</TableCell>;
         };
     },
 );

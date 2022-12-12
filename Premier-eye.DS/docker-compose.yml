@@ -2,8 +2,8 @@ version: '3.3'
 
 services:
   detection:
-    depends_on: 
-      - nomeroff-net 
+    # depends_on: 
+    #   - nomeroff-net 
     tty: true
     container_name: detection
     image: sapfir0/premier-eye:cpu
@@ -21,23 +21,23 @@ services:
     env_file:
       - .env
 
-  nomeroff-net:
-    build: vehiclePlate
-    working_dir: /var/www/nn
-    image: sapfir0/vehicle_plate_detector
-    # restart: unless-stopped
-    ports:
-      - 5051:5051
-    volumes:
-      - ./data:/ds/data
-      # пока волюм не используется, я передаю файл не по ссылке, а по значению
-    networks:
-      - premier-eye_some-net
-    logging:
-       driver: "json-file"
-       options:
-         max-size: "10m"
-         max-file: "5"
+  # nomeroff-net:
+  #   build: vehiclePlate
+  #   working_dir: /var/www/nn
+  #   image: sapfir0/vehicle_plate_detector
+  #   # restart: unless-stopped
+  #   ports:
+  #     - 5051:5051
+  #   volumes:
+  #     - ./data:/ds/data
+  #     # пока волюм не используется, я передаю файл не по ссылке, а по значению
+  #   networks:
+  #     - premier-eye_some-net
+  #   logging:
+  #      driver: "json-file"
+  #      options:
+  #        max-size: "10m"
+  #        max-file: "5"
 
 networks:
   premier-eye_some-net:

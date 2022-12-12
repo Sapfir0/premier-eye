@@ -22,7 +22,7 @@ services:
       context: Premier-eye.SPA
       dockerfile: Dockerfile
     ports:
-      - "5000:80"
+      - "4000:80"
     stdin_open: true
 
 networks:

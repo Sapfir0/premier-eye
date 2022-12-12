@@ -22,6 +22,6 @@ RUN rm -rf /usr/share/nginx/html/*
 
 COPY --from=build /usr/src/app/dist /usr/share/nginx/html
 RUN cd /usr/share/nginx/html && ls
-EXPOSE 5000
+EXPOSE 4000
 
 ENTRYPOINT ["nginx", "-g", "daemon off;"]

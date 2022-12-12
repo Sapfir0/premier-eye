@@ -2,7 +2,7 @@ import { isRight } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable } from 'mobx';
 import { socket } from '../../services/Socket';
-import { ICameraApiInteractionService } from 'services/typings/ApiTypes';
+import type { ICameraApiInteractionService } from 'services/typings/ApiTypes';
 import { AreaMapApiInteractionService } from '../../services/ApiInteractionService/AreaMapInteractionService';
 import { ResolvedEither } from '../../typings/common';
 import { definitions } from '../../typings/Dto';

@@ -2,7 +2,7 @@ import { Either, isLeft } from 'fp-ts/lib/Either';
 import { inject, injectable } from 'inversify';
 import { action, makeObservable, observable, runInAction } from 'mobx';
 import { BaseInteractionError } from 'api_interaction_services';
-import { ICameraApiInteractionService } from 'services/typings/ApiTypes';
+import type { ICameraApiInteractionService } from 'services/typings/ApiTypes';
 import { BaseTableStore } from '../../components/Base/BaseTableStore';
 import { definitions } from '../../typings/Dto';
 import { ColumnDefinition, SortDirection } from '../../typings/table';

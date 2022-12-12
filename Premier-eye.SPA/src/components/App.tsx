@@ -5,7 +5,7 @@ import './App.pcss';
 import { AreaMap } from './AreaMap/AreaMap';
 import { CameraLogger } from './CameraLogger/CameraLogger';
 import ButtonAppBar from './Header/Header';
-import Slider from './Slider/Slider';
+import { Slider } from './Slider/Slider';
 import { Settings } from './Settings/Settings';
 
 function App() {
@@ -15,9 +15,8 @@ function App() {
             <Switch>
                 <Route path={ClientRoutes.Settings} component={Settings} />
                 <Route path={ClientRoutes.AreaMap} component={AreaMap} />
-                <Route path={ClientRoutes.Logger} component={CameraLogger} />
+                <Route path={ClientRoutes.Logger} component={CameraLogger} />   
                 <Route path={ClientRoutes.Index} component={Slider} />
-
                 <Redirect to={ClientRoutes.Index} />
             </Switch>
         </Router>
